@@ -3,9 +3,11 @@ import { Request, Response } from "express";
 import SgidClient from "@opengovsg/sgid-client";
 import * as dotenv from "dotenv";
 dotenv.config();
+import { PrismaClient } from "@prisma/client";
 
 const PORT = 3000;
 const app = express();
+const prisma = new PrismaClient();
 
 const clientConfig = {
   clientId: process.env.CLIENT_ID as string,
@@ -37,8 +39,33 @@ app.get("/", async (req: Request, res: Response) => {
   }
 });
 
+const disconnect = async () => {
+  await prisma.$disconnect();
+};
+
+const createUser = async (req: Request, res: Response) => {
+  await prisma.user.create({
+    data: {
+      name: "Alice",
+      email: "alice@prisma.io",
+      posts: {
+        create: {
+          title: "Hello World",
+        },
+      },
+      profile: {
+        create: { bio: "I like turtles" },
+      },
+    },
+  });
+  await disconnect();
+  res.send("created a new user Alice");
+};
+
 app.get("/api", (req: Request, res: Response) => {
   res.send("hello !!!!");
 });
+
+app.get("/createUser", createUser);
 
 app.listen(PORT, () => console.log(`start listening on port : ${PORT}`));
