@@ -2,39 +2,127 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  user      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  tags      Tag[]
-}
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique @db.VarChar(255)
-  posts   Post[]
-  profile Profile?
+  id              Int         @id @default(autoincrement())
+  hash            String
+  accountTypes    AccountType @relation(fields: [accountType], references: [id])
+  accountType     Int
+  categories      Category?   @relation(fields: [authCategory], references: [id])
+  authCategory    Int?
+  trainee         Trainee?    
+  createdAt       DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime    @default(now()) @db.Timestamp(6)
+  trainings       TrainingProvided[]
 }
 
-model Tag {
-  id      Int   @id @default(autoincrement())
-  name    String
-  posts   Post[]
+model TrainingProvided {
+  id            Int       @id @default(autoincrement())
+  users          User      @relation(fields: [user], references: [id])
+  user        Int
+  requirements  Requirement @relation(fields: [requirement], references: [id])
+  requirement   Int
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
 }
+
+model AccountType {
+  id            Int   @id @default(autoincrement())
+  name          String
+  users         User[]
+}
+
+model Trainee {
+  id            Int       @id @default(autoincrement())
+  callsign      String?
+  categories    Category  @relation(fields: [category], references: [id])
+  category      Int
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+  users         User      @relation(fields: [user], references: [id])
+  user          Int       @unique
+  trainings     TraineeToTraining[]
+  currencies    Currency[]
+}
+
+model Category {
+  id        Int     @id @default(autoincrement())
+  name      String
+  users     User[]
+  trainees  Trainee[]
+  requirements  CategoryToRequirement[]
+}
+
+model Requirement {
+  id              Int     @id @default(autoincrement())
+  name            String
+  hasSeniority    Boolean @default(false)
+  rehackPeriod    Int     @default(0)
+  extensionPeriod Int
+  seniorExtension Int?
+  trainingsProvided TrainingProvided[]
+  currencies      Currency[]
+  categories      CategoryToRequirement[]
+  trainings       Training[]
+}
+
+model Currency {
+  id            Int       @id @default(autoincrement())
+  trainees      Trainee   @relation(fields: [trainee], references: [id])
+  trainee       Int
+  requirements  Requirement @relation(fields: [requirement], references: [id])
+  requirement   Int
+  seniority     Boolean
+  expiry        DateTime
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+}
+
+model CategoryToRequirement {
+  id            Int       @id @default(autoincrement())
+  categories    Category  @relation(fields: [category], references: [id])
+  category      Int
+  requirements  Requirement @relation(fields: [requirement], references: [id])
+  requirement   Int
+}
+
+model Training {
+  id            Int       @id @default(autoincrement())
+  requirements  Requirement @relation(fields: [requirement], references: [id])
+  requirement   Int
+  capacity      Int
+  start         DateTime
+  end           DateTime
+  complete      Boolean
+  instruction   String?
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+  trainees      TraineeToTraining[]
+}
+
+model TraineeToTraining {
+  id            Int       @id @default(autoincrement())
+  trainees      Trainee   @relation(fields: [trainee], references: [id])
+  trainee       Int
+  trainings     Training  @relation(fields: [training], references: [id])
+  training      Int
+  statuses      Status    @relation(fields: [status], references: [id])
+  status        Int    
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+}
+
+model Status {
+  id        Int   @id @default(autoincrement())
+  name      String
+  bookings  TraineeToTraining[]
+}
+
