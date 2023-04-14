@@ -1,6 +1,7 @@
 import "./App.css";
 import axios from "axios";
 import { useState } from "react";
+import AllUsersPage from "./pages/users/index/AllUsersPage";
 
 function App() {
   const [data, setData] = useState();
@@ -16,10 +17,14 @@ function App() {
   }
 
   return (
+    <>
     <div className="App">
       <button onClick={getDataFromServer}>Access server using proxy</button>
       <p>data : {data}</p>
     </div>
+
+    <AllUsersPage />
+    </>
   );
 }
 
