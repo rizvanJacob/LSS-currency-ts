@@ -9,6 +9,13 @@ const PORT = 3000;
 const app = express();
 const prisma = new PrismaClient();
 
+const connectDB = async () => {
+  await prisma.$connect();
+  console.log(`connected to database via prisma`);
+};
+
+connectDB();
+
 const clientConfig = {
   clientId: process.env.CLIENT_ID as string,
   clientSecret: process.env.CLIENT_SECRET as string,
@@ -38,34 +45,8 @@ app.get("/", async (req: Request, res: Response) => {
     res.redirect("/auth");
   }
 });
-
-const disconnect = async () => {
-  await prisma.$disconnect();
-};
-
-const createUser = async (req: Request, res: Response) => {
-  await prisma.user.create({
-    data: {
-      name: "Alice",
-      email: "alice@prisma.io",
-      posts: {
-        create: {
-          title: "Hello World",
-        },
-      },
-      profile: {
-        create: { bio: "I like turtles" },
-      },
-    },
-  });
-  await disconnect();
-  res.send("created a new user Alice");
-};
-
 app.get("/api", (req: Request, res: Response) => {
   res.send("hello !!!!");
 });
-
-app.get("/createUser", createUser);
 
 app.listen(PORT, () => console.log(`start listening on port : ${PORT}`));
