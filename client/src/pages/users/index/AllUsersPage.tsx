@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import EditUserButton from "../edit/EditUserButton";
 import UsersList from "./UsersList";
-import getRequest from "../../../../utilities/getRequest";
+import getRequest from "../../../utilities/getRequest";
 
-type User = {
+export type UserProps = {
     id: number;
-    name: string;
-    email: string;
+    accountType: number;
 }
 
 export default function AllUsersPage(): JSX.Element {
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<UserProps[]>([]);
 
     /* useEffect(() => {
         getRequest(`/api/users`, setUsers);
@@ -22,12 +20,11 @@ export default function AllUsersPage(): JSX.Element {
         <h1> Display all users for Admin to see</h1>
         {users.length > 0 ? (
             <>
-            <UsersList users = { users } setUsers = {setUsers as React.Dispatch<React.SetStateAction<object>>} />
+            <UsersList users = { users as UserProps[] } setUsers = {setUsers as React.Dispatch<React.SetStateAction<UserProps[]>>} />
             </>
         ) : (
             <>
             <p> No users found <progress /></p>
-            <EditUserButton />
             </>
         )}
         
