@@ -13,7 +13,7 @@ function App() {
         element: <AllUsersPage />
       },
       {
-        path: "/users/123id/edit",
+        path: "/users/:id/edit",
         element: <EditUserForm />
       },
     ])
