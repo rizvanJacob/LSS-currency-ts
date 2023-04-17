@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
 }
 
 generator erd {
@@ -13,7 +14,7 @@ datasource db {
 
 model User {
   id              Int         @id @default(autoincrement())
-  hash            String
+  openId          String      @unique
   displayName     String
   accountTypes    AccountType @relation(fields: [accountType], references: [id])
   accountType     Int
@@ -26,13 +27,13 @@ model User {
 }
 
 model TrainingProvided {
-  id            Int       @id @default(autoincrement())
-  users          User      @relation(fields: [user], references: [id])
+  id            Int         @id @default(autoincrement())
+  users          User       @relation(fields: [user], references: [id])
   user        Int
   requirements  Requirement @relation(fields: [requirement], references: [id])
   requirement   Int
-  createdAt     DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+  createdAt     DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime    @default(now()) @db.Timestamp(6)
 }
 
 model AccountType {
