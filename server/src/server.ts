@@ -6,6 +6,7 @@ dotenv.config();
 import { connectDb } from "./config/database";
 connectDb();
 
+import authRouter from "./routes/authRouter";
 import usersRouter from "./routes/usersRouter";
 // import traineesRouter from "./routes/traineesRouter"
 // import trainingsRouter from "./routes/trainingsRouter"
@@ -16,9 +17,16 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
+app.use("/api/", authRouter);
 app.use("/api/users", usersRouter);
 // app.use("/api/trainees", traineesRouter)
 // app.use("/api/trainings", trainingsRouter)
+
+app.get("/", (req, res) => {
+  res.send("connected to express server");
+});
+
+app.get("/api/auth");
 
 const PORT = 3000;
 
