@@ -10,7 +10,7 @@ export default function UserRoutes() {
                 element = {<AllUsersPage />} 
             />
             <Route
-                path='/users/:id/edit'
+                path='/users/:openId/edit'
                 element = {<EditUserForm />} 
             />
         </Routes>

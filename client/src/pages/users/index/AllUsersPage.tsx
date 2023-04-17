@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import UsersList from "./UsersList";
 import getRequest from "../../../utilities/getRequest";
+import { UserProps } from "../../../@types/@types.UserProps"
 
-export type UserProps = {
-    id: number;
-    accountType: number;
-}
 
 export default function AllUsersPage(): JSX.Element {
     const [users, setUsers] = useState<UserProps[]>([]);
@@ -13,8 +10,6 @@ export default function AllUsersPage(): JSX.Element {
     useEffect(() => {
         getRequest(`/api/users`, setUsers);
     }, [])
-
-    console.log("users:", users);
     
     return (
         <>
