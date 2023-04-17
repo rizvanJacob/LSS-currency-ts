@@ -1,7 +1,6 @@
 import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
-import EditUserRoute from "./pages/users/edit/routes/EditUserRoute";
-import UsersPageRoute from "./pages/users/index/routes/UsersPageRoute";
+import UserRoutes from "./pages/users/routes/UserRoutes";
 import Home from "./pages/home/Home";
 import { CurrentUser } from "./@types/@types.currentUser";
 
@@ -24,8 +23,7 @@ function App() {
             <div className="App">
               <h1>A React App made with Vite</h1>
             </div>
-            <UsersPageRoute />
-            <EditUserRoute />
+            <UserRoutes/>
           </>
         </PageContext.Provider>
       ) : (

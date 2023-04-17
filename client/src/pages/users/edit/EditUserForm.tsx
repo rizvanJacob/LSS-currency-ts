@@ -6,7 +6,7 @@ import { CurrentUser } from "../../../@types/@types.currentUser";
 
 export default function EditUserForm(): JSX.Element {
     const { id } = useParams();
-    const [user, setUser] = useState<CurrentUser>({});
+    const [user, setUser] = useState<CurrentUser | null>(null);
     const navigate = useNavigate();
 
     const handleFormSubmit = () => {
@@ -17,7 +17,7 @@ return (
       <h1>Update User Form</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Formik
-          initialValues={user}
+          initialValues={user || {}}
           onSubmit={handleFormSubmit}
           >
           {({ isSubmitting, isValidating, isValid }) => (
@@ -28,7 +28,7 @@ return (
                   type="text"
                   id="id"
                   name="id"
-                  value={user.id || ''}
+                  value={user.accountId || ''}
                 />
                 <ErrorMessage name="id" />
               </div>
