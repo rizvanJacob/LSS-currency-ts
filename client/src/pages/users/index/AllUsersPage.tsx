@@ -10,20 +10,22 @@ export type UserProps = {
 export default function AllUsersPage(): JSX.Element {
     const [users, setUsers] = useState<UserProps[]>([]);
 
-    /* useEffect(() => {
+    useEffect(() => {
         getRequest(`/api/users`, setUsers);
-    }, []) */
+    }, [])
 
+    console.log("users:", users);
+    
     return (
         <>
         <h1> Display all users for Admin to see</h1>
         {users.length > 0 ? (
             <>
-            <UsersList users = { users as UserProps[] } setUsers = {setUsers as React.Dispatch<React.SetStateAction<UserProps[]>>} />
+                <UsersList users = { users as UserProps[] } setUsers = {setUsers as React.Dispatch<React.SetStateAction<UserProps[]>>} />
             </>
         ) : (
             <>
-            <p> No users found <progress /></p>
+                <p> No users found <progress /></p>
             </>
         )}
         

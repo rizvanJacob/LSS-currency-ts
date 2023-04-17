@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import AllUsersPage from "./AllUsersPage";
+import AllUsersPage from "../AllUsersPage";
 
 export default function UsersPageRoute() {
     return (
