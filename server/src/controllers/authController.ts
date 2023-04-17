@@ -9,7 +9,7 @@ const client = new SgidClient({
   clientId: process.env.CLIENT_ID as string,
   clientSecret: process.env.CLIENT_SECRET as string,
   privateKey: process.env.PRIVATE_KEY as string,
-  redirectUri: "http://localhost:3000/api/login",
+  redirectUri: "http://localhost:5173/api/login",
 });
 
 const generateUrl = (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ const login = async (req: Request, res: Response) => {
       });
 
       const token = await jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
-      res.status(200).json(token);
+      res.status(200).json({ token });
     } catch (error) {
       //database not available
       console.log(error);
@@ -43,7 +43,7 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {
     //SG ID client unavailable
     console.log(error);
-    res.redirect("/api");
+    res.redirect("/");
   }
 };
 

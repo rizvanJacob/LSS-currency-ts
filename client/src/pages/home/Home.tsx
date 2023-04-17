@@ -7,15 +7,25 @@ type props = {
 };
 
 const Home = ({ setCurrentUser: setUser }: props) => {
-  const [authUrl, setAuthUrl] = useState<String>("");
+  const [authUrl, setAuthUrl] = useState<string>("");
 
   useEffect(() => {
-    getRequest("", setAuthUrl);
+    const getAuthUrl = async () => {
+      const res = await fetch("/api");
+      const { url } = await res.json();
+      setAuthUrl(url);
+    };
+    getAuthUrl();
+    console.log(authUrl);
   }, []);
+
+  const login = async () => {};
 
   return (
     <>
-      <h1>LOG IN WITH SINGPASS</h1>
+      <a href={authUrl}>LOGIN LINK</a>
+
+      <button onClick={login}>LOG IN WITH SINGPASS</button>
       <h1>CHECK IN</h1>
     </>
   );
