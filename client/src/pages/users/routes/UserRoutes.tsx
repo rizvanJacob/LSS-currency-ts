@@ -3,16 +3,10 @@ import EditUserForm from "../edit/EditUserForm";
 import AllUsersPage from "../index/AllUsersPage";
 
 export default function UserRoutes() {
-    return (
-        <Routes>
-            <Route
-                path='/users'
-                element = {<AllUsersPage />} 
-            />
-            <Route
-                path='/users/:id/edit'
-                element = {<EditUserForm />} 
-            />
-        </Routes>
-    )
+  return (
+    <Routes>
+      <Route path="/" element={<AllUsersPage />} />
+      <Route path="/:id/edit" element={<EditUserForm />} />
+    </Routes>
+  );
 }

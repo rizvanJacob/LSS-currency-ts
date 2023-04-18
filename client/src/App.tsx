@@ -48,10 +48,10 @@ function App() {
               <TempNav />
             </div>
             <Routes>
-              <Route path="/trainees" element={<TraineesRoutes />} />
+              <Route path="/trainees/*" element={<TraineesRoutes />} />
+              <Route path="/users/*" element={<UserRoutes />} />
+              <Route path="/trainings/*" element={<TrainingRoutes />} />
             </Routes>
-            <UserRoutes />
-            <TrainingRoutes />
           </>
         </PageContext.Provider>
       ) : (
