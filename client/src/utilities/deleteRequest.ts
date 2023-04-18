@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-async function deleteRequest(url: string, id: number, setState: React.Dispatch<React.SetStateAction<any>>  ) {
+import { UserProps } from "../@types/@types.UserProps"
+async function deleteRequest(url: string, id: string, setState: React.Dispatch<React.SetStateAction<any>>) {
     try {
         await axios.delete(url, {
             headers: {
@@ -9,7 +9,7 @@ async function deleteRequest(url: string, id: number, setState: React.Dispatch<R
         });
         setState((
             prevState: {[key: string]: any}[]) =>
-            prevState.filter((state: any) => state.id !== id)
+            prevState.filter((state: any) => state.openId !== id)
         );
     } catch (err) {
         console.error(err);

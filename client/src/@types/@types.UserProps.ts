@@ -1,5 +1,5 @@
 export type UserProps = {
-    openId: number;
+    openId: string;
     accountType: number;
     displayName: string;
 }
