@@ -24,6 +24,7 @@ model User {
   createdAt       DateTime    @default(now()) @db.Timestamp(6)
   updatedAt       DateTime    @default(now()) @db.Timestamp(6)
   trainings       TrainingProvided[]
+  approved        Boolean     @default(false)
 }
 
 model TrainingProvided {

@@ -25,11 +25,17 @@ const login = async (req: Request, res: Response) => {
           displayName: true,
           authCategory: true,
           accountType: true,
+          approved: true,
         },
       });
-
-      const token = await jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
-      res.status(200).send({ token });
+      if (userData.approved) {
+        const token = await jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
+        res.status(200).json({ token });
+      } else {
+        res.status(400).json({
+          message: "requested account has not been approved by an admin",
+        });
+      }
     } catch (error: any) {
       const prismaError = error as PrismaClientKnownRequestError;
       if (prismaError.code === "P2025") {
