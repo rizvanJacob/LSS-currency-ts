@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Home = () => {
+const HomePage = (): JSX.Element => {
   const [authUrl, setAuthUrl] = useState<string>("");
 
   useEffect(() => {
@@ -25,4 +25,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
