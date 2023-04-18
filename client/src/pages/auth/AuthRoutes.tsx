@@ -2,7 +2,6 @@ import { setCurrentUserProp } from "../../@types/@types.currentUser";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Home";
 import LoginCallback from "./LoginCallback";
-import Decode from "./Decode";
 
 const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp) => {
   return (
@@ -12,7 +11,6 @@ const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp) => {
         path="/loginCallback"
         element={<LoginCallback setCurrentUser={setCurrentUser} />}
       />
-      <Route path="/decode" element={<Decode />} />
     </Routes>
   );
 };

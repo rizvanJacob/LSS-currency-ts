@@ -12,8 +12,10 @@ const LoginCallback = ({ setCurrentUser }: setCurrentUserProp) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const getCurrentUser = async () => {
-      const response = await fetch(`/api/login/${code}`);
+      const response = await fetch(`/api/login/${code}`, { signal: signal });
       const data = await response.json();
       console.log(data);
       const { token } = data;
@@ -24,6 +26,9 @@ const LoginCallback = ({ setCurrentUser }: setCurrentUserProp) => {
     };
     getCurrentUser();
     navigate("/", { replace: true });
+    return () => {
+      controller.abort;
+    };
   }, []);
   return <h1>Callback page</h1>;
 };

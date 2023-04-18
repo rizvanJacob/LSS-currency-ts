@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
+import jwt_decode from "jwt-decode";
 import { CurrentUser } from "./@types/@types.currentUser";
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
@@ -17,6 +18,14 @@ function App() {
     // }
   );
   const [page, setPage] = useState(null);
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("token") as string;
+      const decodedUser = jwt_decode(token) as CurrentUser;
+      setCurrentUser(decodedUser);
+    } catch (error) {}
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

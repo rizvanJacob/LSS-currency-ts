@@ -4,13 +4,17 @@ const Home = () => {
   const [authUrl, setAuthUrl] = useState<string>("");
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const getAuthUrl = async () => {
-      const res = await fetch("/api");
+      const res = await fetch("/api", { signal: signal });
       const { url } = await res.json();
       setAuthUrl(url);
     };
     getAuthUrl();
-    console.log(authUrl);
+    return () => {
+      controller.abort;
+    };
   }, []);
 
   return (
