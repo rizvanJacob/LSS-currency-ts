@@ -8,9 +8,9 @@ export default function DeleteUserButton({
   user: UserProps;
 }): JSX.Element {
   // Handle click event for deleting a medicine
-  const handleDeleteClick = async (id: string) => {
+  const handleDeleteClick = async (id: number) => {
     try {
-      await deleteRequest(`api/users/${id}`, user.openId, setUsers);
+      await deleteRequest(`api/users/${id}`, user.id, setUsers);
     } catch (err) {
       console.error(err);
     }
@@ -19,7 +19,7 @@ export default function DeleteUserButton({
   return (
     <td>
       <button
-        onClick={() => handleDeleteClick(user.openId)} //"user.id"
+        onClick={() => handleDeleteClick(user.id)} //"user.id"
         style={{ backgroundColor: "#E42313" }}
       >
         Delete

@@ -2,7 +2,7 @@ import axios from "axios";
 import { UserProps } from "../@types/UserProps";
 async function deleteRequest(
   url: string,
-  id: string,
+  id: number,
   setState: React.Dispatch<React.SetStateAction<any>>
 ) {
   try {
@@ -12,7 +12,7 @@ async function deleteRequest(
       },
     });
     setState((prevState: { [key: string]: any }[]) =>
-      prevState.filter((state: any) => state.openId !== id)
+      prevState.filter((state: any) => state.id !== id)
     );
   } catch (err) {
     console.error(err);
