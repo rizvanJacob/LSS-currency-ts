@@ -13,12 +13,12 @@ const usersController = {
 
     getUserById: async(req: Request, res: Response, err: any) => {
         try {
-            const { openId } = req.params;
+            const id = parseInt(req.params.id);
 
             const userData = await prisma.user.findUniqueOrThrow({
-                where: { openId },
+                where: { id },
                 select: {
-                    openId: true,
+                    id: true,
                     displayName: true,
                     accountType: true,
                 },
@@ -32,13 +32,13 @@ const usersController = {
 
     updateUserById: async(req: Request, res: Response, err: any) => {
         try {
-            const { openId } = req.params;
+            const id = parseInt(req.params.id);
             const {displayName, accountType } = req.body;
             const updatedData = await prisma.user.update({
-                where: { openId },
+                where: { id },
                 data: { displayName, accountType },
                 select: {
-                    openId: true,
+                    id: true,
                     displayName: true,
                     accountType: true,
                 },
@@ -51,9 +51,9 @@ const usersController = {
 
     deleteUserById: async (req: Request, res: Response, err: any) => {
         try {
-            const { openId } = req.params;
+            const id = parseInt(req.params.id);
             const deletedUser = await prisma.user.delete({
-                where: { openId },
+                where: { id },
             })
             res.status(200).json({message: "User deleted successfully"});
         } catch (err) {

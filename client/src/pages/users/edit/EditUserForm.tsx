@@ -6,20 +6,20 @@ import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 
 export default function EditUserForm(): JSX.Element {
-  const { openId } = useParams();
+  const { id } = useParams();
   const [user, setUser] = useState<UserProps>({
-    openId: "",
+    id: 0,
     displayName: "",
     accountType: 0,
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRequest(`/api/users/${openId}`, setUser);
+    getRequest(`/api/users/${id}`, setUser);
   }, []);
 
   const handleFormSubmit = async () => {
-    await putRequest(`/api/users/${openId}`, user, setUser);
+    await putRequest(`/api/users/${id}`, user, setUser);
     navigate(`/users`);
   };
 
@@ -36,17 +36,6 @@ export default function EditUserForm(): JSX.Element {
           {({ isSubmitting, isValidating, isValid }) => (
             <Form>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="id">ID:</label>
-                <Field
-                  type="text"
-                  id="openId"
-                  name="openId"
-                  value={user?.openId || ""}
-                  onChange={handleInputChange}
-                />
-                <ErrorMessage name="openId" />
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
                 <label htmlFor="displayName">Display Name:</label>
                 <Field
                   type="text"
@@ -60,7 +49,7 @@ export default function EditUserForm(): JSX.Element {
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label htmlFor="accountType">Account Type:</label>
                 <Field
-                  type="text"
+                  type="number"
                   id="accountType"
                   name="accountType"
                   value={user?.accountType || ""}

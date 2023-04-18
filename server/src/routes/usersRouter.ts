@@ -3,7 +3,7 @@ const router = express.Router();
 import usersController from "../controllers/usersController"
 
 router.get("/", usersController.getAllUsers);
-router.get("/:openId", usersController.getUserById);
-router.put("/:openId", usersController.updateUserById);
-router.delete("/:openId", usersController.deleteUserById);
+router.get("/:id", usersController.getUserById);
+router.put("/:id", usersController.updateUserById);
+router.delete("/:id", usersController.deleteUserById);
 export default router;

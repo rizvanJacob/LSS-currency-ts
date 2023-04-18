@@ -27,8 +27,8 @@ export default function UsersList({
         <tbody>
           {users.map((user: UserProps) => {
             return (
-              <tr key={user.openId}>
-                <td>{user.openId}</td>
+              <tr key={user.id}>
+                <td>{user.id}</td>
                 <td>{user.displayName}</td>
                 <td>{user.accountType}</td>
                 <EditUserButton user={user} />
