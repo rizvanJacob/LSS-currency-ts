@@ -5,6 +5,7 @@ import AuthRoutes from "./pages/auth/AuthRoutes";
 import jwt_decode from "jwt-decode";
 import * as dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/@types.currentUser";
+import TempNav from "./components/TempNav";
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
@@ -40,6 +41,7 @@ function App() {
           <>
             <div className="App">
               <h1>A React App made with Vite</h1>
+              <TempNav />
             </div>
             <UserRoutes />
           </>
