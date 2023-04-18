@@ -33,7 +33,7 @@ const login = async (req: Request, res: Response) => {
         res.status(200).json({ token });
       } else {
         res.status(400).json({
-          message: "requested account has not been approved by an admin",
+          alert: "Your requested account has not been approved",
         });
       }
     } catch (error: any) {

@@ -16,7 +16,8 @@ const LoginCallback = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
       controller.abort;
     };
   }, []);
-  return <h1>Callback page</h1>;
+
+  return <>Authorizing...</>;
 };
 
 export default LoginCallback;
@@ -37,8 +38,10 @@ const attemptLogin = async (
     setCurrentUser(currentUser);
     navigate("/", { replace: true });
   } else if (response.status === 404) {
-    console.log(response);
     const openId = await response.json();
     navigate(`/new/${openId}`);
+  } else if (response.status === 400) {
+    alert("Your requested account has not been approved");
+    navigate("/", { replace: true });
   }
 };

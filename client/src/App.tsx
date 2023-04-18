@@ -10,22 +10,25 @@ import { CurrentUser, UserPayload } from "./@types/currentUser";
 import TempNav from "./components/TempNav";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
+const AUTHORISE = true;
+const CURRENT_USER = {
+  accountId: 1,
+  accountType: 1,
+  category: 1,
+};
+
 const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
 
 function App() {
   const currentUserContextValue = useContext(CurrentUserContext);
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(
-    //null
-    currentUserContextValue || {
-      accountId: 1,
-      accountType: 1,
-      category: 1,
-    }
-  );
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [page, setPage] = useState(null);
 
   useEffect(() => {
+    if (!AUTHORISE) {
+      setCurrentUser(CURRENT_USER);
+    }
     try {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
