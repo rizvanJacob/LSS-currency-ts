@@ -17,7 +17,7 @@ function App() {
     currentUserContextValue ||
        {
        accountId: 1,
-       accountType: "admin",
+       accountType: 1,
        category: 1,
      }
   );
