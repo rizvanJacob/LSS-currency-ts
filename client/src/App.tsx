@@ -3,7 +3,8 @@ import { useState, useEffect, createContext, useContext } from "react";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import jwt_decode from "jwt-decode";
-import { CurrentUser } from "./@types/@types.currentUser";
+import * as dayjs from "dayjs";
+import { CurrentUser, UserPayload } from "./@types/@types.currentUser";
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
@@ -22,8 +23,13 @@ function App() {
   useEffect(() => {
     try {
       const token = localStorage.getItem("token") as string;
-      const decodedUser = jwt_decode(token) as CurrentUser;
-      setCurrentUser(decodedUser);
+      const decoded = jwt_decode(token) as UserPayload;
+
+      if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
+        setCurrentUser(decoded as CurrentUser);
+      } else {
+        localStorage.clear();
+      }
     } catch (error) {}
   }, []);
 
