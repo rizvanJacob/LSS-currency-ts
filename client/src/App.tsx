@@ -11,13 +11,15 @@ const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
 
 function App() {
+  const currentUserContextValue = useContext(CurrentUserContext);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(
-    null
-    //   {
-    //   accountId: 1,
-    //   accountType: "admin",
-    //   category: 1,
-    // }
+    //null
+    currentUserContextValue ||
+       {
+       accountId: 1,
+       accountType: 1,
+       category: 1,
+     }
   );
   const [page, setPage] = useState(null);
 
