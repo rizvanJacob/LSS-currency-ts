@@ -3,3 +3,7 @@ export type CurrentUser = {
   accountType: "admin" | "traineeAdmin" | "trainee" | "trainer";
   category?: Number;
 };
+
+export type setCurrentUserProp = {
+  setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
+};

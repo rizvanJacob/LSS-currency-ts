@@ -1,18 +1,21 @@
 import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
 import UserRoutes from "./pages/users/routes/UserRoutes";
-import Auth from "./pages/home/Auth";
+import AuthRoutes from "./pages/auth/AuthRoutes";
 import { CurrentUser } from "./@types/@types.currentUser";
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>({
-    accountId: 1,
-    accountType: "admin",
-    category: 1,
-  });
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(
+    null
+    //   {
+    //   accountId: 1,
+    //   accountType: "admin",
+    //   category: 1,
+    // }
+  );
   const [page, setPage] = useState(null);
 
   return (
@@ -27,7 +30,7 @@ function App() {
           </>
         </PageContext.Provider>
       ) : (
-        <Auth setCurrentUser={setCurrentUser} />
+        <AuthRoutes setCurrentUser={setCurrentUser} />
       )}
     </CurrentUserContext.Provider>
   );
