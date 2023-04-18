@@ -9,6 +9,7 @@ connectDb();
 import authRouter from "./routes/authRouter";
 import usersRouter from "./routes/usersRouter";
 import traineesRouter from "./routes/traineesRouter";
+import lookupRouter from "./routes/lookupRouter";
 // import trainingsRouter from "./routes/trainingsRouter"
 
 const app = express();
@@ -21,6 +22,7 @@ app.use("/api/", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/trainees", traineesRouter);
 // app.use("/api/trainings", trainingsRouter)
+app.use("/api/lookup", lookupRouter);
 
 app.get("/", (req, res) => {
   res.send("connected to express server");

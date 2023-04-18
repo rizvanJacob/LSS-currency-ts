@@ -1,11 +1,11 @@
 import "./App.css";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import jwt_decode from "jwt-decode";
 import * as dayjs from "dayjs";
-import { CurrentUser, UserPayload } from "./@types/@types.currentUser";
+import { CurrentUser, UserPayload } from "./@types/currentUser";
 import TempNav from "./components/TempNav";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 

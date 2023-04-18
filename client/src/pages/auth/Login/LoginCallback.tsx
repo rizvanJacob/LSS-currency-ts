@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import {
-  CurrentUser,
-  setCurrentUserProp,
-} from "../../../@types/@types.currentUser";
+import { CurrentUser, setCurrentUserProp } from "../../../@types/currentUser";
 
 const LoginCallback = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
   const [searchParams] = useSearchParams();

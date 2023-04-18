@@ -8,11 +8,8 @@ export type setCurrentUserProp = {
   setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
 };
 
-export type UserPayload = {
-  accountId: number;
+export type UserPayload = CurrentUser & {
   displayName: string;
-  accountType: number;
-  category?: number;
   iat: number;
   exp: number;
 };

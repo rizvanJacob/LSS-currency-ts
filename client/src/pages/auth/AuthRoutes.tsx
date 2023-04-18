@@ -1,4 +1,4 @@
-import { setCurrentUserProp } from "../../@types/@types.currentUser";
+import { setCurrentUserProp } from "../../@types/currentUser";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage";
 import LoginCallback from "./Login/LoginCallback";
