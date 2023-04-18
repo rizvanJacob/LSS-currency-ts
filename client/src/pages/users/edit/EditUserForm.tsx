@@ -39,17 +39,6 @@ return (
           {({ isSubmitting, isValidating, isValid }) => (
             <Form>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="id">ID:</label>
-                <Field
-                  type="number"
-                  id="id"
-                  name="id"
-                  value={user?.id || ''}
-                  onChange = {handleInputChange}
-                />
-                <ErrorMessage name="id" />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
                   <label htmlFor="displayName">Display Name:</label>
                   <Field
                       type="text"
