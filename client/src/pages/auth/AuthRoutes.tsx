@@ -1,18 +1,18 @@
 import { setCurrentUserProp } from "../../@types/@types.currentUser";
 import { Route, Routes } from "react-router-dom";
-import Home from "./Home";
-import LoginCallback from "./LoginCallback";
-import Decode from "./Decode";
+import HomePage from "./HomePage";
+import LoginCallback from "./Login/LoginCallback";
+import SignUpPage from "./SignUp/SignUpPage";
 
-const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp) => {
+const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/*" element={<HomePage />} />
       <Route
         path="/loginCallback"
         element={<LoginCallback setCurrentUser={setCurrentUser} />}
       />
-      <Route path="/decode" element={<Decode />} />
+      <Route path="/new/:openId" element={<SignUpPage />} />
     </Routes>
   );
 };
