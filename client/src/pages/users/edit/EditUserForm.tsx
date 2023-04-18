@@ -3,26 +3,37 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { UserProps } from "../../../@types/@types.UserProps"
 import getRequest from "../../../utilities/getRequest"
+import putRequest from "../../../utilities/putRequest"
 
 export default function EditUserForm(): JSX.Element {
     const { openId } = useParams();
-    const [user, setUser] = useState<UserProps | null>(null);
+    const [user, setUser] = useState<UserProps>({
+      openId: '',
+      displayName: '',
+      accountType: 0,
+    });
     const navigate = useNavigate();
 
     useEffect(() => {
         getRequest(`/api/users/${openId}`, setUser);
     }, [])
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
+        await putRequest(`/api/users/${openId}`, user, setUser);
         navigate(`/users`);
     }
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setUser({...user, [name]: value});
+    };
 
 return (
     <fieldset>
       <h1>Update User Form</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Formik
-          initialValues={user || {}}
+          initialValues={user}
           onSubmit={handleFormSubmit}
           >
           {({ isSubmitting, isValidating, isValid }) => (
@@ -34,6 +45,7 @@ return (
                   id="openId"
                   name="openId"
                   value={user?.openId || ''}
+                  onChange = {handleInputChange}
                 />
                 <ErrorMessage name="openId" />
               </div>
@@ -44,6 +56,7 @@ return (
                       id="displayName"
                       name="displayName"
                       value={user?.displayName || ''}
+                      onChange = {handleInputChange}
                   />
                   <ErrorMessage name="displayName" />
               </div>
@@ -54,6 +67,7 @@ return (
                       id="accountType"
                       name="accountType"
                       value={user?.accountType || ''}
+                      onChange = {handleInputChange}
                   />
                   <ErrorMessage name="accountType" />
               </div>
