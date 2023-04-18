@@ -1,5 +1,5 @@
 import deleteRequest from "../../../utilities/getRequest";
-import { UserProps } from "../index/AllUsersPage";
+import { UserProps } from "../../../@types/@types.UserProps"
 export default function DeleteUserButton({setUsers, user}: {setUsers: React.Dispatch<React.SetStateAction<UserProps[]>>, user: UserProps}): JSX.Element {
     // Handle click event for deleting a medicine
     const handleDeleteClick = async (id: number) => {
@@ -13,7 +13,7 @@ export default function DeleteUserButton({setUsers, user}: {setUsers: React.Disp
   return (
     <td>
       <button
-        onClick={() => handleDeleteClick(user.id)} //"user.id"
+        onClick={() => handleDeleteClick(user.openId)} //"user.id"
         style={{ backgroundColor: '#E42313' }}>
         Delete
       </button>
