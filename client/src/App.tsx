@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
+import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
 import * as dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/@types.currentUser";
@@ -46,6 +47,7 @@ function App() {
               <TempNav />
             </div>
             <UserRoutes />
+            <TrainingRoutes />
           </>
         </PageContext.Provider>
       ) : (
