@@ -8,13 +8,15 @@ const CurrentUserContext = createContext<CurrentUser | null>(null);
 const PageContext = createContext(null);
 
 function App() {
+  const currentUserContextValue = useContext(CurrentUserContext);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(
-    null
-    //   {
-    //   accountId: 1,
-    //   accountType: "admin",
-    //   category: 1,
-    // }
+    //null
+    currentUserContextValue ||
+       {
+       accountId: 1,
+       accountType: "admin",
+       category: 1,
+     }
   );
   const [page, setPage] = useState(null);
 
@@ -24,7 +26,7 @@ function App() {
         <PageContext.Provider value={page}>
           <>
             <div className="App">
-              <h1>A React App made with Vite</h1>
+              <h1>Tracking & Booking App</h1>
             </div>
             <UserRoutes />
           </>
