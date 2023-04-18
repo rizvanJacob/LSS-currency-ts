@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
 import EditUserRoute from "./pages/users/edit/routes/EditUserRoute";
 import UsersPageRoute from "./pages/users/index/routes/UsersPageRoute";
-import Home from "./pages/home/Home";
+import Home from "./pages/home/Auth";
 import { CurrentUser } from "./@types/@types.currentUser";
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
