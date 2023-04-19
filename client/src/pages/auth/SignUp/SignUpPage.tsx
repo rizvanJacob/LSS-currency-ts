@@ -21,6 +21,9 @@ const SignUpPage = (): JSX.Element => {
     callsign: "",
     category: 0,
   });
+  const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
+    []
+  );
 
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
@@ -81,7 +84,12 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
             {user.accountType == 4 && (
-              <TrainerFieldset user={user} handleChange={handleUserChange} />
+              <TrainerFieldset
+                user={user}
+                handleChange={handleUserChange}
+                requirementsProvided={requirementsProvided}
+                setRequirementsProvided={setRequirementsProvided}
+              />
             )}
 
             <button>Request Account</button>
