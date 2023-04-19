@@ -7,10 +7,8 @@ export default function EditUserButton({
   user: User;
 }): JSX.Element {
   return (
-    <>
       <Link to={`${user.id}/edit`}>
         <button style={{ backgroundColor: "#00A0A0" }}>✏️</button>
       </Link>
-    </>
   );
 }
