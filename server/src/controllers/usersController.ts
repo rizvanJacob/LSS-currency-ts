@@ -1,9 +1,23 @@
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
-
 const usersController = {
 
-    createUser: async (req: Request, res:Response, err: any) => {},
+    createUser: async (req: Request, res: Response, err: any) => {
+        const { openId, accountType, displayName } = req.body;
+        console.log("req.body", req.body);
+        try {
+            const user = await prisma.user.create({
+                data: {
+                    openId: openId,
+                    accountType: parseInt(accountType),
+                    displayName: displayName,
+                },
+            })
+            res.status(200).json(user);
+        } catch (err) {
+            res.status(500).json({err})
+        }
+    },
 
     getAllUsers: async (err: any, res: Response) => {
         try {

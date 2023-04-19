@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../../utilities/getRequest";
+import postRequest from "../../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
 
 import AdminFieldSet from "./FormComponents/AdminFieldset";
@@ -33,13 +34,15 @@ const SignUpPage = (): JSX.Element => {
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
-
+  const navigate = useNavigate(); 
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
   }, []);
 
   const handleSubmit = () => {
-    console.log("submit form");
+    postRequest("/api/users", user, setUser);
+    alert("Please wait for your account to be approved");
+    navigate("/", { replace: true });
   };
 
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
