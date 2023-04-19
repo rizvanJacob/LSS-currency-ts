@@ -11,7 +11,7 @@ export type UsersListProps = {
   accountTypes: SimpleLookup[];
 };
 
-export default function UsersList({
+export default function ApprovedUsersList({
   users,
   setUsers,
   accountTypes,

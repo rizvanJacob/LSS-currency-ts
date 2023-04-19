@@ -2,6 +2,9 @@ import { prisma } from "../config/database";
 import { Request, Response } from "express";
 
 const usersController = {
+
+    createUser: async (req: Request, res:Response, err: any) => {},
+
     getAllUsers: async (err: any, res: Response) => {
         try {
             const allUsers = await prisma.user.findMany({
@@ -39,7 +42,6 @@ const usersController = {
         try {
             const id = parseInt(req.params.id);
             const {displayName, accountType, approved } = req.body;
-            console.log(approved);
             const updatedData = await prisma.user.update({
                 where: { id },
                 data: { displayName, accountType, approved},
