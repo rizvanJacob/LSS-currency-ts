@@ -17,13 +17,11 @@ export default function DeleteUserButton({
   };
 
   return (
-    <td>
       <button
-        onClick={() => handleDeleteClick(user.id)} //"user.id"
+        onClick={() => handleDeleteClick(user.id)} 
         style={{ backgroundColor: "#E42313" }}
       >
         ❌
       </button>
-    </td>
   );
 }

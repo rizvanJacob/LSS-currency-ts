@@ -37,8 +37,8 @@ export default function UsersList({
                 <td>{user.displayName}</td>
                 <td>{accountType ? accountType.name : ""}</td>
                 <td>{user.approved ? "Approved" : "Not Approved"}</td>
-                <EditUserButton user={user} />
-                <DeleteUserButton setUsers={setUsers} user={user} />
+                <td><EditUserButton user={user} /></td>
+                <td><DeleteUserButton setUsers={setUsers} user={user} /></td>
               </tr>
             );
           })}
