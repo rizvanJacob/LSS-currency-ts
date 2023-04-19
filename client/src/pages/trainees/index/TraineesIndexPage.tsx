@@ -27,6 +27,7 @@ const TraineesIndexPage = (): JSX.Element => {
             <th>Callsign</th>
             <th>Category</th>
             <th>Overall Status</th>
+            <th>Account Status</th>
             <th colSpan={2}>Actions</th>
           </tr>
         </thead>
@@ -36,7 +37,7 @@ const TraineesIndexPage = (): JSX.Element => {
               trainee={t}
               key={t.id}
               category={t.categories.name}
-              status={t.status || ""}
+              overallStatus={t.status || ""}
             />
           ))}
         </tbody>

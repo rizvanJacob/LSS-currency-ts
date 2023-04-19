@@ -11,8 +11,18 @@ export type Trainee = NewTrainee & {
     name: string;
   };
   user: number;
-  currencies: {
-    expiry: Date;
-  }[];
+  users: {
+    approved: boolean;
+  };
+  currencies: Currency[];
   status?: string;
+};
+
+export type Currency = {
+  id?: number;
+  expiry: Date;
+  requirements?: {
+    name: string;
+  };
+  seniority?: boolean;
 };

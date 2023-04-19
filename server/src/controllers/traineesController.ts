@@ -31,6 +31,7 @@ const show = async (req: Request, res: Response) => {
         categories: { select: { name: true } },
         currencies: {
           select: {
+            id: true,
             requirements: { select: { name: true } },
             seniority: true,
             expiry: true,
