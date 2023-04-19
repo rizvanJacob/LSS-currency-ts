@@ -1,5 +1,5 @@
 import { Field } from "formik";
-import { NewUser } from "../../../../@types/UserProps";
+import { NewUser } from "../../../../@types/user";
 import { useState, useEffect } from "react";
 import getRequest from "../../../../utilities/getRequest";
 import { Requirement } from "../../../../@types/lookup";
