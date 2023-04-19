@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import getRequest from "../../../utilities/getRequest";
-import { SimpleLookup } from "../../../@types/lookup";
-import { UserProps, NewUser } from "../../../@types/UserProps";
 import { Field, Form, Formik } from "formik";
+
 import AdminFieldSet from "./FormComponents/AdminFieldset";
 import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";
 import TraineeFieldset from "./FormComponents/TraineeFieldset";
-import { NewTrainee } from "../../../@types/trainee";
 import TrainerFieldset from "./FormComponents/TrainerFieldset";
+
+import { SimpleLookup } from "../../../@types/lookup";
+import { NewUser } from "../../../@types/UserProps";
+import { NewTrainee } from "../../../@types/trainee";
+
+const blankUser = {
+  displayName: "",
+  accountType: 0,
+};
+
+const blankTrainee = {
+  callsign: "",
+  category: 0,
+};
 
 const SignUpPage = (): JSX.Element => {
   const location = useLocation();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
   const [user, setUser] = useState<NewUser>({
-    displayName: "",
-    accountType: 0,
+    ...blankUser,
+    openId: location.state?.openId,
   });
-  const [trainee, setTrainee] = useState<NewTrainee>({
-    callsign: "",
-    category: 0,
-  });
+  const [trainee, setTrainee] = useState<NewTrainee>(blankTrainee);
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
