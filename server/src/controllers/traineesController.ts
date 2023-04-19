@@ -39,7 +39,11 @@ const show = async (req: Request, res: Response) => {
         },
       },
     });
-    res.status(200).json(trainee);
+    if (trainee) {
+      res.status(200).json(trainee);
+    } else {
+      res.status(404);
+    }
   } catch (error) {
     console.log(error);
     res.status(500);

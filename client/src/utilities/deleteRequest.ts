@@ -1,10 +1,12 @@
 import axios from "axios";
 import { UserProps } from "../@types/UserProps";
+
 async function deleteRequest(
   url: string,
   id: number,
   setState: React.Dispatch<React.SetStateAction<any>>
 ) {
+  console.log("fire delete request");
   try {
     await axios.delete(url, {
       headers: {
