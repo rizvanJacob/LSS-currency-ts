@@ -12,7 +12,14 @@ const categories = async (req: Request, res: Response) => {
 
 const statuses = async (req: Request, res: Response) => {};
 
-const requirements = async (req: Request, res: Response) => {};
+const requirements = async (req: Request, res: Response) => {
+  try {
+    const requirements = await prisma.requirement.findMany();
+    res.status(200).json(requirements);
+  } catch (error) {
+    res.send(500);
+  }
+};
 
 const accountTypes = async (req: Request, res: Response) => {
   try {

@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import getRequest from "../../../utilities/getRequest";
-import { Trainee } from "../../../@types/trainee";
 import TableRow from "./components/TableRow";
+import { Trainee } from "../../../@types/trainee";
+import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
 
 const TraineesIndexPage = (): JSX.Element => {
-  const [trainees, setTrainees] = useState<Trainee[] | null>(null);
-  const [categories, setCategories] = useState<string[] | null>(null);
+  const [trainees, setTrainees] = useState<Trainee[]>([]);
+  const [fetchFlag, setFetchFlag] = useState<boolean>(false);
 
   useEffect(() => {
-    getRequest("/api/trainees", setTrainees);
-    getRequest("/api/lookup/categories", setCategories);
+    getRequest("/api/trainees", setTrainees).then(() => {
+      setFetchFlag(!fetchFlag);
+    });
   }, []);
+
+  useEffect(() => {
+    computeOverallStatus(trainees, setTrainees);
+  }, [fetchFlag]);
 
   return (
     <>
@@ -21,6 +27,7 @@ const TraineesIndexPage = (): JSX.Element => {
             <th>Callsign</th>
             <th>Category</th>
             <th>Overall Status</th>
+            <th>Account Status</th>
             <th colSpan={2}>Actions</th>
           </tr>
         </thead>
@@ -29,11 +36,13 @@ const TraineesIndexPage = (): JSX.Element => {
             <TableRow
               trainee={t}
               key={t.id}
-              category={categories?.[t.category]}
+              category={t.categories.name}
+              overallStatus={t.status || ""}
             />
           ))}
         </tbody>
       </table>
+      <p>{JSON.stringify(trainees)}</p>
     </>
   );
 };

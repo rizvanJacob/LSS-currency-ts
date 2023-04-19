@@ -1,27 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import getRequest from "../../../utilities/getRequest";
-import { SimpleLookup } from "../../../@types/lookup";
-import { User } from "../../../@types/user";
 import { Field, Form, Formik } from "formik";
+
 import AdminFieldSet from "./FormComponents/AdminFieldset";
 import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";
 import TraineeFieldset from "./FormComponents/TraineeFieldset";
+import TrainerFieldset from "./FormComponents/TrainerFieldset";
+
+import { SimpleLookup } from "../../../@types/lookup";
+import { NewUser } from "../../../@types/user";
 import { NewTrainee } from "../../../@types/trainee";
+
+const blankUser = {
+  displayName: "",
+  accountType: 0,
+};
+
+const blankTrainee = {
+  callsign: "",
+  category: 0,
+};
 
 const SignUpPage = (): JSX.Element => {
   const location = useLocation();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
-  const [user, setUser] = useState<User>({
-    id: 0,
-    displayName: "",
-    accountType: 0,
-    approved: false,
+  const [user, setUser] = useState<NewUser>({
+    ...blankUser,
+    openId: location.state?.openId,
   });
-  const [trainee, setTrainee] = useState<NewTrainee>({
-    callsign: "",
-    category: 0,
-  });
+  const [trainee, setTrainee] = useState<NewTrainee>(blankTrainee);
+  const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
+    []
+  );
 
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
@@ -79,6 +90,14 @@ const SignUpPage = (): JSX.Element => {
               <TraineeFieldset
                 trainee={trainee}
                 handleChange={handleTraineeChange}
+              />
+            )}
+            {user.accountType == 4 && (
+              <TrainerFieldset
+                user={user}
+                handleChange={handleUserChange}
+                requirementsProvided={requirementsProvided}
+                setRequirementsProvided={setRequirementsProvided}
               />
             )}
 

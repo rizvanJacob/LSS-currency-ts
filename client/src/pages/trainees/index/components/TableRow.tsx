@@ -1,11 +1,21 @@
-import { TraineeProp } from "../../../../@types/trainee";
+import { Trainee } from "../../../../@types/trainee";
+import { Link } from "react-router-dom";
 
-const TableRow = ({ trainee, category }: TraineeProp): JSX.Element => {
+type Prop = {
+  trainee: Trainee;
+  category: string;
+  overallStatus: string;
+};
+
+const TableRow = ({ trainee, category, overallStatus }: Prop): JSX.Element => {
   return (
     <tr>
-      <td>{trainee.callsign}</td>
+      <td>
+        <Link to={`${trainee.id}`}>{trainee.callsign}</Link>
+      </td>
       <td>{category}</td>
-      <td>{1}</td>
+      <td>{overallStatus}</td>
+      <td>{trainee.users.approved ? "Active" : "Inactive"}</td>
       <td>Edit</td>
       <td>Delete</td>
     </tr>
