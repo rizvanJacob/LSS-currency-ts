@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect, createContext, useContext } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
@@ -18,12 +18,10 @@ const CURRENT_USER = {
 };
 
 const CurrentUserContext = createContext<CurrentUser | null>(null);
-const PageContext = createContext(null);
 
 function App() {
   const currentUserContextValue = useContext(CurrentUserContext);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
-  const [page, setPage] = useState(null);
 
   useEffect(() => {
     if (!AUTHORISE) {
@@ -44,19 +42,17 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       {currentUser ? (
-        <PageContext.Provider value={page}>
-          <>
-            <div className="App">
-              <h1>A React App made with Vite</h1>
-              <TempNav />
-            </div>
-            <Routes>
-              <Route path="/trainees/*" element={<TraineesRoutes />} />
-              <Route path="/users/*" element={<UserRoutes />} />
-              <Route path="/trainings/*" element={<TrainingRoutes />} />
-            </Routes>
-          </>
-        </PageContext.Provider>
+        <>
+          <div className="App">
+            <h1>A React App made with Vite</h1>
+            <TempNav />
+          </div>
+          <Routes>
+            <Route path="/trainees/*" element={<TraineesRoutes />} />
+            <Route path="/users/*" element={<UserRoutes />} />
+            <Route path="/trainings/*" element={<TrainingRoutes />} />
+          </Routes>
+        </>
       ) : (
         <AuthRoutes setCurrentUser={setCurrentUser} />
       )}

@@ -1,7 +1,10 @@
-export type Trainee = {
-  id: number;
+export type NewTrainee = {
   callsign: string;
   category: number;
+};
+
+export type Trainee = NewTrainee & {
+  id: number;
   createdAt: Date;
   updatedAt: Date;
   user: number;

@@ -39,7 +39,7 @@ const attemptLogin = async (
     navigate("/", { replace: true });
   } else if (response.status === 404) {
     const openId = await response.json();
-    navigate(`/new/${openId}`);
+    navigate("/new", { state: { openId }, replace: true });
   } else if (response.status === 400) {
     alert("Your requested account has not been approved");
     navigate("/", { replace: true });

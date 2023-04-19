@@ -12,7 +12,7 @@ const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
         path="/loginCallback"
         element={<LoginCallback setCurrentUser={setCurrentUser} />}
       />
-      <Route path="/new/:openId" element={<SignUpPage />} />
+      <Route path="/new" element={<SignUpPage />} />
     </Routes>
   );
 };
