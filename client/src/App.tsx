@@ -20,7 +20,6 @@ const CURRENT_USER = {
 const CurrentUserContext = createContext<CurrentUser | null>(null);
 
 function App() {
-  const currentUserContextValue = useContext(CurrentUserContext);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {

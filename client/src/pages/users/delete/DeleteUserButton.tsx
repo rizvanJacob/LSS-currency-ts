@@ -1,11 +1,11 @@
 import deleteRequest from "../../../utilities/deleteRequest";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
 export default function DeleteUserButton({
   setUsers,
   user,
 }: {
-  setUsers: React.Dispatch<React.SetStateAction<UserProps[]>>;
-  user: UserProps;
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  user: User;
 }): JSX.Element {
   // Handle click event for deleting a medicine
   const handleDeleteClick = async (id: number) => {
@@ -22,7 +22,7 @@ export default function DeleteUserButton({
         onClick={() => handleDeleteClick(user.id)} //"user.id"
         style={{ backgroundColor: "#E42313" }}
       >
-        Delete
+        ❌
       </button>
     </td>
   );

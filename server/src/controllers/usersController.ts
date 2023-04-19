@@ -4,7 +4,11 @@ import { Request, Response } from "express";
 const usersController = {
     getAllUsers: async (err: any, res: Response) => {
         try {
-            const allUsers = await prisma.user.findMany({})
+            const allUsers = await prisma.user.findMany({
+                orderBy: {
+                    id: "asc"
+                }
+            })
             res.status(200).json(allUsers);
         } catch (err) {
             res.status(500).json({err});
@@ -21,6 +25,7 @@ const usersController = {
                     id: true,
                     displayName: true,
                     accountType: true,
+                    approved: true,
                 },
             });
             console.log(userData);
@@ -33,14 +38,16 @@ const usersController = {
     updateUserById: async(req: Request, res: Response, err: any) => {
         try {
             const id = parseInt(req.params.id);
-            const {displayName, accountType } = req.body;
+            const {displayName, accountType, approved } = req.body;
+            console.log(approved);
             const updatedData = await prisma.user.update({
                 where: { id },
-                data: { displayName, accountType },
+                data: { displayName, accountType, approved},
                 select: {
                     id: true,
                     displayName: true,
                     accountType: true,
+                    approved: true,
                 },
             });
             res.status(200).json(updatedData);
@@ -52,7 +59,7 @@ const usersController = {
     deleteUserById: async (req: Request, res: Response, err: any) => {
         try {
             const id = parseInt(req.params.id);
-            const deletedUser = await prisma.user.delete({
+            await prisma.user.delete({
                 where: { id },
             })
             res.status(200).json({message: "User deleted successfully"});

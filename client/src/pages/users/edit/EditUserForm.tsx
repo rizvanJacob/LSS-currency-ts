@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
+import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
-  const [user, setUser] = useState<UserProps>({
+  const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
+  const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
     accountType: 0,
+    approved: false,
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     getRequest(`/api/users/${id}`, setUser);
+    getRequest(`/api/lookup/accountTypes`, setAccountTypes);
   }, []);
+
 
   const handleFormSubmit = async () => {
     await putRequest(`/api/users/${id}`, user, setUser);
@@ -28,6 +33,13 @@ export default function EditUserForm(): JSX.Element {
     setUser({ ...user, [name]: value });
   };
 
+  const handleToggleApprovedStatus = async () => {
+    const updatedUser = { ...user, approved: !user.approved };
+    console.log("handleToggle", updatedUser);
+    setUser(updatedUser);
+    await putRequest(`/api/users/${id}`, updatedUser, setUser);
+  };
+
   return (
     <fieldset>
       <h1>Update User Form</h1>
@@ -36,7 +48,7 @@ export default function EditUserForm(): JSX.Element {
           {({ isSubmitting, isValidating, isValid }) => (
             <Form>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="displayName">Display Name:</label>
+                <label>Display Name:</label>
                 <Field
                   type="text"
                   id="displayName"
@@ -47,15 +59,38 @@ export default function EditUserForm(): JSX.Element {
                 <ErrorMessage name="displayName" />
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="accountType">Account Type:</label>
+                <label>Account Type:</label>
                 <Field
-                  type="number"
+                  as="select"
                   id="accountType"
                   name="accountType"
                   value={user?.accountType || ""}
                   onChange={handleInputChange}
-                />
+                >
+                  {accountTypes?.map((type) => {
+                    return (
+                      <option value={type.id} key={type.id}>
+                        {type.name}
+                      </option>
+                    )
+                  })}
+                </Field>
                 <ErrorMessage name="accountType" />
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <label>Account Status:</label>
+                <a>{user?.approved ? "Approved" : "Not Approved"}</a>
+                {!user?.approved && (
+                  <button
+                    type="button"
+                    id="approved"
+                    name="approved"
+                    onClick={handleToggleApprovedStatus}
+                    style={{ marginLeft: "0.5rem" }}
+                  >
+                    ✔️
+                  </button>
+                )}
               </div>
               <div style={{ marginTop: "2rem", textAlign: "center" }}>
                 <button

@@ -9,7 +9,7 @@ import TraineeFieldset from "./FormComponents/TraineeFieldset";
 import TrainerFieldset from "./FormComponents/TrainerFieldset";
 
 import { SimpleLookup } from "../../../@types/lookup";
-import { NewUser } from "../../../@types/UserProps";
+import { NewUser } from "../../../@types/user";
 import { NewTrainee } from "../../../@types/trainee";
 
 const blankUser = {

@@ -14,7 +14,6 @@ const trainingsController = {
                         },
                     }, 
             })
-            console.log(allTrainings);
             res.status(200).json(allTrainings);
         } catch (err) {
             res.status(500).json({err});

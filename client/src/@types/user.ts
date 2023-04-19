@@ -1,3 +1,4 @@
+
 export type NewUser = {
   openId: string;
   accountType: number;
@@ -5,9 +6,10 @@ export type NewUser = {
   authCategory?: number;
 };
 
-export type UserProps = NewUser & {
+export type User = NewUser & {
   id: number;
   accountType: number;
   displayName: string;
+  approved: boolean;
   authCategory?: number;
 };

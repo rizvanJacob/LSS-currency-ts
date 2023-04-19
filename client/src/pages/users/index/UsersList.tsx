@@ -2,16 +2,19 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import EditUserButton from "../edit/EditUserButton";
 import DeleteUserButton from "../delete/DeleteUserButton";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
+import { SimpleLookup } from "../../../@types/lookup";
 
 export type UsersListProps = {
-  users: UserProps[];
-  setUsers: React.Dispatch<React.SetStateAction<UserProps[]>>;
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  accountTypes: SimpleLookup[];
 };
 
 export default function UsersList({
   users,
   setUsers,
+  accountTypes,
 }: UsersListProps): JSX.Element {
   return (
     <>
@@ -21,16 +24,19 @@ export default function UsersList({
             <th>ID</th>
             <th>Name</th>
             <th>Account Type</th>
+            <th>Account Status</th>
             <th colSpan={2}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user: UserProps) => {
+          {users.map((user: User) => {
+            const accountType = accountTypes.find((type) => type.id === user.accountType);
             return (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.displayName}</td>
-                <td>{user.accountType}</td>
+                <td>{accountType ? accountType.name : ""}</td>
+                <td>{user.approved ? "Approved" : "Not Approved"}</td>
                 <EditUserButton user={user} />
                 <DeleteUserButton setUsers={setUsers} user={user} />
               </tr>
