@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import getRequest from "../../../utilities/getRequest";
-import { Trainee } from "../../../@types/trainee";
 import TableRow from "./components/TableRow";
+import { Trainee } from "../../../@types/trainee";
+import { SimpleLookup } from "../../../@types/lookup";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[] | null>(null);
-  const [categories, setCategories] = useState<string[] | null>(null);
+  const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
     getRequest("/api/trainees", setTrainees);
@@ -26,11 +27,7 @@ const TraineesIndexPage = (): JSX.Element => {
         </thead>
         <tbody>
           {trainees?.map((t) => (
-            <TableRow
-              trainee={t}
-              key={t.id}
-              category={categories?.[t.category]}
-            />
+            <TableRow trainee={t} key={t.id} category="not fixed" />
           ))}
         </tbody>
       </table>
