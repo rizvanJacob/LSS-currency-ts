@@ -22,7 +22,7 @@ export default function DeleteUserButton({
         onClick={() => handleDeleteClick(user.id)} //"user.id"
         style={{ backgroundColor: "#E42313" }}
       >
-        Delete
+        ❌
       </button>
     </td>
   );

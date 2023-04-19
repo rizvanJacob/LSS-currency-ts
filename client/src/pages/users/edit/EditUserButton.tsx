@@ -9,7 +9,7 @@ export default function EditUserButton({
   return (
     <>
       <Link to={`${user.id}/edit`}>
-        <button style={{ backgroundColor: "#00A0A0" }}>Edit</button>
+        <button style={{ backgroundColor: "#00A0A0" }}>✏️</button>
       </Link>
     </>
   );

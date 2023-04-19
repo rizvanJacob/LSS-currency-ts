@@ -1,12 +1,12 @@
 import { Field } from "formik";
 import { useEffect, useState } from "react";
 import getRequest from "../../../../utilities/getRequest";
-import { UserProps } from "../../../../@types/user";
+import { User } from "../../../../@types/user";
 import { SimpleLookup } from "../../../../@types/lookup";
 import { NewTrainee } from "../../../../@types/trainee";
 
 type Prop = {
-  user: UserProps;
+  user: User;
   handleChange: any;
   setTrainee: React.Dispatch<React.SetStateAction<NewTrainee>>;
 };

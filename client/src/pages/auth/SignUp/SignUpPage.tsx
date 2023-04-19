@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import getRequest from "../../../utilities/getRequest";
 import { SimpleLookup } from "../../../@types/lookup";
-import { UserProps } from "../../../@types/user";
+import { User } from "../../../@types/user";
 import { Field, Form, Formik } from "formik";
 import AdminFieldSet from "./FormComponents/AdminFieldset";
 import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";
@@ -12,10 +12,11 @@ import { NewTrainee } from "../../../@types/trainee";
 const SignUpPage = (): JSX.Element => {
   const location = useLocation();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
-  const [user, setUser] = useState<UserProps>({
+  const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
     accountType: 0,
+    approved: false,
   });
   const [trainee, setTrainee] = useState<NewTrainee>({
     callsign: "",
