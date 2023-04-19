@@ -1,6 +1,6 @@
 
 
-export type TrainingProps = {
+export type Training = {
     id: number;
     capacity: number;
     start: Date;

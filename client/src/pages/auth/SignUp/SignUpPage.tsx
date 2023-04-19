@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import getRequest from "../../../utilities/getRequest";
 import { SimpleLookup } from "../../../@types/lookup";
-import { UserProps } from "../../../@types/UserProps";
+import { UserProps } from "../../../@types/user";
 import { Field, Form, Formik } from "formik";
 import AdminFieldSet from "./FormComponents/AdminFieldset";
 import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";

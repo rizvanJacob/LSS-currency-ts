@@ -1,5 +1,5 @@
 import { Field } from "formik";
-import { UserProps } from "../../../../@types/UserProps";
+import { UserProps } from "../../../../@types/user";
 
 type Props = {
   user: UserProps;

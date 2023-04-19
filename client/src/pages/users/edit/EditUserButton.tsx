@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
 
 export default function EditUserButton({
   user,
 }: {
-  user: UserProps;
+  user: User;
 }): JSX.Element {
   return (
     <>

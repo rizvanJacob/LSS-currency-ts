@@ -1,4 +1,4 @@
-export type UserProps = {
+export type User = {
   id: number;
   accountType: number;
   displayName: string;

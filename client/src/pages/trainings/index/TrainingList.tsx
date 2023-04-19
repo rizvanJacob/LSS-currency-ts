@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { TrainingProps } from "../../../@types/@types.TrainingProps"
+import { Training } from "../../../@types/training"
 
 export type TrainingListProps = {
-  trainings: TrainingProps[];
-  setTrainings: React.Dispatch<React.SetStateAction<TrainingProps[]>>;
+  trainings: Training[];
+  setTrainings: React.Dispatch<React.SetStateAction<Training[]>>;
 }
 
 
@@ -23,7 +23,7 @@ export default function TrainingList({ trainings, setTrainings}: TrainingListPro
                     </tr>
                 </thead>
                 <tbody>
-                    {trainings.map((training: TrainingProps) => {
+                    {trainings.map((training: Training) => {
                         const startDate = new Date(training.start).toLocaleString();
                         const endDate = new Date(training.end).toLocaleString();
                         return (

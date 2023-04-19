@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import EditUserButton from "../edit/EditUserButton";
 import DeleteUserButton from "../delete/DeleteUserButton";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
 
 export type UsersListProps = {
-  users: UserProps[];
-  setUsers: React.Dispatch<React.SetStateAction<UserProps[]>>;
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 };
 
 export default function UsersList({
@@ -25,7 +25,7 @@ export default function UsersList({
           </tr>
         </thead>
         <tbody>
-          {users.map((user: UserProps) => {
+          {users.map((user: User) => {
             return (
               <tr key={user.id}>
                 <td>{user.id}</td>

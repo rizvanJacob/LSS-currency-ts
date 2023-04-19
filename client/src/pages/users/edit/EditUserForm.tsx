@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { UserProps } from "../../../@types/UserProps";
+import { User } from "../../../@types/user";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
-  const [user, setUser] = useState<UserProps>({
+  const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
     accountType: 0,
