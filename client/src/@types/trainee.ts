@@ -7,10 +7,12 @@ export type Trainee = NewTrainee & {
   id: number;
   createdAt: Date;
   updatedAt: Date;
+  categories: {
+    name: string;
+  };
   user: number;
-};
-
-export type TraineeProp = {
-  trainee: Trainee;
-  category: string | undefined;
+  currencies: {
+    expiry: Date;
+  }[];
+  status?: string;
 };

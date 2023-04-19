@@ -1,11 +1,20 @@
-import { TraineeProp } from "../../../../@types/trainee";
+import { Trainee } from "../../../../@types/trainee";
+import { Link } from "react-router-dom";
 
-const TableRow = ({ trainee, category }: TraineeProp): JSX.Element => {
+type Prop = {
+  trainee: Trainee;
+  category: string;
+  status: string;
+};
+
+const TableRow = ({ trainee, category, status }: Prop): JSX.Element => {
   return (
     <tr>
-      <td>{trainee.callsign}</td>
+      <td>
+        <Link to={`${trainee.id}`}>{trainee.callsign}</Link>
+      </td>
       <td>{category}</td>
-      <td>{1}</td>
+      <td>{status}</td>
       <td>Edit</td>
       <td>Delete</td>
     </tr>
