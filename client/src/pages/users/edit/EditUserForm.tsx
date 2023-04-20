@@ -14,7 +14,6 @@ export default function EditUserForm(): JSX.Element {
     displayName: "",
     accountType: 0,
     approved: false,
-    openId: "",
   });
   const navigate = useNavigate();
 
@@ -22,7 +21,6 @@ export default function EditUserForm(): JSX.Element {
     getRequest(`/api/users/${id}`, setUser);
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
   }, []);
-
 
   const handleFormSubmit = async () => {
     await putRequest(`/api/users/${id}`, user, setUser);
@@ -73,7 +71,7 @@ export default function EditUserForm(): JSX.Element {
                       <option value={type.id} key={type.id}>
                         {type.name}
                       </option>
-                    )
+                    );
                   })}
                 </Field>
                 <ErrorMessage name="accountType" />

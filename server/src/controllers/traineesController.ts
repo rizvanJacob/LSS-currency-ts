@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
-import { accountTypes } from "./lookupController";
+import dayjs from "dayjs";
 
 const index = async (req: Request, res: Response) => {
   try {
@@ -29,10 +29,18 @@ const show = async (req: Request, res: Response) => {
             approved: true,
           },
         },
-        categories: { select: { name: true } },
+        categories: {
+          select: {
+            name: true,
+            requirements: {
+              select: { requirements: { select: { id: true, name: true } } },
+            },
+          },
+        },
         currencies: {
           select: {
             id: true,
+            requirement: true,
             requirements: { select: { name: true } },
             seniority: true,
             expiry: true,
@@ -50,8 +58,37 @@ const show = async (req: Request, res: Response) => {
     res.status(500);
   }
 };
-const create = (req: Request, res: Response) => {};
-const edit = (req: Request, res: Response) => {};
+const create = (req: Request, res: Response) => {
+  const { trainee } = req.body;
+  console.log(trainee);
+};
+
+const update = async (req: Request, res: Response) => {
+  const trainee = req.body;
+  // console.log(trainee);
+
+  const upsertCurrencies = trainee.currencies.map((c: any) => {
+    console.log(c);
+    const upsertTransaction = prisma.currency.upsert({
+      where: { id: c.id || 0 },
+      update: { expiry: c.expiry, updatedAt: dayjs().toDate() },
+      create: {
+        expiry: c.expiry,
+        seniority: false,
+        trainee: trainee.id,
+        requirement: c.requirement,
+      },
+    });
+    return upsertTransaction;
+  });
+
+  try {
+    await prisma.$transaction(upsertCurrencies);
+    res.status(200).send("updated");
+  } catch (error) {
+    res.status(500).send("unable to update");
+  }
+};
 
 const deleteController = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -93,4 +130,4 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
-export { index, show, create, edit, deleteController as delete };
+export { index, show, create, update, deleteController as delete };

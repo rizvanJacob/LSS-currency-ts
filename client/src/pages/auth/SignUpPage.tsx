@@ -6,7 +6,7 @@ import { Field, Form, Formik } from "formik";
 
 import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
 import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
-import TraineeFieldset from "../../components/FormFieldsets/TraineeFieldset";
+import TraineeParticularsFieldset from "../../components/FormFieldsets/TraineeParticularsFieldset";
 import TrainerFieldset from "../../components/FormFieldsets/TrainerFieldset";
 
 import { SimpleLookup } from "../../@types/lookup";
@@ -90,7 +90,7 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
             {user.accountType == 3 && (
-              <TraineeFieldset
+              <TraineeParticularsFieldset
                 trainee={trainee}
                 handleChange={handleTraineeChange}
               />

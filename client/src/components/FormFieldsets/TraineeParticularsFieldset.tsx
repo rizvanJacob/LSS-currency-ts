@@ -10,7 +10,7 @@ type Prop = {
   handleChange: any;
 };
 
-const TraineeFieldset = ({ trainee, handleChange }: Prop) => {
+const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
@@ -46,4 +46,4 @@ const TraineeFieldset = ({ trainee, handleChange }: Prop) => {
   );
 };
 
-export default TraineeFieldset;
+export default TraineeParticularsFieldset;
