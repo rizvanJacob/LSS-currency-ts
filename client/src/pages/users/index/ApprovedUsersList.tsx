@@ -24,7 +24,6 @@ export default function ApprovedUsersList({
                 <td>{user.id}</td>
                 <td>{user.displayName}</td>
                 <td>{user.accountTypes?.name}</td>
-                <td>{user.approved ? "Approved" : "Not Approved"}</td>
                 <td><EditUserButton user={user} /></td>
                 <td><DeleteUserButton setUsers={setUsers} user={user} /></td>
               </tr>
