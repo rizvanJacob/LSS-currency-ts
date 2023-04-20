@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
+import { accountTypes } from "./lookupController";
 
 const index = async (req: Request, res: Response) => {
   try {
@@ -58,9 +59,9 @@ const deleteController = async (req: Request, res: Response) => {
   try {
     const trainee = await prisma.trainee.findUnique({
       where: { id: Number(id) },
-      select: { user: true },
+      select: { users: { select: { id: true, accountType: true } } },
     });
-    const userId = trainee?.user;
+    const userId = trainee?.users.id;
 
     const deleteCurrencies = prisma.currency.deleteMany({
       where: {
@@ -77,14 +78,15 @@ const deleteController = async (req: Request, res: Response) => {
         id: Number(id),
       },
     });
-    const deleteUser = prisma.user.delete({ where: { id: Number(userId) } });
 
     await prisma.$transaction([
       deleteCurrencies,
       deleteTrainings,
       deleteTrainee,
-      deleteUser,
     ]);
+    if (trainee?.users.accountType === 3) {
+      await prisma.user.delete({ where: { id: Number(userId) } });
+    }
     res.status(200);
   } catch (error) {
     res.status(500).json({ error });
