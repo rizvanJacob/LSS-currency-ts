@@ -1,64 +1,40 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Training } from "../../../@types/training";
+import { NewTraining } from "../../../@types/training";
 import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
-import putRequest from "../../../utilities/putRequest";
+import postRequest from "../../../utilities/postRequest";
 import dayjs from "dayjs";
-export default function EditTrainingForm(): JSX.Element {
-    const { id } = useParams();
+export default function CreateTrainingForm(): JSX.Element {
     const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
-    const [training, setTraining] = useState<Training>({ 
+    const [training, setTraining] = useState<NewTraining>({ 
                 id: 0,
                 capacity: 0,
                 start: new Date(),
                 end: new Date(),
-                complete: false,
                 requirement: 0,
                 requirements: {
-                    name: ''
-                },
-                trainees: {
-                    trainees: {
-                        callsign: '',
-                        categories: {
-                            name: '',
-                        },
-                        currencies: {
-                            expiry: new Date()
-                        }
-                    }
+                    name: ""
                 },
                 instruction: ""
             });
     const navigate = useNavigate();
 
     useEffect(() => {
-        getRequest(`/api/trainings/${id}`, setTraining);
-    }, [id, setTraining]);
-
-    useEffect(() => {
         getRequest(`/api/lookup/requirements`, setRequirementTypes);
     }, [])
-    console.log("instruction", training.instruction);
+
     const handleFormSubmit = async () => {
-        await putRequest(`/api/trainings/${id}`, training, setTraining);
+        await postRequest(`/api/trainings`, training, setTraining);
+        console.log(training);
         navigate(`/trainings`);
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+        const { name, value} = event.target;
         setTraining(training => {
-            if (name === 'name') {
-            return {
-                ...training,
-                requirements: {
-                ...training.requirements,
-                name: value
-                }
-            };
-            } else if (name === 'start') {
+            if (name === 'start') {
                 const newStart = dayjs(value).toDate();
                 return { ...training, start: newStart }
             } else if (name === 'end') {
@@ -72,6 +48,15 @@ export default function EditTrainingForm(): JSX.Element {
                 const [hours, minutes] = value.split(':');
                 const newEnd = dayjs(training.end).set('hour', parseInt(hours)).set('minute', parseInt(minutes)).toDate();
                 return { ...training, end: newEnd }
+            } else if (name === "name") {
+                return {
+                    ...training,
+                    requirement: requirementTypes.find((type) => (value === type.name))?.id ?? 0,
+                    requirements: {
+                        ...training.requirements,
+                        name: value
+                    }
+                }
             } else {
                 return {
                     ...training,
@@ -83,7 +68,7 @@ export default function EditTrainingForm(): JSX.Element {
 
   return (
     <fieldset>
-        <legend>Edit {training?.requirements?.name} on {dayjs(training?.start).format("YYYY-MM-DD")}</legend>
+        <legend>Create New Session</legend>
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Formik initialValues={training} onSubmit={handleFormSubmit}>
             {({ isSubmitting, isValidating, isValid }) => (
@@ -93,19 +78,16 @@ export default function EditTrainingForm(): JSX.Element {
                         <Field
                             as="select"
                             type="text"
-                            id="requirements"
+                            id="name"
                             name="name"
-                            value={training?.requirements?.name || ""}
                             onChange={handleInputChange}
                         >
                             <option value="">Select a requirement</option>
-                            {requirementTypes.map((type) => {
-                                return (
-                                    <option value={type.name} key ={type.id}>
-                                        {type.name}
-                                    </option>
-                                )
-                            })}
+                            {requirementTypes.map((type) => (
+                                <option value={type.name} key ={type.id}>
+                                    {type.name}
+                                </option>
+                            ))}
                         </Field>
                         <ErrorMessage name="name" />
                     </div>
@@ -182,7 +164,7 @@ export default function EditTrainingForm(): JSX.Element {
                     disabled={isSubmitting || isValidating || !isValid}
                     style={{ backgroundColor: "#00A0A0" }}
                     >
-                    Update Training
+                    Create
                     </button>
                 </div>
                 </Form>

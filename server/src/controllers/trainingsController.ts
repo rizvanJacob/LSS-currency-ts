@@ -113,6 +113,25 @@ const trainingsController = {
         } catch (err) {
             res.status(500).json({err});
         }
+    },
+
+    createTraining: async (req: Request, res: Response, err: any) => {
+        try {
+            const { start, end, capacity, instruction, requirement } = req.body;
+            const newTraining = await prisma.training.create({
+                data: { 
+                    start: start,
+                    end: end, 
+                    capacity: parseInt(capacity), 
+                    instruction: instruction,
+                    requirement: parseInt(requirement),
+                    complete: false,
+                },
+            })
+            res.status(200).json(newTraining);
+        } catch (err) {
+            res.status(500).json({err});
+        }
     }
 }
 export default trainingsController;
