@@ -10,5 +10,8 @@ export type NewUser = BasicUser & {
 
 export type User = BasicUser & {
   id: number;
+  accountTypes?: {
+    name: string;
+  };
   approved: boolean;
 };
