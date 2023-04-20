@@ -4,10 +4,10 @@ import getRequest from "../../../utilities/getRequest";
 import postRequest from "../../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
 
-import AdminFieldSet from "./FormComponents/AdminFieldset";
-import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";
-import TraineeFieldset from "./FormComponents/TraineeFieldset";
-import TrainerFieldset from "./FormComponents/TrainerFieldset";
+import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
+import TraineeAdminFieldset from "../../../components/FormFieldsets/TraineeAdminFieldset";
+import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
+import TrainerFieldset from "../../../components/FormFieldsets/TrainerFieldset";
 
 import { SimpleLookup } from "../../../@types/lookup";
 import { NewUser } from "../../../@types/user";
@@ -34,7 +34,7 @@ const SignUpPage = (): JSX.Element => {
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
   }, []);

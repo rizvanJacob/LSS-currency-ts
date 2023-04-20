@@ -1,8 +1,9 @@
 import { Field } from "formik";
-import { NewTrainee } from "../../../../@types/trainee";
 import { useEffect, useState } from "react";
-import { SimpleLookup } from "../../../../@types/lookup";
-import getRequest from "../../../../utilities/getRequest";
+import getRequest from "../../utilities/getRequest";
+
+import { NewTrainee } from "../../@types/trainee";
+import { SimpleLookup } from "../../@types/lookup";
 
 type Prop = {
   trainee: NewTrainee;
