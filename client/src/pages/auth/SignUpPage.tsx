@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import getRequest from "../../../utilities/getRequest";
-import postRequest from "../../../utilities/postRequest";
+import getRequest from "../../utilities/getRequest";
+import postRequest from "../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
 
-import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
-import TraineeAdminFieldset from "../../../components/FormFieldsets/TraineeAdminFieldset";
-import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
-import TrainerFieldset from "../../../components/FormFieldsets/TrainerFieldset";
+import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
+import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
+import TraineeFieldset from "../../components/FormFieldsets/TraineeFieldset";
+import TrainerFieldset from "../../components/FormFieldsets/TrainerFieldset";
 
-import { SimpleLookup } from "../../../@types/lookup";
-import { NewUser } from "../../../@types/user";
-import { NewTrainee } from "../../../@types/trainee";
+import { SimpleLookup } from "../../@types/lookup";
+import { NewUser } from "../../@types/user";
+import { NewTrainee } from "../../@types/trainee";
 
 const blankUser = {
   displayName: "",
