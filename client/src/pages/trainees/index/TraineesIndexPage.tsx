@@ -3,6 +3,7 @@ import getRequest from "../../../utilities/getRequest";
 import TableRow from "./components/TableRow";
 import { Trainee } from "../../../@types/trainee";
 import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
+import deleteRequest from "../../../utilities/deleteRequest";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -17,6 +18,15 @@ const TraineesIndexPage = (): JSX.Element => {
   useEffect(() => {
     computeOverallStatus(trainees, setTrainees);
   }, [fetchFlag]);
+
+  const deleteTrainee = (id: number) => async () => {
+    deleteRequest(`/api/trainees/${id}`, id, setTrainees);
+    // const response = await fetch(`/api/trainees/${id}`, { method: "DELETE" });
+    // const data = await response.json();
+    // console.log({ data });
+    // const updatedTrainees = trainees.filter((t) => t.id !== id);
+    // setTrainees(updatedTrainees);
+  };
 
   return (
     <>
@@ -38,6 +48,7 @@ const TraineesIndexPage = (): JSX.Element => {
               key={t.id}
               category={t.categories.name}
               overallStatus={t.status || ""}
+              deleteTrainee={deleteTrainee}
             />
           ))}
         </tbody>

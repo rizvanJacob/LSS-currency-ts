@@ -4,6 +4,7 @@ async function deleteRequest(
   id: number,
   setState: React.Dispatch<React.SetStateAction<any>>
 ) {
+  console.log("fire delete request");
   try {
     await axios.delete(url, {
       headers: {
