@@ -37,6 +37,7 @@ const EditTraineePage = () => {
       trainee
     )) as Response;
     setLoading(false);
+
     if (response.status === 200) {
       navigate("/trainees");
     } else {
@@ -50,7 +51,7 @@ const EditTraineePage = () => {
     setTrainee({ ...trainee, [name]: value });
   };
 
-  const handleCurrencyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, name, value } = event.target;
     if (trainee.currencies.find((c) => c.id === Number(id))) {
       const updatedCurrencies = trainee.currencies.map((c) => {
@@ -59,12 +60,37 @@ const EditTraineePage = () => {
         }
         return c;
       });
-      console.log(updatedCurrencies);
+      // console.log(updatedCurrencies);
       setTrainee({ ...trainee, currencies: updatedCurrencies });
     } else {
       const newCurrency = {
         requirement: Number(id),
         expiry: dayjs(value).toDate(),
+      };
+      const updatedCurrencies = [...trainee.currencies, newCurrency];
+      setTrainee({ ...trainee, currencies: updatedCurrencies });
+    }
+  };
+
+  const handleSeniorityChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { id, name, checked } = event.target;
+    // console.log(id, checked);
+    if (trainee.currencies.find((c) => c.id === Number(id))) {
+      const updatedCurrencies = trainee.currencies.map((c) => {
+        if (c.requirement === Number(id)) {
+          c.seniority = Boolean(checked);
+        }
+        return c;
+      });
+      // console.log(updatedCurrencies);
+      setTrainee({ ...trainee, currencies: updatedCurrencies });
+    } else {
+      const newCurrency = {
+        requirement: Number(id),
+        expiry: dayjs().toDate(),
+        seniority: !Boolean(checked),
       };
       const updatedCurrencies = [...trainee.currencies, newCurrency];
       setTrainee({ ...trainee, currencies: updatedCurrencies });
@@ -91,7 +117,8 @@ const EditTraineePage = () => {
                     key={r.requirements.id}
                     requirement={requirements}
                     currency={currency}
-                    handleChange={handleCurrencyChange}
+                    handleExpiryChange={handleExpiryChange}
+                    handleSeniorityChange={handleSeniorityChange}
                   />
                 );
               })}

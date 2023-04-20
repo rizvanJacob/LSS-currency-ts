@@ -33,7 +33,11 @@ const show = async (req: Request, res: Response) => {
           select: {
             name: true,
             requirements: {
-              select: { requirements: { select: { id: true, name: true } } },
+              select: {
+                requirements: {
+                  select: { id: true, name: true, hasSeniority: true },
+                },
+              },
             },
           },
         },
@@ -65,16 +69,20 @@ const create = (req: Request, res: Response) => {
 
 const update = async (req: Request, res: Response) => {
   const trainee = req.body;
-  // console.log(trainee);
+  console.log(trainee);
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
-    console.log(c);
+    // console.log(c);
     const upsertTransaction = prisma.currency.upsert({
       where: { id: c.id || 0 },
-      update: { expiry: c.expiry, updatedAt: dayjs().toDate() },
+      update: {
+        expiry: c.expiry,
+        updatedAt: dayjs().toDate(),
+        seniority: c.seniority,
+      },
       create: {
         expiry: c.expiry,
-        seniority: false,
+        seniority: c.seniority,
         trainee: trainee.id,
         requirement: c.requirement,
       },
@@ -83,7 +91,7 @@ const update = async (req: Request, res: Response) => {
   });
 
   try {
-    await prisma.$transaction(upsertCurrencies);
+    await Promise.all(upsertCurrencies);
     res.status(200).send("updated");
   } catch (error) {
     res.status(500).send("unable to update");

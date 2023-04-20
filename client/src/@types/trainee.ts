@@ -30,4 +30,5 @@ export type Currency = {
 export type Requirement = {
   id: number;
   name?: string;
+  hasSeniority?: boolean;
 };
