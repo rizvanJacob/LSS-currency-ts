@@ -24,15 +24,14 @@ export default function TrainingList({ trainings, setTrainings}: TrainingListPro
                 </thead>
                 <tbody>
                     {trainings.map((training: Training) => {
-                        const startDate = new Date(training.start).toLocaleString();
-                        const endDate = new Date(training.end).toLocaleString();
                         return (
                             <tr key={training.id}>
                                 <td>{training.id}</td>
                                 <td>{training.requirements.name}</td>
-                                <td>{training.capacity}</td>
-                                <td>{startDate}</td>
-                                <td>{endDate}</td>
+                                <td>{training.capacity - training.trainees.length}/{training.capacity}</td>
+                                <td>{dayjs(training.start).format("YYYY-MM-DD, HH:mm a")}</td>
+                                <td>{dayjs(training.end).format("YYYY-MM-DD, HH:mm a")}</td>
+                                <td><button>👀</button></td>
                             </tr>
                         )
                     })}

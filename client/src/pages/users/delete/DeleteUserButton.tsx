@@ -7,7 +7,6 @@ export default function DeleteUserButton({
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   user: User;
 }): JSX.Element {
-  // Handle click event for deleting a medicine
   const handleDeleteClick = async (id: number) => {
     try {
       await deleteRequest(`api/users/${id}`, user.id, setUsers);

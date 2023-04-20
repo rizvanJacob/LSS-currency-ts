@@ -4,4 +4,5 @@ export type Training = {
     start: Date;
     end: Date;
     requirements: any;
+    trainees: [];
 }
