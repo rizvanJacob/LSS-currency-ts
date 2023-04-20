@@ -11,6 +11,7 @@ const TraineesRoutes = (): JSX.Element => {
         <Route path="/:id" element={<ShowTraineePage />} />
         <Route path="/new" />
         <Route path="/:id/edit" element={<EditTraineePage />} />
+        <Route path="/:id/book/:requirement" element={<p>Book Training</p>} />
       </Routes>
     </>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Currency } from "../../../../@types/trainee";
 import dayjs from "dayjs";
 import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
+import { Link } from "react-router-dom";
 
 type Prop = {
   currency: Currency;
@@ -22,7 +23,9 @@ const CurrencyCard = ({ currency }: Prop) => {
       </summary>
       <p>{status.message}</p>
       <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
-      <button>Book</button>
+      <Link to={`book/${currency.requirement}`}>
+        <button>Book</button>
+      </Link>
     </details>
   );
 };
