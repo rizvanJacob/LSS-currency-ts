@@ -26,7 +26,78 @@ const trainingsController = {
     },
 
     showTraining: async (req: Request, res: Response, err: any) => {
-        const { id } = req.params;
+        try {
+            const id = parseInt(req.params.id);
+            const training = await prisma.training.findUnique({
+                where: {id},
+                select: {
+                    id: true,
+                    start: true,
+                    end: true,
+                    capacity: true,
+                    complete: true,
+                    instruction: true,
+                    requirements: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    trainees: {
+                        select: {
+                            trainees: {
+                                select: {
+                                    callsign: true,
+                                    categories: {
+                                        select: {
+                                            name: true
+                                        }
+                                    },
+                                    currencies: {
+                                        select: {
+                                            expiry: true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            console.log(training);
+            res.status(200).json(training);
+        } catch (err) {
+            res.status(500).json({err});
+        }
     },
+
+    updateTraining: async (req: Request, res: Response, err: any) => {
+        try {
+            const id = parseInt(req.params.id);
+            const {name, start, end, capacity, instruction } = req.body;
+            const updatedTraining = await prisma.training.update({
+                where: {id},
+                data: { start, end, capacity, instruction, requirements: {
+                    update: {
+                        name: name
+                    }
+                } },
+                select: {
+                    id: true,
+                    start: true,
+                    end: true,
+                    capacity: true,
+                    instruction: true,
+                    requirements: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            })
+            res.status(200).json(updatedTraining);
+        } catch (err) {
+            res.status(500).json({err});
+        }
+    }
 }
 export default trainingsController;

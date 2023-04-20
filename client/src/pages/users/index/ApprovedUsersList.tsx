@@ -3,6 +3,7 @@ import EditUserButton from "../edit/EditUserButton";
 import DeleteUserButton from "../delete/DeleteUserButton";
 import { User } from "../../../@types/user";
 import UserTableRow from "../components/UserTableRow"
+
 export type UsersListProps = {
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
