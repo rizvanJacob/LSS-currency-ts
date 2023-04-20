@@ -51,6 +51,44 @@ const show = async (req: Request, res: Response) => {
 };
 const create = (req: Request, res: Response) => {};
 const edit = (req: Request, res: Response) => {};
-const deleteTrainee = (req: Request, res: Response) => {};
 
-export { index, show, create, edit, deleteTrainee as delete };
+const deleteController = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const trainee = await prisma.trainee.findUnique({
+      where: { id: Number(id) },
+      select: { user: true },
+    });
+    const userId = trainee?.user;
+
+    const deleteCurrencies = prisma.currency.deleteMany({
+      where: {
+        trainee: Number(id),
+      },
+    });
+    const deleteTrainings = prisma.traineeToTraining.deleteMany({
+      where: {
+        trainee: Number(id),
+      },
+    });
+    const deleteTrainee = prisma.trainee.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    const deleteUser = prisma.user.delete({ where: { id: Number(userId) } });
+
+    await prisma.$transaction([
+      deleteCurrencies,
+      deleteTrainings,
+      deleteTrainee,
+      deleteUser,
+    ]);
+    res.status(200);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+export { index, show, create, edit, deleteController as delete };

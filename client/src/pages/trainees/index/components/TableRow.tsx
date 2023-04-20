@@ -1,6 +1,5 @@
 import { Trainee } from "../../../../@types/trainee";
 import { Link } from "react-router-dom";
-import deleteRequest from "../../../../utilities/deleteRequest";
 
 type Prop = {
   trainee: Trainee;
@@ -29,7 +28,7 @@ const TableRow = ({
         </Link>
       </td>
       <td>
-        <button onClick={deleteTrainee}>🗙</button>
+        <button onClick={deleteTrainee(trainee.id)}>🗙</button>
       </td>
     </tr>
   );
