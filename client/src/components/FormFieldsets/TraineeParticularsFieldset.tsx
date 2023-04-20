@@ -1,15 +1,16 @@
 import { Field } from "formik";
-import { NewTrainee } from "../../../../@types/trainee";
 import { useEffect, useState } from "react";
-import { SimpleLookup } from "../../../../@types/lookup";
-import getRequest from "../../../../utilities/getRequest";
+import getRequest from "../../utilities/getRequest";
+
+import { NewTrainee } from "../../@types/trainee";
+import { SimpleLookup } from "../../@types/lookup";
 
 type Prop = {
   trainee: NewTrainee;
   handleChange: any;
 };
 
-const TraineeFieldset = ({ trainee, handleChange }: Prop) => {
+const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
@@ -45,4 +46,4 @@ const TraineeFieldset = ({ trainee, handleChange }: Prop) => {
   );
 };
 
-export default TraineeFieldset;
+export default TraineeParticularsFieldset;

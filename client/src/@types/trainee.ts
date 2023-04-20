@@ -5,24 +5,30 @@ export type NewTrainee = {
 
 export type Trainee = NewTrainee & {
   id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   categories: {
     name: string;
+    requirements?: { requirements: Requirement }[];
   };
   user: number;
   users: {
     approved: boolean;
   };
   currencies: Currency[];
-  status?: string;
+  status?: { message: string; color: string };
 };
 
 export type Currency = {
   id?: number;
   expiry: Date;
-  requirements?: {
-    name: string;
-  };
+  requirement?: number;
+  requirements?: Requirement;
   seniority?: boolean;
+};
+
+export type Requirement = {
+  id: number;
+  name?: string;
+  hasSeniority?: boolean;
 };

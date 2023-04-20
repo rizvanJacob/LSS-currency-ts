@@ -1,8 +1,9 @@
 import { Field } from "formik";
-import { NewUser } from "../../../../@types/user";
 import { useState, useEffect } from "react";
-import getRequest from "../../../../utilities/getRequest";
-import { Requirement } from "../../../../@types/lookup";
+import getRequest from "../../utilities/getRequest";
+
+import { NewUser } from "../../@types/user";
+import { Requirement } from "../../@types/lookup";
 
 type Props = {
   user: NewUser;

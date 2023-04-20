@@ -1,19 +1,17 @@
-
-export type NewUser = {
-  openId: string;
+type BasicUser = {
   accountType: number;
   displayName: string;
   authCategory?: number;
 };
 
-export type User = NewUser & {
+export type NewUser = BasicUser & {
+  openId: string;
+};
+
+export type User = BasicUser & {
   id: number;
-  accountType: number;
   accountTypes?: {
     name: string;
   };
-  displayName: string;
-  openId?: string;
   approved: boolean;
-  authCategory?: number;
 };

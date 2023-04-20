@@ -1,5 +1,6 @@
 import { Field } from "formik";
-import { NewUser } from "../../../../@types/user";
+
+import { NewUser } from "../../@types/user";
 
 type Props = {
   user: NewUser;

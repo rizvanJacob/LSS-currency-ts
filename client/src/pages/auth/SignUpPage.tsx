@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import getRequest from "../../../utilities/getRequest";
-import postRequest from "../../../utilities/postRequest";
+import getRequest from "../../utilities/getRequest";
+import postRequest from "../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
 
-import AdminFieldSet from "./FormComponents/AdminFieldset";
-import TraineeAdminFieldset from "./FormComponents/TraineeAdminFieldset";
-import TraineeFieldset from "./FormComponents/TraineeFieldset";
-import TrainerFieldset from "./FormComponents/TrainerFieldset";
+import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
+import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
+import TraineeParticularsFieldset from "../../components/FormFieldsets/TraineeParticularsFieldset";
+import TrainerFieldset from "../../components/FormFieldsets/TrainerFieldset";
 
-import { SimpleLookup } from "../../../@types/lookup";
-import { NewUser } from "../../../@types/user";
-import { NewTrainee } from "../../../@types/trainee";
+import { SimpleLookup } from "../../@types/lookup";
+import { NewUser } from "../../@types/user";
+import { NewTrainee } from "../../@types/trainee";
 
 const blankUser = {
   displayName: "",
@@ -34,7 +34,7 @@ const SignUpPage = (): JSX.Element => {
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
   }, []);
@@ -90,7 +90,7 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
             {user.accountType == 3 && (
-              <TraineeFieldset
+              <TraineeParticularsFieldset
                 trainee={trainee}
                 handleChange={handleTraineeChange}
               />
