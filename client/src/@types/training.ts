@@ -1,13 +1,22 @@
-export type Training = {
+
+export type NewTraining = {
     id: number;
-    capacity: number;
     start: Date;
     end: Date;
-    complete: boolean;
+    capacity: number;
     instruction: string;
+    requirement: number;
+    requirements?: {
+        name: string;
+    };
+}
+
+
+export type Training = NewTraining & {
     requirements: {
         name: string;
     };
+    complete?: boolean;
     trainees: {
         trainees: {
             callsign: string,

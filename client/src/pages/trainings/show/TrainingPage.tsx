@@ -12,6 +12,7 @@ export default function TrainingPage(): JSX.Element {
             start: new Date(),
             end: new Date(),
             complete: false,
+            requirement: 0,
             requirements: {
                 name: ''
             },

@@ -6,7 +6,6 @@ export default function UserTableRow() {
             <th>ID</th>
             <th>Name</th>
             <th>Account Type</th>
-            <th>Account Status</th>
             <th colSpan={2}>Actions</th>
           </tr>
         </thead>

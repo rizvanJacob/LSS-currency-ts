@@ -25,11 +25,17 @@ const TraineesIndexPage = (): JSX.Element => {
 
   return (
     <>
-      <h1>Trainees</h1>
+      
       {trainees.length > 0 ? (
-        <TraineesTable trainees={trainees} deleteTrainee={deleteTrainee} />
+        <>
+          <h1>Trainees</h1>
+          <TraineesTable trainees={trainees} deleteTrainee={deleteTrainee} />
+        </>
       ) : (
-        <progress />
+        <>
+          <h1>Fetching Trainees</h1>
+          <progress />
+        </>
       )}
     </>
   );

@@ -35,6 +35,7 @@ export default function AllUsersPage(): JSX.Element {
         </>
       ) : (
         <>
+          <h1>Fetching Users</h1>
           <p>
             <progress />
           </p>
