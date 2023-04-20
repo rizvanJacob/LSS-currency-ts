@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-import { User } from "../../../@types/user";
+import { Training } from "../../../@types/training";
 
 export default function EditUserButton({
-  user,
+  training,
 }: {
-  user: User;
+  training: Training;
 }): JSX.Element {
   return (
-      <Link to={`/users/${user.id}/edit`}>
+      <Link to={`/trainings/${training.id}/edit`}>
         <button style={{ backgroundColor: "#00A0A0" }}>✏️</button>
       </Link>
   );

@@ -3,6 +3,21 @@ export type Training = {
     capacity: number;
     start: Date;
     end: Date;
-    requirements: any;
-    trainees: [];
+    complete: boolean;
+    instruction: string;
+    requirements: {
+        name: string;
+    };
+    trainees: {
+        trainees: {
+            callsign: string,
+            categories: {
+                name: string,
+            },
+            currencies: {
+                expiry: Date
+            }
+        }
+    };
+    
 }

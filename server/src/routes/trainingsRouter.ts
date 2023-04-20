@@ -4,6 +4,6 @@ import trainingsController from "../controllers/trainingsController"
 
 
 router.get("/", trainingsController.getAllTrainings);
-router.get("/:trainingId", trainingsController.showTraining);
-
+router.get("/:id", trainingsController.showTraining);
+router.put("/:id", trainingsController.updateTraining)
 export default router;
