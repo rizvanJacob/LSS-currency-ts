@@ -3,10 +3,10 @@ import dayjs from "dayjs";
 
 const MONTHS_TO_DUE_SOON = 3;
 
-const STATUS_MESSAGES = {
-  current: "Current",
-  dueSoon: "Due Soon",
-  expired: "Expired",
+const STATUSES = {
+  current: { message: "Current", color: "green" },
+  dueSoon: { message: "Due Soon", color: "orange" },
+  expired: { message: "EXPIRED", color: "red" },
 };
 
 export const computeOverallStatus = (
@@ -17,11 +17,11 @@ export const computeOverallStatus = (
   const updatedTrainees = trainees.map((t) => {
     t.currencies.forEach((c) => {
       if (isExpired(c.expiry)) {
-        t.status = STATUS_MESSAGES.expired;
+        t.status = STATUSES.expired;
       } else if (isDueSoon(c.expiry)) {
-        t.status = STATUS_MESSAGES.dueSoon;
+        t.status = STATUSES.dueSoon;
       } else {
-        t.status = STATUS_MESSAGES.current;
+        t.status = STATUSES.current;
       }
     });
     return t;
@@ -39,17 +39,19 @@ const isDueSoon = (expiry: Date) => {
 
 export const computeStatus = (
   currency: Currency,
-  setStatus: React.Dispatch<React.SetStateAction<string>>
+  setStatus: React.Dispatch<
+    React.SetStateAction<{ message: string; color: string }>
+  >
 ) => {
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
     .add(3, "month")
     .isAfter(dayjs(currency.expiry), "day");
   if (expired) {
-    setStatus(STATUS_MESSAGES.expired);
+    setStatus(STATUSES.expired);
   } else if (dueSoon) {
-    setStatus(STATUS_MESSAGES.dueSoon);
+    setStatus(STATUSES.dueSoon);
   } else {
-    setStatus(STATUS_MESSAGES.current);
+    setStatus(STATUSES.current);
   }
 };

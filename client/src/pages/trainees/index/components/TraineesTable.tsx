@@ -24,7 +24,7 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
             trainee={t}
             key={t.id}
             category={t.categories.name}
-            overallStatus={t.status || ""}
+            overallStatus={t.status?.message || ""}
             deleteTrainee={deleteTrainee}
           />
         ))}

@@ -8,7 +8,10 @@ type Prop = {
 };
 
 const CurrencyCard = ({ currency }: Prop) => {
-  const [status, setStatus] = useState<string>("");
+  const [status, setStatus] = useState<{ message: string; color: string }>({
+    message: "",
+    color: "",
+  });
   useEffect(() => {
     computeStatus(currency, setStatus);
   }, []);
@@ -17,7 +20,7 @@ const CurrencyCard = ({ currency }: Prop) => {
       <summary>
         <span>{currency?.requirements?.name}</span>
       </summary>
-      <p>{status}</p>
+      <p>{status.message}</p>
       <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
       <button>Book</button>
     </details>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trainee, Currency } from "../../../@types/trainee";
+import { Trainee } from "../../../@types/trainee";
 import getRequest from "../../../utilities/getRequest";
 import { useParams } from "react-router-dom";
 import CurrencyCard from "./components/CurrencyCard";
