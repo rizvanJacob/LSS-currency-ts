@@ -5,6 +5,9 @@ const trainingsController = {
     getAllTrainings: async (err: any, res: Response) => {
         try {
             const allTrainings = await prisma.training.findMany({
+                orderBy: {
+                    id: "asc"
+                },
                 include: 
                     {
                         requirements: {
@@ -95,6 +98,18 @@ const trainingsController = {
                 }
             })
             res.status(200).json(updatedTraining);
+        } catch (err) {
+            res.status(500).json({err});
+        }
+    },
+
+    deleteTraining: async (req: Request, res: Response, err: any) => {
+        try {
+            const id = parseInt(req.params.id);
+            await prisma.training.delete({
+                where: {id},
+            })
+            res.status(200).json({message: "Training deleted successfully"});
         } catch (err) {
             res.status(500).json({err});
         }
