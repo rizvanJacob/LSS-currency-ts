@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import TrainingInfo from "./TrainingInfo";
 export default function TrainingPage(): JSX.Element {
     const { id } = useParams();
+    const [trainings, setTrainings] = useState<Training[]>([])
     const [training, setTraining] = useState<Training>({ 
             id: 0,
             capacity: 0,
@@ -28,13 +29,14 @@ export default function TrainingPage(): JSX.Element {
             instruction: ""
         });
 
+
     useEffect(() => {
         getRequest(`/api/trainings/${id}`, setTraining)
     }, [])
 
     return (
         <>
-            <TrainingInfo training={training} setTraining={setTraining}/>
+            <TrainingInfo training={training} setTraining={setTraining} setTrainings={setTrainings}/>
         </>
     )
 }
