@@ -8,7 +8,7 @@ type Prop = {
   deleteTrainee: any;
 };
 
-const TableRow = ({
+const TraineeTableRow = ({
   trainee,
   category,
   overallStatus,
@@ -34,4 +34,4 @@ const TableRow = ({
   );
 };
 
-export default TableRow;
+export default TraineeTableRow;
