@@ -17,13 +17,17 @@ const ShowTraineePage = () => {
 
   return (
     <>
-      <h1>{trainee?.callsign}</h1>
-      <p>{trainee?.categories.name}</p>
-      {trainee?.currencies.map((c) => {
-        return <CurrencyCard currency={c} key={c.id} />;
-      })}
-      <hr />
-      {JSON.stringify(trainee)}
+      {trainee ? (
+        <>
+          <h1>{trainee?.callsign}</h1>
+          <p>{trainee?.categories.name}</p>
+          {trainee?.currencies.map((c) => {
+            return <CurrencyCard currency={c} key={c.id} />;
+          })}
+        </>
+      ) : (
+        <progress />
+      )}
     </>
   );
 };

@@ -19,23 +19,28 @@ const blankTrainee = {
 };
 
 const EditTraineePage = () => {
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [trainee, setTrainee] = useState<Trainee>(blankTrainee);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRequest(`/api/trainees/${id}`, setTrainee);
+    getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
+      setLoading(false);
+    });
   }, []);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const response = (await putRequest(
       `/api/trainees/${id}`,
       trainee
     )) as Response;
-    console.log(response);
+    setLoading(false);
     if (response.status === 200) {
       navigate("/trainees");
     } else {
+      getRequest(`/api/trainees/${id}`, setTrainee);
       alert("Update unsuccessful. Please try again later");
     }
   };
@@ -68,33 +73,35 @@ const EditTraineePage = () => {
 
   return (
     <>
-      {" "}
-      Edit Trainee Form:
-      <Formik initialValues={trainee} onSubmit={handleSubmit}>
-        {({ isSubmitting, isValidating, isValid }) => (
-          <Form>
-            <TraineeParticularsFieldset
-              trainee={trainee}
-              handleChange={handleTraineeChange}
-            />
-            {trainee.categories.requirements?.map((r) => {
-              const { requirements } = r;
-              const currency = trainee.currencies.find(
-                (c) => c.requirement === requirements.id
-              );
-              return (
-                <CurrencyFieldset
-                  key={r.requirements.id}
-                  requirement={requirements}
-                  currency={currency}
-                  handleChange={handleCurrencyChange}
-                />
-              );
-            })}
-            <button type="submit">Update Trainee</button>
-          </Form>
-        )}
-      </Formik>
+      {!loading ? (
+        <Formik initialValues={trainee} onSubmit={handleSubmit}>
+          {({ isSubmitting, isValidating, isValid }) => (
+            <Form>
+              <TraineeParticularsFieldset
+                trainee={trainee}
+                handleChange={handleTraineeChange}
+              />
+              {trainee.categories.requirements?.map((r) => {
+                const { requirements } = r;
+                const currency = trainee.currencies.find(
+                  (c) => c.requirement === requirements.id
+                );
+                return (
+                  <CurrencyFieldset
+                    key={r.requirements.id}
+                    requirement={requirements}
+                    currency={currency}
+                    handleChange={handleCurrencyChange}
+                  />
+                );
+              })}
+              <button type="submit">Update Trainee</button>
+            </Form>
+          )}
+        </Formik>
+      ) : (
+        <progress />
+      )}
     </>
   );
 };
