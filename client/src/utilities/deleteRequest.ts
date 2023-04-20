@@ -1,6 +1,4 @@
 import axios from "axios";
-import { UserProps } from "../@types/UserProps";
-
 async function deleteRequest(
   url: string,
   id: number,

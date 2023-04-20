@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import getRequest from "../../../utilities/getRequest";
-import { TrainingProps } from "../../../@types/@types.TrainingProps";
+import { Training } from "../../../@types/training";
 import TrainingList from "./TrainingList"
 
 export default function AllTrainingsPage(): JSX.Element {
-    const [trainings, setTrainings] = useState<TrainingProps[]>([]);
+    const [trainings, setTrainings] = useState<Training[]>([]);
 
     useEffect(() => {
         getRequest(`/api/trainings`, setTrainings);
@@ -15,7 +15,7 @@ export default function AllTrainingsPage(): JSX.Element {
         <h1> Display all trainings for Admin to see</h1>
         {trainings.length > 0 ? (
             <>
-                <TrainingList trainings = { trainings as TrainingProps[] } setTrainings = { setTrainings as React.Dispatch<React.SetStateAction<TrainingProps[]>>} />
+                <TrainingList trainings = { trainings as Training[] } setTrainings = { setTrainings as React.Dispatch<React.SetStateAction<Training[]>>} />
             </>
         ) : (
             <>

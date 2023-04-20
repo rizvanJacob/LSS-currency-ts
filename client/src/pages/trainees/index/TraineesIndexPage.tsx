@@ -3,7 +3,6 @@ import getRequest from "../../../utilities/getRequest";
 import TableRow from "./components/TableRow";
 import { Trainee } from "../../../@types/trainee";
 import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
-import deleteRequest from "../../../utilities/deleteRequest";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
