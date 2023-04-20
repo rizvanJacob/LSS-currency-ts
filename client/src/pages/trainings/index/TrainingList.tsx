@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import dayjs from "dayjs";
 import { Training } from "../../../@types/training"
 
 export type TrainingListProps = {

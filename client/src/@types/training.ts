@@ -1,5 +1,3 @@
-
-
 export type Training = {
     id: number;
     capacity: number;

@@ -9,6 +9,9 @@ export type NewUser = {
 export type User = NewUser & {
   id: number;
   accountType: number;
+  accountTypes: {
+    name: string;
+  };
   displayName: string;
   approved: boolean;
   authCategory?: number;
