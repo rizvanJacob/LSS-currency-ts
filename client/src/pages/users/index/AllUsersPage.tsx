@@ -3,15 +3,12 @@ import ApprovedUsersList from "./ApprovedUsersList";
 import getRequest from "../../../utilities/getRequest";
 import { SimpleLookup } from "../../../@types/lookup";
 import { User } from "../../../@types/user";
-import FilteredUsersList from "./UnapprovedUsersList"
-
+import UnapprovedUsersList from "./UnapprovedUsersList"
 export default function AllUsersPage(): JSX.Element {
   const [users, setUsers] = useState<User[]>([]);
-  const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
-    getRequest(`/api/users`, setUsers);
-    getRequest(`/api/lookup/accountTypes`, setAccountTypes);
+        getRequest(`/api/users`, setUsers)
   }, []);
 
   const notApprovedUsers = users.filter(user => !user.approved);
@@ -22,12 +19,11 @@ export default function AllUsersPage(): JSX.Element {
       {users.length > 0 ? (
         <>
           <h1>Pending approval:</h1>
-          <FilteredUsersList
+          <UnapprovedUsersList
             users={notApprovedUsers as User[]}
             setUsers={
               setUsers as React.Dispatch<React.SetStateAction<User[]>>
             }
-            accountTypes = {accountTypes as SimpleLookup[]}
           />
           <h1> Approved Users:</h1>
           <ApprovedUsersList
@@ -35,7 +31,6 @@ export default function AllUsersPage(): JSX.Element {
             setUsers={
               setUsers as React.Dispatch<React.SetStateAction<User[]>>
             }
-            accountTypes = {accountTypes as SimpleLookup[]}
           />
         </>
       ) : (

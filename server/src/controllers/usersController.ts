@@ -19,11 +19,18 @@ const usersController = {
         }
     },
 
-    getAllUsers: async (err: any, res: Response) => {
+    getAllUsers: async (req: Request, res: Response, err: any) => {
         try {
             const allUsers = await prisma.user.findMany({
                 orderBy: {
                     id: "asc"
+                },
+                include: {
+                    accountTypes: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
             })
             res.status(200).json(allUsers);

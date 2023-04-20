@@ -14,6 +14,7 @@ export default function EditUserForm(): JSX.Element {
     displayName: "",
     accountType: 0,
     approved: false,
+    openId: "",
   });
   const navigate = useNavigate();
 

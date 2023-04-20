@@ -12,12 +12,21 @@ const trainingsController = {
                                 name: true,
                             },
                         },
+                        trainees: {
+                            include: {
+                                trainees: true
+                            }
+                        }
                     }, 
             })
             res.status(200).json(allTrainings);
         } catch (err) {
             res.status(500).json({err});
         }
+    },
+
+    showTraining: async (req: Request, res: Response, err: any) => {
+        const { id } = req.params;
     },
 }
 export default trainingsController;
