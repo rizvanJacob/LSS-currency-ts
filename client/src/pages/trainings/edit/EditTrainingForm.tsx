@@ -41,7 +41,7 @@ export default function EditTrainingForm(): JSX.Element {
     useEffect(() => {
         getRequest(`/api/lookup/requirements`, setRequirementTypes);
     }, [])
-    console.log("instruction", training.instruction);
+
     const handleFormSubmit = async () => {
         await putRequest(`/api/trainings/${id}`, training, setTraining);
         navigate(`/trainings`);
@@ -93,7 +93,7 @@ export default function EditTrainingForm(): JSX.Element {
                         <Field
                             as="select"
                             type="text"
-                            id="requirements"
+                            id="name"
                             name="name"
                             value={training?.requirements?.name || ""}
                             onChange={handleInputChange}

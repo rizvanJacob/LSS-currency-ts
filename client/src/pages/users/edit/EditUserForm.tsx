@@ -16,6 +16,9 @@ export default function EditUserForm(): JSX.Element {
     accountType: 3,
     approved: false,
     authCategory: 0,
+    trainee: {
+      callsign: ""
+    },
   });
   const navigate = useNavigate();
 
@@ -39,7 +42,22 @@ export default function EditUserForm(): JSX.Element {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const parsedValue = (name === "authCategory" || name === "accountType") ? parseInt(value) : value;
-    setUser({ ...user, [name]: parsedValue });
+    setUser(user => {
+      if (name === "callsign") {
+        return {
+          ...user,
+          trainee: {
+            ...user.trainee,
+            callsign: parsedValue.toString()
+          }
+        }
+      } else {
+        return {
+          ...user,
+          [name]: parsedValue
+        }
+      }
+    });
   };
 
   return (
@@ -103,7 +121,19 @@ export default function EditUserForm(): JSX.Element {
                   <ErrorMessage name="authCategory" />
                 </div>
               )}
-              
+              {user.accountType === 3 && (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <label>Callsign:</label>
+                  <Field
+                    type="text"
+                    id="callsign"
+                    name="callsign"
+                    value={user?.trainee?.callsign || ""}
+                    onChange={handleInputChange}
+                  />
+                  <ErrorMessage name="callsign" />
+                </div>
+              )}
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Account Status:</label>
                 <a>{user?.approved ? "Approved" : "Not Approved"}</a>

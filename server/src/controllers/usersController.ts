@@ -52,9 +52,13 @@ const usersController = {
                     accountType: true,
                     approved: true,
                     authCategory: true,
-                },
+                    trainee: {
+                        select: {
+                            callsign: true
+                        }
+                    }
+                }
             });
-            console.log(userData);
             res.status(200).json(userData);
         } catch (err) {
             res.status(500).json({err});
@@ -64,19 +68,31 @@ const usersController = {
     updateUserById: async(req: Request, res: Response, err: any) => {
         try {
             const id = parseInt(req.params.id);
-            console.log(req.body);
-            const {displayName, approved, accountType, authCategory} = req.body;
+            console.log("request body", req.body);
+            const {displayName, approved, accountType, authCategory, trainee} = req.body;
             const updatedData = await prisma.user.update({
                 where: { id },
-                data: { displayName, accountType, approved, authCategory},
+                data: { displayName, accountType, approved, authCategory,
+                    trainee: {
+                        update: {
+                            callsign: trainee?.callsign
+                        }
+                    }
+                },
                 select: {
                     id: true,
                     displayName: true,
                     accountType: true,
                     approved: true,
                     authCategory: true,
+                    trainee: {
+                        select: {
+                            callsign: true
+                        }
+                    }
                 },
             });
+            console.log("Backendsendrequest", updatedData);
             res.status(200).json(updatedData);
         } catch (err) {
             res.status(500).json({err})

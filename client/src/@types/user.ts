@@ -14,4 +14,7 @@ export type User = BasicUser & {
     name: string;
   };
   approved: boolean;
+  trainee?: {
+    callsign?: string;
+  }
 };
