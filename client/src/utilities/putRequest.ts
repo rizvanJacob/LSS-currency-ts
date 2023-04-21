@@ -12,7 +12,7 @@ async function putRequest(
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
+    console.log("response from put request", response);
     if (response.status === 200 && setState) {
       setState(response.data);
     }
