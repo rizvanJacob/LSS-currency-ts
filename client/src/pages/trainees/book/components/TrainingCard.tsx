@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 type Prop = {
@@ -5,7 +6,17 @@ type Prop = {
 };
 
 const TrainingCard = ({ training }: Prop) => {
+  const { id } = useParams();
   const vacancies = training.capacity - training.trainees.length;
+
+  const bookTraining = async () => {
+    const response = await fetch(`/api/trainees/${id}/book/${training.id}`, {
+      method: "PUT",
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   return (
     <>
       <h4>Date: {dayjs(training.start).format("DD MMM YY")}</h4>
@@ -14,7 +25,11 @@ const TrainingCard = ({ training }: Prop) => {
       <p>
         Vacancies: {vacancies}/{training.capacity}
       </p>
-      {vacancies > 0 ? <button>Book</button> : <button>Join Waitlist</button>}
+      {vacancies > 0 ? (
+        <button onClick={bookTraining}>Book</button>
+      ) : (
+        <button>Join Waitlist</button>
+      )}
     </>
   );
 };

@@ -40,7 +40,7 @@ const BookTrainingPage = () => {
             setDisplayDate={setDisplayDate}
           />
           {displayTrainings.map((t) => {
-            return <TrainingCard training={t} />;
+            return <TrainingCard training={t} key={t.id} />;
           })}
           <p>{JSON.stringify(trainings)}</p>
         </>
