@@ -52,10 +52,6 @@ export default function CreateTrainingForm(): JSX.Element {
                 return {
                     ...training,
                     requirement: requirementTypes.find((type) => (value === type.name))?.id ?? 0,
-                    requirements: {
-                        ...training.requirements,
-                        name: value
-                    }
                 }
             } else {
                 return {

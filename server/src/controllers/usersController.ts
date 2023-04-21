@@ -54,7 +54,8 @@ const usersController = {
                     authCategory: true,
                     trainee: {
                         select: {
-                            callsign: true
+                            callsign: true,
+                            category: true
                         }
                     }
                 }
@@ -75,9 +76,10 @@ const usersController = {
                 data: { displayName, accountType, approved, authCategory,
                     trainee: {
                         update: {
-                            callsign: trainee?.callsign
+                            callsign: trainee?.callsign,
+                            category: parseInt(trainee?.category),
                         }
-                    }
+                    },
                 },
                 select: {
                     id: true,
@@ -87,9 +89,10 @@ const usersController = {
                     authCategory: true,
                     trainee: {
                         select: {
-                            callsign: true
+                            callsign: true,
+                            category: true,
                         }
-                    }
+                    },
                 },
             });
             console.log("Backendsendrequest", updatedData);

@@ -10,11 +10,16 @@ export type NewUser = BasicUser & {
 
 export type User = BasicUser & {
   id: number;
+  category?: {}
+  categories?: {
+    name: string;
+  }
   accountTypes?: {
     name: string;
   };
   approved: boolean;
   trainee?: {
     callsign?: string;
+    category?: number;
   }
 };
