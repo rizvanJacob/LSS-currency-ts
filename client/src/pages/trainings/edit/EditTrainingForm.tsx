@@ -50,13 +50,10 @@ export default function EditTrainingForm(): JSX.Element {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setTraining(training => {
-            if (name === 'name') {
+            if (name === 'requirement') {
             return {
                 ...training,
-                requirements: {
-                ...training.requirements,
-                name: value
-                }
+                requirement: requirementTypes.find((type) => (value === type.name))?.id ?? 0,
             };
             } else if (name === 'start') {
                 const newStart = dayjs(value).toDate();
@@ -93,9 +90,9 @@ export default function EditTrainingForm(): JSX.Element {
                         <Field
                             as="select"
                             type="text"
-                            id="name"
-                            name="name"
-                            value={training?.requirements?.name || ""}
+                            id="requirement"
+                            name="requirement"
+                            value={requirementTypes.find((type) => (training?.requirement === type.id))?.name || ""}
                             onChange={handleInputChange}
                         >
                             <option value="">Select a requirement</option>
@@ -107,7 +104,7 @@ export default function EditTrainingForm(): JSX.Element {
                                 )
                             })}
                         </Field>
-                        <ErrorMessage name="name" />
+                        <ErrorMessage name="requirement" />
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <label>Start Date:</label>
