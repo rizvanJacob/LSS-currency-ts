@@ -45,6 +45,7 @@ const trainingsController = {
           capacity: true,
           complete: true,
           instruction: true,
+          requirement: true,
           requirements: {
             select: {
               name: true,
@@ -81,7 +82,8 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.id);
-      const { name, start, end, capacity, instruction } = req.body;
+      console.log("updated training req body", req.body)
+      const { requirement, start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
         data: {
@@ -89,11 +91,7 @@ const trainingsController = {
           end,
           capacity,
           instruction,
-          requirements: {
-            update: {
-              name: name,
-            },
-          },
+          requirement,
         },
         select: {
           id: true,
@@ -101,11 +99,7 @@ const trainingsController = {
           end: true,
           capacity: true,
           instruction: true,
-          requirements: {
-            select: {
-              name: true,
-            },
-          },
+          requirement: true,
         },
       });
       res.status(200).json(updatedTraining);

@@ -40,9 +40,14 @@ const SignUpPage = (): JSX.Element => {
   }, []);
 
   const handleSubmit = () => {
-    postRequest("/api/users", user, setUser);
-    alert("Please wait for your account to be approved");
-    navigate("/", { replace: true });
+    if (user.openId) {
+      postRequest("/api/users", user, setUser);
+      alert("Please wait for your account to be approved");
+      navigate("/", { replace: true });
+    } else {
+      alert("You do not have a valid token from Singpass, please log in again")
+      navigate("/", { replace: true });
+    }
   };
 
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
