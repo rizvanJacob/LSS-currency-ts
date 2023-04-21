@@ -9,34 +9,37 @@ import putRequest from "../../../utilities/putRequest";
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
+  const [categoryTypes, setCategoryTypes] = useState<SimpleLookup[] | null>(null);
   const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
-    accountType: 0,
+    accountType: 3,
     approved: false,
+    authCategory: 0,
   });
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRequest(`/api/users/${id}`, setUser);
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
+    getRequest(`/api/lookup/categories`, setCategoryTypes);
+    getRequest(`/api/users/${id}`, setUser);
   }, []);
 
   const handleFormSubmit = async () => {
-    await putRequest(`/api/users/${id}`, user, setUser);
+    if (!user.approved) {
+      const updatedUser = { ...user, approved: !user.approved };
+      setUser(updatedUser);
+      await putRequest(`/api/users/${id}`, updatedUser, setUser);
+    } else {
+      await putRequest(`/api/users/${id}`, user, setUser);
+    }
     navigate(`/users`);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
-  };
-
-  const handleToggleApprovedStatus = async () => {
-    const updatedUser = { ...user, approved: !user.approved };
-    console.log("handleToggle", updatedUser);
-    setUser(updatedUser);
-    await putRequest(`/api/users/${id}`, updatedUser, setUser);
+    const parsedValue = (name === "authCategory" || name === "accountType") ? parseInt(value) : value;
+    setUser({ ...user, [name]: parsedValue });
   };
 
   return (
@@ -61,6 +64,7 @@ export default function EditUserForm(): JSX.Element {
                 <label>Account Type:</label>
                 <Field
                   as="select"
+                  type="number"
                   id="accountType"
                   name="accountType"
                   value={user?.accountType || ""}
@@ -76,29 +80,52 @@ export default function EditUserForm(): JSX.Element {
                 </Field>
                 <ErrorMessage name="accountType" />
               </div>
+
+              {user.accountType === 2 && (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <label>Authorization Category:</label>
+                  <Field
+                    as="select"
+                    type="number"
+                    id="authCategory"
+                    name="authCategory"
+                    value={user?.authCategory || ""}
+                    onChange={handleInputChange}
+                  >
+                    {categoryTypes?.map((type) => {
+                      return (
+                        <option value={type.id} key={type.id}>
+                          {type.name}
+                        </option>
+                      );
+                    })}
+                  </Field>
+                  <ErrorMessage name="authCategory" />
+                </div>
+              )}
+              
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Account Status:</label>
                 <a>{user?.approved ? "Approved" : "Not Approved"}</a>
-                {!user?.approved && (
-                  <button
-                    type="button"
-                    id="approved"
-                    name="approved"
-                    onClick={handleToggleApprovedStatus}
-                    style={{ marginLeft: "0.5rem" }}
-                  >
-                    ✔️
-                  </button>
-                )}
               </div>
               <div style={{ marginTop: "2rem", textAlign: "center" }}>
-                <button
-                  type="submit"
-                  disabled={isSubmitting || isValidating || !isValid}
-                  style={{ backgroundColor: "#00A0A0" }}
-                >
-                  Update User
-                </button>
+                {!user?.approved ? (
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isValidating || !isValid}
+                    style={{ backgroundColor: "#00A0A0" }}
+                  >
+                    Update User and Approve
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isValidating || !isValid}
+                    style={{ backgroundColor: "#00A0A0" }}
+                  >
+                    Update User
+                  </button>
+                )}
               </div>
             </Form>
           )}
