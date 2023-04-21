@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 const usersController = {
 
     createUser: async (req: Request, res: Response, err: any) => {
-        const { openId, accountType, displayName } = req.body;
+        const { openId, accountType, displayName, authCategory } = req.body;
         console.log("req.body", req.body);
         try {
             const user = await prisma.user.create({
@@ -11,6 +11,7 @@ const usersController = {
                     openId: openId,
                     accountType: parseInt(accountType),
                     displayName: displayName,
+                    authCategory: authCategory,
                 },
             })
             res.status(200).json(user);
@@ -50,6 +51,7 @@ const usersController = {
                     displayName: true,
                     accountType: true,
                     approved: true,
+                    authCategory: true,
                 },
             });
             console.log(userData);
@@ -62,15 +64,17 @@ const usersController = {
     updateUserById: async(req: Request, res: Response, err: any) => {
         try {
             const id = parseInt(req.params.id);
-            const {displayName, accountType, approved } = req.body;
+            console.log(req.body);
+            const {displayName, approved, accountType, authCategory} = req.body;
             const updatedData = await prisma.user.update({
                 where: { id },
-                data: { displayName, accountType, approved},
+                data: { displayName, accountType, approved, authCategory},
                 select: {
                     id: true,
                     displayName: true,
                     accountType: true,
                     approved: true,
+                    authCategory: true,
                 },
             });
             res.status(200).json(updatedData);
