@@ -1,22 +1,33 @@
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+const MAX_USERS = 100;
 const usersController = {
 
     createUser: async (req: Request, res: Response, err: any) => {
         const { openId, accountType, displayName, authCategory } = req.body;
         console.log("req.body", req.body);
         try {
-            const user = await prisma.user.create({
-                data: {
-                    openId: openId,
-                    accountType: parseInt(accountType),
-                    displayName: displayName,
-                    authCategory: authCategory,
-                },
-            })
-            res.status(200).json(user);
+            const numUsers = await prisma.user.count();
+            console.log(`There are ${numUsers} records in the database`);
+            if (numUsers < MAX_USERS) {
+                try {
+                    const user = await prisma.user.create({
+                        data: {
+                            openId: openId,
+                            accountType: parseInt(accountType),
+                            displayName: displayName,
+                            authCategory: authCategory,
+                        },
+                    })
+                    res.status(200).json(user);
+                } catch (err) {
+                    res.status(500).json({message: "Creation of user has failed."})
+                }
+            } else {
+                res.status(400).json({message: "No more account creation is allowed"})
+            }
         } catch (err) {
-            res.status(500).json({err})
+            res.status(500).json({err});
         }
     },
 
