@@ -8,22 +8,32 @@ import putRequest from "../../../utilities/putRequest";
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
-  const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
-  const [categoryTypes, setCategoryTypes] = useState<SimpleLookup[] | null>(null);
+  const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
+  const [categoryTypes, setCategoryTypes] = useState<SimpleLookup[]>([]);
   const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
     accountType: 3,
     approved: false,
     authCategory: 0,
+    categories: {
+      name: ""
+    },
+    trainee: {
+      callsign: "",
+      category: 0
+    },
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
-    getRequest(`/api/users/${id}`, setUser);
   }, []);
+
+  useEffect(() => {
+    getRequest(`/api/users/${id}`, setUser);
+  }, [id]);
 
   const handleFormSubmit = async () => {
     if (!user.approved) {
@@ -39,7 +49,30 @@ export default function EditUserForm(): JSX.Element {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const parsedValue = (name === "authCategory" || name === "accountType") ? parseInt(value) : value;
-    setUser({ ...user, [name]: parsedValue });
+    setUser(user => {
+      if (name === "callsign") {
+        return {
+          ...user,
+          trainee: {
+            ...user.trainee,
+            callsign: parsedValue.toString()
+          }
+        }
+      } else if (name === "category") {
+        return {
+          ...user,
+          trainee: {
+            ...user.trainee,
+            category: categoryTypes?.find((type) => (value === type.name))?.id ?? 0,
+          },
+        }
+      } else {
+        return {
+          ...user,
+          [name]: parsedValue
+        }
+      }
+    });
   };
 
   return (
@@ -92,18 +125,49 @@ export default function EditUserForm(): JSX.Element {
                     value={user?.authCategory || ""}
                     onChange={handleInputChange}
                   >
-                    {categoryTypes?.map((type) => {
-                      return (
-                        <option value={type.id} key={type.id}>
-                          {type.name}
-                        </option>
-                      );
-                    })}
+                    {categoryTypes.map((type) => (
+                      <option value={type.id} key={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
                   </Field>
                   <ErrorMessage name="authCategory" />
                 </div>
               )}
-              
+              {user.accountType === 3 && (
+                <>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <label>Callsign:</label>
+                  <Field
+                    type="text"
+                    id="callsign"
+                    name="callsign"
+                    value={user?.trainee?.callsign || ""}
+                    onChange={handleInputChange}
+                  />
+                  <ErrorMessage name="callsign" />
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <label>Category:</label>
+                  <Field
+                    as="select"
+                    type="text"
+                    id="category"
+                    name="category"
+                    value={categoryTypes.find((type) => (user?.trainee?.category === type.id))?.name || ""}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select a category</option>
+                    {categoryTypes.map((type) => (
+                        <option value={type.name} key={type.id}>
+                          {type.name}
+                        </option>
+                    ))}  
+                  </Field>
+                  <ErrorMessage name="category" />
+                </div>
+                </>
+              )}
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Account Status:</label>
                 <a>{user?.approved ? "Approved" : "Not Approved"}</a>
