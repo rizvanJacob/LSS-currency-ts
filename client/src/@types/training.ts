@@ -1,32 +1,29 @@
-
 export type NewTraining = {
-    id: number;
-    start: Date;
-    end: Date;
-    capacity: number;
-    instruction: string;
-    requirement: number;
-    requirements?: {
-        name: string;
-    };
-}
-
+  id: number;
+  start: Date;
+  end: Date;
+  capacity: number;
+  instruction: string;
+  requirement: number;
+  requirements?: {
+    name: string;
+  };
+};
 
 export type Training = NewTraining & {
-    requirements: {
-        name: string;
-    };
-    complete?: boolean;
+  requirements: {
+    name: string;
+  };
+  complete?: boolean;
+  trainees: {
     trainees: {
-        trainees: {
-            callsign: string,
-            categories: {
-                name: string,
-            },
-            currencies: {
-                expiry: Date
-            }
-        }
+      callsign: string;
+      categories: {
+        name: string;
+      };
+      currencies: {
+        expiry: Date;
+      };
     };
-    
-}
+  };
+};

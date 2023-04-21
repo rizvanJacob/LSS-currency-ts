@@ -62,9 +62,29 @@ const show = async (req: Request, res: Response) => {
     res.status(500);
   }
 };
+
 const create = (req: Request, res: Response) => {
   const { trainee } = req.body;
   console.log(trainee);
+};
+
+const book = async (req: Request, res: Response) => {
+  const { id, trainingId } = req.params;
+
+  try {
+    const booking = await prisma.traineeToTraining.create({
+      data: {
+        trainee: Number(id),
+        training: Number(trainingId),
+        status: 1,
+      },
+    });
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500);
+  }
+
+  console.log(`trainee: ${id}, training: ${trainingId}`);
 };
 
 const update = async (req: Request, res: Response) => {
@@ -138,4 +158,4 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
-export { index, show, create, update, deleteController as delete };
+export { index, show, create, update, book, deleteController as delete };
