@@ -7,16 +7,18 @@ export default function TrainingPage(): JSX.Element {
     const { id } = useParams();
     const [trainings, setTrainings] = useState<Training[]>([])
     const [training, setTraining] = useState<Training>({ 
-            id: 0,
-            capacity: 0,
-            start: new Date(),
-            end: new Date(),
-            complete: false,
-            requirement: 0,
-            requirements: {
-                name: ''
-            },
-            trainees: {
+        id: 0,
+        capacity: 0,
+        start: new Date(),
+        end: new Date(),
+        complete: false,
+        requirement: 0,
+        requirements: {
+            name: ''
+        },
+        instruction: "",
+        trainees: [
+            {
                 trainees: {
                     callsign: '',
                     categories: {
@@ -26,9 +28,9 @@ export default function TrainingPage(): JSX.Element {
                         expiry: new Date()
                     }
                 }
-            },
-            instruction: ""
-        });
+            },   
+        ]
+    });
 
 
     useEffect(() => {
