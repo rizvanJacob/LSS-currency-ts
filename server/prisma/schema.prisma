@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["clientExtensions"]
+  previewFeatures = ["clientExtensions", "extendedWhereUnique"]
 }
 
 generator erd {
@@ -95,6 +95,7 @@ model CategoryToRequirement {
   category      Int
   requirements  Requirement @relation(fields: [requirement], references: [id])
   requirement   Int
+  @@unique([category, requirement])
 }
 
 model Training {
@@ -121,6 +122,7 @@ model TraineeToTraining {
   status        Int    
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @default(now()) @db.Timestamp(6)
+  @@unique([trainee, training])
 }
 
 model Status {

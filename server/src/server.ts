@@ -24,10 +24,6 @@ app.use("/api/trainees", traineesRouter);
 app.use("/api/trainings", trainingsRouter);
 app.use("/api/lookup", lookupRouter);
 
-app.get("/", (req, res) => {
-  res.send("connected to express server");
-});
-
 app.get("/api/auth");
 
 const PORT = 3000;
