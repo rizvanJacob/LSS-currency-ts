@@ -63,7 +63,7 @@ export default function EditUserForm(): JSX.Element {
           ...user,
           trainee: {
             ...user.trainee,
-            category: categoryTypes?.find((type) => (value === type.name))?.id ?? 0,
+            category: categoryTypes?.find((type) => (parsedValue === type.name))?.id ?? 0,
           },
         }
       } else {
@@ -100,6 +100,7 @@ export default function EditUserForm(): JSX.Element {
                   type="number"
                   id="accountType"
                   name="accountType"
+                  disabled
                   value={user?.accountType || ""}
                   onChange={handleInputChange}
                 >
@@ -125,6 +126,7 @@ export default function EditUserForm(): JSX.Element {
                     value={user?.authCategory || ""}
                     onChange={handleInputChange}
                   >
+                    <option value={0}>Select a category</option>
                     {categoryTypes.map((type) => (
                       <option value={type.id} key={type.id}>
                         {type.name}

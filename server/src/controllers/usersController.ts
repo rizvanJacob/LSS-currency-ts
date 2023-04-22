@@ -83,14 +83,14 @@ const usersController = {
             console.log("request body", req.body);
             const {displayName, approved, accountType, authCategory, trainee} = req.body;
             const updatedData = await prisma.user.update({
-                where: { id },
+                where: { id: id },
                 data: { displayName, accountType, approved, authCategory,
-                    trainee: {
+                    trainee: trainee ? {
                         update: {
                             callsign: trainee?.callsign,
-                            category: parseInt(trainee?.category),
+                            category: Number(trainee?.category),
                         }
-                    },
+                    } : undefined,
                 },
                 select: {
                     id: true,
@@ -115,11 +115,22 @@ const usersController = {
 
     deleteUserById: async (req: Request, res: Response, err: any) => {
         try {
-            const id = parseInt(req.params.id);
-            await prisma.user.delete({
-                where: { id },
-            })
-            res.status(200).json({message: "User deleted successfully"});
+            const userId = parseInt(req.params.id);
+            const existingTrainee = await prisma.trainee.findUnique({
+                where: {user :userId}
+            });
+
+            await prisma.$transaction(async (prisma) => {
+                if (existingTrainee) {
+                    await prisma.trainee.delete({
+                        where: { user: userId }
+                    })
+                }
+                await prisma.user.delete({
+                    where: { id: userId },
+                });
+            });
+            res.status(200).json({message: "User and trainee profile deleted successfully"});
         } catch (err) {
             res.status(500).json({err})
         }
