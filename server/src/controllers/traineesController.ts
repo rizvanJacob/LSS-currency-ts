@@ -92,7 +92,6 @@ const update = async (req: Request, res: Response) => {
   console.log(trainee);
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
-    // console.log(c);
     const upsertTransaction = prisma.currency.upsert({
       where: { id: c.id || 0 },
       update: {
@@ -110,8 +109,14 @@ const update = async (req: Request, res: Response) => {
     return upsertTransaction;
   });
 
+  const updateTrainee = prisma.currency.update({
+    where: { id: trainee.id },
+    data: { trainee },
+  });
+
   try {
     await Promise.all(upsertCurrencies);
+    await updateTrainee;
     res.status(200).send("updated");
   } catch (error) {
     res.status(500).send("unable to update");

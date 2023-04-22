@@ -1,7 +1,7 @@
 import { setCurrentUserProp } from "../../@types/currentUser";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage";
-import LoginCallback from "./LoginCallbackPage";
+import LoginCallbackPage from "./LoginCallbackPage";
 import SignUpPage from "./SignUpPage";
 
 const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
@@ -10,7 +10,7 @@ const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
       <Route path="/*" element={<HomePage />} />
       <Route
         path="/loginCallback"
-        element={<LoginCallback setCurrentUser={setCurrentUser} />}
+        element={<LoginCallbackPage setCurrentUser={setCurrentUser} />}
       />
       <Route path="/new" element={<SignUpPage />} />
     </Routes>

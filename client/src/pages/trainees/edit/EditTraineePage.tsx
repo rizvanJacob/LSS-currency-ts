@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import getRequest from "../../../utilities/getRequest";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
 import TraineeParticularsFieldset from "../../../components/FormFieldsets/TraineeParticularsFieldset";
 import { Trainee } from "../../../@types/trainee";

@@ -3,7 +3,9 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
 
-const LoginCallback = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
+const LoginCallbackPage = ({
+  setCurrentUser,
+}: setCurrentUserProp): JSX.Element => {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code") as string;
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const LoginCallback = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
   return <>Authorizing...</>;
 };
 
-export default LoginCallback;
+export default LoginCallbackPage;
 
 const attemptLogin = async (
   signal: AbortSignal,

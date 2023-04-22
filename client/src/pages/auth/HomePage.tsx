@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
 
+type AuthURLs = {
+  login: string;
+  checkin: string;
+};
+
 const HomePage = (): JSX.Element => {
-  const [authUrl, setAuthUrl] = useState<string>("");
+  const [authUrls, setAuthUrls] = useState<AuthURLs>({
+    login: "",
+    checkin: "",
+  });
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    const getAuthUrl = async () => {
+    const getAuthUrls = async () => {
       const res = await fetch("/api", { signal: signal });
-      const { url } = await res.json();
-      setAuthUrl(url);
+      const data = await res.json();
+      setAuthUrls(data);
     };
-    getAuthUrl();
+    getAuthUrls();
     return () => {
       controller.abort;
     };
@@ -19,8 +27,12 @@ const HomePage = (): JSX.Element => {
 
   return (
     <>
-      <a href={authUrl}>LOGIN LINK</a>
-      <h1>CHECK IN</h1>
+      <a href={authUrls.login}>
+        <h1>LOGIN</h1>
+      </a>
+      <a href={authUrls.checkin}>
+        <h1>CHECK IN</h1>
+      </a>
     </>
   );
 };

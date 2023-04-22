@@ -6,10 +6,34 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-const generateUrl = (req: Request, res: Response) => {
-  const url = client.authorizationUrl("state", "openid", null);
+const generateUrl = async (req: Request, res: Response) => {
+  const clientUrl = new URL("http://example.com");
+  clientUrl.protocol = req.protocol;
+  clientUrl.hostname = req.hostname;
+  clientUrl.port = "5173";
 
-  res.status(200).json(url);
+  const loginCallback = `${clientUrl}loginCallback`;
+  const checkinCallback = `${clientUrl}checkinCallback`;
+
+  const login = client.authorizationUrl(
+    "state",
+    "openid",
+    null,
+    loginCallback
+  ).url;
+
+  const checkin = client.authorizationUrl(
+    "state",
+    "openid",
+    null,
+    checkinCallback
+  ).url;
+
+  console.log(`login: ${loginCallback}
+  check in: ${checkinCallback}`);
+
+  res.status(200).json({ login, checkin });
+  // res.status(200).json({ login: login.url, checkin: checkin.url });
 };
 
 const login = async (req: Request, res: Response) => {
