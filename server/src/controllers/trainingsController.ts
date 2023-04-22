@@ -19,7 +19,6 @@ const trainingsController = {
             },
           },
           trainees: {
-            where: { status: 1 },
             include: {
               trainees: true,
             },

@@ -13,7 +13,9 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   const [isLoading, setIsLoading] = useState(false);
   const [buttonText, setButtonText] = useState("");
   const { id } = useParams();
-  const vacancies = training.capacity - training.trainees.length;
+
+  const bookedTrainees = training.trainees.filter((t) => t.status === 1);
+  const vacancies = training.capacity - bookedTrainees.length;
 
   const bookTraining = async () => {
     setIsLoading(true);
@@ -26,12 +28,15 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   };
 
   useEffect(() => {
-    if (
-      training.trainees.find((t) => {
-        return t.trainee === Number(id);
-      })
-    ) {
-      setButtonText("Unbook");
+    const booking = training.trainees.find((t) => {
+      return t.trainee === Number(id);
+    });
+    if (booking) {
+      if (booking.status === 1) {
+        setButtonText("Unbook");
+      } else {
+        setButtonText("Leave Waitlist");
+      }
     } else {
       if (vacancies) {
         setButtonText("Book");
