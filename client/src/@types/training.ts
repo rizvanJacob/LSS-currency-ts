@@ -25,5 +25,5 @@ export type Training = NewTraining & {
         expiry: Date;
       };
     };
-  };
+  }[];
 };

@@ -66,17 +66,17 @@ const show = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const { callsign, category, user } = req.body;
-    console.log("req.body", req.body)
+    console.log("req.body", req.body);
     const newTrainee = await prisma.trainee.create({
       data: {
         callsign: callsign,
         category: Number(category),
-        user: Number(user)
-      }
+        user: Number(user),
+      },
     });
     res.status(200).json(newTrainee);
   } catch (err) {
-    res.status(500).json({err})
+    res.status(500).json({ err });
   }
 };
 
@@ -94,15 +94,33 @@ const updateBooking = async (req: Request, res: Response) => {
 };
 
 const book = async (traineeId: number, trainingId: number) => {
-  const booking = await prisma.traineeToTraining.findFirst({
+  const existingBooking = await prisma.traineeToTraining.findFirst({
     where: { trainee: traineeId, training: trainingId },
   });
+  if (existingBooking) {
+    console.log("delete booking");
+    return await prisma.traineeToTraining.delete({
+      where: { id: existingBooking.id },
+    });
+  }
 
-  // if (booking)
-  //if traineeId + trainingId in traineesToTrainings, delete it
-  //else:
-  //if training is full, add to waitlist
-  //else, book
+  const training = await prisma.training.findUnique({
+    where: { id: trainingId },
+    select: { capacity: true, trainees: { select: { id: true } } },
+  });
+
+  let status = 1;
+  if (training && training?.trainees.length >= training?.capacity) {
+    status = 6;
+  }
+  console.log("make booking. status: ", status);
+  return await prisma.traineeToTraining.create({
+    data: {
+      trainee: traineeId,
+      training: trainingId,
+      status: status,
+    },
+  });
 };
 
 const update = async (req: Request, res: Response) => {

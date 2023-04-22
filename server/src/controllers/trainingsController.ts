@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
     const { requirement } = req.query;
-    console.log(requirement);
     try {
       const allTrainings = await prisma.training.findMany({
         where: {
@@ -82,7 +81,7 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.id);
-      console.log("updated training req body", req.body)
+      console.log("updated training req body", req.body);
       const { requirement, start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
