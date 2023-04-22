@@ -16,7 +16,9 @@ export type Training = NewTraining & {
   };
   complete?: boolean;
   trainees: {
+    trainee?: number;
     trainees: {
+      id?: number;
       callsign: string;
       categories: {
         name: string;

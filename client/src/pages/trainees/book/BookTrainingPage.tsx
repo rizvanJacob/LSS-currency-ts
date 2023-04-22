@@ -7,7 +7,7 @@ import { Training } from "../../../@types/training";
 import TrainingCard from "./components/TrainingCard";
 
 const BookTrainingPage = () => {
-  const [loaded, setLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const [displayTrainings, setDisplayTrainings] = useState<Training[]>([]);
@@ -19,7 +19,7 @@ const BookTrainingPage = () => {
       `/api/trainings/?trainee=${id}&requirement=${requirement}`,
       setTrainings
     ).then(() => {
-      setLoaded(true);
+      setIsLoaded(true);
     });
   }, []);
 
@@ -28,11 +28,22 @@ const BookTrainingPage = () => {
       dayjs(t.start).isSame(dayjs(displayDate), "day")
     );
     setDisplayTrainings(display);
-  }, [displayDate]);
+  }, [displayDate, trainings]);
+
+  const updateTraining = (newTraining: Training) => {
+    setTrainings(
+      trainings.map((t) => {
+        if (t.id === newTraining.id) {
+          return newTraining;
+        }
+        return t;
+      })
+    );
+  };
 
   return (
     <>
-      {loaded ? (
+      {isLoaded ? (
         <>
           <TrainingCalendar
             trainings={trainings}
@@ -40,7 +51,13 @@ const BookTrainingPage = () => {
             setDisplayDate={setDisplayDate}
           />
           {displayTrainings.map((t) => {
-            return <TrainingCard training={t} key={t.id} />;
+            return (
+              <TrainingCard
+                training={t}
+                key={t.id}
+                updateTraining={updateTraining}
+              />
+            );
           })}
           <p>{JSON.stringify(trainings)}</p>
         </>
