@@ -1,6 +1,7 @@
 export type NewTrainee = {
   callsign: string;
   category: number;
+  user?: number;
 };
 
 export type Trainee = NewTrainee & {
@@ -11,7 +12,6 @@ export type Trainee = NewTrainee & {
     name: string;
     requirements?: { requirements: Requirement }[];
   };
-  user: number;
   users: {
     approved: boolean;
   };

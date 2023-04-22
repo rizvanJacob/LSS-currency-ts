@@ -21,6 +21,7 @@ const blankUser = {
 const blankTrainee = {
   callsign: "",
   category: 0,
+  user: 0,
 };
 
 const SignUpPage = (): JSX.Element => {
@@ -31,6 +32,7 @@ const SignUpPage = (): JSX.Element => {
     openId: location.state?.openId,
   });
   const [trainee, setTrainee] = useState<NewTrainee>(blankTrainee);
+  const [includeTrainee, setIncludeTrainee] = useState<boolean>(false);
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
@@ -39,9 +41,17 @@ const SignUpPage = (): JSX.Element => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (user.openId) {
-      postRequest("/api/users", user, setUser);
+      if ((Number(user.accountType) === 2 && includeTrainee) || Number(user.accountType) === 3) {
+        const userResponsePromise = postRequest("/api/users", {...user, displayName: (Number(user.accountType) === 3) ? trainee.callsign : user.displayName}, setUser);
+        const traineeResponsePromise = userResponsePromise.then(userResponse => {
+          return postRequest("/api/trainees", {...trainee, user: Number(userResponse?.data.id)}, setTrainee);
+        });
+        await Promise.all([userResponsePromise, traineeResponsePromise]);
+      } else {
+        postRequest("/api/users", user, setUser);
+      }
       alert("Please wait for your account to be approved");
       navigate("/", { replace: true });
     } else {
@@ -57,7 +67,7 @@ const SignUpPage = (): JSX.Element => {
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setTrainee({ ...trainee, [name]: value });
+    setTrainee({ ...trainee, [name]: (name === "category") ? Number(value) : value });
   };
 
   return (
@@ -92,6 +102,8 @@ const SignUpPage = (): JSX.Element => {
                 user={user}
                 handleChange={handleUserChange}
                 setTrainee={setTrainee}
+                includeTrainee={includeTrainee}
+                setIncludeTrainee={setIncludeTrainee}
               />
             )}
             {user.accountType == 3 && (

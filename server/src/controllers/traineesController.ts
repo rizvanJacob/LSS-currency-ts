@@ -63,9 +63,21 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
-const create = (req: Request, res: Response) => {
-  const { trainee } = req.body;
-  console.log(trainee);
+const create = async (req: Request, res: Response) => {
+  try {
+    const { callsign, category, user } = req.body;
+    console.log("req.body", req.body)
+    const newTrainee = await prisma.trainee.create({
+      data: {
+        callsign: callsign,
+        category: Number(category),
+        user: Number(user)
+      }
+    });
+    res.status(200).json(newTrainee);
+  } catch (err) {
+    res.status(500).json({err})
+  }
 };
 
 const updateBooking = async (req: Request, res: Response) => {
