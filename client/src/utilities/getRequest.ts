@@ -7,7 +7,7 @@ async function getRequest(
   try {
     const response = await axios.get(url);
     setState(response.data);
-    // console.log(response.data);
+    return response;
   } catch (err) {
     console.error(err);
   }

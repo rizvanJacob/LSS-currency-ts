@@ -29,6 +29,7 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
       <label>Category: </label>
       <Field
         as="select"
+        type="number"
         name="category"
         value={trainee.category}
         onChange={handleChange}

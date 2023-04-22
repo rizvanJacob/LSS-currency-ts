@@ -11,6 +11,7 @@ async function postRequest(url: string, data: object, setState: React.Dispatch<R
             setState(response.data);
         }
         console.log(response.data);
+        return response;
     } catch (err) {
         console.error(err);
     }

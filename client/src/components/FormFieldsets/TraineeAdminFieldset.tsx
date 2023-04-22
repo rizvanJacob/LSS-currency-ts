@@ -10,11 +10,13 @@ type Prop = {
   user: NewUser;
   handleChange: any;
   setTrainee: React.Dispatch<React.SetStateAction<NewTrainee>>;
+  includeTrainee: boolean;
+  setIncludeTrainee: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const TraineeAdminFieldset = ({ user, handleChange, setTrainee }: Prop) => {
+const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, setIncludeTrainee }: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
-  const [includeTrainee, setIncludeTrainee] = useState<boolean>(false);
+  //const [includeTrainee, setIncludeTrainee] = useState<boolean>(false);
 
   useEffect(() => {
     getRequest("/api/lookup/categories", setCategories);

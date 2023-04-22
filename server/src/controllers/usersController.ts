@@ -4,7 +4,7 @@ const MAX_USERS = 100;
 const usersController = {
 
     createUser: async (req: Request, res: Response, err: any) => {
-        const { openId, accountType, displayName, authCategory } = req.body;
+        const { openId, accountType, displayName, authCategory} = req.body;
         console.log("req.body", req.body);
         try {
             const numUsers = await prisma.user.count();
@@ -14,9 +14,9 @@ const usersController = {
                     const user = await prisma.user.create({
                         data: {
                             openId: openId,
-                            accountType: parseInt(accountType),
+                            accountType: Number(accountType),
                             displayName: displayName,
-                            authCategory: authCategory,
+                            authCategory: (accountType === 2) ? Number(authCategory) : null,
                         },
                     })
                     res.status(200).json(user);

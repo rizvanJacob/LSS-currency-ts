@@ -16,7 +16,7 @@ const login = async (req: Request, res: Response) => {
   const { code } = req.params;
   try {
     const { sub: openId } = await client.callback(code as string, null);
-    console.log(openId);
+    console.log("openId", openId);
     try {
       const userData = await prisma.user.findUniqueOrThrow({
         where: { openId } as any,
