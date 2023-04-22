@@ -7,7 +7,7 @@ router.get("/", traineesController.index);
 router.get("/:id", traineesController.show);
 router.post("/", traineesController.create);
 router.put("/:id", traineesController.update);
-router.put("/:id/book/:trainingId", traineesController.book);
+router.put("/:id/book/:trainingId", traineesController.updateBooking);
 router.delete("/:id", traineesController.delete);
 
 export default router;

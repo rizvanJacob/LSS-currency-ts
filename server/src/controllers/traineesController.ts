@@ -68,23 +68,29 @@ const create = (req: Request, res: Response) => {
   console.log(trainee);
 };
 
-const book = async (req: Request, res: Response) => {
+const updateBooking = async (req: Request, res: Response) => {
   const { id, trainingId } = req.params;
 
   try {
-    const booking = await prisma.traineeToTraining.create({
-      data: {
-        trainee: Number(id),
-        training: Number(trainingId),
-        status: 1,
-      },
-    });
+    const booking = await book(Number(id), Number(trainingId));
     res.status(200).json(booking);
   } catch (error) {
     res.status(500);
   }
 
   console.log(`trainee: ${id}, training: ${trainingId}`);
+};
+
+const book = async (traineeId: number, trainingId: number) => {
+  const booking = await prisma.traineeToTraining.findFirst({
+    where: { trainee: traineeId, training: trainingId },
+  });
+
+  // if (booking)
+  //if traineeId + trainingId in traineesToTrainings, delete it
+  //else:
+  //if training is full, add to waitlist
+  //else, book
 };
 
 const update = async (req: Request, res: Response) => {
@@ -163,4 +169,11 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
-export { index, show, create, update, book, deleteController as delete };
+export {
+  index,
+  show,
+  create,
+  update,
+  updateBooking,
+  deleteController as delete,
+};
