@@ -10,28 +10,30 @@ export default function EditTrainingForm(): JSX.Element {
     const { id } = useParams();
     const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
     const [training, setTraining] = useState<Training>({ 
-                id: 0,
-                capacity: 0,
-                start: new Date(),
-                end: new Date(),
-                complete: false,
-                requirement: 0,
-                requirements: {
-                    name: ''
-                },
+        id: 0,
+        capacity: 0,
+        start: new Date(),
+        end: new Date(),
+        complete: false,
+        requirement: 0,
+        requirements: {
+            name: ''
+        },
+        instruction: "",
+        trainees: [
+            {
                 trainees: {
-                    trainees: {
-                        callsign: '',
-                        categories: {
-                            name: '',
-                        },
-                        currencies: {
-                            expiry: new Date()
-                        }
+                    callsign: '',
+                    categories: {
+                        name: '',
+                    },
+                    currencies: {
+                        expiry: new Date()
                     }
-                },
-                instruction: ""
-            });
+                }
+            },   
+        ]
+    });
     const navigate = useNavigate();
 
     useEffect(() => {

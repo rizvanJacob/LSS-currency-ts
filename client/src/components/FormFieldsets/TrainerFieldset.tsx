@@ -6,7 +6,8 @@ import { NewUser } from "../../@types/user";
 import { Requirement } from "../../@types/lookup";
 
 type Props = {
-  user: NewUser;
+  user: NewUser & { trainings?: { id?: number; user?: number; requirement?: number }[] };
+  setUser: React.Dispatch<React.SetStateAction<NewUser>>
   handleChange: any;
   requirementsProvided: number[];
   setRequirementsProvided: React.Dispatch<React.SetStateAction<number[]>>;
@@ -14,6 +15,7 @@ type Props = {
 
 const TrainerFieldset = ({
   user,
+  setUser,
   handleChange,
   requirementsProvided,
   setRequirementsProvided,
@@ -25,16 +27,26 @@ const TrainerFieldset = ({
   }, []);
 
   const changeRequirementsProvided = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = Number(event.target.value);
     if (requirementsProvided.includes(value)) {
       setRequirementsProvided(requirementsProvided.filter((r) => r !== value));
+      setUser({
+      ...user,
+      trainings: user.trainings?.filter((t) => t.requirement !== value)
+    });
     } else {
       setRequirementsProvided([...requirementsProvided, value]);
+      setUser({
+      ...user,
+      trainings: [
+        ...(user.trainings ?? []),
+        { requirement: value }
+      ]
+    });
     }
   };
-
   return (
     <fieldset>
       <label>

@@ -4,22 +4,35 @@ const MAX_USERS = 100;
 const usersController = {
 
     createUser: async (req: Request, res: Response, err: any) => {
-        const { openId, accountType, displayName, authCategory} = req.body;
-        console.log("req.body", req.body);
+        const { openId, accountType, displayName, authCategory, trainings} = req.body.user;
+        const { requirementsProvided } = req.body;
         try {
             const numUsers = await prisma.user.count();
             console.log(`There are ${numUsers} records in the database`);
             if (numUsers < MAX_USERS) {
                 try {
-                    const user = await prisma.user.create({
-                        data: {
-                            openId: openId,
-                            accountType: Number(accountType),
-                            displayName: displayName,
-                            authCategory: (accountType === 2) ? Number(authCategory) : null,
-                        },
+                    await prisma.$transaction(async (prisma) => {
+                        const user = await prisma.user.create({
+                            data: {
+                                openId: openId,
+                                accountType: Number(accountType),
+                                displayName: displayName,
+                                authCategory: (accountType === 2) ? Number(authCategory) : null
+                            },
+                        })
+                        
+                        if (accountType === 4) {
+                            await Promise.all(requirementsProvided.map(async (requirement: number) => {
+                                await prisma.trainingProvided.create({
+                                    data: {
+                                        user: user.id,
+                                        requirement: Number(requirement),
+                                    },
+                                })
+                            }))
+                        }
+                        res.status(200).json(user);
                     })
-                    res.status(200).json(user);
                 } catch (err) {
                     res.status(500).json({message: "Creation of user has failed."})
                 }
@@ -116,21 +129,32 @@ const usersController = {
     deleteUserById: async (req: Request, res: Response, err: any) => {
         try {
             const userId = parseInt(req.params.id);
+            const existingUser = await prisma.user.findUnique({
+                where: {id: Number(userId)},
+                select: {
+                    accountType: true
+                }
+            })
             const existingTrainee = await prisma.trainee.findUnique({
-                where: {user :userId}
+                where: {user : Number(userId)}
             });
 
             await prisma.$transaction(async (prisma) => {
                 if (existingTrainee) {
                     await prisma.trainee.delete({
-                        where: { user: userId }
+                        where: { user: Number(userId) }
                     })
-                }
+                };
+                if (existingUser?.accountType === 4) {
+                    await prisma.trainingProvided.deleteMany({
+                        where: { user: Number(userId) }
+                    })
+                };
                 await prisma.user.delete({
                     where: { id: userId },
                 });
             });
-            res.status(200).json({message: "User and trainee profile deleted successfully"});
+            res.status(200).json({message: "User and corresponding relations deleted successfully"});
         } catch (err) {
             res.status(500).json({err})
         }

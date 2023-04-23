@@ -4,11 +4,19 @@ type BasicUser = {
   authCategory?: number;
 };
 
-export type NewUser = BasicUser & {
+export type TrainerUser = {
+    trainings?: {
+      id?: number;
+      user?: number;
+      requirement?: number;
+  }[];
+}
+
+export type NewUser = BasicUser & TrainerUser & {
   openId: string;
 };
 
-export type User = BasicUser & {
+export type User = BasicUser & TrainerUser & {
   id: number;
   category?: {}
   categories?: {
