@@ -22,6 +22,7 @@ const blankTrainee = {
   callsign: "",
   category: 0,
   user: 0,
+
 };
 
 const SignUpPage = (): JSX.Element => {
@@ -49,6 +50,9 @@ const SignUpPage = (): JSX.Element => {
           return postRequest("/api/trainees", {...trainee, user: Number(userResponse?.data.id)}, setTrainee);
         });
         await Promise.all([userResponsePromise, traineeResponsePromise]);
+      } else if (Number(user.accountType) === 4) {
+        console.log(user);
+        postRequest("/api/users", {user, requirementsProvided}, setUser)
       } else {
         postRequest("/api/users", user, setUser);
       }
@@ -62,7 +66,7 @@ const SignUpPage = (): JSX.Element => {
 
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
+    setUser({ ...user, [name]: (name==="accountType") ? Number(value) : value });
   };
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -115,6 +119,7 @@ const SignUpPage = (): JSX.Element => {
             {user.accountType == 4 && (
               <TrainerFieldset
                 user={user}
+                setUser={setUser}
                 handleChange={handleUserChange}
                 requirementsProvided={requirementsProvided}
                 setRequirementsProvided={setRequirementsProvided}
