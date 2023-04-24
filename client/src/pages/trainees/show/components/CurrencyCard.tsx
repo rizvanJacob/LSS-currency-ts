@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Currency } from "../../../../@types/trainee";
 import dayjs from "dayjs";
-import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
+import {
+  CurrencyStatus,
+  computeStatus,
+} from "../../../../utilities/computeCurrencyStatus";
 import { Link, useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
 
@@ -20,9 +23,10 @@ const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
 
 const CurrencyCard = ({ currency }: Prop) => {
   const { id } = useParams();
-  const [status, setStatus] = useState<{ message: string; color: string }>({
+  const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
     color: "",
+    open: false,
   });
   const [booking, setBooking] = useState<Booking>({
     status: 0,
@@ -40,7 +44,7 @@ const CurrencyCard = ({ currency }: Prop) => {
     );
   }, []);
   return (
-    <details>
+    <details open={status.open}>
       <summary>
         <span>{currency?.requirements?.name}</span>
       </summary>
