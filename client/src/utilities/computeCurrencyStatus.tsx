@@ -6,6 +6,7 @@ const MONTHS_TO_DUE_SOON = 3;
 const STATUSES = {
   current: { message: "Current", color: "green" },
   dueSoon: { message: "Due Soon", color: "orange" },
+  dueSoonBooked: { message: "Due Soon, Booked", color: "green" },
   expired: { message: "EXPIRED", color: "red" },
 };
 
@@ -39,6 +40,8 @@ const isDueSoon = (expiry: Date) => {
 
 export const computeStatus = (
   currency: Currency,
+  bookedStatus: number,
+  bookedDate: Date | undefined,
   setStatus: React.Dispatch<
     React.SetStateAction<{ message: string; color: string }>
   >
@@ -50,7 +53,15 @@ export const computeStatus = (
   if (expired) {
     setStatus(STATUSES.expired);
   } else if (dueSoon) {
-    setStatus(STATUSES.dueSoon);
+    const isBookedBeforeExpiry = !dayjs(bookedDate).isAfter(
+      dayjs(currency.expiry),
+      "day"
+    );
+    if (bookedStatus === 1 && isBookedBeforeExpiry) {
+      setStatus(STATUSES.dueSoonBooked);
+    } else {
+      setStatus(STATUSES.dueSoon);
+    }
   } else {
     setStatus(STATUSES.current);
   }

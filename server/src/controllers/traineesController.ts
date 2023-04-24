@@ -38,6 +38,11 @@ const show = async (req: Request, res: Response) => {
                   select: { id: true, name: true, hasSeniority: true },
                 },
               },
+              orderBy: {
+                requirements: {
+                  currencies: {},
+                },
+              },
             },
           },
         },
@@ -60,6 +65,32 @@ const show = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     res.status(500);
+  }
+};
+
+const showBooking = async (req: Request, res: Response) => {
+  const { id, requirementId } = req.params;
+
+  try {
+    const booking = await prisma.traineeToTraining.findFirst({
+      where: {
+        trainee: Number(id),
+        trainings: { requirement: Number(requirementId) },
+      },
+      select: {
+        status: true,
+        trainings: {
+          select: { start: true },
+        },
+      },
+    });
+    if (booking) {
+      res.status(200).json(booking);
+    } else {
+      res.status(404).json({ message: "no bookings found" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
   }
 };
 
@@ -202,6 +233,7 @@ const deleteController = async (req: Request, res: Response) => {
 export {
   index,
   show,
+  showBooking,
   create,
   update,
   updateBooking,
