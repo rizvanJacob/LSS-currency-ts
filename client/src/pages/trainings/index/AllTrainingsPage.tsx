@@ -1,17 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import getRequest from "../../../utilities/getRequest";
 import { Training } from "../../../@types/training";
 import TrainingList from "./TrainingList"
 import CreateTrainingForm from "../create/CreateTrainingButton";
 import { SimpleLookup } from "../../../@types/lookup";
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext } from "../../../App";
+
+const TRAINING_INDEX_ACCESS = [1,2];
 
 export default function AllTrainingsPage(): JSX.Element {
     const [trainings, setTrainings] = useState<Training[]>([]);
-    const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
-    useEffect(() => {
-        getRequest(`/api/trainings`, setTrainings);
-    }, [])
+    const [trainingsProvided, setTrainingsProvided] = useState<any>();
+    const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
     
+    if (TRAINING_INDEX_ACCESS.includes(Number(currentUser?.accountType))) {
+        useEffect(() => {
+            getRequest(`/api/trainings`, setTrainings);
+            
+        }, [])
+    } else if (Number(currentUser?.accountType) === 4) {
+        useEffect(() => {
+            getRequest(`/api/trainings/${Number(currentUser?.id)}/trainer`, setTrainings);
+        }, [])
+    }
+    console.log(trainingsProvided);
     return (
         <>
             {trainings.length > 0 ? (

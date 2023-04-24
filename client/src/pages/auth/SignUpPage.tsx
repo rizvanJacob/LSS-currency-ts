@@ -31,6 +31,7 @@ const SignUpPage = (): JSX.Element => {
   const [user, setUser] = useState<NewUser>({
     ...blankUser,
     openId: location.state?.openId,
+    requirementsProvided: [],
   });
   const [trainee, setTrainee] = useState<NewTrainee>(blankTrainee);
   const [includeTrainee, setIncludeTrainee] = useState<boolean>(false);
@@ -51,8 +52,7 @@ const SignUpPage = (): JSX.Element => {
         });
         await Promise.all([userResponsePromise, traineeResponsePromise]);
       } else if (Number(user.accountType) === 4) {
-        console.log(user);
-        postRequest("/api/users", {user, requirementsProvided}, setUser)
+        postRequest("/api/users", {...user, requirementsProvided: requirementsProvided}, setUser)
       } else {
         postRequest("/api/users", user, setUser);
       }

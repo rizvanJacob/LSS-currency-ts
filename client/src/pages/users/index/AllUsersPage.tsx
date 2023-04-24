@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ApprovedUsersList from "./ApprovedUsersList";
 import getRequest from "../../../utilities/getRequest";
 import { SimpleLookup } from "../../../@types/lookup";
 import { User } from "../../../@types/user";
 import UnapprovedUsersList from "./UnapprovedUsersList"
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext } from "../../../App";
+import { useNavigate } from "react-router-dom";
+
 export default function AllUsersPage(): JSX.Element {
+  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -13,6 +18,7 @@ export default function AllUsersPage(): JSX.Element {
 
   const notApprovedUsers = users.filter(user => !user.approved);
   const approvedUsers = users.filter(user => user.approved);
+
 
   return (
     <>

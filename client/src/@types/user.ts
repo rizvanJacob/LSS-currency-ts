@@ -1,4 +1,4 @@
-type BasicUser = {
+export type BasicUser = {
   accountType: number;
   displayName: string;
   authCategory?: number;
@@ -14,6 +14,7 @@ export type TrainerUser = {
 
 export type NewUser = BasicUser & TrainerUser & {
   openId: string;
+  requirementsProvided?: number[];
 };
 
 export type User = BasicUser & TrainerUser & {

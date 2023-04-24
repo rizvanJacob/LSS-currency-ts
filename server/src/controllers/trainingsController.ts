@@ -17,7 +17,7 @@ const trainingsController = {
             : {}),
         },
         orderBy: {
-          id: "asc",
+          requirement: "asc",
         },
         include: checkin
           ? {}
@@ -37,6 +37,66 @@ const trainingsController = {
       res.status(200).json(allTrainings);
     } catch (err) {
       res.status(500).json({ err });
+    }
+  },
+
+  getAllTrainingsByTrainer: async (req:Request, res: Response, err: any) => {
+    const { userId } = req.params;
+    try {
+      const trainingsProvided = await prisma.trainingProvided.findMany({
+        where: { user: Number(userId)},
+      })
+
+      const requirements = trainingsProvided.map((trainingProvided) => {
+        return Number(trainingProvided.requirement);
+      });
+
+      const trainingsByTrainer = await prisma.training.findMany({
+        where: { 
+          requirement: {
+            in: requirements
+          } 
+        },
+        orderBy: {
+          requirement: "asc",
+        },
+        select: {
+          id: true,
+          start: true,
+          end: true,
+          capacity: true,
+          complete: true,
+          instruction: true,
+          requirement: true,
+          requirements: {
+            select: {
+              name: true,
+            },
+          },
+          trainees: {
+            select: {
+              trainees: {
+                select: {
+                  callsign: true,
+                  categories: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  currencies: {
+                    select: {
+                      expiry: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+      res.status(200).json(trainingsByTrainer);
+    } catch (err) {
+      res.status(500).json({err});
     }
   },
 
@@ -89,7 +149,6 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.id);
-      console.log("updated training req body", req.body);
       const { requirement, start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
