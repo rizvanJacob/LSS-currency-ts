@@ -6,6 +6,7 @@ import TrainingInfo from "./components/TrainingInfo";
 import TraineeList from "./components/TraineeList";
 export default function TrainingPage(): JSX.Element {
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [training, setTraining] = useState<Training>({
     id: 0,
@@ -34,10 +35,14 @@ export default function TrainingPage(): JSX.Element {
   });
 
   useEffect(() => {
-    getRequest(`/api/trainings/${id}`, setTraining);
+    getRequest(`/api/trainings/${id}`, setTraining).then(() => {
+      setIsLoading(false);
+    });
   }, []);
 
-  return (
+  return isLoading ? (
+    <progress />
+  ) : (
     <>
       <TrainingInfo
         training={training}
