@@ -15,10 +15,10 @@ const TraineesRoutes = (): JSX.Element => {
     <>
       {currentUser ? (
         <Routes>
-          {INDEX_PAGE_ACCESS.includes(currentUser.accountType) ? (
+          {INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
-          {TRAINEE_PAGE_ACCESS.includes(currentUser.accountType) ? (
+          {TRAINEE_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
             <>
             <Route path="/:id" element={<ShowTraineePage />} />
             <Route path="/:id/edit" element={<EditTraineePage />} />

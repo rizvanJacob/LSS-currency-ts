@@ -13,6 +13,7 @@ export default function AllTrainingsPage(): JSX.Element {
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [trainingsProvided, setTrainingsProvided] = useState<any>();
     const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
+    
     if (TRAINING_INDEX_ACCESS.includes(Number(currentUser?.accountType))) {
         useEffect(() => {
             getRequest(`/api/trainings`, setTrainings);

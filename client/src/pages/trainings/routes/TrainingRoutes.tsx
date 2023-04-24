@@ -3,7 +3,6 @@ import AllTrainingsPage from "../index/AllTrainingsPage";
 import TrainingPage from "../show/TrainingPage";
 import EditTrainingForm from "../edit/EditTrainingForm";
 import CreateTrainingForm from "../create/CreateTrainingForm";
-import UnauthorizedPage from "../../auth/UnauthorizedPage";
 import { CurrentUser } from "../../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../App";
@@ -18,15 +17,15 @@ export default function TrainingRoutes() {
         <Routes>
           <Route path="/" element={<AllTrainingsPage />} />
           <Route path="/:id" element={<TrainingPage />} />
-          {CHANGE_TRAINING_ACCESS.includes(currentUser.accountType) ? (
+          {CHANGE_TRAINING_ACCESS.includes(Number(currentUser.accountType)) ? (
             <>
               <Route path="/:id/edit" element={<EditTrainingForm />} />
               <Route path="/new" element={<CreateTrainingForm />} />
             </>
-          ) : <Route path="/unauthorized" element={<UnauthorizedPage/>} />
+          ) : null
           };
         </Routes>
-      ) : <Route path="/unauthorized" element={<UnauthorizedPage/>} />
+      ) : null
       }
     </>
     

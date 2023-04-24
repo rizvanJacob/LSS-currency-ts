@@ -11,7 +11,7 @@ const trainingsController = {
           ...(requirement ? { requirement: Number(requirement) } : {}),
         },
         orderBy: {
-          id: "asc",
+          requirement: "asc",
         },
         include: {
           requirements: {
@@ -48,6 +48,9 @@ const trainingsController = {
           requirement: {
             in: requirements
           } 
+        },
+        orderBy: {
+          requirement: "asc",
         },
         select: {
           id: true,

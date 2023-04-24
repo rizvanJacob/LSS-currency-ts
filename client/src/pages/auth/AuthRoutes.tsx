@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage";
 import LoginCallbackPage from "./LoginCallbackPage";
 import SignUpPage from "./SignUpPage";
-import UnauthorizedPage from "./UnauthorizedPage";
 
 const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
   return (
@@ -14,7 +13,6 @@ const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
         element={<LoginCallbackPage setCurrentUser={setCurrentUser} />}
       />
       <Route path="/new" element={<SignUpPage />} />
-      <Route path="/unauthorized" element={<UnauthorizedPage />} />
     </Routes>
   );
 };

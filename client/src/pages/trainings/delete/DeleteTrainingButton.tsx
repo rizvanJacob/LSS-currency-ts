@@ -17,11 +17,6 @@ export default function DeleteTrainingButton({
     const navigate = useNavigate();
 
     const handleDeleteClick = async (id: number) => {
-        if (!currentUser || currentUser.accountType !== 4) {
-            navigate('/unauthorized', { replace : true });
-        return <></>;
-        
-    } 
         try {
             await deleteRequest(`/api/trainings/${id}`, training.id, setTrainings);
             navigate("/trainings", { replace: true });

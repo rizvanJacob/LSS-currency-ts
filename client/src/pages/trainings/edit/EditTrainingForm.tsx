@@ -39,12 +39,6 @@ export default function EditTrainingForm(): JSX.Element {
         ]
     });
 
-    if (!currentUser || currentUser.accountType !== 4) {
-        useEffect(() => {
-            navigate('/unauthorized', { replace : true });
-        }, [currentUser])
-        return <></>;
-    }
     
     useEffect(() => {
         getRequest(`/api/trainings/${id}`, setTraining);
