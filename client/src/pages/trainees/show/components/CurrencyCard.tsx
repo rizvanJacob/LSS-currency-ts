@@ -1,30 +1,67 @@
 import { useEffect, useState } from "react";
-import { Currency } from "../../../../@types/trainee";
+import { Currency, CurrencyStatus } from "../../../../@types/trainee";
 import dayjs from "dayjs";
 import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import getRequest from "../../../../utilities/getRequest";
 
 type Prop = {
   currency: Currency;
 };
 
+type Booking = {
+  status: number;
+  trainings?: {
+    start: Date;
+  };
+};
+
+const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
+
 const CurrencyCard = ({ currency }: Prop) => {
-  const [status, setStatus] = useState<{ message: string; color: string }>({
+  const { id } = useParams();
+  const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
     color: "",
+    open: false,
   });
+  const [booking, setBooking] = useState<Booking>({
+    status: 0,
+  });
+
   useEffect(() => {
-    computeStatus(currency, setStatus);
+    getRequest(
+      `/api/trainees/${id}/bookings/${currency.requirement}`,
+      setBooking
+    );
   }, []);
+
+  useEffect(() => {
+    computeStatus(
+      currency,
+      booking.status,
+      booking.trainings?.start,
+      setStatus
+    );
+  }, [booking]);
+
   return (
-    <details>
+    <details open={status.open}>
       <summary>
         <span>{currency?.requirements?.name}</span>
       </summary>
       <p>{status.message}</p>
       <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
-      <Link to={`book/${currency.requirement}`}>
-        <button>Book</button>
+      {booking.status ? (
+        <p>
+          {BOOKING_STATUSES[booking.status]}:{" "}
+          {dayjs(booking.trainings?.start).format("DD-MMM-YY")}
+        </p>
+      ) : null}
+      <Link
+        to={`book/${currency.requirement}/?selected=${booking.trainings?.start}`}
+      >
+        <button>{booking.status ? "Ammend booking" : "Book"}</button>
       </Link>
     </details>
   );

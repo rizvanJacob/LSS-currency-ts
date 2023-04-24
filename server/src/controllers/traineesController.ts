@@ -3,12 +3,43 @@ import { prisma } from "../config/database";
 import dayjs from "dayjs";
 
 const index = async (req: Request, res: Response) => {
+  const { training } = req.query;
+
   try {
     const trainees = await prisma.trainee.findMany({
+      where: training
+        ? {
+            trainings: {
+              some: {
+                training: Number(training),
+              },
+            },
+            users: { approved: true },
+          }
+        : {},
       include: {
         users: { select: { approved: true } },
         categories: { select: { name: true } },
-        currencies: { select: { expiry: true } },
+        currencies: training
+          ? {
+              where: {
+                requirements: {
+                  trainings: {
+                    some: {
+                      id: Number(training),
+                    },
+                  },
+                },
+              },
+            }
+          : { select: { expiry: true } },
+        trainings: training
+          ? {
+              where: { training: Number(training) },
+              select: { statuses: { select: { name: true } } },
+              orderBy: { training: "asc" },
+            }
+          : {},
       },
     });
     res.status(200).json(trainees);
@@ -49,6 +80,9 @@ const show = async (req: Request, res: Response) => {
             seniority: true,
             expiry: true,
           },
+          orderBy: {
+            expiry: "asc",
+          },
         },
       },
     });
@@ -60,6 +94,32 @@ const show = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     res.status(500);
+  }
+};
+
+const showBooking = async (req: Request, res: Response) => {
+  const { id, requirementId } = req.params;
+
+  try {
+    const booking = await prisma.traineeToTraining.findFirst({
+      where: {
+        trainee: Number(id),
+        trainings: { requirement: Number(requirementId) },
+      },
+      select: {
+        status: true,
+        trainings: {
+          select: { start: true },
+        },
+      },
+    });
+    if (booking) {
+      res.status(200).json(booking);
+    } else {
+      res.status(404).json({ message: "no bookings found" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
   }
 };
 
@@ -199,11 +259,49 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
+const checkin = async (req: Request, res: Response) => {
+  console.log("handle checkin");
+  const { passphrase } = req.body;
+  const { user: userId, training: trainingId } = req.query;
+
+  try {
+    const trainee = await prisma.trainee.findUnique({
+      where: { user: Number(userId) },
+    });
+    const training = await prisma.training.findUnique({
+      where: { id: Number(trainingId) },
+    });
+
+    const isCorrectPassphrase = passphrase === training?.passphrase;
+    const isSameDay = dayjs(training?.start).isSame(dayjs());
+
+    if (trainee && isCorrectPassphrase && isSameDay) {
+      await prisma.traineeToTraining.update({
+        where: {
+          trainee_training: {
+            trainee: trainee?.id,
+            training: Number(trainingId),
+          },
+        },
+        data: { status: 2 },
+      });
+      return res.status(200).json({ message: "Check in successful!" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Check in unsucessful. Please try again." });
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
 export {
   index,
   show,
+  showBooking,
   create,
   update,
   updateBooking,
+  checkin,
   deleteController as delete,
 };

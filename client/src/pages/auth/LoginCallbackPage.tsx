@@ -30,7 +30,9 @@ const attemptLogin = async (
   code: string,
   navigate: any
 ) => {
-  const response = await fetch(`/api/login/${code}`, { signal: signal });
+  const response = await fetch(`/api/login/${code}/?callback=loginCallback`, {
+    signal: signal,
+  });
   if (response.ok) {
     const data = await response.json();
     const { token } = data;

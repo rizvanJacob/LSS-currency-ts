@@ -3,28 +3,36 @@ import { Request, Response } from "express";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
-    const { requirement } = req.query;
-    console.log("query", req.query);
+    const { requirement, checkin, user } = req.query;
     try {
       const allTrainings = await prisma.training.findMany({
         where: {
           ...(requirement ? { requirement: Number(requirement) } : {}),
+          ...(checkin && user
+            ? {
+                trainees: {
+                  some: { trainees: { user: Number(user) }, status: 1 },
+                },
+              }
+            : {}),
         },
         orderBy: {
           requirement: "asc",
         },
-        include: {
-          requirements: {
-            select: {
-              name: true,
+        include: checkin
+          ? {}
+          : {
+              requirements: {
+                select: {
+                  name: true,
+                },
+              },
+              trainees: {
+                include: {
+                  trainees: true,
+                },
+              },
             },
-          },
-          trainees: {
-            include: {
-              trainees: true,
-            },
-          },
-        },
       });
       res.status(200).json(allTrainings);
     } catch (err) {
@@ -131,7 +139,7 @@ const trainingsController = {
           },
         },
       });
-      console.log(training);
+      // console.log(training);
       res.status(200).json(training);
     } catch (err) {
       res.status(500).json({ err });

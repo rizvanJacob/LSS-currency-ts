@@ -22,7 +22,13 @@ const ShowTraineePage = () => {
           <h1>{trainee?.callsign}</h1>
           <p>{trainee?.categories.name}</p>
           {trainee?.currencies.map((c) => {
-            return <CurrencyCard currency={c} key={c.id} />;
+            if (
+              trainee.categories.requirements?.find((r) => {
+                return r.requirements.id === c.requirement;
+              })
+            ) {
+              return <CurrencyCard currency={c} key={c.id} />;
+            }
           })}
         </>
       ) : (

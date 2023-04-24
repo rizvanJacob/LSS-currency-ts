@@ -108,10 +108,10 @@ model Training {
   end           DateTime
   complete      Boolean
   instruction   String?
+  passphrase    String    @default("code")
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @default(now()) @db.Timestamp(6)
   trainees      TraineeToTraining[]
-  passphrase    String    @default("code")
 }
 
 model TraineeToTraining {

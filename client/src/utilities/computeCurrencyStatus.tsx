@@ -1,12 +1,13 @@
-import { Trainee, Currency } from "../@types/trainee";
+import { Trainee, Currency, CurrencyStatus } from "../@types/trainee";
 import dayjs from "dayjs";
 
 const MONTHS_TO_DUE_SOON = 3;
 
 const STATUSES = {
-  current: { message: "Current", color: "green" },
-  dueSoon: { message: "Due Soon", color: "orange" },
-  expired: { message: "EXPIRED", color: "red" },
+  current: { message: "Current", color: "green", open: false },
+  dueSoonBooked: { message: "Due Soon, Booked", color: "green", open: false },
+  dueSoon: { message: "Due Soon", color: "orange", open: true },
+  expired: { message: "EXPIRED", color: "red", open: true },
 };
 
 export const computeOverallStatus = (
@@ -39,9 +40,9 @@ const isDueSoon = (expiry: Date) => {
 
 export const computeStatus = (
   currency: Currency,
-  setStatus: React.Dispatch<
-    React.SetStateAction<{ message: string; color: string }>
-  >
+  bookedStatus: number,
+  bookedDate: Date | undefined,
+  setStatus: React.Dispatch<React.SetStateAction<CurrencyStatus>>
 ) => {
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
@@ -50,7 +51,15 @@ export const computeStatus = (
   if (expired) {
     setStatus(STATUSES.expired);
   } else if (dueSoon) {
-    setStatus(STATUSES.dueSoon);
+    const isBookedBeforeExpiry = !dayjs(bookedDate).isAfter(
+      dayjs(currency.expiry),
+      "day"
+    );
+    if (bookedStatus === 1 && isBookedBeforeExpiry) {
+      setStatus(STATUSES.dueSoonBooked);
+    } else {
+      setStatus(STATUSES.dueSoon);
+    }
   } else {
     setStatus(STATUSES.current);
   }

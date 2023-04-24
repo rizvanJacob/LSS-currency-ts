@@ -13,3 +13,11 @@ export type UserPayload = CurrentUser & {
   iat: number;
   exp: number;
 };
+
+export type DecodedToken = {
+  id: number;
+  approved: boolean;
+  authCategory?: number;
+  displayName: string;
+  accountType: number;
+};
