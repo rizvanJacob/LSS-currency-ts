@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { Currency } from "../../../../@types/trainee";
+import { Currency, CurrencyStatus } from "../../../../@types/trainee";
 import dayjs from "dayjs";
-import {
-  CurrencyStatus,
-  computeStatus,
-} from "../../../../utilities/computeCurrencyStatus";
+import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
 import { Link, useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
 
@@ -31,18 +28,23 @@ const CurrencyCard = ({ currency }: Prop) => {
   const [booking, setBooking] = useState<Booking>({
     status: 0,
   });
+
   useEffect(() => {
     getRequest(
       `/api/trainees/${id}/bookings/${currency.requirement}`,
       setBooking
     );
+  }, []);
+
+  useEffect(() => {
     computeStatus(
       currency,
       booking.status,
       booking.trainings?.start,
       setStatus
     );
-  }, []);
+  }, [booking]);
+
   return (
     <details open={status.open}>
       <summary>

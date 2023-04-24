@@ -1,4 +1,4 @@
-import { Trainee, Currency } from "../@types/trainee";
+import { Trainee, Currency, CurrencyStatus } from "../@types/trainee";
 import dayjs from "dayjs";
 
 const MONTHS_TO_DUE_SOON = 3;
@@ -8,12 +8,6 @@ const STATUSES = {
   dueSoonBooked: { message: "Due Soon, Booked", color: "green", open: false },
   dueSoon: { message: "Due Soon", color: "orange", open: true },
   expired: { message: "EXPIRED", color: "red", open: true },
-};
-
-export type CurrencyStatus = {
-  message: string;
-  color: string;
-  open: boolean;
 };
 
 export const computeOverallStatus = (
@@ -50,6 +44,7 @@ export const computeStatus = (
   bookedDate: Date | undefined,
   setStatus: React.Dispatch<React.SetStateAction<CurrencyStatus>>
 ) => {
+  console.log("booking: ", bookedStatus, bookedDate);
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
     .add(3, "month")
@@ -61,6 +56,8 @@ export const computeStatus = (
       dayjs(currency.expiry),
       "day"
     );
+    console.log("booked before expiry: ", isBookedBeforeExpiry);
+    console.log("booked: ", bookedStatus === 1);
     if (bookedStatus === 1 && isBookedBeforeExpiry) {
       setStatus(STATUSES.dueSoonBooked);
     } else {

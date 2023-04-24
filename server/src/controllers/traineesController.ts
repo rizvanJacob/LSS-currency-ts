@@ -38,11 +38,6 @@ const show = async (req: Request, res: Response) => {
                   select: { id: true, name: true, hasSeniority: true },
                 },
               },
-              orderBy: {
-                requirements: {
-                  currencies: {},
-                },
-              },
             },
           },
         },
@@ -53,6 +48,9 @@ const show = async (req: Request, res: Response) => {
             requirements: { select: { name: true } },
             seniority: true,
             expiry: true,
+          },
+          orderBy: {
+            expiry: "asc",
           },
         },
       },

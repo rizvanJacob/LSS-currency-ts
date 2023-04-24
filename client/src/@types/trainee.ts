@@ -32,3 +32,9 @@ export type Requirement = {
   name?: string;
   hasSeniority?: boolean;
 };
+
+export type CurrencyStatus = {
+  message: string;
+  color: string;
+  open: boolean;
+};
