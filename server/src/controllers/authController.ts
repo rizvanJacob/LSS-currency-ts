@@ -5,12 +5,14 @@ import * as jwt from "jsonwebtoken";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_EXPIRY = "1h";
+const PORT = "5173";
 
 const generateUrl = async (req: Request, res: Response) => {
   const clientUrl = new URL("http://example.com");
   clientUrl.protocol = req.protocol;
   clientUrl.hostname = req.hostname;
-  clientUrl.port = "5173";
+  clientUrl.port = PORT;
 
   const loginCallback = `${clientUrl}loginCallback`;
   const checkinCallback = `${clientUrl}checkinCallback`;
@@ -29,18 +31,25 @@ const generateUrl = async (req: Request, res: Response) => {
     checkinCallback
   ).url;
 
-  console.log(`login: ${loginCallback}
-  check in: ${checkinCallback}`);
-
   res.status(200).json({ login, checkin });
-  // res.status(200).json({ login: login.url, checkin: checkin.url });
 };
 
 const login = async (req: Request, res: Response) => {
   const { code } = req.params;
+  const { callback } = req.query;
+  const clientUrl = new URL("http://example.com");
+  clientUrl.protocol = req.protocol;
+  clientUrl.hostname = req.hostname;
+  clientUrl.port = PORT;
+
+  const fullCallback = `${clientUrl}${callback}`;
+
   try {
-    const { sub: openId } = await client.callback(code as string, null);
-    console.log("openId", openId);
+    const { sub: openId } = await client.callback(
+      code as string,
+      null,
+      fullCallback
+    );
     try {
       const userData = await prisma.user.findUniqueOrThrow({
         where: { openId } as any,
@@ -53,7 +62,9 @@ const login = async (req: Request, res: Response) => {
         },
       });
       if (userData.approved) {
-        const token = await jwt.sign(userData, JWT_SECRET, { expiresIn: "1h" });
+        const token = await jwt.sign(userData, JWT_SECRET, {
+          expiresIn: JWT_EXPIRY,
+        });
         res.status(200).json({ token });
       } else {
         res.status(400).json({

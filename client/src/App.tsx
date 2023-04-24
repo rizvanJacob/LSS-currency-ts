@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";

@@ -1,6 +1,8 @@
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+
 const MAX_USERS = 100;
+
 const usersController = {
   createUser: async (req: Request, res: Response, err: any) => {
     const { openId, accountType, displayName, authCategory, trainings } =
@@ -163,11 +165,9 @@ const usersController = {
           where: { id: userId },
         });
       });
-      res
-        .status(200)
-        .json({
-          message: "User and corresponding relations deleted successfully",
-        });
+      res.status(200).json({
+        message: "User and corresponding relations deleted successfully",
+      });
     } catch (err) {
       res.status(500).json({ err });
     }

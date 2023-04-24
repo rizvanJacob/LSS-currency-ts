@@ -259,6 +259,42 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
+const checkin = async (req: Request, res: Response) => {
+  console.log("handle checkin");
+  const { passphrase } = req.body;
+  const { user: userId, training: trainingId } = req.query;
+
+  try {
+    const trainee = await prisma.trainee.findUnique({
+      where: { user: Number(userId) },
+    });
+    const training = await prisma.training.findUnique({
+      where: { id: Number(trainingId) },
+    });
+
+    const isCorrectPassphrase = passphrase === training?.passphrase;
+    const isSameDay = dayjs(training?.start).isSame(dayjs());
+
+    if (trainee && isCorrectPassphrase && isSameDay) {
+      await prisma.traineeToTraining.update({
+        where: {
+          trainee_training: {
+            trainee: trainee?.id,
+            training: Number(trainingId),
+          },
+        },
+        data: { status: 2 },
+      });
+      return res.status(200).json({ message: "Check in successful!" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Check in unsucessful. Please try again." });
+    }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
 export {
   index,
   show,
@@ -266,5 +302,6 @@ export {
   create,
   update,
   updateBooking,
+  checkin,
   deleteController as delete,
 };
