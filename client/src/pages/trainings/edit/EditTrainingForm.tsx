@@ -11,14 +11,6 @@ import { CurrentUserContext } from "../../../App";
 export default function EditTrainingForm(): JSX.Element {
     const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
     const navigate = useNavigate();
-
-    if (!currentUser || currentUser.accountType !== 4) {
-        useEffect(() => {
-            navigate('/unauthorized', { replace : true });
-        }, [currentUser])
-        return <></>;
-    }
-    
     const { id } = useParams();
     const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
     const [training, setTraining] = useState<Training>({ 
@@ -47,6 +39,13 @@ export default function EditTrainingForm(): JSX.Element {
         ]
     });
 
+    if (!currentUser || currentUser.accountType !== 4) {
+        useEffect(() => {
+            navigate('/unauthorized', { replace : true });
+        }, [currentUser])
+        return <></>;
+    }
+    
     useEffect(() => {
         getRequest(`/api/trainings/${id}`, setTraining);
     }, [id, setTraining]);
@@ -85,7 +84,7 @@ export default function EditTrainingForm(): JSX.Element {
             } else {
                 return {
                     ...training,
-                    [name]: value
+                    [name]: (name==="capacity") ? Number(value) : value
                 };
             }
         });

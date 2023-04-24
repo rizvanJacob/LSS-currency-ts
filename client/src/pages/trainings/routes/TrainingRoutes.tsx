@@ -8,7 +8,7 @@ import { CurrentUser } from "../../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../App";
 
-const CHANGE_TRAINING_ACCESS = [1, 4];
+const CHANGE_TRAINING_ACCESS = [4];
 
 export default function TrainingRoutes() {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
@@ -26,7 +26,8 @@ export default function TrainingRoutes() {
           ) : <Route path="/unauthorized" element={<UnauthorizedPage/>} />
           };
         </Routes>
-      ) : null}
+      ) : <Route path="/unauthorized" element={<UnauthorizedPage/>} />
+      }
     </>
     
   );

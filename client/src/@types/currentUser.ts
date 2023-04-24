@@ -1,5 +1,5 @@
 export type CurrentUser = {
-  accountId: number;
+  id: number;
   accountType: number;
   category?: number;
 };

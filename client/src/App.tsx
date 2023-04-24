@@ -11,9 +11,9 @@ import TempNav from "./components/TempNav";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import UnauthorizedPage from "./pages/auth/UnauthorizedPage";
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 const CURRENT_USER = {
-  accountId: 1,
+  id: 1,
   accountType: 1,
   category: 1,
 };
