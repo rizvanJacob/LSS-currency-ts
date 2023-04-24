@@ -4,8 +4,8 @@ const MAX_USERS = 100;
 const usersController = {
 
     createUser: async (req: Request, res: Response, err: any) => {
-        const { openId, accountType, displayName, authCategory, trainings} = req.body.user;
-        const { requirementsProvided } = req.body;
+        console.log(req.body);
+        const { openId, accountType, displayName, authCategory, trainings, requirementsProvided} = req.body;
         try {
             const numUsers = await prisma.user.count();
             console.log(`There are ${numUsers} records in the database`);

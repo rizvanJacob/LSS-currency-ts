@@ -1,12 +1,24 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate} from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Training } from "../../../@types/training";
 import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext } from "../../../App";
 export default function EditTrainingForm(): JSX.Element {
+    const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
+    const navigate = useNavigate();
+
+    if (!currentUser || currentUser.accountType !== 4) {
+        useEffect(() => {
+            navigate('/unauthorized', { replace : true });
+        }, [currentUser])
+        return <></>;
+    }
+    
     const { id } = useParams();
     const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
     const [training, setTraining] = useState<Training>({ 
@@ -34,7 +46,6 @@ export default function EditTrainingForm(): JSX.Element {
             },   
         ]
     });
-    const navigate = useNavigate();
 
     useEffect(() => {
         getRequest(`/api/trainings/${id}`, setTraining);
@@ -189,5 +200,5 @@ export default function EditTrainingForm(): JSX.Element {
             </Formik>
         </div>
     </fieldset>
-  );
+  )
 }

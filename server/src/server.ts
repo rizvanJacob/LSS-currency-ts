@@ -18,7 +18,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-app.use("/api/", authRouter);
+app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/trainees", traineesRouter);
 app.use("/api/trainings", trainingsRouter);
