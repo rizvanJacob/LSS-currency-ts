@@ -70,7 +70,7 @@ const trainingsController = {
           },
         },
       });
-      console.log(training);
+      // console.log(training);
       res.status(200).json(training);
     } catch (err) {
       res.status(500).json({ err });

@@ -44,7 +44,6 @@ export const computeStatus = (
   bookedDate: Date | undefined,
   setStatus: React.Dispatch<React.SetStateAction<CurrencyStatus>>
 ) => {
-  console.log("booking: ", bookedStatus, bookedDate);
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
     .add(3, "month")
@@ -56,8 +55,6 @@ export const computeStatus = (
       dayjs(currency.expiry),
       "day"
     );
-    console.log("booked before expiry: ", isBookedBeforeExpiry);
-    console.log("booked: ", bookedStatus === 1);
     if (bookedStatus === 1 && isBookedBeforeExpiry) {
       setStatus(STATUSES.dueSoonBooked);
     } else {

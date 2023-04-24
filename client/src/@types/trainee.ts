@@ -16,7 +16,8 @@ export type Trainee = NewTrainee & {
     approved: boolean;
   };
   currencies: Currency[];
-  status?: { message: string; color: string };
+  status?: CurrencyStatus;
+  trainings?: { status: number; statuses?: { name: string } }[];
 };
 
 export type Currency = {

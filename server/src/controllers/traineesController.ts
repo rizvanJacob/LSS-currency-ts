@@ -3,12 +3,43 @@ import { prisma } from "../config/database";
 import dayjs from "dayjs";
 
 const index = async (req: Request, res: Response) => {
+  const { training } = req.query;
+
   try {
     const trainees = await prisma.trainee.findMany({
+      where: training
+        ? {
+            trainings: {
+              some: {
+                training: Number(training),
+              },
+            },
+            users: { approved: true },
+          }
+        : {},
       include: {
         users: { select: { approved: true } },
         categories: { select: { name: true } },
-        currencies: { select: { expiry: true } },
+        currencies: training
+          ? {
+              where: {
+                requirements: {
+                  trainings: {
+                    some: {
+                      id: Number(training),
+                    },
+                  },
+                },
+              },
+            }
+          : { select: { expiry: true } },
+        trainings: training
+          ? {
+              where: { training: Number(training) },
+              select: { statuses: { select: { name: true } } },
+              orderBy: { training: "asc" },
+            }
+          : {},
       },
     });
     res.status(200).json(trainees);
