@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api": "http://localhost:3000/",
+      "/api": "https://lss-currency.onrender.com//",
     },
   },
   plugins: [react()],
