@@ -304,14 +304,21 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         ? requirement?.seniorExtension
         : requirement?.extensionPeriod) || 0;
 
-    const newExpiry = getNextExpiry(
-      currency?.expiry,
-      training?.end,
-      requirement?.rehackPeriod,
-      extension,
-      true
-    );
-    return { requirement, currency, training, newExpiry };
+    if (
+      currency?.expiry !== undefined &&
+      training?.end !== undefined &&
+      requirement?.rehackPeriod !== undefined &&
+      extension !== undefined
+    ) {
+      const newExpiry = getNextExpiry(
+        currency?.expiry,
+        training?.end,
+        requirement?.rehackPeriod,
+        extension,
+        true
+      );
+      return { requirement, currency, training, newExpiry };
+    }
   } catch (error) {}
 };
 
