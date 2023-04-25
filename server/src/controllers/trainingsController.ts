@@ -1,5 +1,8 @@
+import dayjs from "dayjs";
 import { prisma } from "../config/database";
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
+import exp from "constants";
+import { isUndefined } from "util";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -175,31 +178,43 @@ const trainingsController = {
   },
 
   completeTraining: async (req: Request, res: Response) => {
-    console.log("Complete training. Completed trainees: ");
-    console.log(req.body);
+    const { id: trainingId } = req.params;
+    const completedTrainees = req.body as number[];
 
-    const completedTrainees = req.body;
+    console.log("training: ", trainingId);
+    console.log("Completed trainees: ");
+    console.log(completedTrainees);
 
-    const updateStatuses = completedTrainees.map(
-      (t: { trainee: number; training: number }) => {
-        prisma.traineeToTraining.update({
-          where: {
-            trainee_training: {
-              trainee: t.trainee,
-              training: t.training,
-            },
-            status: 2,
-          },
-          data: {
-            status: 3,
-          },
-        });
-      }
-    );
+    const updateCompletedTrainees = prisma.traineeToTraining.updateMany({
+      where: {
+        training: Number(trainingId),
+        trainee: { in: completedTrainees },
+        status: 2,
+      },
+      data: {
+        status: 3,
+      },
+    });
 
-    await Promise.all(updateStatuses);
+    const updateAbsentTrainees = prisma.traineeToTraining.updateMany({
+      where: {
+        training: Number(trainingId),
+        trainee: {
+          notIn: completedTrainees,
+        },
+        status: 2,
+      },
+      data: {
+        status: 5,
+      },
+    });
 
-    res.send(200);
+    try {
+      await Promise.all([updateCompletedTrainees, updateAbsentTrainees]);
+      res.send(200);
+    } catch (error) {
+      res.send(500).json(error);
+    }
   },
 
   deleteTraining: async (req: Request, res: Response, err: any) => {
@@ -232,5 +247,99 @@ const trainingsController = {
       res.status(500).json({ err });
     }
   },
+  testCurrencyUpdate: async (req: Request, res: Response) => {
+    const completedTrainee = 1;
+    const { id: trainingId } = req.params;
+    console.log("test");
+
+    const response = await updateCurrency(1, Number(trainingId));
+    res.json(response);
+  },
 };
 export default trainingsController;
+
+const updateCurrency = async (traineeId: number, trainingId: number) => {
+  const getRequirement = prisma.requirement.findFirst({
+    where: {
+      trainings: {
+        some: {
+          id: trainingId,
+        },
+      },
+    },
+  });
+
+  const getTrainee = prisma.trainee.findUnique({
+    where: { id: traineeId },
+    select: {
+      currencies: {
+        where: {
+          requirements: {
+            trainings: {
+              some: {
+                id: trainingId,
+              },
+            },
+          },
+        },
+        select: { seniority: true, expiry: true },
+      },
+    },
+  });
+
+  const getTraining = prisma.training.findUnique({
+    where: { id: Number(trainingId) },
+    select: { end: true },
+  });
+
+  try {
+    const [requirement, trainee, training] = await Promise.all([
+      getRequirement,
+      getTrainee,
+      getTraining,
+    ]);
+    const currency = trainee?.currencies[0];
+    const extension =
+      (currency?.seniority
+        ? requirement?.seniorExtension
+        : requirement?.extensionPeriod) || 0;
+
+    const newExpiry = getNextExpiry(
+      currency?.expiry,
+      training?.end,
+      requirement?.rehackPeriod,
+      extension,
+      true
+    );
+    return { requirement, currency, training, newExpiry };
+  } catch (error) {}
+};
+
+function getNextExpiry(
+  expiry: Date,
+  lastAttended: Date,
+  reattemptPeriod: number,
+  validityExtension: number,
+  refreshToEndOfMonth: boolean
+) {
+  const isBeforeExpiry = !dayjs(lastAttended).isAfter(dayjs(expiry), "day");
+  const reattemptWindowStart = dayjs(expiry).subtract(
+    reattemptPeriod,
+    "months"
+  );
+  const isAfterWindowStart = !reattemptWindowStart.isAfter(
+    dayjs(expiry),
+    "day"
+  );
+  const isWithinReattemptWindow = isBeforeExpiry && isAfterWindowStart;
+
+  if (isWithinReattemptWindow) {
+    if (refreshToEndOfMonth) {
+      return dayjs(expiry).add(validityExtension, "month").endOf("month");
+    } else {
+      return dayjs(expiry).add(validityExtension, "month");
+    }
+  } else {
+    return dayjs(lastAttended).add(validityExtension, "month");
+  }
+}

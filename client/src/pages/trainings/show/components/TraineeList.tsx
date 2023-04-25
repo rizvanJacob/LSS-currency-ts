@@ -4,18 +4,11 @@ import getRequest from "../../../../utilities/getRequest";
 import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
 
-type CompletedTrainees = {
-  trainee: number;
-  training: number;
-};
-
 const TraineeList = () => {
   const { id: trainingId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
-  const [completedTrainees, setCompletedTrainees] = useState<
-    CompletedTrainees[]
-  >([]);
+  const [completedTrainees, setCompletedTrainees] = useState<number[]>([]);
 
   useEffect(() => {
     getRequest(`/api/trainees/?training=${trainingId}`, setTrainees).then(
@@ -29,17 +22,11 @@ const TraineeList = () => {
     const { name, checked } = event.currentTarget;
 
     if (checked) {
-      setCompletedTrainees([
-        ...completedTrainees,
-        {
-          trainee: Number(name),
-          training: Number(trainingId),
-        },
-      ]);
+      setCompletedTrainees([...completedTrainees, Number(name)]);
     } else {
       setCompletedTrainees(
         completedTrainees.filter((t) => {
-          return t.trainee !== Number(name);
+          return t !== Number(name);
         })
       );
     }
@@ -57,6 +44,7 @@ const TraineeList = () => {
       body: JSON.stringify(completedTrainees),
     });
     await getRequest(`/api/trainees/?training=${trainingId}`, setTrainees);
+    setCompletedTrainees([]);
     setIsLoading(false);
   };
 
