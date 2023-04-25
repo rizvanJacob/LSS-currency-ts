@@ -4,6 +4,7 @@ import { Training } from "../../../@types/training";
 import { useParams, useNavigate } from "react-router-dom";
 import TrainingInfo from "./components/TrainingInfo";
 import TraineeList from "./components/TraineeList";
+
 export default function TrainingPage(): JSX.Element {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);

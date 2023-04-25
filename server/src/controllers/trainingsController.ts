@@ -40,22 +40,22 @@ const trainingsController = {
     }
   },
 
-  getAllTrainingsByTrainer: async (req:Request, res: Response, err: any) => {
+  getAllTrainingsByTrainer: async (req: Request, res: Response, err: any) => {
     const { userId } = req.params;
     try {
       const trainingsProvided = await prisma.trainingProvided.findMany({
-        where: { user: Number(userId)},
-      })
+        where: { user: Number(userId) },
+      });
 
       const requirements = trainingsProvided.map((trainingProvided) => {
         return Number(trainingProvided.requirement);
       });
 
       const trainingsByTrainer = await prisma.training.findMany({
-        where: { 
+        where: {
           requirement: {
-            in: requirements
-          } 
+            in: requirements,
+          },
         },
         orderBy: {
           requirement: "asc",
@@ -93,10 +93,10 @@ const trainingsController = {
             },
           },
         },
-      })
+      });
       res.status(200).json(trainingsByTrainer);
     } catch (err) {
-      res.status(500).json({err});
+      res.status(500).json({ err });
     }
   },
 
@@ -172,6 +172,34 @@ const trainingsController = {
     } catch (err) {
       res.status(500).json({ err });
     }
+  },
+
+  completeTraining: async (req: Request, res: Response) => {
+    console.log("Complete training. Completed trainees: ");
+    console.log(req.body);
+
+    const completedTrainees = req.body;
+
+    const updateStatuses = completedTrainees.map(
+      (t: { trainee: number; training: number }) => {
+        prisma.traineeToTraining.update({
+          where: {
+            trainee_training: {
+              trainee: t.trainee,
+              training: t.training,
+            },
+            status: 2,
+          },
+          data: {
+            status: 3,
+          },
+        });
+      }
+    );
+
+    await Promise.all(updateStatuses);
+
+    res.send(200);
   },
 
   deleteTraining: async (req: Request, res: Response, err: any) => {

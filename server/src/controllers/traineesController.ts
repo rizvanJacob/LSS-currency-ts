@@ -1,4 +1,4 @@
-import { Account } from "../constants"
+import { Account } from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
@@ -298,6 +298,7 @@ const checkin = async (req: Request, res: Response) => {
     return res.status(500).json(error);
   }
 };
+
 export {
   index,
   show,

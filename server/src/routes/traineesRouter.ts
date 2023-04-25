@@ -3,14 +3,21 @@ const router = express.Router();
 import { isAuth } from "../controllers/authController";
 import * as traineesController from "../controllers/traineesController";
 
-
 router.get("/", isAuth([1, 2, 3]), traineesController.index);
 router.get("/:id", isAuth([1, 2, 3]), traineesController.show);
 router.post("/", isAuth([1, 2, 3]), traineesController.create);
 router.put("/:id", isAuth([1, 2, 3]), traineesController.update);
-router.put("/:id/book/:trainingId", isAuth([1, 2, 3]), traineesController.updateBooking);
+router.put(
+  "/:id/book/:trainingId",
+  isAuth([1, 2, 3]),
+  traineesController.updateBooking
+);
 router.delete("/:id", isAuth([1, 2]), traineesController.delete);
-router.get("/:id/bookings/:requirementId", isAuth([1,3,4]), traineesController.showBooking);
+router.get(
+  "/:id/bookings/:requirementId",
+  isAuth([1, 3, 4]),
+  traineesController.showBooking
+);
 router.put("/checkin", isAuth([3]), traineesController.checkin);
 
 export default router;
