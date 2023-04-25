@@ -1,3 +1,4 @@
+import { Account } from "../../../../server/src/constants"
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
@@ -45,13 +46,13 @@ const SignUpPage = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (user.openId) {
-      if ((Number(user.accountType) === 2 && includeTrainee) || Number(user.accountType) === 3) {
-        const userResponsePromise = postRequest("/api/users", {...user, displayName: (Number(user.accountType) === 3) ? trainee.callsign : user.displayName}, setUser);
+      if ((Number(user.accountType) === Account.TraineeAdmin && includeTrainee) || Number(user.accountType) === Account.Trainee) {
+        const userResponsePromise = postRequest("/api/users", {...user, displayName: (Number(user.accountType) === Account.Trainee) ? trainee.callsign : user.displayName}, setUser);
         const traineeResponsePromise = userResponsePromise.then(userResponse => {
           return postRequest("/api/trainees", {...trainee, user: Number(userResponse?.data.id)}, setTrainee);
         });
         await Promise.all([userResponsePromise, traineeResponsePromise]);
-      } else if (Number(user.accountType) === 4) {
+      } else if (Number(user.accountType) === Account.Trainer) {
         postRequest("/api/users", {...user, requirementsProvided: requirementsProvided}, setUser)
       } else {
         postRequest("/api/users", user, setUser);
@@ -98,10 +99,10 @@ const SignUpPage = (): JSX.Element => {
                 })}
               </Field>
             </fieldset>
-            {user.accountType == 1 && (
+            {user.accountType == Account.Admin && (
               <AdminFieldSet user={user} handleChange={handleUserChange} />
             )}
-            {user.accountType == 2 && (
+            {user.accountType == Account.TraineeAdmin && (
               <TraineeAdminFieldset
                 user={user}
                 handleChange={handleUserChange}
@@ -110,13 +111,13 @@ const SignUpPage = (): JSX.Element => {
                 setIncludeTrainee={setIncludeTrainee}
               />
             )}
-            {user.accountType == 3 && (
+            {user.accountType == Account.Trainee && (
               <TraineeParticularsFieldset
                 trainee={trainee}
                 handleChange={handleTraineeChange}
               />
             )}
-            {user.accountType == 4 && (
+            {user.accountType == Account.Trainer && (
               <TrainerFieldset
                 user={user}
                 setUser={setUser}

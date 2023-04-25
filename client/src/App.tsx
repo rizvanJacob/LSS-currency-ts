@@ -14,7 +14,7 @@ const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
   accountType: 1,
-  category: 1,
+  authCategory: 1,
 };
 
 const TRAINING_ACCOUNT_TYPES = [1, 2, 4];
@@ -33,7 +33,6 @@ function App() {
     try {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
-
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
       } else {

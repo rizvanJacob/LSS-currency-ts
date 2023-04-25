@@ -1,3 +1,4 @@
+import { Account } from "../constants"
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
@@ -54,7 +55,9 @@ const show = async (req: Request, res: Response) => {
   try {
     const trainee = await prisma.trainee.findUnique({
       where: { id: Number(id) },
-      include: {
+      select: {
+        category: true,
+        user: true,
         users: {
           select: {
             approved: true,
@@ -250,7 +253,7 @@ const deleteController = async (req: Request, res: Response) => {
       deleteTrainings,
       deleteTrainee,
     ]);
-    if (trainee?.users.accountType === 3) {
+    if (trainee?.users.accountType === Account.Trainee) {
       await prisma.user.delete({ where: { id: Number(userId) } });
     }
     res.status(200);
