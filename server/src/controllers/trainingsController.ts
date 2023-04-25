@@ -317,6 +317,16 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         extension,
         true
       );
+
+      await prisma.currency.update({
+        where: {
+          trainee_requirement: {
+            trainee: traineeId,
+            requirement: requirement.id,
+          },
+        },
+        data: {},
+      });
       return { requirement, currency, training, newExpiry };
     }
   } catch (error) {}
