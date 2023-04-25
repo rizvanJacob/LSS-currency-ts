@@ -19,16 +19,19 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-const corsOptions = {
-  origin: "https://lss-currency-1w7k.onrender.com/",
-  methods: "GET,PUT,POST,DELETE",
-  allowedHeaders: "Content-Type,Authorization",
-  preflightContinue: true,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.header(
+    "Access-Controll-Allow-Origin",
+    "https://lss-currency-1w7k.onrender.com/"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  console.log("allow CORS");
+  next();
+});
 
-app.options("*", cors());
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/trainees", traineesRouter);
