@@ -10,7 +10,7 @@ import { CurrentUser, UserPayload } from "./@types/currentUser";
 import TempNav from "./components/TempNav";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
-const AUTHORISE = true;
+const AUTHORISE = false;
 const CURRENT_USER = {
   id: 1,
   accountType: 1,
@@ -50,21 +50,18 @@ function App() {
             <TempNav />
           </div>
           <Routes>
-            {
-              (TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/trainees/*" element={<TraineesRoutes />} />
-              ) : null
-            };
-            {
-              (USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/users/*" element={<UserRoutes />} />
-              ) : null
-            }
-            {
-              (TRAINING_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/trainings/*" element={<TrainingRoutes />} />
-              ) : null
-            }
+            {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+              <Route path="/trainees/*" element={<TraineesRoutes />} />
+            ) : null}
+            ;
+            {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+              <Route path="/users/*" element={<UserRoutes />} />
+            ) : null}
+            {TRAINING_ACCOUNT_TYPES.includes(
+              Number(currentUser.accountType)
+            ) ? (
+              <Route path="/trainings/*" element={<TrainingRoutes />} />
+            ) : null}
           </Routes>
         </>
       ) : (

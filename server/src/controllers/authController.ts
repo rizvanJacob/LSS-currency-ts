@@ -1,6 +1,6 @@
 import client from "../config/sgid";
 import { prisma } from "../config/database";
-import { Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
@@ -10,8 +10,9 @@ type User = {
   authCategory?: number;
   accountType: number;
   approved: boolean;
-}
+};
 
+const AUTHORISE = false;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
@@ -112,34 +113,40 @@ const findUser = async (req: Request, res: Response) => {
   res.json(token);
 };
 
-const AUTHENTICATED = false;
-const isAuth = (authorized: number[]) => (req: Request, res: Response, next: NextFunction) => {
-  if (!AUTHENTICATED) return next();
+const isAuth =
+  (authorized: number[]) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    if (!AUTHORISE) return next();
 
-  try {
-        const authorization = req.headers.authorization;
-        const token = authorization?.split(" ")[1];
+    try {
+      const authorization = req.headers.authorization;
+      const token = authorization?.split(" ")[1];
 
-        if (!token) {
-          res.status(401).json({message: "Missing or invalid authorization token"});
-          return;
-        }
+      if (!token) {
+        res
+          .status(401)
+          .json({ message: "Missing or invalid authorization token" });
+        return;
+      }
 
-        const verifiedUser = jwt.verify(token as string, process.env.JWT_SECRET as string) as User;
-        console.log(verifiedUser);
+      const verifiedUser = jwt.verify(
+        token as string,
+        process.env.JWT_SECRET as string
+      ) as User;
+      console.log(verifiedUser);
 
-        if (authorized.includes(verifiedUser.accountType)) {
-          console.log("Authenticated!");
-          next();
-        } else {
-          console.log("You are unauthorized");
-          res.status(401).json({message: "You are not authorized to access this resource."});
-        }
-
+      if (authorized.includes(verifiedUser.accountType)) {
+        console.log("Authenticated!");
+        next();
+      } else {
+        console.log("You are unauthorized");
+        res
+          .status(401)
+          .json({ message: "You are not authorized to access this resource." });
+      }
     } catch (err) {
-      res.status(404).json({message: "You are unauthorized"});
+      res.status(404).json({ message: "You are unauthorized" });
     }
-};
-
+  };
 
 export { generateUrl, isAuth, login, findUser };
