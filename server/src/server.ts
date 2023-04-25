@@ -21,9 +21,13 @@ app.use(express.static(path.join(__dirname, "../client/dist")));
 
 const corsOptions = {
   origin: "https://lss-currency-1w7k.onrender.com/",
+  methods: "GET,PUT,POST,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
+  preflightContinue: true,
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
 app.options("*", cors());
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
