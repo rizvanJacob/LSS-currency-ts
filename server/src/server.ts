@@ -17,20 +17,7 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../client/dist")));
-
-app.use((req, res, next) => {
-  res.header(
-    "Access-Controll-Allow-Origin",
-    "https://lss-currency-1w7k.onrender.com/"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  console.log("allow CORS");
-  next();
-});
+app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
@@ -42,4 +29,7 @@ app.get("/api/auth");
 
 const PORT = 3000;
 
-app.listen(PORT, () => console.log(`start listening on port : ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`start listening on port : ${PORT}`);
+  console.log(path.join(__dirname, "../client/dist"));
+});
