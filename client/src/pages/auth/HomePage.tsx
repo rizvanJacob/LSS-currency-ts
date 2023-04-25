@@ -15,7 +15,9 @@ const HomePage = (): JSX.Element => {
     const controller = new AbortController();
     const signal = controller.signal;
     const getAuthUrls = async () => {
-      const res = await fetch("/api", { signal: signal });
+      const res = await fetch("https://lss-currency.onrender.com/api", {
+        signal: signal,
+      });
       const data = await res.json();
       setAuthUrls(data);
     };
