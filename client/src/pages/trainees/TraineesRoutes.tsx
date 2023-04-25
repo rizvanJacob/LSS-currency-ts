@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 
 const INDEX_PAGE_ACCESS = [1, 2, 4];
-const TRAINEE_PAGE_ACCESS = [1, 3, 4]
+const TRAINEE_PAGE_ACCESS = [1, 2, 3, 4]
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   return (

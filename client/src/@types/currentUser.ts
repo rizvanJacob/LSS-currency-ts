@@ -1,7 +1,7 @@
 export type CurrentUser = {
   id: number;
   accountType: number;
-  category?: number;
+  authCategory?: number;
 };
 
 export type setCurrentUserProp = {

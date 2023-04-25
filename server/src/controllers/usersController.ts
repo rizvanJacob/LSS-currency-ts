@@ -1,3 +1,4 @@
+import { Account } from "../constants";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
 
@@ -19,11 +20,11 @@ const usersController = {
                                 openId: openId,
                                 accountType: Number(accountType),
                                 displayName: displayName,
-                                authCategory: (accountType === 2) ? Number(authCategory) : null
+                                authCategory: (accountType === Account.TraineeAdmin) ? Number(authCategory) : null
                             },
                         })
                         
-                        if (accountType === 4) {
+                        if (accountType === Account.Trainer) {
                             await Promise.all(requirementsProvided.map(async (requirement: number) => {
                                 await prisma.trainingProvided.create({
                                     data: {
@@ -154,7 +155,7 @@ const usersController = {
                 where: { user: Number(userId) },
             });
             }
-            if (existingUser?.accountType === 4) {
+            if (existingUser?.accountType === Account.Trainer) {
             await prisma.trainingProvided.deleteMany({
                 where: { user: Number(userId) },
             });

@@ -1,3 +1,4 @@
+import { Account } from "../../../../../server/src/constants"
 import { useState, useEffect, useContext } from 'react';
 import getRequest from "../../../utilities/getRequest";
 import { Training } from "../../../@types/training";
@@ -13,13 +14,13 @@ export default function AllTrainingsPage(): JSX.Element {
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [trainingsProvided, setTrainingsProvided] = useState<any>();
     const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
-    
+
     if (TRAINING_INDEX_ACCESS.includes(Number(currentUser?.accountType))) {
         useEffect(() => {
             getRequest(`/api/trainings`, setTrainings);
             
         }, [])
-    } else if (Number(currentUser?.accountType) === 4) {
+    } else if (Number(currentUser?.accountType) === Account.Trainer) {
         useEffect(() => {
             getRequest(`/api/trainings/${Number(currentUser?.id)}/trainer`, setTrainings);
         }, [])

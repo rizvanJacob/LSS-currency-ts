@@ -1,3 +1,4 @@
+import { Account } from "../../../../../server/src/constants";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -13,7 +14,7 @@ export default function EditUserForm(): JSX.Element {
   const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
-    accountType: 3,
+    accountType: Account.Trainee,
     approved: false,
     authCategory: 0,
     categories: {
@@ -115,7 +116,7 @@ export default function EditUserForm(): JSX.Element {
                 <ErrorMessage name="accountType" />
               </div>
 
-              {user.accountType === 2 && (
+              {user.accountType === Account.TraineeAdmin && (
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <label>Authorization Category:</label>
                   <Field
@@ -136,7 +137,7 @@ export default function EditUserForm(): JSX.Element {
                   <ErrorMessage name="authCategory" />
                 </div>
               )}
-              {user.accountType === 3 && (
+              {user.accountType === Account.Trainee && (
                 <>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <label>Callsign:</label>
