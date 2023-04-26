@@ -80,7 +80,7 @@ model Currency {
   trainee       Int
   requirements  Requirement @relation(fields: [requirement], references: [id])
   requirement   Int
-  seniority     Boolean
+  seniority     Boolean   @default(false)
   expiry        DateTime
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @default(now()) @db.Timestamp(6)
@@ -103,7 +103,7 @@ model Training {
   capacity      Int
   start         DateTime
   end           DateTime
-  complete      Boolean
+  complete      Boolean   @default(false)
   instruction   String?
   passphrase    String    @default("code")
   createdAt     DateTime  @default(now()) @db.Timestamp(6)

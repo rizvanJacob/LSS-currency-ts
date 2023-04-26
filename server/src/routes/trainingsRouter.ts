@@ -4,7 +4,6 @@ const router = express.Router();
 import trainingsController from "../controllers/trainingsController";
 import { isAuth } from "../controllers/authController";
 
-
 router.get("/", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.getAllTrainings);
 router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.showTraining);
 router.put("/:id", isAuth([Account.Admin, Account.Trainer]), trainingsController.updateTraining);

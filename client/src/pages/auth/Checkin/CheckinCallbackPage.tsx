@@ -39,7 +39,7 @@ const CheckinCallbackPage = () => {
       <h1>Check In</h1>
       <h4>Select a training to check in to:</h4>
       {isLoading ? (
-        <progress />
+        <progress className="progress w-56" />
       ) : (
         trainings.map((t) => {
           return (

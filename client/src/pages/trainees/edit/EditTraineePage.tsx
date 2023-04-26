@@ -130,7 +130,7 @@ const EditTraineePage = () => {
           )}
         </Formik>
       ) : (
-        <progress />
+        <progress className="progress w-56" />
       )}
     </>
   );

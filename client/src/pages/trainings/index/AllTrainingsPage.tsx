@@ -28,7 +28,15 @@ export default function AllTrainingsPage(): JSX.Element {
                 <p><progress /></p>
             </>
             )}
-        
         </>
-    )
+      ) : (
+        <>
+          <h1>Fetching Trainings</h1>
+          <p>
+            <progress className="progress w-56" />
+          </p>
+        </>
+      )}
+    </>
+  );
 }
