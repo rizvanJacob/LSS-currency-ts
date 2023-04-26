@@ -57,6 +57,7 @@ const show = async (req: Request, res: Response) => {
       where: { id: Number(id) },
       select: {
         category: true,
+        callsign: true,
         user: true,
         users: {
           select: {
@@ -119,7 +120,7 @@ const showBooking = async (req: Request, res: Response) => {
     if (booking) {
       res.status(200).json(booking);
     } else {
-      res.status(404).json({ message: "no bookings found" });
+      res.status(204).json({ message: "no bookings found" });
     }
   } catch (error) {
     res.status(500).json(error);

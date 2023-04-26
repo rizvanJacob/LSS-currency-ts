@@ -47,18 +47,27 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   }, [training]);
 
   return (
-    <>
-      <h4>Date: {dayjs(training.start).format("DD MMM YY")}</h4>
-      <p>Start: {dayjs(training.start).format("HH:mm")}</p>
-      <p>End: {dayjs(training.end).format("HH:mm")}</p>
-      <p>
-        Vacancies: {vacancies}/{training.capacity}
-      </p>
-      <button onClick={bookTraining} disabled={isLoading}>
-        {buttonText}
-      </button>
-      <p>{JSON.stringify(training)}</p>
-    </>
+    <div className="my-2 py-5 px-5 card bg-sky-50 shadow-xl">
+      <div className="flex items-center ">
+        <div className="flex-1 flex-col">
+          <h4 className="card-title">
+            {dayjs(training.start).format("DD MMM YY")}
+          </h4>
+          <p>Start: {dayjs(training.start).format("HH:mm")}</p>
+          <p>End: {dayjs(training.end).format("HH:mm")}</p>
+          <p>
+            Vacancies: {vacancies}/{training.capacity}
+          </p>
+        </div>
+        <button
+          className="btn btn-outline min-w-max"
+          onClick={bookTraining}
+          disabled={isLoading}
+        >
+          {buttonText}
+        </button>
+      </div>
+    </div>
   );
 };
 

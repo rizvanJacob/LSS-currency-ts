@@ -44,7 +44,10 @@ const BookTrainingPage = () => {
   return (
     <>
       {isLoaded ? (
-        <>
+        <div className="flex flex-col w-screen max-w-md mx-auto p-3">
+          <h1 className="font-bold text-xl">
+            Book {trainings[0].requirements.name}
+          </h1>
           <TrainingCalendar
             trainings={trainings}
             displayDate={displayDate}
@@ -59,8 +62,7 @@ const BookTrainingPage = () => {
               />
             );
           })}
-          <p>{JSON.stringify(trainings)}</p>
-        </>
+        </div>
       ) : (
         <progress className="progress w-56" />
       )}

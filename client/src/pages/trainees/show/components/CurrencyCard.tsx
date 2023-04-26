@@ -46,24 +46,32 @@ const CurrencyCard = ({ currency }: Prop) => {
   }, [booking]);
 
   return (
-    <details open={status.open}>
-      <summary>
-        <span>{currency?.requirements?.name}</span>
-      </summary>
-      <p>{status.message}</p>
-      <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
-      {booking.status ? (
-        <p>
-          {BOOKING_STATUSES[booking.status]}:{" "}
-          {dayjs(booking.trainings?.start).format("DD-MMM-YY")}
-        </p>
-      ) : null}
-      <Link
-        to={`book/${currency.requirement}/?selected=${booking.trainings?.start}`}
-      >
-        <button>{booking.status ? "Ammend booking" : "Book"}</button>
-      </Link>
-    </details>
+    <div className={"collapse collapse-arrow"}>
+      <input type="checkbox" defaultChecked={status.open} />
+      <h4 className={`collapse-title font-semibold text-${status.color}-600`}>
+        {currency?.requirements?.name}
+      </h4>
+      <div className="collapse-content">
+        <div className="flex">
+          <div className="flex-1 flex-col">
+            <p>{status.message}</p>
+            <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
+            {booking.status ? (
+              <p>
+                {BOOKING_STATUSES[booking.status]}:{" "}
+                {dayjs(booking.trainings?.start).format("DD-MMM-YY")}
+              </p>
+            ) : null}
+          </div>
+          <Link
+            className="btn btn-sm btn-outline"
+            to={`book/${currency.requirement}/?selected=${booking.trainings?.start}`}
+          >
+            <button>{booking.status ? "Ammend booking" : "Book"}</button>
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

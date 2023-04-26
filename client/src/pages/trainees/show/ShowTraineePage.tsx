@@ -39,9 +39,9 @@ const ShowTraineePage = () => {
   return (
     <>
       {trainee ? (
-        <>
-          <h1>{trainee?.callsign}</h1>
-          <p>{trainee?.categories.name}</p>
+        <div className="flex flex-col mx-auto items-stretch w-screen max-w-md p-3">
+          <h1 className="text-3xl font-bold ">{trainee?.callsign}</h1>
+          <p className="text-lg">{trainee?.categories.name}</p>
           {trainee?.currencies.map((c) => {
             if (
               trainee.categories.requirements?.find((r) => {
@@ -51,9 +51,9 @@ const ShowTraineePage = () => {
               return <CurrencyCard currency={c} key={c.id} />;
             }
           })}
-        </>
+        </div>
       ) : (
-        <progress className="progress w-56" />
+        <progress className="progress w-56 mx-auto" />
       )}
     </>
   );
