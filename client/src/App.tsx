@@ -58,15 +58,17 @@ function App() {
       {currentUser ? (
         <>
           <div className="App">
-            <Navbar />
+            <Navbar
+              accountType={currentUser.accountType}
+              traineeId={currentUser.trainee?.id}
+            />
           </div>
           <Routes>
-            {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
-              <Route path="/trainees/*" element={<TraineesRoutes />} />
-            ) : null}
-            ;
             {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
               <Route path="/users/*" element={<UserRoutes />} />
+            ) : null}
+            {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+              <Route path="/trainees/*" element={<TraineesRoutes />} />
             ) : null}
             {TRAINING_ACCOUNT_TYPES.includes(
               Number(currentUser.accountType)

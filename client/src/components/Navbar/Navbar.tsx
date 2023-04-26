@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SmallMenu from "./components/SmallMenu";
 import LargeMenu from "./components/LargeMenu";
@@ -7,14 +8,45 @@ export type MenuItem = {
   path: string;
 };
 
-const Navbar = (): JSX.Element => {
+type Prop = {
+  accountType: number;
+  traineeId?: number;
+};
+
+const Navbar = ({ accountType, traineeId }: Prop): JSX.Element => {
   const navigate = useNavigate();
-  const menuItems: MenuItem[] = [
-    { name: "Users", path: "/users" },
-    { name: "Trainees", path: "/trainees" },
-    { name: "Trainings", path: "/trainings" },
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
     { name: "Log Out", path: "/logout" },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (accountType === 1) {
+      setMenuItems([
+        { name: "Users", path: "/users" },
+        { name: "Trainees", path: "/trainees" },
+        { name: "Trainings", path: "/trainings" },
+        ...menuItems,
+      ]);
+    } else if (accountType === 2) {
+      setMenuItems([
+        { name: "My Currencies", path: `/trainees/${traineeId}` },
+        { name: "Trainees", path: "/trainees" },
+        { name: "Trainings", path: "/trainings" },
+        ...menuItems,
+      ]);
+    } else if (accountType === 3) {
+      setMenuItems([
+        { name: "My Currencies", path: `/trainees/${traineeId}` },
+        ...menuItems,
+      ]);
+    } else if (accountType === 4) {
+      setMenuItems([
+        { name: "Trainees", path: "/trainees" },
+        { name: "Trainings", path: "/trainings" },
+        ...menuItems,
+      ]);
+    }
+  }, [accountType, traineeId]);
 
   return (
     <nav className="navbar bg-cyan-800 max-h-10">

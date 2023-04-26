@@ -13,7 +13,7 @@ const HomePageCallback = ({ accountType, traineeId }: Prop) => {
   useEffect(() => {
     let homepath = HOME_PAGES[accountType];
     if (accountType === 3) {
-      homepath = `${homepath}/traineeId`;
+      homepath = `${homepath}/${traineeId}`;
     }
     console.log("in homepage callback. homepath: ", homepath);
     navigate(homepath, { replace: true });
