@@ -16,13 +16,14 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
         </label>
         <div
           tabIndex={0}
-          className="dropdown-content menu bg-sky-50 rounded-box p-2 min-w-max"
+          className="dropdown-content menu bg-sky-50 rounded-box p-2 w-36 mt-3"
         >
-          {menuItems.map((i) => {
+          {menuItems.map((i, index) => {
             return (
               <Link
-                className="btn btn-ghost normal-case text-md text-left"
+                className="btn btn-ghost normal-case text-md justify-start"
                 to={i.path}
+                key={index}
               >
                 {i.name}
               </Link>
