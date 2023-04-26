@@ -1,9 +1,12 @@
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { Training } from "../../../../@types/training";
+import { useState, useEffect } from "react";
 import {
   TileDisabledFunc,
   TileClassNameFunc,
+  NavigationLabelArgs,
+  NavigationLabelFunc,
 } from "react-calendar/dist/cjs/shared/types";
 
 type Prop = {
@@ -13,9 +16,16 @@ type Prop = {
 };
 
 const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
+  const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
     return dayjs(t.start).toDate();
   });
+
+  useEffect(() => {
+    setFlag(-flag);
+    console.log(displayDate);
+    console.log(flag);
+  }, [displayDate]);
 
   const tileDisabled: TileDisabledFunc = ({ date, view }) => {
     if (view === "month") {
@@ -45,31 +55,20 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
     setDisplayDate(nextValue);
   };
 
+  const getNavigationLabel: NavigationLabelFunc = ({
+    date,
+    label,
+    view,
+    locale,
+  }) => {
+    console.log(date);
+    const navDisplay = dayjs(date).format("MMM YY");
+    return <h4 className="btn btn-sm sm:btn-wide btn-ghost">{navDisplay}</h4>;
+  };
+
   return (
     <div className="mx-auto py-5">
-      <h3 className="text-center text-md font-semibold">
-        {dayjs(displayDate).format("MMM-YY")}
-      </h3>
-      <div className="flex h-[312px] items-center">
-        <button
-          className=" font-extrabold text-3xl h-full"
-          onClick={() => {
-            if (
-              dayjs(displayDate)
-                .startOf("month")
-                .isAfter(dayjs().startOf("month"))
-            ) {
-              setDisplayDate(
-                dayjs(displayDate)
-                  .subtract(1, "month")
-                  .startOf("month")
-                  .toDate()
-              );
-            }
-          }}
-        >
-          {"<"}
-        </button>
+      <div className="flex flex-col h-[360px] items-center">
         <Calendar
           className="flex-1 max-w-sm"
           value={displayDate}
@@ -77,19 +76,17 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
           minDate={dayjs().toDate()}
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
+          prevLabel={
+            <button className="ml-16 sm:ml-5 btn btn-sm btn-outline">
+              {"<"}
+            </button>
+          }
+          prev2Label={<></>}
+          nextLabel={<button className="btn btn-sm btn-outline">{">"}</button>}
+          next2Label={<></>}
+          navigationLabel={getNavigationLabel}
           showNeighboringMonth={false}
-          showNavigation={false}
         />
-        <button
-          className="font-extrabold text-3xl h-full"
-          onClick={() => {
-            setDisplayDate(
-              dayjs(displayDate).add(1, "month").startOf("month").toDate()
-            );
-          }}
-        >
-          {">"}
-        </button>
       </div>
     </div>
   );

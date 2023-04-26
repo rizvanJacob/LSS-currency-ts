@@ -56,7 +56,10 @@ const EditTraineePage = () => {
 
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, name, value } = event.target;
-    if (trainee.currencies.find((c) => c.id === Number(id))) {
+    console.log("expiry change");
+    console.log(id, value);
+
+    if (trainee.currencies.find((c) => c.requirement === Number(id))) {
       const updatedCurrencies = trainee.currencies.map((c) => {
         if (c.requirement === Number(id)) {
           c.expiry = dayjs(value).toDate();
@@ -79,17 +82,18 @@ const EditTraineePage = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { id, name, checked } = event.target;
-    // console.log(id, checked);
-    if (trainee.currencies.find((c) => c.id === Number(id))) {
+    console.log(id, checked);
+    if (trainee.currencies.find((c) => c.requirement === Number(id))) {
+      console.log("update");
       const updatedCurrencies = trainee.currencies.map((c) => {
         if (c.requirement === Number(id)) {
           c.seniority = Boolean(checked);
         }
         return c;
       });
-      // console.log(updatedCurrencies);
       setTrainee({ ...trainee, currencies: updatedCurrencies });
     } else {
+      console.log("create");
       const newCurrency = {
         requirement: Number(id),
         expiry: dayjs().toDate(),
