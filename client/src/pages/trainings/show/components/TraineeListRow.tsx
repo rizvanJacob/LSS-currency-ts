@@ -12,7 +12,7 @@ const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
   return (
     <tr>
       <Link to={`/trainees/${trainee.id}`}>
-        <td>{trainee.callsign}</td>
+        <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">{trainee.callsign}</td>
       </Link>
       <td>{trainee.categories.name}</td>
       <td>{dayjs(trainee.currencies[0].expiry).format("DD MMM YY")}</td>
