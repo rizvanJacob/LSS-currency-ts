@@ -77,8 +77,8 @@ const TraineeList = ({ trainingComplete }: Prop) => {
           })}
         </tbody>
       </table>
-      <button type="submit" disabled={trainingComplete}>
-        Complete
+      <button className="btn btn-sm" type="submit" disabled={trainingComplete}>
+        {trainingComplete ? "Completed" : "Complete"}
       </button>
     </form>
   );
