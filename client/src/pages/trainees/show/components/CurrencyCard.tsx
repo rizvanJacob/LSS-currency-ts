@@ -52,8 +52,8 @@ const CurrencyCard = ({ currency }: Prop) => {
         {currency?.requirements?.name}
       </h4>
       <div className="collapse-content">
-        <div className="flex">
-          <div className="flex-1 flex-col">
+        <div className="flex items-center">
+          <div className="flex-1 flex-col min-w-max">
             <p>{status.message}</p>
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
             {booking.status ? (
@@ -64,10 +64,10 @@ const CurrencyCard = ({ currency }: Prop) => {
             ) : null}
           </div>
           <Link
-            className="btn btn-sm btn-outline"
+            className="break-words btn btn-sm btn-outline"
             to={`book/${currency.requirement}/?selected=${booking.trainings?.start}`}
           >
-            <button>{booking.status ? "Ammend booking" : "Book"}</button>
+            <button>{booking.status ? "Amend" : "Book"}</button>
           </Link>
         </div>
       </div>

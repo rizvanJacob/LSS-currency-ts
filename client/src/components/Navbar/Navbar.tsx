@@ -12,7 +12,7 @@ const Navbar = (): JSX.Element => {
   const menuItems: MenuItem[] = [
     { name: "Users", path: "/users" },
     { name: "Trainees", path: "/trainees" },
-    { name: "Trainers", path: "/trainers" },
+    { name: "Trainings", path: "/trainings" },
     { name: "Log Out", path: "/logout" },
   ];
 
