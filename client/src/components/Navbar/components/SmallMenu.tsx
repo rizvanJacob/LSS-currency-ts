@@ -14,7 +14,6 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
-  console.log(isChecked);
   return (
     <div className={className}>
       <div className="dropdown dropdown-end">

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Training } from "../../../../@types/training";
-
+import Enter from "../../../../assets/icons/enterIcon.svg";
 export default function ShowTrainingButton({
   training,
 }: {
@@ -8,7 +8,9 @@ export default function ShowTrainingButton({
 }): JSX.Element {
   return (
     <Link to={`${training.id}`}>
-      <button style={{ backgroundColor: "#00A0A0" }}>➡️</button>
+      <button className="btn btn-circle">
+        <img src={Enter} alt="enter"/>
+      </button>
     </Link>
   );
 }
