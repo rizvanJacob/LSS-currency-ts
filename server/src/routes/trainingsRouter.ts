@@ -9,7 +9,6 @@ router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]
 router.put("/:id", isAuth([Account.Admin, Account.Trainer]), trainingsController.updateTraining);
 router.delete("/:id", isAuth([Account.Admin, Account.Trainer]), trainingsController.deleteTraining);
 router.post("/", isAuth([Account.Admin, Account.Trainer]), trainingsController.createTraining);
-router.get("/testCurrencyUpdate/:id", trainingsController.testCurrencyUpdate);
 router.put("/complete/:id", trainingsController.completeTraining);
 
 export default router;
