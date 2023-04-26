@@ -1,3 +1,4 @@
+import { Account } from "../../server/src/constants";
 import "./App.css";
 import { useState, useEffect, createContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -13,13 +14,13 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
-  accountType: 1,
+  accountType: Account.Admin,
   authCategory: 1,
 };
 
-const TRAINING_ACCOUNT_TYPES = [1, 2, 4];
-const TRAINEE_ACCOUNT_TYPES = [1, 2, 3, 4];
-const USER_ACCOUNT_TYPES = [1];
+const TRAINING_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin, Account.Trainer];
+const TRAINEE_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer];
+const USER_ACCOUNT_TYPES = [Account.Admin];
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 
