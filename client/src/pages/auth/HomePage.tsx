@@ -28,14 +28,14 @@ const HomePage = (): JSX.Element => {
   }, []);
 
   return (
-    <>
-      <a href={authUrls.login}>
-        <h1>LOGIN</h1>
+    <div className="flex flex-col mx-auto items-center h-48 justify-evenly">
+      <a className="btn btn-wide" href={authUrls.login}>
+        LOGIN
       </a>
-      <a href={authUrls.checkin}>
-        <h1>CHECK IN</h1>
+      <a className="btn btn-wide" href={authUrls.checkin}>
+        CHECK IN
       </a>
-    </>
+    </div>
   );
 };
 

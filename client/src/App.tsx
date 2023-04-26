@@ -10,7 +10,7 @@ import { CurrentUser, UserPayload } from "./@types/currentUser";
 import Navbar from "./components/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
   accountType: 1,
