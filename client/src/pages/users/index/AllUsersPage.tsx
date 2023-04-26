@@ -22,33 +22,34 @@ export default function AllUsersPage(): JSX.Element {
   return (
     <>
       {users.length > 0 ? (
-        <>
-        {notApprovedUsers.length > 0 ? (
-          <>
-          <h1>Pending approval:</h1>
-          <UnapprovedUsersList
-            users={notApprovedUsers as User[]}
-            setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
-          />
-          </>
-        ) : (
-          <></>
-        )}
-          
-
-          <h1> Approved Users:</h1>
+  
+        <div className="p-4 space-y-4">
+          {notApprovedUsers.length > 0 ? (
+            <>
+            <h1 className="text-lg font-bold">Pending approval:</h1>
+            <UnapprovedUsersList
+              users={notApprovedUsers as User[]}
+              setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
+            />
+            </>
+          ) : (
+            <></>
+          )}
+        
+          <h1 className="text-lg font-bold"> Approved Users:</h1>
           <ApprovedUsersList
             users={approvedUsers as User[]}
             setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
           />
-        </>
+        </div>
+
       ) : (
-        <>
-          <h1>Fetching Users</h1>
+       <div className="p-4">
+          <h1 className="text-lg font-bold">Fetching Users</h1>
           <p>
             <progress className="progress w-56" />
           </p>
-        </>
+        </div>
       )}
     </>
   );
