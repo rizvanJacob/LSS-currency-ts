@@ -26,6 +26,7 @@ const CurrencyFieldset = ({
           name="currencies"
           value={currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""}
           onChange={handleExpiryChange}
+          required={true}
         />
       </label>
       {requirement.hasSeniority && (
