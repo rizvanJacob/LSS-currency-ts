@@ -1,18 +1,15 @@
+import {Account} from "../constants"
 import express from "express";
 const router = express.Router();
 import trainingsController from "../controllers/trainingsController";
 import { isAuth } from "../controllers/authController";
 
-router.get("/", isAuth([1, 2, 4]), trainingsController.getAllTrainings);
-router.get("/:id", isAuth([1, 2, 4]), trainingsController.showTraining);
-router.put("/:id", isAuth([4]), trainingsController.updateTraining);
+router.get("/", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.getAllTrainings);
+router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.showTraining);
+router.put("/:id", isAuth([Account.Admin, Account.Trainer]), trainingsController.updateTraining);
+router.delete("/:id", isAuth([Account.Admin, Account.Trainer]), trainingsController.deleteTraining);
+router.post("/", isAuth([Account.Admin, Account.Trainer]), trainingsController.createTraining);
+router.get("/testCurrencyUpdate/:id", trainingsController.testCurrencyUpdate);
 router.put("/complete/:id", trainingsController.completeTraining);
-router.delete("/:id", isAuth([4]), trainingsController.deleteTraining);
-router.post("/", isAuth([4]), trainingsController.createTraining);
-router.get(
-  "/:userId/trainer",
-  isAuth([1, 2, 4]),
-  trainingsController.getAllTrainingsByTrainer
-);
 
 export default router;

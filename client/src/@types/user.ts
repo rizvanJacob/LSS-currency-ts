@@ -19,7 +19,7 @@ export type NewUser = BasicUser & TrainerUser & {
 
 export type User = BasicUser & TrainerUser & {
   id: number;
-  category?: {}
+  category?: number
   categories?: {
     name: string;
   }

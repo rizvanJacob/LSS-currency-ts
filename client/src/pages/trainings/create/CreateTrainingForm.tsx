@@ -92,7 +92,7 @@ export default function CreateTrainingForm(): JSX.Element {
                     </option>
                   ))}
                 </Field>
-                <ErrorMessage name="name" />
+                {/* <ErrorMessage name="name" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Start Date:</label>
@@ -103,7 +103,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={dayjs(training?.start).format("YYYY-MM-DD") || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="start_date" />
+                {/* <ErrorMessage name="start_date" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Start Time:</label>
@@ -114,7 +114,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={dayjs(training?.start).format("HH:mm") || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="start_time" />
+                {/* <ErrorMessage name="start_time" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>End Date:</label>
@@ -125,7 +125,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="start_date" />
+                {/* <ErrorMessage name="start_date" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>End Time:</label>
@@ -136,7 +136,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={dayjs(training?.end).format("HH:mm") || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="end_time" />
+                {/* <ErrorMessage name="end_time" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Capacity:</label>
@@ -147,7 +147,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={training?.capacity || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="capacity" />
+                {/* <ErrorMessage name="capacity" /> */}
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <label>Additional Instructions:</label>
@@ -159,7 +159,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   value={training?.instruction || ""}
                   onChange={handleInputChange}
                 />
-                <ErrorMessage name="instruction" />
+                {/* <ErrorMessage name="instruction" /> */}
               </div>
               <div style={{ marginTop: "2rem", textAlign: "center" }}>
                 <button

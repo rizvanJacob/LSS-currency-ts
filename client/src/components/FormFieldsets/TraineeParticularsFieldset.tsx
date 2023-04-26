@@ -16,6 +16,7 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   useEffect(() => {
     getRequest("/api/lookup/categories", setCategories);
   }, []);
+  
 
   return (
     <fieldset>
@@ -34,7 +35,6 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
         value={trainee.category}
         onChange={handleChange}
       >
-        <option value={0}>Select category</option>
         {categories?.map((c) => {
           return (
             <option value={c.id} key={c.id}>

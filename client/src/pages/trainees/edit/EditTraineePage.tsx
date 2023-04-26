@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { Account } from "../../../../../server/src/constants";
+import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -7,6 +8,8 @@ import { Trainee } from "../../../@types/trainee";
 import CurrencyFieldset from "../../../components/FormFieldsets/CurrencyFieldset";
 import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext } from "../../../App";
 
 const blankTrainee = {
   callsign: "",
