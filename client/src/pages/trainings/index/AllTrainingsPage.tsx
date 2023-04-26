@@ -14,27 +14,31 @@ export default function AllTrainingsPage(): JSX.Element {
     getRequest(`/api/trainings`, setTrainings);
   }, []);
 
-  return trainings.length > 0 ? (
+  return (
     <>
-      <h1>Training Index</h1>
-      {currentUser?.accountType === Account.Trainer ? (
-        <CreateTrainingButton />
+      {trainings.length > 0 ? (
+        <>
+          <h1>Training Index</h1>
+          {currentUser?.accountType === Account.Trainer ? (
+            <CreateTrainingButton />
+          ) : (
+            <></>
+          )}
+          <TrainingList
+            trainings={trainings as Training[]}
+            setTrainings={
+              setTrainings as React.Dispatch<React.SetStateAction<Training[]>>
+            }
+          />
+        </>
       ) : (
-        <></>
+        <>
+          <h1>Fetching Trainings</h1>
+          <p>
+            <progress />
+          </p>
+        </>
       )}
-      <TrainingList
-        trainings={trainings as Training[]}
-        setTrainings={
-          setTrainings as React.Dispatch<React.SetStateAction<Training[]>>
-        }
-      />
-    </>
-  ) : (
-    <>
-      <h1>Fetching Trainings</h1>
-      <p>
-        <progress className="progress w-56" />
-      </p>
     </>
   );
 }

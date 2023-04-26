@@ -182,8 +182,9 @@ const isAuth = (authorized: number[]) => async (req: Request, res: Response, nex
         console.log("checked")
         return next();
       }
+    } else if (verifiedUser.accountType === Account.Admin) {
+      return next();
     }
-
     throw new Error("You are unauthorized");
   } catch (err) {
     console.log("catch error", err)
