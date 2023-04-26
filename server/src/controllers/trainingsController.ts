@@ -101,6 +101,7 @@ const trainingsController = {
           capacity,
           instruction,
           requirement,
+          updatedAt: dayjs().toDate(),
         },
         select: {
           id: true,
@@ -121,11 +122,7 @@ const trainingsController = {
     const { id: trainingId } = req.params;
     const completedTrainees = req.body as number[];
 
-    console.log("training: ", trainingId);
-    console.log("Completed trainees: ");
-    console.log(completedTrainees);
-
-    const updateCompletedTrainees = prisma.traineeToTraining.updateMany({
+    const updateCompletedStatuses = prisma.traineeToTraining.updateMany({
       where: {
         training: Number(trainingId),
         trainee: { in: completedTrainees },
@@ -133,10 +130,11 @@ const trainingsController = {
       },
       data: {
         status: 3,
+        updatedAt: dayjs().toDate(),
       },
     });
 
-    const updateAbsentTrainees = prisma.traineeToTraining.updateMany({
+    const updateAbsentStatuses = prisma.traineeToTraining.updateMany({
       where: {
         training: Number(trainingId),
         trainee: {
@@ -146,11 +144,26 @@ const trainingsController = {
       },
       data: {
         status: 5,
+        updatedAt: dayjs().toDate(),
       },
     });
 
+    const updateTraineeCurrencies = completedTrainees.map((t) =>
+      updateCurrency(t, Number(trainingId))
+    );
+
+    const updateTraining = prisma.training.update({
+      where: { id: Number(trainingId) },
+      data: { complete: true, updatedAt: dayjs().toDate() },
+    });
+
     try {
-      await Promise.all([updateCompletedTrainees, updateAbsentTrainees]);
+      await Promise.all([
+        updateCompletedStatuses,
+        updateAbsentStatuses,
+        updateTraineeCurrencies,
+        updateTraining,
+      ]);
       res.send(200);
     } catch (error) {
       res.send(500).json(error);
@@ -191,14 +204,6 @@ const trainingsController = {
     } catch (err) {
       res.status(500).json({ err });
     }
-  },
-  testCurrencyUpdate: async (req: Request, res: Response) => {
-    const completedTrainee = 1;
-    const { id: trainingId } = req.params;
-    console.log("test");
-
-    const response = await updateCurrency(1, Number(trainingId));
-    res.json(response);
   },
 };
 export default trainingsController;
@@ -263,16 +268,15 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         true
       );
 
-      await prisma.currency.update({
+      return prisma.currency.update({
         where: {
           trainee_requirement: {
             trainee: traineeId,
             requirement: requirement.id,
           },
         },
-        data: {},
+        data: { expiry: newExpiry.toDate(), updatedAt: dayjs().toDate() },
       });
-      return { requirement, currency, training, newExpiry };
     }
   } catch (error) {}
 };

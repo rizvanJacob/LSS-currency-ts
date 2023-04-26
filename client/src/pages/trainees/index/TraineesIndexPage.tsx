@@ -31,7 +31,7 @@ const TraineesIndexPage = (): JSX.Element => {
       if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
         navigate(`/`);
       }
-    }, [])
+    }, []);
     deleteRequest(`/api/trainees/${id}`, id, setTrainees);
   };
 
@@ -45,7 +45,7 @@ const TraineesIndexPage = (): JSX.Element => {
       ) : (
         <>
           <h1>Fetching Trainees</h1>
-          <progress />
+          <progress className="progress w-56" />
         </>
       )}
     </>

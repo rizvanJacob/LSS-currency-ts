@@ -62,7 +62,7 @@ const BookTrainingPage = () => {
           <p>{JSON.stringify(trainings)}</p>
         </>
       ) : (
-        <progress />
+        <progress className="progress w-56" />
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import { Account } from "../constants";
+import { Account, MONTHS_TO_RECORD_WITHDRAWAL } from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
@@ -160,9 +160,27 @@ const updateBooking = async (req: Request, res: Response) => {
 const book = async (traineeId: number, trainingId: number) => {
   const existingBooking = await prisma.traineeToTraining.findFirst({
     where: { trainee: traineeId, training: trainingId },
+    include: {
+      trainings: {
+        select: {
+          start: true,
+        },
+      },
+    },
   });
   if (existingBooking) {
     console.log("delete booking");
+    if (
+      dayjs()
+        .add(MONTHS_TO_RECORD_WITHDRAWAL, "months")
+        .isAfter(dayjs(existingBooking.trainings.start))
+    ) {
+      console.log("record withdrawal");
+      return await prisma.traineeToTraining.update({
+        where: { id: existingBooking.id },
+        data: { status: 4, updatedAt: dayjs().toDate() },
+      });
+    }
     return await prisma.traineeToTraining.delete({
       where: { id: existingBooking.id },
     });
@@ -299,7 +317,7 @@ const checkin = async (req: Request, res: Response) => {
             training: Number(trainingId),
           },
         },
-        data: { status: 2 },
+        data: { status: 2, updatedAt: dayjs().toDate() },
       });
       return res.status(200).json({ message: "Check in successful!" });
     } else {

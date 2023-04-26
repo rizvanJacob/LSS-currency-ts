@@ -4,7 +4,11 @@ import getRequest from "../../../../utilities/getRequest";
 import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
 
-const TraineeList = () => {
+type Prop = {
+  trainingComplete: boolean | undefined;
+};
+
+const TraineeList = ({ trainingComplete }: Prop) => {
   const { id: trainingId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -49,7 +53,7 @@ const TraineeList = () => {
   };
 
   return isLoading ? (
-    <progress />
+    <progress className="progress w-56" />
   ) : (
     <form onSubmit={handleSubmit}>
       <table>
@@ -67,12 +71,15 @@ const TraineeList = () => {
                 trainee={t}
                 key={t.id}
                 handleChange={handleCheck}
+                trainingComplete={trainingComplete}
               />
             );
           })}
         </tbody>
       </table>
-      <button type="submit">Complete</button>
+      <button className="btn btn-sm" type="submit" disabled={trainingComplete}>
+        {trainingComplete ? "Completed" : "Complete"}
+      </button>
     </form>
   );
 };
