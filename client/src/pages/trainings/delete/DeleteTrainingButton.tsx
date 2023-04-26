@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext } from "../../../App";
 import { useEffect, useContext } from "react";
+import RedCross from "../../../assets/icons/redCross.svg";
 export default function DeleteTrainingButton({
   setTraining,
   training,
@@ -28,9 +29,9 @@ export default function DeleteTrainingButton({
     return (
         <button
             onClick={() => handleDeleteClick(training.id)} 
-            style={{ backgroundColor: "#E42313" }}
+            className="btn btn-circle"
         >
-            ❌
+            <img src={RedCross} alt="redCross"/>
         </button>
     );
 }

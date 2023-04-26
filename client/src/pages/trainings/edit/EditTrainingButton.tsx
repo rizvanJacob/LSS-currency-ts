@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Training } from "../../../@types/training";
-
+import Edit from "../../../assets/icons/editIcon.svg";
 export default function EditUserButton({
   training,
 }: {
@@ -8,7 +8,9 @@ export default function EditUserButton({
 }): JSX.Element {
   return (
       <Link to={`/trainings/${training.id}/edit`}>
-        <button style={{ backgroundColor: "#00A0A0" }}>✏️</button>
+        <button className="btn btn-circle">
+          <img src={Edit} alt="edit"/>
+        </button>
       </Link>
   );
 }

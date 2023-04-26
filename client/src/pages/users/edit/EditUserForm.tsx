@@ -129,149 +129,162 @@ export default function EditUserForm(): JSX.Element {
 
   return (
     <fieldset>
-      <h1>Update User Form</h1>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Formik initialValues={user} validationSchema={schema} onSubmit={handleFormSubmit}>
-          {({ isSubmitting, isValidating, isValid }) => (
-            <Form>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="displayName">Display Name:</label>
-                <Field
-                  type="text"
-                  id="displayName"
-                  name="displayName"
-                  placeholder="Enter your name"
-                  value={user?.displayName || ""}
-                  onChange={handleInputChange}
-                />
-                <ErrorMessage name="displayName" />
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <label htmlFor="accountType">Account Type:</label>
-                <Field
-                  as="select"
-                  type="number"
-                  id="accountType"
-                  name="accountType"
-                  disabled
-                  value={user?.accountType || ""}
-                  onChange={handleInputChange}
-                >
-                  {accountTypes?.map((type) => {
-                    return (
-                      <option value={type.id} key={type.id}>
-                        {type.name}
-                      </option>
-                    );
-                  })}
-                </Field>
-                <ErrorMessage name="accountType" />
-              </div>
+      <div className="max-w-lg mx-auto">
+        <h1 className="text-3xl text-center font-bold mb-8">Update User</h1>
+        <div className="flex items-center justify-center">
+          <Formik initialValues={user} validationSchema={schema} onSubmit={handleFormSubmit}>
+            {({ isSubmitting, isValidating, isValid }) => (
+              <Form className="space-y-6">
+                <div className="flex items-center">
+                  <label htmlFor="displayName" className="w-2/4">Display Name:</label>
+                  <div className="w-3/4">
+                    <Field
+                      type="text"
+                      id="displayName"
+                      name="displayName"
+                      placeholder="Enter your name"
+                      className="input-text input input-bordered input-primary w-full max-w-xs"
+                      value={user?.displayName || ""}
+                      onChange={handleInputChange}
+                    />
+                    <ErrorMessage name="displayName" className="error-message" />
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <label htmlFor="accountType" className="w-2/4">Account Type:</label>
+                  <div className="w-3/4">
+                    <Field
+                      as="select"
+                      type="number"
+                      id="accountType"
+                      name="accountType"
+                      disabled
+                      className="input-select select select-primary w-full max-w-xs"
+                      value={user?.accountType || ""}
+                      onChange={handleInputChange}
+                    >
+                      {accountTypes?.map((type) => {
+                        return (
+                          <option value={type.id} key={type.id}>
+                            {type.name}
+                          </option>
+                        );
+                      })}
+                    </Field>
+                    <ErrorMessage name="accountType" className="error-message"/>
+                  </div>
+                </div>
 
-              {user.accountType === Account.TraineeAdmin && (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <label htmlFor="authCategory">Authorization Category:</label>
-                  <Field
-                    as="select"
-                    type="number"
-                    id="authCategory"
-                    name="authCategory"
-                    disabled={user.accountType !== Account.TraineeAdmin}
-                    value={user?.authCategory || ""}
-                    onChange={handleInputChange}
-                  >
-                    {categoryTypes.map((type) => (
-                      <option value={type.id} key={type.id}>
-                        {type.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <ErrorMessage name="authCategory" />
-                </div>
-              )}
-              {user.accountType === Account.Trainee && (
-                <>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <label htmlFor="callsign">Callsign:</label>
-                  <Field
-                    type="text"
-                    id="callsign"
-                    name="callsign"
-                    placeholder="Enter your callsign"
-                    disabled={user.accountType !== Account.Trainee}
-                    value={user?.trainee?.callsign || ""}
-                    onChange={handleInputChange}
-                  />
-                  <ErrorMessage name="callsign" />
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <label htmlFor="category">Category:</label>
-                  <Field
-                    as="select"
-                    type="text"
-                    id="category"
-                    name="category"
-                    disabled={user.accountType !== Account.Trainee}
-                    value={categoryTypes.find((type) => (user?.trainee?.category === type.id))?.name || ""}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Select a category</option>
-                    {categoryTypes.map((type) => (
-                        <option value={type.name} key={type.id}>
-                          {type.name}
-                        </option>
-                    ))}  
-                  </Field>
-                  <ErrorMessage name="category" />
-                </div>
-                </>
-              )}
-{/*               {user.accountType === Account.Trainer && (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <label htmlFor="requirements">Training Provided:</label>
-                    {requirements?.map((r) => {
-                      return (
-                        <label key={r.id}>
-                          <Field
-                            type="checkbox"
-                            name="requirements"
-                            value={r.id}
-                            checked={requirements.includes(r.id)}
-                            onChange={changeRequirementsProvided}
-                          />
-                          {r.name}
-                        </label>
-                      );
-                    })}
-                  <ErrorMessage name="requirementsProvided" />
-                </div>
-              )} */}
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <label>Account Status:</label>
-                <a>{user?.approved ? "Approved" : "Not Approved"}</a>
-              </div>
-              <div style={{ marginTop: "2rem", textAlign: "center" }}>
-                {!user?.approved ? (
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || isValidating || !isValid}
-                    style={{ backgroundColor: "#00A0A0" }}
-                  >
-                    Update User and Approve
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || isValidating || !isValid}
-                    style={{ backgroundColor: "#00A0A0" }}
-                  >
-                    Update User
-                  </button>
+                {user.accountType === Account.TraineeAdmin && (
+                  <div className="flex items-center">
+                    <label htmlFor="authCategory" className="w-2/4">Authorization Category:</label>
+                    <div className="w-3/4">
+                      <Field
+                        as="select"
+                        type="number"
+                        id="authCategory"
+                        name="authCategory"
+                        disabled={user.accountType !== Account.TraineeAdmin}
+                        value={user?.authCategory || ""}
+                        onChange={handleInputChange}
+                        className="input-select select select-primary w-full max-w-xs"
+                      >
+                        {categoryTypes.map((type) => (
+                          <option value={type.id} key={type.id}>
+                            {type.name}
+                          </option>
+                        ))}
+                      </Field>
+                      <ErrorMessage name="authCategory" className="error-message"/>
+                    </div>
+                  </div>
                 )}
-              </div>
-            </Form>
-          )}
-        </Formik>
+                {user.accountType === Account.Trainee && (
+                  <>
+                  <div className="flex items-center">
+                    <label htmlFor="callsign" className="w-2/4">Callsign:</label>
+                      <div className="w-3/4">
+                        <Field
+                          type="text"
+                          id="callsign"
+                          name="callsign"
+                          placeholder="Enter your callsign"
+                          disabled={user.accountType !== Account.Trainee}
+                          value={user?.trainee?.callsign || ""}
+                          onChange={handleInputChange}
+                          className="input-text input input-bordered input-primary w-full max-w-xs"
+                        />
+                      <ErrorMessage name="callsign" className="error-message"/>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <label htmlFor="category" className="w-2/4">Category:</label>
+                    <div className="w-3/4">
+                      <Field
+                        as="select"
+                        type="text"
+                        id="category"
+                        name="category"
+                        disabled={user.accountType !== Account.Trainee}
+                        value={categoryTypes.find((type) => (user?.trainee?.category === type.id))?.name || ""}
+                        onChange={handleInputChange}
+                        className="input-select select select-primary w-full max-w-xs"
+                      >
+                        <option value="">Select a category</option>
+                        {categoryTypes.map((type) => (
+                            <option value={type.name} key={type.id}>
+                              {type.name}
+                            </option>
+                        ))}  
+                      </Field>
+                    <ErrorMessage name="category" className="error-message"/>
+                    </div>
+                  </div>
+                  </>
+                )}
+  {/*               {user.accountType === Account.Trainer && (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <label htmlFor="requirements">Training Provided:</label>
+                      {requirements?.map((r) => {
+                        return (
+                          <label key={r.id}>
+                            <Field
+                              type="checkbox"
+                              name="requirements"
+                              value={r.id}
+                              checked={requirements.includes(r.id)}
+                              onChange={changeRequirementsProvided}
+                            />
+                            {r.name}
+                          </label>
+                        );
+                      })}
+                    <ErrorMessage name="requirementsProvided" />
+                  </div>
+                )} */}
+                <div className="flex justify-center">
+                  {!user?.approved ? (
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || isValidating || !isValid}
+                      className="btn btn-info "
+                    >
+                      Update User and Approve
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || isValidating || !isValid}
+                      className="btn btn-info"
+                    >
+                      Update User
+                    </button>
+                  )}
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </fieldset>
   );

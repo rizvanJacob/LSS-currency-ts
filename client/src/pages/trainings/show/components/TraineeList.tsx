@@ -56,13 +56,13 @@ const TraineeList = ({ trainingComplete }: Prop) => {
     <progress className="progress w-56" />
   ) : (
     <form onSubmit={handleSubmit}>
-      <table>
-        <thead>
-          <th>Trainee</th>
-          <th>Category</th>
-          <th>Expiry</th>
-          <th>Status</th>
-          <th>Complete</th>
+      <table className="table w-full">
+        <thead className="bg-blue-500 text-black">
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Trainee</th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Category</th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Expiry</th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Status</th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Complete</th>
         </thead>
         <tbody>
           {trainees.map((t) => {
