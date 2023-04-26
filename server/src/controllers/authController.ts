@@ -145,8 +145,11 @@ const isAuth =
 export { generateUrl, isAuth, login, findUser };
 
 const formURL = (req: Request) => {
-  const newURL = new URL("http://example.com");
+  const newURL = new URL("https://example.com");
+  console.log("protocol: ", req.protocol);
   newURL.protocol = req.protocol;
+
+  console.log("hostname: ", req.hostname);
   newURL.hostname = req.hostname;
   if (newURL.hostname === "localhost") {
     newURL.port = DEV_PORT;

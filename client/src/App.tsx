@@ -5,7 +5,7 @@ import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/currentUser";
 import Navbar from "./components/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
