@@ -19,7 +19,7 @@ export default function DeleteUserButton({
   return (
       <button
         onClick={() => handleDeleteClick(user.id)} 
-        className="btn btn-circle btn-outline"
+        className="btn btn-circle"
       >
         <img src={RedCross} alt="redCross"/>
       </button>
