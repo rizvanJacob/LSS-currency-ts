@@ -8,7 +8,6 @@ import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import * as Yup from "yup";
-import { userSchemas } from "../../../yupSchema"
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
@@ -17,10 +16,10 @@ export default function EditUserForm(): JSX.Element {
   const [requirements, setRequirements] = useState<Requirement[]>(
     []
   );
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<User>({  
     id: 0,
     displayName: "",
-    accountType: Account.Trainee,
+    accountType: 0,
     approved: false,
     authCategory: 0,
     categories: {
@@ -34,16 +33,20 @@ export default function EditUserForm(): JSX.Element {
   const navigate = useNavigate();
 
   useEffect(() => {
+    getRequest(`/api/users/${id}`, setUser);
+  }, [id]);
+  
+  useEffect(() => {
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
     getRequest("/api/lookup/requirements", setRequirements);
   }, []);
 
-  useEffect(() => {
-    getRequest(`/api/users/${id}`, setUser);
-  }, [id]);
 
-  const schema = Yup.object().shape({
+
+  console.log(user.accountType === Account.Trainee);
+  console.log(user)
+  const schema = (user.accountType !== 0) && Yup.object().shape({
     accountType: Yup.number().default(user.accountType).required("Account Type is required"),
     displayName: Yup.string().default(user.displayName).required("Display Name is required"),
     approved: Yup.boolean().default(user.approved),
@@ -51,16 +54,16 @@ export default function EditUserForm(): JSX.Element {
     categories: Yup.object().default(user.categories),
     trainee: Yup.object().default(user.trainee),
     category: Yup.number().when("accountType", (accountType) =>
-      (Number(accountType) === Account.Trainee) 
-        ? Yup.number().default(user.accountType).required("Category is required")
-        : Yup.number().default(user.accountType)
+      (Number(accountType) === Account.Trainee)
+        ? Yup.number().default(user.category).required("Category is required")
+        : Yup.number().nullable().default(user.category)
     ),
     callsign: Yup.string().when("accountType", (accountType) =>
       (Number(accountType) === Account.Trainee) 
-        ? Yup.number().default(user.accountType).required("Category is required")
-        : Yup.number().default(user.accountType)
+        ? Yup.string().default(user.trainee?.callsign).required("Callsign is required")
+        : Yup.string().nullable().default(user.trainee?.callsign)
     ),
-  });
+});
 
   const handleFormSubmit = async () => {
     if (!user.approved) {
@@ -137,6 +140,7 @@ export default function EditUserForm(): JSX.Element {
                   type="text"
                   id="displayName"
                   name="displayName"
+                  placeholder="Enter your name"
                   value={user?.displayName || ""}
                   onChange={handleInputChange}
                 />
@@ -176,7 +180,6 @@ export default function EditUserForm(): JSX.Element {
                     value={user?.authCategory || ""}
                     onChange={handleInputChange}
                   >
-                    <option value={0}>Select a category</option>
                     {categoryTypes.map((type) => (
                       <option value={type.id} key={type.id}>
                         {type.name}
@@ -194,6 +197,7 @@ export default function EditUserForm(): JSX.Element {
                     type="text"
                     id="callsign"
                     name="callsign"
+                    placeholder="Enter your callsign"
                     disabled={user.accountType !== Account.Trainee}
                     value={user?.trainee?.callsign || ""}
                     onChange={handleInputChange}

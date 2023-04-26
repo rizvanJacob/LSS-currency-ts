@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
 import postRequest from "../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
 import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
@@ -127,7 +128,13 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
 
-            <button>Request Account</button>
+            <button 
+              type="submit"
+              disabled={isSubmitting || isValidating || !isValid}
+              style={{ backgroundColor: "#00A0A0" }}
+            >
+                Request Account
+            </button>
           </Form>
         )}
       </Formik>

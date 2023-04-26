@@ -1,12 +1,12 @@
+import {Account} from "../constants"
 import express from "express";
 const router = express.Router();
 import trainingsController from "../controllers/trainingsController";
 import { isAuth } from "../controllers/authController";
 
-router.get("/", isAuth([1, 2, 4]), trainingsController.getAllTrainings);
-router.get("/:id", isAuth([1, 2, 4]), trainingsController.showTraining);
-router.put("/:id", isAuth([4]), trainingsController.updateTraining);
-router.delete("/:id", isAuth([4]), trainingsController.deleteTraining);
-router.post("/", isAuth([4]), trainingsController.createTraining);
-router.get("/:userId/trainer", isAuth([1, 2, 4]), trainingsController.getAllTrainingsByTrainer)
+router.get("/", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.getAllTrainings);
+router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]), trainingsController.showTraining);
+router.put("/:id", isAuth([Account.Trainer]), trainingsController.updateTraining);
+router.delete("/:id", isAuth([Account.Trainer]), trainingsController.deleteTraining);
+router.post("/", isAuth([Account.Trainer]), trainingsController.createTraining);
 export default router;

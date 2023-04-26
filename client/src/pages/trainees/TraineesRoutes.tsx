@@ -8,7 +8,8 @@ import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 
 const INDEX_PAGE_ACCESS = [1, 2, 4];
-const TRAINEE_PAGE_ACCESS = [1, 2, 3, 4]
+const TRAINEE_SHOW_ACCESS = [1, 2, 3, 4]
+const TRAINEE_AMEND_ACCESS = [1, 2, 3]
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   return (
@@ -18,9 +19,11 @@ const TraineesRoutes = (): JSX.Element => {
           {INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
-          {TRAINEE_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
-            <>
+          {TRAINEE_SHOW_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/:id" element={<ShowTraineePage />} />
+          ) : null}
+          {TRAINEE_AMEND_ACCESS.includes(Number(currentUser.accountType)) ? (
+            <>
             <Route path="/:id/edit" element={<EditTraineePage />} />
             <Route path="/:id/book/:requirement" element={<BookTrainingPage />} />
             </>
