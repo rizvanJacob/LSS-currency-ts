@@ -16,14 +16,10 @@ const AUTHORISE = false;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
-const PORT = "5173";
+const DEV_PORT = "5173";
 
 const generateUrl = async (req: Request, res: Response) => {
-  const clientUrl = new URL("http://example.com");
-  clientUrl.protocol = req.protocol;
-  clientUrl.hostname = req.hostname;
-  clientUrl.port = PORT;
-
+  const clientUrl = formURL(req);
   const loginCallback = `${clientUrl}loginCallback`;
   const checkinCallback = `${clientUrl}checkinCallback`;
 
@@ -47,10 +43,7 @@ const generateUrl = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   const { code } = req.params;
   const { callback } = req.query;
-  const clientUrl = new URL("http://example.com");
-  clientUrl.protocol = req.protocol;
-  clientUrl.hostname = req.hostname;
-  clientUrl.port = PORT;
+  const clientUrl = formURL(req);
 
   const fullCallback = `${clientUrl}${callback}`;
 
@@ -139,14 +132,24 @@ const isAuth =
         console.log("Authenticated!");
         next();
       } else {
-        console.log("You are unauthorized");
+        console.log("Unauthorized access attempt");
         res
           .status(401)
           .json({ message: "You are not authorized to access this resource." });
       }
     } catch (err) {
-      res.status(404).json({ message: "You are unauthorized" });
+      res.status(404).json({ message: "NOT FOUND" });
     }
   };
 
 export { generateUrl, isAuth, login, findUser };
+
+const formURL = (req: Request) => {
+  const newURL = new URL("http://example.com");
+  newURL.protocol = req.protocol;
+  newURL.hostname = req.hostname;
+  if (newURL.hostname === "localhost") {
+    newURL.port = DEV_PORT;
+  }
+  return newURL;
+};
