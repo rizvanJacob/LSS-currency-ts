@@ -13,7 +13,7 @@ const Navbar = (): JSX.Element => {
     { name: "Users", path: "/users" },
     { name: "Trainees", path: "/trainees" },
     { name: "Trainers", path: "/trainers" },
-    { name: "Log Out", path: "/" },
+    { name: "Log Out", path: "/logout" },
   ];
 
   return (
