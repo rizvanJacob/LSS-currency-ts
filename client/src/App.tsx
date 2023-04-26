@@ -7,7 +7,7 @@ import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
 import * as dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/currentUser";
-import TempNav from "./components/TempNav";
+import Navbar from "./components/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
 const AUTHORISE = false;
@@ -46,8 +46,7 @@ function App() {
       {currentUser ? (
         <>
           <div className="App">
-            <h1>A React App made with Vite</h1>
-            <TempNav />
+            <Navbar />
           </div>
           <Routes>
             {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
