@@ -18,7 +18,7 @@ const TraineeTableRow = ({
   return (
     <tr>
       <td>
-        <Link className="badge badge-primary px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950"
+        <Link className="badge px-2 py-4 whitespace-nowrap text-center text-sm font-medium"
           to={trainee.id.toString()}>{trainee.callsign}
          </Link>
       </td>
@@ -26,18 +26,20 @@ const TraineeTableRow = ({
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">{overallStatus}</td>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">{trainee.users.approved ? "Active" : "Inactive"}</td>
       <div className="text-center">
-      <td>
-        <Link to={`${trainee.id}/edit`}>
-          <button className="btn btn-circle px-1 py-2 text-center whitespace-nowrap">
-            <img src={Edit} alt="edit"/>
+      <div className="flex items-center justify-center">
+        <td>
+          <Link to={`${trainee.id}/edit`}>
+            <button className="btn btn-circle btn-outline">
+              <img src={Edit} alt="edit"/>
+            </button>
+          </Link>
+        </td>
+        <td>
+          <button className="btn btn-circle btn-outline" onClick={deleteTrainee(trainee.id)}>
+            <img src={RedCross} alt="redCross"/>
           </button>
-        </Link>
-      </td>
-      <td>
-        <button className="px-1 py-2 text-center whitespace-nowrap btn btn-circle" onClick={deleteTrainee(trainee.id)}>
-          <img src={RedCross} alt="redCross"/>
-        </button>
-      </td>
+        </td>
+      </div>
       </div>
     </tr>
   );

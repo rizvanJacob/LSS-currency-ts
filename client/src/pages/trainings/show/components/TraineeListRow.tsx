@@ -14,10 +14,10 @@ const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
       <Link to={`/trainees/${trainee.id}`}>
         <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">{trainee.callsign}</td>
       </Link>
-      <td>{trainee.categories.name}</td>
-      <td>{dayjs(trainee.currencies[0].expiry).format("DD MMM YY")}</td>
-      <td>{toTitleCase(trainee.trainings?.[0].statuses?.name)}</td>
-      <td>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">{trainee.categories.name}</td>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">{dayjs(trainee.currencies[0].expiry).format("DD MMM YY")}</td>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">{toTitleCase(trainee.trainings?.[0].statuses?.name)}</td>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
         {trainee.trainings?.[0].statuses?.name === "attended" && (
           <input
             name={String(trainee.id)}

@@ -14,7 +14,7 @@ export default function TrainingInfo({
   setTrainings,
 }: TrainingProps): JSX.Element {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl bg-info-content">
+    <div className="card w-96 bg-base-100 shadow-xl bg-primary">
       <div className="card-body">
         <h2 className="card-title">{training.requirements.name}</h2>
         <h2>Start: {dayjs(training.start).format("YYYY-MM-DD, HH:mm a")}</h2>

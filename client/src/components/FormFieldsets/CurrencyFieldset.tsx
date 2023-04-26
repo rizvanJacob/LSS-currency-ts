@@ -16,10 +16,12 @@ const CurrencyFieldset = ({
   handleSeniorityChange,
 }: Prop) => {
   return (
+
+  <div className="flex items-center justify-center">
     <fieldset>
-      <legend>{requirement.name}</legend>
-      <label>
-        Expires:
+      <label className="w-2/4">{requirement.name}</label>
+      <label className="w-2/4">Expires:</label>
+      <div className="w-3/4">
         <Field
           type="date"
           id={requirement.id}
@@ -28,20 +30,22 @@ const CurrencyFieldset = ({
           onChange={handleExpiryChange}
           required={true}
         />
-      </label>
+        </div>
+        <label className="w-2/4">Senior:</label>
+        <div className="w-3/4">
       {requirement.hasSeniority && (
-        <label>
-          Senior:
           <Field
             type="checkbox"
             id={requirement.id}
             name="seniority"
             checked={currency?.seniority}
+            className="checkbox"
             onChange={handleSeniorityChange}
           />
-        </label>
-      )}
-    </fieldset>
+        )}
+        </div>
+      </fieldset>
+    </div>
   );
 };
 
