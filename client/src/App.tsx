@@ -58,7 +58,10 @@ function App() {
       {currentUser ? (
         <>
           <div className="App">
-            <Navbar />
+            <Navbar
+              accountType={currentUser.accountType}
+              traineeId={currentUser.trainee?.id}
+            />
           </div>
           <Routes>
             {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (

@@ -2,7 +2,7 @@ import MenuIcon from "../../../assets/icons/menuIcon.svg";
 import Cross from "../../../assets/icons/cross.svg";
 import { MenuItem } from "../Navbar";
 import { Link } from "react-router-dom";
-import { useState } from "react"
+import { useState } from "react";
 type Prop = {
   menuItems: MenuItem[];
   className: string;
@@ -19,14 +19,18 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
     <div className={className}>
       <div className="dropdown dropdown-end">
         <label className="btn btn-circle swap swap-rotate">
-          <input type="checkbox" checked={isChecked} onChange={toggleCheckbox} />
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={toggleCheckbox}
+          />
           <img className="swap-off fill-current" src={MenuIcon} alt="Menu" />
           <img className="swap-on fill-current" src={Cross} alt="Cross" />
         </label>
         {isChecked && (
           <div
             tabIndex={0}
-            className="dropdown-content menu bg-sky-50 rounded-box p-2 w-36 mt-3"
+            className="dropdown-content menu bg-sky-50 rounded-box p-2 w-40 mt-3"
           >
             {menuItems.map((i, index) => {
               return (
