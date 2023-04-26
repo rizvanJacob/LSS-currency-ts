@@ -41,28 +41,37 @@ const BookTrainingPage = () => {
     );
   };
 
+  console.log("trainings");
+  console.log(trainings);
+  console.log("trainings displayed");
+  console.log(displayTrainings);
+
   return (
     <>
       {isLoaded ? (
-        <div className="flex flex-col w-screen max-w-md mx-auto p-3">
-          <h1 className="font-bold text-xl">
-            Book {trainings[0].requirements.name}
-          </h1>
-          <TrainingCalendar
-            trainings={trainings}
-            displayDate={displayDate}
-            setDisplayDate={setDisplayDate}
-          />
-          {displayTrainings.map((t) => {
-            return (
-              <TrainingCard
-                training={t}
-                key={t.id}
-                updateTraining={updateTraining}
-              />
-            );
-          })}
-        </div>
+        trainings.length ? (
+          <div className="flex flex-col w-screen max-w-md mx-auto p-3">
+            <h1 className="font-bold text-xl">
+              Book {trainings[0].requirements.name}
+            </h1>
+            <TrainingCalendar
+              trainings={trainings}
+              displayDate={displayDate}
+              setDisplayDate={setDisplayDate}
+            />
+            {displayTrainings.map((t) => {
+              return (
+                <TrainingCard
+                  training={t}
+                  key={t.id}
+                  updateTraining={updateTraining}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <p className="mx-auto py-5 text-2xl">No trainings available</p>
+        )
       ) : (
         <progress className="progress w-56" />
       )}

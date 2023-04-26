@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Trainee } from "../../../../@types/trainee";
 
 type Prop = {
   training: Training;
@@ -19,8 +18,12 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
 
   const bookTraining = async () => {
     setIsLoading(true);
+    const token = localStorage.getItem("token");
     const response = await fetch(`/api/trainees/${id}/book/${training.id}`, {
       method: "PUT",
+      headers: {
+        authorization: `bearer ${token}`,
+      },
     });
     const data = await response.json();
     updateTraineesinTraining(data, training, updateTraining);
@@ -31,7 +34,7 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
     const booking = training.trainees.find((t) => {
       return t.trainee === Number(id);
     });
-    if (booking) {
+    if (booking && booking.status !== 4) {
       if (booking.status === 1) {
         setButtonText("Unbook");
       } else {
@@ -81,7 +84,6 @@ const updateTraineesinTraining = (
   const isInTraining = training.trainees.find((t) => {
     return t.trainee === booking.trainee;
   });
-  console.log("Already in training: ", isInTraining);
   let newTraining = {};
 
   if (isInTraining) {

@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import { prisma } from "../config/database";
-import e, { Request, Response } from "express";
-import exp from "constants";
-import { isUndefined } from "util";
+import { Request, Response } from "express";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -23,7 +21,13 @@ const trainingsController = {
           requirement: "asc",
         },
         include: checkin
-          ? {}
+          ? {
+              requirements: {
+                select: {
+                  name: true,
+                },
+              },
+            }
           : {
               requirements: {
                 select: {
@@ -37,8 +41,11 @@ const trainingsController = {
               },
             },
       });
+      console.log("trainings:");
+      console.log(allTrainings);
       res.status(200).json(allTrainings);
     } catch (err) {
+      console.log(err);
       res.status(500).json({ err });
     }
   },
@@ -82,7 +89,6 @@ const trainingsController = {
           },
         },
       });
-      // console.log(training);
       res.status(200).json(training);
     } catch (err) {
       res.status(500).json({ err });
@@ -175,13 +181,15 @@ const trainingsController = {
       const id = parseInt(req.params.id);
       await prisma.$transaction(async (prisma) => {
         await prisma.traineeToTraining.deleteMany({
-          where: { training: id}
+          where: { training: id },
         });
         await prisma.training.delete({
           where: { id },
         });
-      })
-      res.status(200).json({ message: "Training and Bookings deleted successfully" });
+      });
+      res
+        .status(200)
+        .json({ message: "Training and Bookings deleted successfully" });
     } catch (err) {
       res.status(500).json({ err });
     }

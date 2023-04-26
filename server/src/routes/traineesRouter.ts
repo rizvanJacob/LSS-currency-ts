@@ -1,26 +1,55 @@
-import { Account } from "../constants"
+import { Account } from "../constants";
 import express from "express";
 const router = express.Router();
 import { isAuth } from "../controllers/authController";
 import * as traineesController from "../controllers/traineesController";
 
-
-router.get("/", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]), traineesController.index);
-router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]), traineesController.show);
+router.get(
+  "/",
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainee,
+    Account.Trainer,
+  ]),
+  traineesController.index
+);
+router.get(
+  "/:id",
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainee,
+    Account.Trainer,
+  ]),
+  traineesController.show
+);
 router.post("/", traineesController.create);
-router.put("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee]), traineesController.update);
+router.put("/checkin", isAuth([Account.Trainee]), traineesController.checkin);
+router.put(
+  "/:id",
+  isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee]),
+  traineesController.update
+);
 router.put(
   "/:id/book/:trainingId",
-  isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]),
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainee,
+    Account.Trainer,
+  ]),
   traineesController.updateBooking
 );
-router.delete("/:id", isAuth([Account.Admin, Account.TraineeAdmin]), traineesController.delete);
+router.delete(
+  "/:id",
+  isAuth([Account.Admin, Account.TraineeAdmin]),
+  traineesController.delete
+);
 router.get(
   "/:id/bookings/:requirementId",
   isAuth([Account.Admin, Account.Trainee, Account.Trainer]),
   traineesController.showBooking
 );
-router.put("/checkin", isAuth([Account.Trainee]), traineesController.checkin);
-
 
 export default router;

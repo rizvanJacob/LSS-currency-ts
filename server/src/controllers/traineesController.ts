@@ -148,6 +148,7 @@ const updateBooking = async (req: Request, res: Response) => {
   const { id, trainingId } = req.params;
 
   try {
+    console.log("attempt booking");
     const booking = await book(Number(id), Number(trainingId));
     res.status(200).json(booking);
   } catch (error) {
@@ -168,7 +169,7 @@ const book = async (traineeId: number, trainingId: number) => {
       },
     },
   });
-  if (existingBooking) {
+  if (existingBooking && existingBooking.status !== 4) {
     console.log("delete booking");
     if (
       dayjs()
@@ -196,8 +197,18 @@ const book = async (traineeId: number, trainingId: number) => {
     status = 6;
   }
   console.log("make booking. status: ", status);
-  return await prisma.traineeToTraining.create({
-    data: {
+  return await prisma.traineeToTraining.upsert({
+    where: {
+      trainee_training: {
+        trainee: traineeId,
+        training: trainingId,
+      },
+    },
+    update: {
+      status: status,
+      updatedAt: dayjs().toDate(),
+    },
+    create: {
       trainee: traineeId,
       training: trainingId,
       status: status,
@@ -206,15 +217,19 @@ const book = async (traineeId: number, trainingId: number) => {
 };
 
 const update = async (req: Request, res: Response) => {
-  console.log("Update training function")
+  console.log("Update trainee");
   const trainee = req.body;
   const { id: traineeId } = req.params;
-  console.log("trainee", trainee);
 
-  const upsertCurrencies = trainee.currencies.map((c: any) => {
-    console.log(c)
+  const upsertCurrencies = trainee.currencies?.map((c: any) => {
+    console.log(c);
     const upsertTransaction = prisma.currency.upsert({
-      where: { trainee_requirement: {trainee: Number(traineeId), requirement: c.requirement} },
+      where: {
+        trainee_requirement: {
+          trainee: Number(traineeId),
+          requirement: c.requirement,
+        },
+      },
       update: {
         expiry: c.expiry,
         seniority: c.seniority || false,
@@ -240,12 +255,18 @@ const update = async (req: Request, res: Response) => {
 
   const updateTrainee = prisma.trainee.update({
     where: { id: Number(traineeId) },
-    data: { callsign: trainee.callsign, category: Number(trainee.category), updatedAt: dayjs().toDate() },
+    data: {
+      callsign: trainee.callsign,
+      category: Number(trainee.category),
+      updatedAt: dayjs().toDate(),
+    },
   });
 
   try {
-    await Promise.all(upsertCurrencies);
     await updateTrainee;
+    if (upsertCurrencies.length) {
+      await Promise.all(upsertCurrencies);
+    }
     res.status(200).send("updated");
   } catch (error) {
     console.log(error);
