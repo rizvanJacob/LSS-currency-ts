@@ -1,4 +1,5 @@
 import deleteRequest from "../../../utilities/deleteRequest";
+import RedCross from "../../../assets/icons/redCross.svg";
 import { User } from "../../../@types/user";
 export default function DeleteUserButton({
   setUsers,
@@ -18,9 +19,9 @@ export default function DeleteUserButton({
   return (
       <button
         onClick={() => handleDeleteClick(user.id)} 
-        style={{ backgroundColor: "#E42313" }}
+        className="btn btn-circle btn-outline"
       >
-        ❌
+        <img src={RedCross} alt="redCross"/>
       </button>
   );
 }
