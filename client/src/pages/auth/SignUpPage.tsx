@@ -1,4 +1,4 @@
-import { Account } from "../../../../server/src/constants"
+import { Account } from "../../../../server/src/constants";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
@@ -24,7 +24,6 @@ const blankTrainee = {
   callsign: "",
   category: Account.Trainee,
   user: 0,
-
 };
 
 const SignUpPage = (): JSX.Element => {
@@ -47,36 +46,64 @@ const SignUpPage = (): JSX.Element => {
 
   const handleSubmit = async () => {
     if (user.openId) {
-      if ((Number(user.accountType) === Account.TraineeAdmin && includeTrainee) || Number(user.accountType) === Account.Trainee) {
-        const userResponsePromise = postRequest("/api/users", {...user, displayName: (Number(user.accountType) === Account.Trainee) ? trainee.callsign : user.displayName}, setUser);
-        const traineeResponsePromise = userResponsePromise.then(userResponse => {
-          return postRequest("/api/trainees", {...trainee, user: Number(userResponse?.data.id)}, setTrainee);
-        });
+      if (
+        (Number(user.accountType) === Account.TraineeAdmin && includeTrainee) ||
+        Number(user.accountType) === Account.Trainee
+      ) {
+        const userResponsePromise = postRequest(
+          "/api/users",
+          {
+            ...user,
+            displayName:
+              Number(user.accountType) === Account.Trainee
+                ? trainee.callsign
+                : user.displayName,
+          },
+          setUser
+        );
+        const traineeResponsePromise = userResponsePromise.then(
+          (userResponse) => {
+            return postRequest(
+              "/api/trainees",
+              { ...trainee, user: Number(userResponse?.data.id) },
+              setTrainee
+            );
+          }
+        );
         await Promise.all([userResponsePromise, traineeResponsePromise]);
       } else if (Number(user.accountType) === Account.Trainer) {
-        postRequest("/api/users", {...user, requirementsProvided: requirementsProvided}, setUser)
+        postRequest(
+          "/api/users",
+          { ...user, requirementsProvided: requirementsProvided },
+          setUser
+        );
       } else {
         postRequest("/api/users", user, setUser);
       }
       alert("Please wait for your account to be approved");
       navigate("/", { replace: true });
     } else {
-      alert("You do not have a valid token from Singpass, please log in again")
+      alert("You do not have a valid token from Singpass, please log in again");
       navigate("/", { replace: true });
     }
   };
 
   const handleUserChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: (name==="accountType") ? Number(value) : value });
+    setUser({
+      ...user,
+      [name]: name === "accountType" ? Number(value) : value,
+    });
   };
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setTrainee({ ...trainee, [name]: (name === "category") ? Number(value) : value });
+    setTrainee({
+      ...trainee,
+      [name]: name === "category" ? Number(value) : value,
+    });
   };
 
-  console.log(trainee);
   return (
     <>
       <h1>Request for an account</h1>
@@ -129,12 +156,12 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
 
-            <button 
+            <button
               type="submit"
               disabled={isSubmitting || isValidating || !isValid}
               style={{ backgroundColor: "#00A0A0" }}
             >
-                Request Account
+              Request Account
             </button>
           </Form>
         )}
