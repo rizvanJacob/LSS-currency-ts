@@ -15,10 +15,10 @@ export default function AllTrainingsPage(): JSX.Element {
   }, []);
 
   return trainings.length > 0 ? (
-    <>
+    <div className="p-4 space-y-4">
       {trainings.length > 0 ? (
         <>
-          <h1>Training Index</h1>
+          <h1 className="text-lg font-bold text-black">Training Index</h1>
           {currentUser?.accountType === Account.Trainer ||
           currentUser?.accountType === Account.Admin ? (
             <CreateTrainingButton />
@@ -35,19 +35,15 @@ export default function AllTrainingsPage(): JSX.Element {
       ) : (
         <></>
       )}
-      <TrainingList
-        trainings={trainings as Training[]}
-        setTrainings={
-          setTrainings as React.Dispatch<React.SetStateAction<Training[]>>
-        }
-      />
-    </>
+    </div>
   ) : (
     <>
-      <h1>Fetching Trainings</h1>
-      <p>
-        <progress />
-      </p>
+      <div className="p-4">
+          <h1 className="text-lg font-bold">Fetching Trainings</h1>
+          <p>
+            <progress className="progress w-56" />
+          </p>
+        </div>
     </>
   );
 }

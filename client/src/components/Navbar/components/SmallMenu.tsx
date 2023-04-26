@@ -18,7 +18,7 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
   return (
     <div className={className}>
       <div className="dropdown dropdown-end">
-        <label className="btn btn-circle swap swap-rotate">
+        <label className="btn btn-circle swap swap-rotate ">
           <input type="checkbox" checked={isChecked} onChange={toggleCheckbox} />
           <img className="swap-off fill-current" src={MenuIcon} alt="Menu" />
           <img className="swap-on fill-current" src={Cross} alt="Cross" />
