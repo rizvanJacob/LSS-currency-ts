@@ -21,7 +21,6 @@ export default function TrainingList({
           {trainings.map((training: Training) => {
             return (
               <tr key={training.id}>
-                <td>{training.id}</td>
                 <td>{training.requirements.name}</td>
                 <td>
                   {training.capacity - Object.keys(training.trainees).length}/
