@@ -131,12 +131,12 @@ export default function EditUserForm(): JSX.Element {
     <fieldset>
       <div className="max-w-lg mx-auto">
         <h1 className="text-3xl text-center font-bold mb-8">Update User</h1>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="flex items-center justify-center">
           <Formik initialValues={user} validationSchema={schema} onSubmit={handleFormSubmit}>
             {({ isSubmitting, isValidating, isValid }) => (
               <Form className="space-y-6">
                 <div className="flex items-center">
-                  <label htmlFor="displayName" className="w-1/4">Display Name:</label>
+                  <label htmlFor="displayName" className="w-2/4">Display Name:</label>
                   <div className="w-3/4">
                     <Field
                       type="text"
@@ -151,7 +151,7 @@ export default function EditUserForm(): JSX.Element {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <label htmlFor="accountType" className="w-1/4">Account Type:</label>
+                  <label htmlFor="accountType" className="w-2/4">Account Type:</label>
                   <div className="w-3/4">
                     <Field
                       as="select"
@@ -177,7 +177,7 @@ export default function EditUserForm(): JSX.Element {
 
                 {user.accountType === Account.TraineeAdmin && (
                   <div className="flex items-center">
-                    <label htmlFor="authCategory" className="w-1/4">Authorization Category:</label>
+                    <label htmlFor="authCategory" className="w-2/4">Authorization Category:</label>
                     <div className="w-3/4">
                       <Field
                         as="select"
@@ -202,7 +202,7 @@ export default function EditUserForm(): JSX.Element {
                 {user.accountType === Account.Trainee && (
                   <>
                   <div className="flex items-center">
-                    <label htmlFor="callsign" className="w-1/4">Callsign:</label>
+                    <label htmlFor="callsign" className="w-2/4">Callsign:</label>
                       <div className="w-3/4">
                         <Field
                           type="text"
@@ -218,7 +218,7 @@ export default function EditUserForm(): JSX.Element {
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <label htmlFor="category" className="w-1/4">Category:</label>
+                    <label htmlFor="category" className="w-2/4">Category:</label>
                     <div className="w-3/4">
                       <Field
                         as="select"
@@ -262,12 +262,12 @@ export default function EditUserForm(): JSX.Element {
                     <ErrorMessage name="requirementsProvided" />
                   </div>
                 )} */}
-                <div style={{ marginTop: "2rem", textAlign: "center" }}>
+                <div className="flex justify-center">
                   {!user?.approved ? (
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info"
+                      className="btn btn-info "
                     >
                       Update User and Approve
                     </button>
