@@ -35,7 +35,7 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
     const booking = training.trainees.find((t) => {
       return t.trainee === Number(id);
     });
-    if (booking) {
+    if (booking && booking.status !== 4) {
       if (booking.status === 1) {
         setButtonText("Unbook");
       } else {
