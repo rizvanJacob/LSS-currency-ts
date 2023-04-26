@@ -14,22 +14,37 @@ export default function UnapprovedUsersList({
   setUsers,
 }: UsersListProps): JSX.Element {
   return (
-    <>
-      <table>
+    <div className="overflow-x-auto">
+      <table className="table w-full">
         <UserTableRow />
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {users.map((user: User) => {
+            const accountType = user.accountTypes?.name;
+            let accountTypeClass = "";
+            switch (accountType) {
+              case "Admin":
+                accountTypeClass = "text-blue-500";
+                break;
+              case "Trainee Admin":
+                accountTypeClass = "text-red-500";
+                break;
+              case "Trainee":
+                accountTypeClass = "text-green-500";
+                break;
+              case "Trainer":
+                accountTypeClass = "text-gray-500";
+            }
             return (
-              <tr key={user.id}>
-                <td>{user.displayName}</td>
-                <td>{user.accountTypes?.name}</td>
-                <td><EditUserButton user={user} /></td>
-                <td><DeleteUserButton setUsers={setUsers} user={user} /></td>
+              <tr key={user.id} className="hover:bg-gray-100">
+                <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-blue-200">{user.displayName}</td>
+                <td className={`px-2 py-4 whitespace-nowrap text-sm hidden md:table-cell ${accountTypeClass}`}>{accountType}</td>
+                <td className="px-1 py-2 whitespace-nowrap"><EditUserButton user={user} /></td>
+                <td className="px-1 py-2 whitespace-nowrap"><DeleteUserButton setUsers={setUsers} user={user} /></td>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
