@@ -6,8 +6,9 @@ import { Link } from "react-router-dom";
 type Prop = {
   trainee: Trainee;
   handleChange: any;
+  trainingComplete: boolean | undefined;
 };
-const TraineeListRow = ({ trainee, handleChange }: Prop) => {
+const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
   return (
     <tr>
       <Link to={`/trainees/${trainee.id}`}>
@@ -22,6 +23,7 @@ const TraineeListRow = ({ trainee, handleChange }: Prop) => {
             name={String(trainee.id)}
             type="checkbox"
             onChange={handleChange}
+            disabled={trainingComplete}
           />
         )}
       </td>

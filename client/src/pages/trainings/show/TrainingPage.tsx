@@ -50,7 +50,7 @@ export default function TrainingPage(): JSX.Element {
         setTraining={setTraining}
         setTrainings={setTrainings}
       />
-      <TraineeList />
+      <TraineeList trainingComplete={training.complete} />
     </>
   );
 }
