@@ -8,7 +8,7 @@ import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/currentUser";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
 const AUTHORISE = true;
