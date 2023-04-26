@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = (): JSX.Element => {
   const navigate = useNavigate();
   return (
-    <nav className="navbar bg-blue-300">
+    <nav className="navbar bg-cyan-800">
       <div className="flex-1">
         <button
-          className="btn btn-ghost normal-case text-xl"
+          className="btn btn-ghost normal-case text-xl text-neutral-200"
           onClick={() => {
             navigate(-1);
           }}
@@ -14,13 +14,22 @@ const Navbar = (): JSX.Element => {
           Back
         </button>
       </div>
-      <Link className="btn btn-ghost normal-case text-xl" to="/users">
+      <Link
+        className="btn btn-ghost normal-case text-xl text-neutral-200"
+        to="/users"
+      >
         Users
       </Link>
-      <Link className="btn btn-ghost normal-case text-xl" to="/trainees">
+      <Link
+        className="btn btn-ghost normal-case text-xl text-neutral-200"
+        to="/trainees"
+      >
         Trainees
       </Link>
-      <Link className="btn btn-ghost normal-case text-xl" to="/trainings">
+      <Link
+        className="btn btn-ghost normal-case text-xl text-neutral-200"
+        to="/trainings"
+      >
         Trainings
       </Link>
     </nav>
