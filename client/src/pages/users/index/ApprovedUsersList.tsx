@@ -21,7 +21,6 @@ export default function ApprovedUsersList({
           {users.map((user: User) => {
             return (
               <tr key={user.id}>
-                <td>{user.id}</td>
                 <td>{user.displayName}</td>
                 <td>{user.accountTypes?.name}</td>
                 <td><EditUserButton user={user} /></td>

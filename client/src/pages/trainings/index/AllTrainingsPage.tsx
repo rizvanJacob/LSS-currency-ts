@@ -19,7 +19,7 @@ export default function AllTrainingsPage(): JSX.Element {
       {trainings.length > 0 ? (
         <>
           <h1>Training Index</h1>
-          {currentUser?.accountType === Account.Trainer ? (
+          {(currentUser?.accountType === Account.Trainer || currentUser?.accountType === Account.Admin) ? (
             <CreateTrainingButton />
           ) : (
             <></>
