@@ -1,3 +1,4 @@
+import { Account } from "../../../../../server/src/constants";
 import { Route, Routes } from "react-router-dom";
 import AllTrainingsPage from "../index/AllTrainingsPage";
 import TrainingPage from "../show/TrainingPage";
@@ -7,7 +8,7 @@ import { CurrentUser } from "../../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../App";
 
-const CHANGE_TRAINING_ACCESS = [4];
+const CHANGE_TRAINING_ACCESS = [Account.Trainer];
 
 export default function TrainingRoutes() {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);

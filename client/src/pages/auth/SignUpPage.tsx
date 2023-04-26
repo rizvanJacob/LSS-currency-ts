@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
 import postRequest from "../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
 import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
@@ -21,7 +22,7 @@ const blankUser = {
 
 const blankTrainee = {
   callsign: "",
-  category: 0,
+  category: Account.Trainee,
   user: 0,
 
 };
@@ -75,6 +76,7 @@ const SignUpPage = (): JSX.Element => {
     setTrainee({ ...trainee, [name]: (name === "category") ? Number(value) : value });
   };
 
+  console.log(trainee);
   return (
     <>
       <h1>Request for an account</h1>
@@ -127,7 +129,13 @@ const SignUpPage = (): JSX.Element => {
               />
             )}
 
-            <button>Request Account</button>
+            <button 
+              type="submit"
+              disabled={isSubmitting || isValidating || !isValid}
+              style={{ backgroundColor: "#00A0A0" }}
+            >
+                Request Account
+            </button>
           </Form>
         )}
       </Formik>

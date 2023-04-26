@@ -1,3 +1,4 @@
+import { Account } from "../../../../../server/src/constants";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CurrentUser } from "../../../@types/currentUser";
@@ -11,7 +12,7 @@ import deleteRequest from "../../../utilities/deleteRequest";
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [fetchFlag, setFetchFlag] = useState<boolean>(false);
-  const DEL_TRAINEE_ACCESS = [1, 2];
+  const DEL_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
 

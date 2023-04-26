@@ -57,6 +57,7 @@ const show = async (req: Request, res: Response) => {
       where: { id: Number(id) },
       select: {
         category: true,
+        callsign: true,
         user: true,
         users: {
           select: {
@@ -205,13 +206,15 @@ const book = async (traineeId: number, trainingId: number) => {
 };
 
 const update = async (req: Request, res: Response) => {
+  console.log("Update training function")
   const trainee = req.body;
   const { id: traineeId } = req.params;
-  console.log(trainee);
+  console.log("trainee", trainee);
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
+    console.log(c)
     const upsertTransaction = prisma.currency.upsert({
-      where: { id: c.id },
+      where: { trainee_requirement: {trainee: Number(traineeId), requirement: c.requirement} },
       update: {
         expiry: c.expiry,
         seniority: c.seniority || false,
@@ -219,7 +222,7 @@ const update = async (req: Request, res: Response) => {
       },
       create: {
         expiry: c.expiry,
-        seniority: c.seniority,
+        seniority: c.seniority || false,
         trainees: {
           connect: {
             id: Number(traineeId),
@@ -237,7 +240,7 @@ const update = async (req: Request, res: Response) => {
 
   const updateTrainee = prisma.trainee.update({
     where: { id: Number(traineeId) },
-    data: { category: trainee.category, updatedAt: dayjs().toDate() },
+    data: { callsign: trainee.callsign, category: Number(trainee.category), updatedAt: dayjs().toDate() },
   });
 
   try {
