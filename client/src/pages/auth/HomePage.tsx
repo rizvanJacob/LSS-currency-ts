@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { useSearchParams, useNavigate } from "react-router-dom";
 type AuthURLs = {
   login: string;
   checkin: string;
@@ -10,6 +10,10 @@ const HomePage = (): JSX.Element => {
     login: "",
     checkin: "",
   });
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get("code") as string;
+  const state = searchParams.get("state") as string;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -22,6 +26,13 @@ const HomePage = (): JSX.Element => {
       setAuthUrls(data);
     };
     getAuthUrls();
+
+    if (state === "login") {
+      navigate("/loginCallback", { state: { code } });
+    } else if (state === "checkin") {
+      navigate("/checkinCallback", { state: { code } });
+    }
+
     return () => {
       controller.abort;
     };

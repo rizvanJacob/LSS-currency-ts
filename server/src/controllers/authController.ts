@@ -20,21 +20,18 @@ const DEV_PORT = "5173";
 
 const generateUrl = async (req: Request, res: Response) => {
   const clientUrl = formURL(req);
-  const loginCallback = `${clientUrl}loginCallback`;
-  const checkinCallback = `${clientUrl}checkinCallback`;
-
   const login = client.authorizationUrl(
-    "state",
+    "login",
     "openid",
     null,
-    loginCallback
+    clientUrl.toString()
   ).url;
 
   const checkin = client.authorizationUrl(
-    "state",
+    "checkin",
     "openid",
     null,
-    checkinCallback
+    clientUrl.toString()
   ).url;
 
   res.status(200).json({ login, checkin });
@@ -42,16 +39,13 @@ const generateUrl = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { code } = req.params;
-  const { callback } = req.query;
   const clientUrl = formURL(req);
-
-  const fullCallback = `${clientUrl}${callback}`;
 
   try {
     const { sub: openId } = await client.callback(
       code as string,
       null,
-      fullCallback
+      clientUrl.toString()
     );
     try {
       const userData = await prisma.user.findUniqueOrThrow({
