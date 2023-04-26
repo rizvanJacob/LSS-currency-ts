@@ -34,27 +34,29 @@ const CheckinCallbackPage = () => {
   }, []);
 
   return (
-    <>
-      <h1>Check In</h1>
-      <h4>Select a training to check in to:</h4>
-      {isLoading ? (
-        <progress className="progress w-56" />
-      ) : trainings.length ? (
-        trainings.map((t) => {
-          return (
-            <CheckinToTraining
-              training={t}
-              token={jwtoken.current}
-              user={user.current}
-              setIsLoading={setIsLoading}
-              key={t.id}
-            />
-          );
-        })
-      ) : (
-        <p>No trainings to check in to</p>
-      )}
-    </>
+    <div className="card w-96 bg-base-100 shadow-xl bg-info-content">
+      <div className="card-body">
+        <h1 className="card-title text-3xl text-center font-bold mb-8">Check In</h1>
+        <h4 className="text-3xl text-center font-bold mb-8 ">Select a training to check in to:</h4>
+        {isLoading ? (
+          <progress className="progress w-56" />
+        ) : trainings.length ? (
+          trainings.map((t) => {
+            return (
+              <CheckinToTraining
+                training={t}
+                token={jwtoken.current}
+                user={user.current}
+                setIsLoading={setIsLoading}
+                key={t.id}
+              />
+            );
+          })
+        ) : (
+          <p>No trainings to check in to</p>
+        )}
+      </div>
+    </div>
   );
 };
 

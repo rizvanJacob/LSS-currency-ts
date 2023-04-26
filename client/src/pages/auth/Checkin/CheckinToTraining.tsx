@@ -42,18 +42,23 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
   return (
     <>
       <h2>{training.requirements.name}</h2>
-      <form onSubmit={handleCheckin}>
-        <input
-          type="password"
-          name="passphrase"
-          placeholder="Enter the passphrase"
-          value={passphrase}
-          required
-          onChange={(e) => {
-            setPassphrase(e.target.value);
-          }}
-        />
-        <button>Check In</button>;
+      <form className="space-y-6" onSubmit={handleCheckin}>
+        <div className="flex items-center">
+          <input
+            type="password"
+            name="passphrase"
+            placeholder="Enter the passphrase"
+            value={passphrase}
+            className="input-text input input-bordered input-primary w-full max-w-xs"
+            required
+            onChange={(e) => {
+              setPassphrase(e.target.value);
+            }}
+          />
+        </div>
+        <div className="flex justify-center">
+          <button className="btn btn-info">Check In</button>;
+        </div>
       </form>
     </>
   );

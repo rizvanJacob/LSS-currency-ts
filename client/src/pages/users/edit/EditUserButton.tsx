@@ -8,7 +8,7 @@ export default function EditUserButton({
 }): JSX.Element {
   return (
       <Link to={`/users/${user.id}/edit`}>
-        <button className="btn btn-circle">
+        <button className="btn btn-circle btn-outline">
           <img src={Edit} alt="edit"/>
         </button>
       </Link>
