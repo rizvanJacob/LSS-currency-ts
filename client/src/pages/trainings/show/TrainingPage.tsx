@@ -42,7 +42,7 @@ export default function TrainingPage(): JSX.Element {
   }, []);
 
   return isLoading ? (
-    <progress />
+    <progress className="progress w-56" />
   ) : (
     <>
       <TrainingInfo

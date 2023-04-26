@@ -211,10 +211,10 @@ const update = async (req: Request, res: Response) => {
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
     const upsertTransaction = prisma.currency.upsert({
-      where: { id: c.id || 0 },
+      where: { id: c.id },
       update: {
         expiry: c.expiry,
-        seniority: c.seniority,
+        seniority: c.seniority || false,
         updatedAt: dayjs().toDate(),
       },
       create: {

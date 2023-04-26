@@ -49,7 +49,7 @@ const TraineeList = () => {
   };
 
   return isLoading ? (
-    <progress />
+    <progress className="progress w-56"/>
   ) : (
     <form onSubmit={handleSubmit}>
       <table>

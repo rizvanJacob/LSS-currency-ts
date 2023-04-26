@@ -13,23 +13,24 @@ const ShowTraineePage = () => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
 
-  const EDIT_TRAINEE_ACCESS = [Account.Admin,Account.TraineeAdmin]
+  const EDIT_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
   useEffect(() => {
     getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
       setFetchFlag(!fetchFlag);
     });
   }, []);
 
-  console.log("Auth category", currentUser)
-  console.log("trainee category", trainee)
+  console.log("Auth category", currentUser);
+  console.log("trainee category", trainee);
   useEffect(() => {
-    if ( trainee && (
-      !EDIT_TRAINEE_ACCESS.includes(Number(currentUser?.accountType)) ||
-      (Number(currentUser?.accountType) === Account.TraineeAdmin &&
-        Number(trainee?.category) !== Number(currentUser?.authCategory)) ||
-      ((Number(currentUser?.accountType) === Account.TraineeAdmin || Number(currentUser?.accountType) === Account.Trainee) &&
-        Number(trainee?.user) !== Number(currentUser?.id))
-    )
+    if (
+      trainee &&
+      (!EDIT_TRAINEE_ACCESS.includes(Number(currentUser?.accountType)) ||
+        (Number(currentUser?.accountType) === Account.TraineeAdmin &&
+          Number(trainee?.category) !== Number(currentUser?.authCategory)) ||
+        ((Number(currentUser?.accountType) === Account.TraineeAdmin ||
+          Number(currentUser?.accountType) === Account.Trainee) &&
+          Number(trainee?.user) !== Number(currentUser?.id)))
     ) {
       navigate(-1);
     }
@@ -52,7 +53,7 @@ const ShowTraineePage = () => {
           })}
         </>
       ) : (
-        <progress />
+        <progress className="progress w-56" />
       )}
     </>
   );

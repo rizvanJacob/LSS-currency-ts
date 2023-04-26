@@ -11,7 +11,7 @@ import deleteRequest from "../../../utilities/deleteRequest";
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [fetchFlag, setFetchFlag] = useState<boolean>(false);
-  const DEL_TRAINEE_ACCESS = [1,2];
+  const DEL_TRAINEE_ACCESS = [1, 2];
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
 
@@ -30,13 +30,12 @@ const TraineesIndexPage = (): JSX.Element => {
       if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
         navigate(`/`);
       }
-    }, [])
+    }, []);
     deleteRequest(`/api/trainees/${id}`, id, setTrainees);
   };
 
   return (
     <>
-      
       {trainees.length > 0 ? (
         <>
           <h1>Trainees</h1>
@@ -45,7 +44,7 @@ const TraineesIndexPage = (): JSX.Element => {
       ) : (
         <>
           <h1>Fetching Trainees</h1>
-          <progress />
+          <progress className="progress w-56" />
         </>
       )}
     </>
