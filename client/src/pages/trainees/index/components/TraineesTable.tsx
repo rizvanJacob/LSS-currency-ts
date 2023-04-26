@@ -8,28 +8,30 @@ type Prop = {
 
 const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Callsign</th>
-          <th>Category</th>
-          <th>Overall Status</th>
-          <th>Account Status</th>
-          <th colSpan={2}>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {trainees?.map((t) => (
-          <TraineeTableRow
-            trainee={t}
-            key={t.id}
-            category={t.categories.name}
-            overallStatus={t.status?.message || ""}
-            deleteTrainee={deleteTrainee}
-          />
-        ))}
-      </tbody>
-    </table>
+    <div className="overflow-x-auto">
+      <table className="table w-full">
+        <thead className="bg-blue-500 text-black">
+          <tr>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Callsign</th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Category</th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Overall Status</th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Account Status</th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider" colSpan={2}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {trainees?.map((t) => (
+            <TraineeTableRow
+              trainee={t}
+              key={t.id}
+              category={t.categories.name}
+              overallStatus={t.status?.message || ""}
+              deleteTrainee={deleteTrainee}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
