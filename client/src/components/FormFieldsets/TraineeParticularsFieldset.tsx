@@ -16,6 +16,7 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   useEffect(() => {
     getRequest("/api/lookup/categories", setCategories);
   }, []);
+  
 
   return (
     <fieldset>

@@ -5,9 +5,9 @@ import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/currentUser";
-import TempNav from "./components/TempNav";
+import Navbar from "./components/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 
 const AUTHORISE = true;
@@ -46,25 +46,21 @@ function App() {
       {currentUser ? (
         <>
           <div className="App">
-            <h1>A React App made with Vite</h1>
-            <TempNav />
+            <Navbar />
           </div>
           <Routes>
-            {
-              (TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/trainees/*" element={<TraineesRoutes />} />
-              ) : null
-            };
-            {
-              (USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/users/*" element={<UserRoutes />} />
-              ) : null
-            }
-            {
-              (TRAINING_ACCOUNT_TYPES.includes(Number(currentUser.accountType))) ? (
-                <Route path="/trainings/*" element={<TrainingRoutes />} />
-              ) : null
-            }
+            {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+              <Route path="/trainees/*" element={<TraineesRoutes />} />
+            ) : null}
+            ;
+            {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+              <Route path="/users/*" element={<UserRoutes />} />
+            ) : null}
+            {TRAINING_ACCOUNT_TYPES.includes(
+              Number(currentUser.accountType)
+            ) ? (
+              <Route path="/trainings/*" element={<TrainingRoutes />} />
+            ) : null}
           </Routes>
         </>
       ) : (

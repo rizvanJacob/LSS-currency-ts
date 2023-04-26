@@ -1,3 +1,4 @@
+import { Account } from "../../../../server/src/constants";
 import { Routes, Route } from "react-router-dom";
 import TraineesIndexPage from "./index/TraineesIndexPage";
 import ShowTraineePage from "./show/ShowTraineePage";
@@ -7,9 +8,9 @@ import { CurrentUser } from "../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 
-const INDEX_PAGE_ACCESS = [1, 2, 4];
-const TRAINEE_SHOW_ACCESS = [1, 2, 3, 4]
-const TRAINEE_AMEND_ACCESS = [1, 2, 3]
+const INDEX_PAGE_ACCESS = [Account.Admin, Account.TraineeAdmin, Account.Trainer];
+const TRAINEE_SHOW_ACCESS = [Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]
+const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin, Account.Trainee]
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   return (

@@ -151,14 +151,17 @@ const usersController = {
 
         await prisma.$transaction(async (prisma) => {
             if (existingTrainee) {
-            await prisma.trainee.delete({
-                where: { user: Number(userId) },
-            });
+                await prisma.currency.deleteMany({
+                    where: { trainee: Number(existingTrainee.id)}
+                })
+                await prisma.trainee.delete({
+                    where: { user: Number(userId) },
+                });
             }
             if (existingUser?.accountType === Account.Trainer) {
-            await prisma.trainingProvided.deleteMany({
-                where: { user: Number(userId) },
-            });
+                await prisma.trainingProvided.deleteMany({
+                    where: { user: Number(userId) },
+                });
             }
             await prisma.user.delete({
             where: { id: userId },

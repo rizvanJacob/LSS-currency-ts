@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
 
 const LoginCallbackPage = ({
   setCurrentUser,
 }: setCurrentUserProp): JSX.Element => {
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code") as string;
+  const location = useLocation();
+  const code = location.state.code;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const attemptLogin = async (
   code: string,
   navigate: any
 ) => {
-  const response = await fetch(`/api/login/${code}/?callback=loginCallback`, {
+  const response = await fetch(`/api/login/${code}/`, {
     signal: signal,
   });
   if (response.ok) {

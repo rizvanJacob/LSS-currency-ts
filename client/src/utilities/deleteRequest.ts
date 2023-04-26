@@ -4,11 +4,13 @@ async function deleteRequest(
   id: number,
   setState: React.Dispatch<React.SetStateAction<any>>
 ) {
+  const token = localStorage.getItem("token");
   console.log("fire delete request");
   try {
     await axios.delete(url, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     setState((prevState: { [key: string]: any }[]) =>

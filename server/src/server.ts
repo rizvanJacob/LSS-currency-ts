@@ -16,7 +16,7 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
@@ -28,4 +28,7 @@ app.get("/api/auth");
 
 const PORT = 3000;
 
-app.listen(PORT, () => console.log(`start listening on port : ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`start listening on port : ${PORT}`);
+  console.log(path.join(__dirname, "../client/dist"));
+});

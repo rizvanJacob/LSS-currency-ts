@@ -9,9 +9,18 @@ router.get("/", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Ac
 router.get("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]), traineesController.show);
 router.post("/", traineesController.create);
 router.put("/:id", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee]), traineesController.update);
-router.put("/:id/book/:trainingId", isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]), traineesController.updateBooking);
+router.put(
+  "/:id/book/:trainingId",
+  isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee, Account.Trainer]),
+  traineesController.updateBooking
+);
 router.delete("/:id", isAuth([Account.Admin, Account.TraineeAdmin]), traineesController.delete);
-router.get("/:id/bookings/:requirementId", isAuth([Account.Admin,Account.Trainee, Account.Trainer]), traineesController.showBooking);
+router.get(
+  "/:id/bookings/:requirementId",
+  isAuth([Account.Admin, Account.Trainee, Account.Trainer]),
+  traineesController.showBooking
+);
 router.put("/checkin", isAuth([Account.Trainee]), traineesController.checkin);
+
 
 export default router;

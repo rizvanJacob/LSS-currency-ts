@@ -39,3 +39,8 @@ export type CurrencyStatus = {
   color: string;
   open: boolean;
 };
+
+export type CompletedTrainees = {
+  trainee: number;
+  training: number;
+};

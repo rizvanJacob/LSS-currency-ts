@@ -1,4 +1,4 @@
-import { Account } from "../constants"
+import { Account } from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
@@ -57,6 +57,7 @@ const show = async (req: Request, res: Response) => {
       where: { id: Number(id) },
       select: {
         category: true,
+        callsign: true,
         user: true,
         users: {
           select: {
@@ -187,30 +188,41 @@ const book = async (traineeId: number, trainingId: number) => {
 };
 
 const update = async (req: Request, res: Response) => {
+  console.log("Update training function")
   const trainee = req.body;
-  console.log(trainee);
+  const { id: traineeId } = req.params;
+  console.log("trainee", trainee);
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
+    console.log(c)
     const upsertTransaction = prisma.currency.upsert({
-      where: { id: c.id || 0 },
+      where: { trainee_requirement: {trainee: Number(traineeId), requirement: c.requirement} },
       update: {
         expiry: c.expiry,
+        seniority: c.seniority || false,
         updatedAt: dayjs().toDate(),
-        seniority: c.seniority,
       },
       create: {
         expiry: c.expiry,
-        seniority: c.seniority,
-        trainee: trainee.id,
-        requirement: c.requirement,
+        seniority: c.seniority || false,
+        trainees: {
+          connect: {
+            id: Number(traineeId),
+          },
+        },
+        requirements: {
+          connect: {
+            id: c.requirement,
+          },
+        },
       },
     });
     return upsertTransaction;
   });
 
-  const updateTrainee = prisma.currency.update({
-    where: { id: trainee.id },
-    data: { trainee },
+  const updateTrainee = prisma.trainee.update({
+    where: { id: Number(traineeId) },
+    data: { callsign: trainee.callsign, category: Number(trainee.category), updatedAt: dayjs().toDate() },
   });
 
   try {
@@ -218,6 +230,7 @@ const update = async (req: Request, res: Response) => {
     await updateTrainee;
     res.status(200).send("updated");
   } catch (error) {
+    console.log(error);
     res.status(500).send("unable to update");
   }
 };
@@ -298,6 +311,7 @@ const checkin = async (req: Request, res: Response) => {
     return res.status(500).json(error);
   }
 };
+
 export {
   index,
   show,

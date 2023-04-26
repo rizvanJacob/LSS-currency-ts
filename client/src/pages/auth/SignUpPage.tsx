@@ -22,7 +22,7 @@ const blankUser = {
 
 const blankTrainee = {
   callsign: "",
-  category: 0,
+  category: Account.Trainee,
   user: 0,
 
 };
@@ -76,6 +76,7 @@ const SignUpPage = (): JSX.Element => {
     setTrainee({ ...trainee, [name]: (name === "category") ? Number(value) : value });
   };
 
+  console.log(trainee);
   return (
     <>
       <h1>Request for an account</h1>

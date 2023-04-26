@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "dev": "concurrently \"cd ./server && npm run dev\" \"cd ./client && npm run dev\""
+    "dev": "concurrently \"cd ./server && npm run dev\" \"cd ./client && npm run dev\"",
+    "build": "cd ./server && tsc -p . && cd../client && tsc && vite build",
+    "start": "cd ./server && node ./dist/server.js"
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
