@@ -23,7 +23,7 @@ export default function UnapprovedUsersList({
             let accountTypeClass = "";
             switch (accountType) {
               case "Admin":
-                accountTypeClass = "text-blue-500";
+                accountTypeClass = "text-blue-400";
                 break;
               case "Trainee Admin":
                 accountTypeClass = "text-red-500";
@@ -36,7 +36,7 @@ export default function UnapprovedUsersList({
             }
             return (
               <tr key={user.id} className="hover:bg-gray-100">
-                <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-blue-600">{user.displayName}</td>
+                <td className="px-2 py-4 whitespace-nowrap text-sm font-medium text-yellow-300">{user.displayName}</td>
                 <td className={`px-2 py-4 whitespace-nowrap text-sm hidden md:table-cell ${accountTypeClass}`}>{accountType}</td>
                 <td className="px-1 py-2 whitespace-nowrap"><EditUserButton user={user} /></td>
                 <td className="px-1 py-2 whitespace-nowrap"><DeleteUserButton setUsers={setUsers} user={user} /></td>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { User } from "../../../@types/user";
-
+import Edit from "../../../assets/icons/editIcon.svg";
 export default function EditUserButton({
   user,
 }: {
@@ -8,7 +8,9 @@ export default function EditUserButton({
 }): JSX.Element {
   return (
       <Link to={`/users/${user.id}/edit`}>
-        <button style={{ backgroundColor: "#00A0A0" }}>✏️</button>
+        <button className="btn btn-circle btn-outline">
+          <img src={Edit} alt="edit"/>
+        </button>
       </Link>
   );
 }
