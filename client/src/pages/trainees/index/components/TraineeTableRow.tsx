@@ -18,7 +18,7 @@ const TraineeTableRow = ({
   return (
     <tr>
       <td>
-        <Link className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950"
+        <Link className="badge badge-primary px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950"
           to={trainee.id.toString()}>{trainee.callsign}
          </Link>
       </td>
