@@ -78,68 +78,76 @@ const SignUpPage = (): JSX.Element => {
 
   console.log(trainee);
   return (
-    <>
-      <h1>Request for an account</h1>
-      <Formik initialValues={user as any} onSubmit={handleSubmit}>
-        {({ isSubmitting, isValidating, isValid }) => (
-          <Form>
-            <fieldset>
-              <legend>Account Type:</legend>
-              <Field
-                as="select"
-                name="accountType"
-                value={user.accountType}
-                onChange={handleUserChange}
-              >
-                <option value="">Select an Account Type</option>
-                {accountTypes?.map((t) => {
-                  return (
-                    <option value={t.id} key={t.id}>
-                      {t.name}
-                    </option>
-                  );
-                })}
-              </Field>
-            </fieldset>
-            {user.accountType == Account.Admin && (
-              <AdminFieldSet user={user} handleChange={handleUserChange} />
-            )}
-            {user.accountType == Account.TraineeAdmin && (
-              <TraineeAdminFieldset
-                user={user}
-                handleChange={handleUserChange}
-                setTrainee={setTrainee}
-                includeTrainee={includeTrainee}
-                setIncludeTrainee={setIncludeTrainee}
-              />
-            )}
-            {user.accountType == Account.Trainee && (
-              <TraineeParticularsFieldset
-                trainee={trainee}
-                handleChange={handleTraineeChange}
-              />
-            )}
-            {user.accountType == Account.Trainer && (
-              <TrainerFieldset
-                user={user}
-                setUser={setUser}
-                handleChange={handleUserChange}
-                requirementsProvided={requirementsProvided}
-                setRequirementsProvided={setRequirementsProvided}
-              />
-            )}
-
-            <button 
-              type="submit"
-              disabled={isSubmitting || isValidating || !isValid}
-              style={{ backgroundColor: "#00A0A0" }}
-            >
-                Request Account
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </>
+    <div className="max-w-lg mx-auto">
+      <h1 className="text-3xl text-center font-bold mb-8">Request for an account</h1>
+      <div className="flex items-center justify-center">
+        <Formik initialValues={user as any} onSubmit={handleSubmit}>
+          {({ isSubmitting, isValidating, isValid }) => (
+            <Form className="space-y-6">
+              <div className="flex items-center">
+                <fieldset>
+                  <label className="w-1/4">Account Type:</label>
+                  <div className="w-4/4">
+                    <Field
+                      as="select"
+                      name="accountType"
+                      value={user.accountType}
+                      onChange={handleUserChange}
+                      className="input-select select select-primary w-full max-w-xs"
+                    >
+                      <option value="">Select an Account Type</option>
+                      {accountTypes?.map((t) => {
+                        return (
+                          <option value={t.id} key={t.id}>
+                            {t.name}
+                          </option>
+                        );
+                      })}
+                    </Field>
+                  </div>
+                </fieldset>
+              </div>
+              {user.accountType == Account.Admin && (
+                <AdminFieldSet user={user} handleChange={handleUserChange} />
+              )}
+              {user.accountType == Account.TraineeAdmin && (
+                <TraineeAdminFieldset
+                  user={user}
+                  handleChange={handleUserChange}
+                  setTrainee={setTrainee}
+                  includeTrainee={includeTrainee}
+                  setIncludeTrainee={setIncludeTrainee}
+                />
+              )}
+              {user.accountType == Account.Trainee && (
+                <TraineeParticularsFieldset
+                  trainee={trainee}
+                  handleChange={handleTraineeChange}
+                />
+              )}
+              {user.accountType == Account.Trainer && (
+                <TrainerFieldset
+                  user={user}
+                  setUser={setUser}
+                  handleChange={handleUserChange}
+                  requirementsProvided={requirementsProvided}
+                  setRequirementsProvided={setRequirementsProvided}
+                />
+              )}
+              <div className="flex justify-center">
+                <button 
+                  type="submit"
+                  disabled={isSubmitting || isValidating || !isValid}
+                  className="btn btn-info "
+                >
+                    Request Account
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 };
 

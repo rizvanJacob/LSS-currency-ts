@@ -48,37 +48,39 @@ const TrainerFieldset = ({
     }
   };
   return (
-    <fieldset>
-      <label>
-        Display Name:
-        <Field
-          type="text"
-          id="displayName"
-          name="displayName"
-          value={user.displayName}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Training Provided:
-        <div>
-          {requirements?.map((r) => {
-            return (
-              <label key={r.id}>
-                <Field
-                  type="checkbox"
-                  name="requirementsProvided"
-                  value={r.id}
-                  checked={requirementsProvided.includes(r.id)}
-                  onChange={changeRequirementsProvided}
-                />
-                {r.name}
-              </label>
-            );
-          })}
+    <div className="flex items-center">
+      <fieldset>
+        <label className="w-2/4">Display Name:</label>
+         <div className="w-3/4">
+            <Field
+              type="text"
+              id="displayName"
+              name="displayName"
+              className="input-text input input-bordered input-primary w-full max-w-xs"
+              value={user.displayName}
+              onChange={handleChange}
+            />
         </div>
-      </label>
-    </fieldset>
+        <label  className="w-2/4"> Training Provided:</label>
+          <div className="w-3/4">
+            {requirements?.map((r) => {
+              return (
+                <label key={r.id}>
+                  <Field
+                    type="checkbox"
+                    name="requirementsProvided"
+                    value={r.id}
+                    className="checkbox"
+                    checked={requirementsProvided.includes(r.id)}
+                    onChange={changeRequirementsProvided}
+                  />
+                  {r.name}
+                </label>
+              );
+            })}
+          </div>
+      </fieldset>
+    </div>
   );
 };
 
