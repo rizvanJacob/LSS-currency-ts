@@ -2,6 +2,9 @@ export type CurrentUser = {
   id: number;
   accountType: number;
   authCategory?: number;
+  trainee?: {
+    id: number;
+  };
 };
 
 export type setCurrentUserProp = {

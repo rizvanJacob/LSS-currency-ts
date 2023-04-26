@@ -11,6 +11,7 @@ import { CurrentUser, UserPayload } from "./@types/currentUser";
 import Navbar from "./components/Navbar/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
+import HomePageCallback from "./components/HomePageCallback";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -73,6 +74,15 @@ function App() {
               <Route path="/trainings/*" element={<TrainingRoutes />} />
             ) : null}
             <Route path="/logout" element={<LogoutCallback />} />
+            <Route
+              path="/"
+              element={
+                <HomePageCallback
+                  accountType={currentUser.accountType}
+                  traineeId={currentUser.trainee?.id}
+                />
+              }
+            />
           </Routes>
         </>
       ) : (

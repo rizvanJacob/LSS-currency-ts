@@ -1,7 +1,7 @@
-import {Account} from "../constants"
+import { Account } from "../constants";
 import express from "express";
 const router = express.Router();
-import usersController from "../controllers/usersController"
+import usersController from "../controllers/usersController";
 import { isAuth } from "../controllers/authController";
 
 router.get("/", isAuth([Account.Admin]), usersController.getAllUsers);
