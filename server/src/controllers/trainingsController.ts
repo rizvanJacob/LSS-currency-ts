@@ -185,7 +185,7 @@ const trainingsController = {
     console.log("Completed trainees: ");
     console.log(completedTrainees);
 
-    const updateCompletedTrainees = prisma.traineeToTraining.updateMany({
+    const updateCompletedStatuses = prisma.traineeToTraining.updateMany({
       where: {
         training: Number(trainingId),
         trainee: { in: completedTrainees },
@@ -196,7 +196,7 @@ const trainingsController = {
       },
     });
 
-    const updateAbsentTrainees = prisma.traineeToTraining.updateMany({
+    const updateAbsentStatuses = prisma.traineeToTraining.updateMany({
       where: {
         training: Number(trainingId),
         trainee: {
@@ -209,8 +209,16 @@ const trainingsController = {
       },
     });
 
+    const updateTraineeCurrencies = completedTrainees.map((t) =>
+      updateCurrency(t, Number(trainingId))
+    );
+
     try {
-      await Promise.all([updateCompletedTrainees, updateAbsentTrainees]);
+      await Promise.all([
+        updateCompletedStatuses,
+        updateAbsentStatuses,
+        updateTraineeCurrencies,
+      ]);
       res.send(200);
     } catch (error) {
       res.send(500).json(error);
@@ -318,16 +326,15 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         true
       );
 
-      await prisma.currency.update({
+      return prisma.currency.update({
         where: {
           trainee_requirement: {
             trainee: traineeId,
             requirement: requirement.id,
           },
         },
-        data: {},
+        data: { expiry: newExpiry.toDate() },
       });
-      return { requirement, currency, training, newExpiry };
     }
   } catch (error) {}
 };

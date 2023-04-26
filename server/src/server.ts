@@ -1,7 +1,6 @@
 import express from "express";
 import logger from "morgan";
 import path from "path";
-import cors from "cors";
 import * as dotenv from "dotenv";
 dotenv.config();
 import { connectDb } from "./config/database";

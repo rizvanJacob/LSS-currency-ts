@@ -188,6 +188,7 @@ const book = async (traineeId: number, trainingId: number) => {
 
 const update = async (req: Request, res: Response) => {
   const trainee = req.body;
+  const { id: traineeId } = req.params;
   console.log(trainee);
 
   const upsertCurrencies = trainee.currencies.map((c: any) => {
@@ -201,16 +202,24 @@ const update = async (req: Request, res: Response) => {
       create: {
         expiry: c.expiry,
         seniority: c.seniority,
-        trainee: trainee.id,
-        requirement: c.requirement,
+        trainees: {
+          connect: {
+            id: Number(traineeId),
+          },
+        },
+        requirements: {
+          connect: {
+            id: c.requirement,
+          },
+        },
       },
     });
     return upsertTransaction;
   });
 
-  const updateTrainee = prisma.currency.update({
-    where: { id: trainee.id },
-    data: { trainee },
+  const updateTrainee = prisma.trainee.update({
+    where: { id: Number(traineeId) },
+    data: { category: trainee.category },
   });
 
   try {
@@ -218,6 +227,7 @@ const update = async (req: Request, res: Response) => {
     await updateTrainee;
     res.status(200).send("updated");
   } catch (error) {
+    console.log(error);
     res.status(500).send("unable to update");
   }
 };
