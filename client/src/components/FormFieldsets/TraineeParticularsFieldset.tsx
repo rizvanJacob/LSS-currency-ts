@@ -19,7 +19,7 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   
 
   return (
-    <div className="flex items-center">
+     <div className="flex items-center justify-center">
       <fieldset>
         <label className="w-2/4">Callsign: </label>
         <div className="w-3/4">

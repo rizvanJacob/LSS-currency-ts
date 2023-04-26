@@ -125,7 +125,9 @@ const EditTraineePage = () => {
                   />
                 );
               })}
-              <button type="submit">Update Trainee</button>
+              <div className="flex justify-center">
+                <button className="btn btn-info" type="submit">Update Trainee</button>
+              </div>
             </Form>
           )}
         </Formik>
