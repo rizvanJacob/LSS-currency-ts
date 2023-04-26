@@ -8,7 +8,7 @@ import { CurrentUser } from "../../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../App";
 
-const CHANGE_TRAINING_ACCESS = [Account.Trainer];
+const CHANGE_TRAINING_ACCESS = [Account.Admin, Account.Trainer];
 
 export default function TrainingRoutes() {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);

@@ -16,9 +16,22 @@ export default function AllTrainingsPage(): JSX.Element {
 
   return trainings.length > 0 ? (
     <>
-      <h1>Training Index</h1>
-      {currentUser?.accountType === Account.Trainer ? (
-        <CreateTrainingButton />
+      {trainings.length > 0 ? (
+        <>
+          <h1>Training Index</h1>
+          {currentUser?.accountType === Account.Trainer ||
+          currentUser?.accountType === Account.Admin ? (
+            <CreateTrainingButton />
+          ) : (
+            <></>
+          )}
+          <TrainingList
+            trainings={trainings as Training[]}
+            setTrainings={
+              setTrainings as React.Dispatch<React.SetStateAction<Training[]>>
+            }
+          />
+        </>
       ) : (
         <></>
       )}
