@@ -17,12 +17,12 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
     event.preventDefault();
     setIsLoading(true);
     const response = await fetch(
-      `/api/trainees/checkin/?user=${user}&training=${training.id}`,
+      `/api/trainees/checkin/?user=${user}&training=${training.id}&checkin=true`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          authorization: `bearer,${token}`,
+          authorization: `bearer ${token}`,
         },
         body: JSON.stringify({ passphrase }),
       }

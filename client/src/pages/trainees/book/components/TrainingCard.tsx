@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Trainee } from "../../../../@types/trainee";
 
 type Prop = {
   training: Training;
@@ -85,7 +84,6 @@ const updateTraineesinTraining = (
   const isInTraining = training.trainees.find((t) => {
     return t.trainee === booking.trainee;
   });
-  console.log("Already in training: ", isInTraining);
   let newTraining = {};
 
   if (isInTraining) {

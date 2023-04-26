@@ -179,8 +179,8 @@ const isAuth =
             );
           }
         } else {
-          const { trainee } = req.query;
-          if (Number(trainee) === verifiedUser.trainee?.id) {
+          const { trainee, checkin } = req.query;
+          if (Number(trainee) === verifiedUser.trainee?.id || checkin) {
             console.log("Trainee authorized for query");
             return next();
           }

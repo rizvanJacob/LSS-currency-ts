@@ -221,7 +221,7 @@ const update = async (req: Request, res: Response) => {
   const trainee = req.body;
   const { id: traineeId } = req.params;
 
-  const upsertCurrencies = trainee.currencies.map((c: any) => {
+  const upsertCurrencies = trainee.currencies?.map((c: any) => {
     console.log(c);
     const upsertTransaction = prisma.currency.upsert({
       where: {
@@ -263,8 +263,10 @@ const update = async (req: Request, res: Response) => {
   });
 
   try {
-    await Promise.all(upsertCurrencies);
     await updateTrainee;
+    if (upsertCurrencies.length) {
+      await Promise.all(upsertCurrencies);
+    }
     res.status(200).send("updated");
   } catch (error) {
     console.log(error);

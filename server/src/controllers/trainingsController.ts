@@ -21,7 +21,13 @@ const trainingsController = {
           requirement: "asc",
         },
         include: checkin
-          ? {}
+          ? {
+              requirements: {
+                select: {
+                  name: true,
+                },
+              },
+            }
           : {
               requirements: {
                 select: {
@@ -39,6 +45,7 @@ const trainingsController = {
       console.log(allTrainings);
       res.status(200).json(allTrainings);
     } catch (err) {
+      console.log(err);
       res.status(500).json({ err });
     }
   },

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import getRequest from "../../../utilities/getRequest";
-import { useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { DecodedToken } from "../../../@types/currentUser";
 import CheckinToTraining from "./CheckinToTraining";
@@ -11,24 +11,23 @@ const CheckinCallbackPage = () => {
   const user = useRef(0);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code") as string;
+  const location = useLocation();
+  const code = location.state.code;
 
   useEffect(() => {
     const loginAndGetTrainings = async () => {
-      const response = await fetch(
-        `/api/login/${code}/?callback=checkinCallback`
-      );
+      const response = await fetch(`/api/login/${code}`);
       const data = await response.json();
       jwtoken.current = data.token;
 
       const decodedToken = jwtDecode(data.token) as DecodedToken;
       user.current = decodedToken.id;
-
-      await getRequest(
+      const trainingsResponse = await fetch(
         `/api/trainings/?checkin=true&user=${user.current}`,
-        setTrainings
+        { headers: { authorization: `bearer ${jwtoken.current}` } }
       );
+      const trainingsData = await trainingsResponse.json();
+      setTrainings(trainingsData);
       setIsLoading(false);
     };
     loginAndGetTrainings();
@@ -40,7 +39,7 @@ const CheckinCallbackPage = () => {
       <h4>Select a training to check in to:</h4>
       {isLoading ? (
         <progress className="progress w-56" />
-      ) : (
+      ) : trainings.length ? (
         trainings.map((t) => {
           return (
             <CheckinToTraining
@@ -52,6 +51,8 @@ const CheckinCallbackPage = () => {
             />
           );
         })
+      ) : (
+        <p>No trainings to check in to</p>
       )}
     </>
   );
