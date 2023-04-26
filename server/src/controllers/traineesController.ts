@@ -108,7 +108,7 @@ const showBooking = async (req: Request, res: Response) => {
     const booking = await prisma.traineeToTraining.findFirst({
       where: {
         trainee: Number(id),
-        trainings: { requirement: Number(requirementId) },
+        trainings: { requirement: Number(requirementId), complete: false },
       },
       select: {
         status: true,
