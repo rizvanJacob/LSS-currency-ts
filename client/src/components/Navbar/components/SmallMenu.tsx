@@ -24,8 +24,16 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
             checked={isChecked}
             onChange={toggleCheckbox}
           />
-          <img className="swap-off fill-current" src={MenuIcon} alt="Menu" />
-          <img className="swap-on fill-current" src={Cross} alt="Cross" />
+          <img
+            className="swap-off m-auto h-full w-full fill-neutral-200"
+            src={MenuIcon}
+            alt="Menu"
+          />
+          <img
+            className="swap-on m-auto w-full h-full fill-neutral-200"
+            src={Cross}
+            alt="Cross"
+          />
         </label>
         {isChecked && (
           <div

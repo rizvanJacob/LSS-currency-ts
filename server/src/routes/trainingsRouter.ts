@@ -6,7 +6,12 @@ import { isAuth } from "../controllers/authController";
 
 router.get(
   "/",
-  isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]),
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainer,
+    Account.Trainee,
+  ]),
   trainingsController.getAllTrainings
 );
 router.get(

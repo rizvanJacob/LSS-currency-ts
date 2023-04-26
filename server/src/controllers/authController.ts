@@ -11,6 +11,9 @@ type User = {
   authCategory?: number;
   accountType: number;
   approved: boolean;
+  trainee?: {
+    id: number;
+  };
 };
 
 const AUTHORISE = true;
@@ -120,7 +123,7 @@ const isAuth =
       const trainingId = Number(req.params.trainingId);
 
       if (!token) {
-        console.log("check token failed", token);
+        console.log("Missing token");
         return res
           .status(401)
           .json({ message: "Missing or invalid authorization token" });
@@ -130,12 +133,13 @@ const isAuth =
         token as string,
         process.env.JWT_SECRET as string
       ) as User;
-      console.log("verified user", verifiedUser);
+      console.log("verified jwt token", verifiedUser);
 
       if (!authorized.includes(verifiedUser.accountType)) {
-        throw new Error("You are unauthorized");
+        throw new Error("Unauthorized account type");
       }
       if (verifiedUser.accountType === Account.TraineeAdmin) {
+        console.log("Authorizing trainee admin...");
         if (id) {
           const trainee = await prisma.trainee.findUnique({
             where: { id },
@@ -148,16 +152,18 @@ const isAuth =
           });
 
           if (trainee && verifiedUser.authCategory === trainee?.category) {
-            console.log("Authorized category");
+            console.log("Trainee Admin authorized to access trainees");
             return next();
           } else if (training) {
+            console.log("Trainee Admin authorized access to trainings");
             return next();
           }
         } else {
+          console.log("Trainee Admin authorized with general access");
           return next();
         }
       } else if (verifiedUser.accountType === Account.Trainee) {
-        console.log("verified trainee", verifiedUser);
+        console.log("Authorizing trainee...");
         if (id) {
           const trainee = await prisma.trainee.findUnique({
             where: { id },
@@ -165,13 +171,22 @@ const isAuth =
           });
 
           if (trainee?.user === verifiedUser.id) {
+            console.log("Trainee authorized to access own resources");
             return next();
           } else {
-            throw new Error("You are unauthorized to access this");
+            throw new Error(
+              "Trainee unauthorized. Attempted to access other trainees"
+            );
+          }
+        } else {
+          const { trainee } = req.query;
+          if (Number(trainee) === verifiedUser.trainee?.id) {
+            console.log("Trainee authorized for query");
+            return next();
           }
         }
       } else if (verifiedUser.accountType === Account.Trainer) {
-        console.log("verifying trainer", verifiedUser);
+        console.log("Authorizing trainer...");
         if (Number(trainingId)) {
           const training = await prisma.training.findUnique({
             where: { id: trainingId },
@@ -188,17 +203,23 @@ const isAuth =
               res.status(200).json({
                 message: "You are authorized to book training for trainees",
               });
+              console.log(
+                "Trainer authorized with access to trainings provided"
+              );
               return next();
             }
           }
         } else {
-          console.log("checked");
+          console.log("Trainer authorized for general access");
           return next();
         }
       } else if (verifiedUser.accountType === Account.Admin) {
+        console.log("Admin authorized");
         return next();
       }
-      throw new Error("You are unauthorized");
+      throw new Error(
+        "All authorization routes exhausted. Request is unauthorized"
+      );
     } catch (err) {
       console.log("catch error", err);
       res.status(404).json({ err });
