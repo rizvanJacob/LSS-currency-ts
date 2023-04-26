@@ -6,9 +6,10 @@ import { Trainee } from "../../../../@types/trainee";
 
 type Prop = {
   trainingComplete: boolean | undefined;
+  setTrainingComplete: any;
 };
 
-const TraineeList = ({ trainingComplete }: Prop) => {
+const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   const { id: trainingId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -49,6 +50,7 @@ const TraineeList = ({ trainingComplete }: Prop) => {
     });
     await getRequest(`/api/trainees/?training=${trainingId}`, setTrainees);
     setCompletedTrainees([]);
+    setTrainingComplete();
     setIsLoading(false);
   };
 
@@ -58,11 +60,21 @@ const TraineeList = ({ trainingComplete }: Prop) => {
     <form onSubmit={handleSubmit}>
       <table className="table w-full">
         <thead className="bg-blue-500 text-black">
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Trainee</th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Category</th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Expiry</th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Status</th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Complete</th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+            Trainee
+          </th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+            Category
+          </th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+            Expiry
+          </th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+            Status
+          </th>
+          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+            Complete
+          </th>
         </thead>
         <tbody>
           {trainees.map((t) => {

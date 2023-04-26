@@ -41,6 +41,10 @@ export default function TrainingPage(): JSX.Element {
     });
   }, []);
 
+  const setTrainingComplete = () => {
+    setTraining({ ...training, complete: true });
+  };
+
   return isLoading ? (
     <progress className="progress w-56" />
   ) : (
@@ -50,7 +54,10 @@ export default function TrainingPage(): JSX.Element {
         setTraining={setTraining}
         setTrainings={setTrainings}
       />
-      <TraineeList trainingComplete={training.complete} />
+      <TraineeList
+        trainingComplete={training.complete}
+        setTrainingComplete={setTrainingComplete}
+      />
     </>
   );
 }
