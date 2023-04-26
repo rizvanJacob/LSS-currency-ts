@@ -103,7 +103,7 @@ model Training {
   capacity      Int
   start         DateTime
   end           DateTime
-  complete      Boolean
+  complete      Boolean   @default(false)
   instruction   String?
   passphrase    String    @default("code")
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
