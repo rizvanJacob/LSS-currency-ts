@@ -1,5 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import ProgressBar from "./ProgressBar";
 
 type Prop = {
   accountType: number;
@@ -18,7 +19,7 @@ const HomePageCallback = ({ accountType, traineeId }: Prop) => {
     console.log("in homepage callback. homepath: ", homepath);
     navigate(homepath, { replace: true });
   }, []);
-  return <progress className="progress w-56" />;
+  return <ProgressBar />;
 };
 
 export default HomePageCallback;
