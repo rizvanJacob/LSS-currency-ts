@@ -60,20 +60,20 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   ) : (
     <form onSubmit={handleSubmit}>
       <table className="table w-full">
-        <thead className="bg-blue-500 text-black">
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+        <thead className="text-black">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
             Trainee
           </th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
             Category
           </th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
             Expiry
           </th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
             Status
           </th>
-          <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
             Complete
           </th>
         </thead>
