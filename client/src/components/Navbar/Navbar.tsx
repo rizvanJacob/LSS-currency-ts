@@ -15,37 +15,10 @@ type Prop = {
 
 const Navbar = ({ accountType, traineeId }: Prop): JSX.Element => {
   const navigate = useNavigate();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([
-    { name: "Log Out", path: "/logout" },
-  ]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    if (accountType === 1) {
-      setMenuItems([
-        { name: "Users", path: "/users" },
-        { name: "Trainees", path: "/trainees" },
-        { name: "Trainings", path: "/trainings" },
-        ...menuItems,
-      ]);
-    } else if (accountType === 2) {
-      setMenuItems([
-        { name: "My Currencies", path: `/trainees/${traineeId}` },
-        { name: "Trainees", path: "/trainees" },
-        { name: "Trainings", path: "/trainings" },
-        ...menuItems,
-      ]);
-    } else if (accountType === 3) {
-      setMenuItems([
-        { name: "My Currencies", path: `/trainees/${traineeId}` },
-        ...menuItems,
-      ]);
-    } else if (accountType === 4) {
-      setMenuItems([
-        { name: "Trainees", path: "/trainees" },
-        { name: "Trainings", path: "/trainings" },
-        ...menuItems,
-      ]);
-    }
+    setMenuItems(getMenuItems(accountType, traineeId));
   }, [accountType, traineeId]);
 
   return (
@@ -67,3 +40,31 @@ const Navbar = ({ accountType, traineeId }: Prop): JSX.Element => {
 };
 
 export default Navbar;
+
+const getMenuItems = (accountType: number, traineeId: number = 0) => {
+  const lookup = [
+    [],
+    [
+      { name: "Users", path: "/users" },
+      { name: "Trainees", path: "/trainees" },
+      { name: "Trainings", path: "/trainings" },
+      { name: "Log Out", path: "/logout" },
+    ] as MenuItem[],
+    [
+      { name: "My Currencies", path: `/trainees/${traineeId}` },
+      { name: "Trainees", path: "/trainees" },
+      { name: "Trainings", path: "/trainings" },
+      { name: "Log Out", path: "/logout" },
+    ] as MenuItem[],
+    [
+      { name: "My Currencies", path: `/trainees/${traineeId}` },
+      { name: "Log Out", path: "/logout" },
+    ] as MenuItem[],
+    [
+      { name: "Trainees", path: "/trainees" },
+      { name: "Trainings", path: "/trainings" },
+      { name: "Log Out", path: "/logout" },
+    ] as MenuItem[],
+  ];
+  return lookup[accountType];
+};
