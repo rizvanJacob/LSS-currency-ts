@@ -49,7 +49,7 @@ export default function TrainingPage(): JSX.Element {
   return isLoading ? (
     <ProgressBar />
   ) : (
-    <div className="max-w-md flex flex-col mx-auto">
+    <div className="max-w-2xl flex flex-col mx-auto">
       <TrainingInfo
         training={training}
         setTraining={setTraining}
