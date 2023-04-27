@@ -34,7 +34,7 @@ const CheckinCallbackPage = () => {
   }, []);
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl bg-info-content">
+    <div className="card w-96 bg-base-100 shadow-xl bg-primary">
       <div className="card-body">
         <h1 className="card-title text-3xl text-center font-bold mb-8">Check In</h1>
         <h4 className="text-3xl text-center font-bold mb-8 ">Select a training to check in to:</h4>

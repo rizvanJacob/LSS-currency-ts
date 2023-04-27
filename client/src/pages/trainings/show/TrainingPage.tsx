@@ -46,9 +46,11 @@ export default function TrainingPage(): JSX.Element {
   };
 
   return isLoading ? (
-    <progress className="progress w-56" />
+    <div className="flex justify-center py-5">
+      <progress className="progress w-56" />
+    </div>
   ) : (
-    <>
+    <div className="max-w-md flex flex-col mx-auto">
       <TrainingInfo
         training={training}
         setTraining={setTraining}
@@ -58,6 +60,6 @@ export default function TrainingPage(): JSX.Element {
         trainingComplete={training.complete}
         setTrainingComplete={setTrainingComplete}
       />
-    </>
+    </div>
   );
 }

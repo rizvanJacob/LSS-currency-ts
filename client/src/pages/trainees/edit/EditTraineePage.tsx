@@ -106,43 +106,47 @@ const EditTraineePage = () => {
 
   return (
     <fieldset>
-      <h1 className="text-3xl text-center font-bold mb-8">Edit Trainee Profile</h1>
+      <h1 className="text-3xl text-center font-bold mb-8">
+        Edit Trainee Profile
+      </h1>
       <div className="flex items-center justify-center">
-      {!loading ? (
-        <Formik initialValues={trainee} onSubmit={handleSubmit}>
-          {({ isSubmitting, isValidating, isValid }) => (
-            <Form className="space-y-6">
-              <div className="flex items-center">
-                <TraineeParticularsFieldset
-                  trainee={trainee}
-                  handleChange={handleTraineeChange}
-                />
-              </div>
-              {trainee.categories.requirements?.map((r) => {
-                const { requirements } = r;
-                const currency = trainee.currencies.find(
-                  (c) => c.requirement === requirements.id
-                );
-                return (
-                  <CurrencyFieldset
-                    key={r.requirements.id}
-                    requirement={requirements}
-                    currency={currency}
-                    handleExpiryChange={handleExpiryChange}
-                    handleSeniorityChange={handleSeniorityChange}
+        {!loading ? (
+          <Formik initialValues={trainee} onSubmit={handleSubmit}>
+            {({ isSubmitting, isValidating, isValid }) => (
+              <Form className="space-y-6">
+                <div className="flex items-center">
+                  <TraineeParticularsFieldset
+                    trainee={trainee}
+                    handleChange={handleTraineeChange}
                   />
-                );
-              })}
-              <div className="flex justify-center">
-                <button className="btn btn-info" type="submit">Update Trainee</button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      ) : (
-        <progress className="progress w-56" />
-      )}
-    </div>
+                </div>
+                {trainee.categories.requirements?.map((r) => {
+                  const { requirements } = r;
+                  const currency = trainee.currencies.find(
+                    (c) => c.requirement === requirements.id
+                  );
+                  return (
+                    <CurrencyFieldset
+                      key={r.requirements.id}
+                      requirement={requirements}
+                      currency={currency}
+                      handleExpiryChange={handleExpiryChange}
+                      handleSeniorityChange={handleSeniorityChange}
+                    />
+                  );
+                })}
+                <div className="flex justify-center">
+                  <button className="btn btn-info" type="submit">
+                    Update Trainee
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        ) : (
+          <progress className="progress w-56" />
+        )}
+      </div>
     </fieldset>
   );
 };

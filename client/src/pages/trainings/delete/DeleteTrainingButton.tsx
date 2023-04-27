@@ -27,11 +27,11 @@ export default function DeleteTrainingButton({
     };
 
     return (
-        <button
-            onClick={() => handleDeleteClick(training.id)} 
-            className="btn btn-circle btn-outline"
-        >
-            <img src={RedCross} alt="redCross"/>
-        </button>
+      <button
+        onClick={() => handleDeleteClick(training.id)}
+        className="flex-0 btn btn-square btn-sm btn-secondary text-white"
+      >
+        <img src={RedCross} alt="redCross" />
+      </button>
     );
 }
