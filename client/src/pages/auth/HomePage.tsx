@@ -40,10 +40,10 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div className="flex flex-col mx-auto items-center h-48 justify-evenly">
-      <a className="btn btn-wide" href={authUrls.login}>
+      <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
       </a>
-      <a className="btn btn-wide" href={authUrls.checkin}>
+      <a className="btn btn-primary btn-wide" href={authUrls.checkin}>
         CHECK IN
       </a>
     </div>
