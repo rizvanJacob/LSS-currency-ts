@@ -43,9 +43,6 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
 
-
-  console.log(user.accountType === Account.Trainee);
-  console.log(user)
   const schema = (user.accountType !== 0) && Yup.object().shape({
     accountType: Yup.number().default(user.accountType).required("Account Type is required"),
     displayName: Yup.string().default(user.displayName).required("Display Name is required"),
