@@ -44,10 +44,7 @@ const TraineesIndexPage = (): JSX.Element => {
           <TraineesTable trainees={trainees} deleteTrainee={deleteTrainee} />
         </div>
       ) : (
-        <div className="p-4">
-          <h1 className="text-lg font-bold">Fetching Trainees</h1>
-          <ProgressBar />
-        </div>
+        <ProgressBar />
       )}
     </>
   );

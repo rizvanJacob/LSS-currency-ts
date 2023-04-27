@@ -38,11 +38,6 @@ export default function AllTrainingsPage(): JSX.Element {
       )}
     </div>
   ) : (
-    <>
-      <div className="p-4">
-        <h1 className="text-lg font-bold">Fetching Trainings</h1>
-        <ProgressBar />
-      </div>
-    </>
+    <ProgressBar />
   );
 }
