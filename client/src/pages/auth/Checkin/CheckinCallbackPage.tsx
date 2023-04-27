@@ -4,6 +4,7 @@ import jwtDecode from "jwt-decode";
 import { DecodedToken } from "../../../@types/currentUser";
 import CheckinToTraining from "./CheckinToTraining";
 import { Training } from "../../../@types/training";
+import ProgressBar from "../../../components/ProgressBar";
 
 const CheckinCallbackPage = () => {
   const jwtoken = useRef("");
@@ -45,7 +46,7 @@ const CheckinCallbackPage = () => {
           Select a training to check in to:
         </h4>
         {isLoading ? (
-          <progress className="progress w-56" />
+          <ProgressBar />
         ) : trainings.length ? (
           trainings.map((t) => {
             return (

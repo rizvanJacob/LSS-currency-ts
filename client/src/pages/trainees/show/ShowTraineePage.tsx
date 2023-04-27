@@ -6,13 +6,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import CurrencyCard from "./components/CurrencyCard";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext } from "../../../App";
+import ProgressBar from "../../../components/ProgressBar";
 const ShowTraineePage = () => {
   const { id } = useParams();
   const [trainee, setTrainee] = useState<Trainee | null>(null);
   const [fetchFlag, setFetchFlag] = useState<boolean>(false);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
-  const EDIT_TRAINEE_ACCESS = [Account.Admin,Account.TraineeAdmin]
+  const EDIT_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
 
   useEffect(() => {
     getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
@@ -37,7 +38,7 @@ const ShowTraineePage = () => {
           })}
         </div>
       ) : (
-        <progress className="progress w-56 mx-auto" />
+        <ProgressBar />
       )}
     </>
   );
