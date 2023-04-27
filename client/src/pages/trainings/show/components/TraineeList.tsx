@@ -58,39 +58,41 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   return isLoading ? (
     <ProgressBar />
   ) : (
-    <form onSubmit={handleSubmit}>
-      <table className="table w-full">
-        <thead className="text-black">
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-            Trainee
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-            Category
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-            Expiry
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-            Status
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-            Complete
-          </th>
-        </thead>
-        <tbody>
-          {trainees.map((t) => {
-            return (
-              <TraineeListRow
-                trainee={t}
-                key={t.id}
-                handleChange={handleCheck}
-                trainingComplete={trainingComplete}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-      <button className="btn btn-sm" type="submit" disabled={trainingComplete}>
+    <form className="text-center m-auto" onSubmit={handleSubmit}>
+      <div className="overflow-x-auto">
+        <table className="table w-full">
+          <thead className="text-black">
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+              Trainee
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+              Category
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+              Expiry
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+              Status
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+              Complete
+            </th>
+          </thead>
+          <tbody>
+            {trainees.map((t) => {
+              return (
+                <TraineeListRow
+                  trainee={t}
+                  key={t.id}
+                  handleChange={handleCheck}
+                  trainingComplete={trainingComplete}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <button className="btn btn-sm btn-secondary" type="submit" disabled={trainingComplete}>
         {trainingComplete ? "Completed" : "Complete"}
       </button>
     </form>
