@@ -109,13 +109,13 @@ const EditTraineePage = () => {
   };
 
   return (
-    <fieldset>
-      <div className="flex items-center justify-center">
+    <fieldset className="justify-center">
+      <div className="flex justify-center">
         {!loading ? (
           <Formik initialValues={trainee} onSubmit={handleSubmit}>
             {({ isSubmitting, isValidating, isValid }) => (
-              <Form className="space-y-6">
-                <div className="flex items-center">
+              <Form className="space-y-6 text-center m-auto">
+                <div className="flex justify-center">
                   <TraineeParticularsFieldset
                     trainee={trainee}
                     handleChange={handleTraineeChange}
@@ -137,7 +137,7 @@ const EditTraineePage = () => {
                   );
                 })}
                 <div className="flex justify-center">
-                  <button className="btn btn-info" type="submit">
+                  <button className="btn btn-primary" type="submit">
                     Update Trainee
                   </button>
                 </div>
