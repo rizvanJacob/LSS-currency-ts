@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import getRequest from "../../../utilities/getRequest";
 import { useLocation } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { DecodedToken } from "../../../@types/currentUser";
@@ -34,10 +33,14 @@ const CheckinCallbackPage = () => {
   }, []);
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl bg-info-content">
+    <div className="card w-96 shadow-xl mx-auto">
       <div className="card-body">
-        <h1 className="card-title text-3xl text-center font-bold mb-8">Check In</h1>
-        <h4 className="text-3xl text-center font-bold mb-8 ">Select a training to check in to:</h4>
+        <h1 className="card-title text-3xl text-center font-bold mb-8">
+          Check In
+        </h1>
+        <h4 className="text-3xl text-center font-bold mb-8 ">
+          Select a training to check in to:
+        </h4>
         {isLoading ? (
           <progress className="progress w-56" />
         ) : trainings.length ? (
