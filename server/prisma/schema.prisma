@@ -68,6 +68,8 @@ model Requirement {
   rehackPeriod    Int     @default(0)
   extensionPeriod Int
   seniorExtension Int?
+  selfComplete    Boolean @default(false)
+  alsoCompletes   Int?
   trainingsProvided TrainingProvided[]
   currencies      Currency[]
   categories      CategoryToRequirement[]
