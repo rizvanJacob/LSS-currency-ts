@@ -18,7 +18,6 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
     <div className={className}>
       <div className="dropdown">
         <label tabIndex={0} className="btn btn-circle btn-ghost">
-          {" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 text-secondary"
@@ -34,24 +33,22 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
             />
           </svg>
         </label>
-        {isChecked && (
-          <div
-            tabIndex={0}
-            className="dropdown-content menu bg-secondary rounded-box p-2 w-40 mt-3"
-          >
-            {menuItems.map((i, index) => {
-              return (
-                <Link
-                  className="btn btn-ghost normal-case text-md justify-start"
-                  to={i.path}
-                  key={index}
-                >
-                  {i.name}
-                </Link>
-              );
-            })}
-          </div>
-        )}
+        <div
+          tabIndex={0}
+          className="dropdown-content menu bg-secondary rounded-box p-2 w-40 mt-3"
+        >
+          {menuItems.map((i, index) => {
+            return (
+              <Link
+                className="btn btn-ghost normal-case text-md text-primary justify-start"
+                to={i.path}
+                key={index}
+              >
+                {i.name}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

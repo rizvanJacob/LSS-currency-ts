@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SmallMenu from "./components/SmallMenu";
 import LargeMenu from "./components/LargeMenu";
 import UserMenu from "./components/UserMenu";
@@ -24,7 +24,7 @@ const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
   }, [accountType, traineeId]);
 
   return (
-    <nav className="navbar bg-cyan-800 max-h-10">
+    <nav className="navbar bg-primary max-h-10">
       <div className="navbar-start">
         <SmallMenu className="lg:hidden" menuItems={menuItems} />
         <LargeMenu className="hidden lg:block" menuItems={menuItems} />

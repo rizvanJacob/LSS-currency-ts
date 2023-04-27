@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      sans: ['Montserrat', 'sans-serif'],
+      sans: ["Montserrat", "sans-serif"],
     },
   },
   daisyui: {
@@ -12,16 +12,16 @@ module.exports = {
       {
         mytheme: {
           primary: "#0C6291",
-          secondary: "#BAD1CD",
+          secondary: "#B2CEDE",
           accent: "#071108",
           neutral: "#F0E7D8",
-          "base-100": "#FFFFFF",
+          "base-100": "#E8E9ED",
           info: "#D2D0BA",
-          success: "#566246",
+          success: "#7B9E87",
           warning: "#D36135",
           error: "#D9594C",
         },
-      }
+      },
     ],
   },
   plugins: [require("daisyui")],
