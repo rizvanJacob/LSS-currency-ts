@@ -6,6 +6,7 @@ import TrainingList from "./TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext } from "../../../App";
+import ProgressBar from "../../../components/ProgressBar";
 export default function AllTrainingsPage(): JSX.Element {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
@@ -39,11 +40,9 @@ export default function AllTrainingsPage(): JSX.Element {
   ) : (
     <>
       <div className="p-4">
-          <h1 className="text-lg font-bold">Fetching Trainings</h1>
-          <p>
-            <progress className="progress w-56" />
-          </p>
-        </div>
+        <h1 className="text-lg font-bold">Fetching Trainings</h1>
+        <ProgressBar />
+      </div>
     </>
   );
 }

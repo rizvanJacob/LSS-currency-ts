@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
 import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
+import ProgressBar from "../../../../components/ProgressBar";
 
 type Prop = {
   trainingComplete: boolean | undefined;
@@ -55,9 +56,7 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   };
 
   return isLoading ? (
-    <div className="flex justify-center py-5">
-      <progress className="progress w-56" />
-    </div>
+    <ProgressBar />
   ) : (
     <form onSubmit={handleSubmit}>
       <table className="table w-full">

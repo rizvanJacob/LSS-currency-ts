@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext } from "../../../App";
+import ProgressBar from "../../../components/ProgressBar";
 
 const blankTrainee = {
   callsign: "",
@@ -144,7 +145,7 @@ const EditTraineePage = () => {
             )}
           </Formik>
         ) : (
-          <progress className="progress w-56" />
+          <ProgressBar />
         )}
       </div>
     </fieldset>

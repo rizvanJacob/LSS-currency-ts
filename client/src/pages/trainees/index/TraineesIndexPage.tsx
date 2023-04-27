@@ -8,6 +8,7 @@ import TraineesTable from "./components/TraineesTable";
 import { Trainee } from "../../../@types/trainee";
 import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
 import deleteRequest from "../../../utilities/deleteRequest";
+import ProgressBar from "../../../components/ProgressBar";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -45,7 +46,7 @@ const TraineesIndexPage = (): JSX.Element => {
       ) : (
         <div className="p-4">
           <h1 className="text-lg font-bold">Fetching Trainees</h1>
-          <progress className="progress w-56" />
+          <ProgressBar />
         </div>
       )}
     </>

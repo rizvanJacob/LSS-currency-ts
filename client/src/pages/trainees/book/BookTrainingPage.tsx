@@ -5,6 +5,7 @@ import TrainingCalendar from "./components/TrainingCalendar";
 import dayjs from "dayjs";
 import { Training } from "../../../@types/training";
 import TrainingCard from "./components/TrainingCard";
+import ProgressBar from "../../../components/ProgressBar";
 
 const BookTrainingPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -73,7 +74,7 @@ const BookTrainingPage = () => {
           <p className="mx-auto py-5 text-2xl">No trainings available</p>
         )
       ) : (
-        <progress className="progress w-56" />
+        <ProgressBar />
       )}
     </>
   );

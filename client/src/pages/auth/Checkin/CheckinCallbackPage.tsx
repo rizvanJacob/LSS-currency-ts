@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import getRequest from "../../../utilities/getRequest";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { DecodedToken } from "../../../@types/currentUser";
 import CheckinToTraining from "./CheckinToTraining";
 import { Training } from "../../../@types/training";
+import ProgressBar from "../../../components/ProgressBar";
 
 const CheckinCallbackPage = () => {
   const jwtoken = useRef("");
-  const user = useRef(0);
+  const user = useRef({
+    id: 0,
+    accountType: 0,
+  });
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
@@ -21,9 +24,9 @@ const CheckinCallbackPage = () => {
       jwtoken.current = data.token;
 
       const decodedToken = jwtDecode(data.token) as DecodedToken;
-      user.current = decodedToken.id;
+      user.current = decodedToken;
       const trainingsResponse = await fetch(
-        `/api/trainings/?checkin=true&user=${user.current}`,
+        `/api/trainings/?checkin=true&user=${user.current.id}`,
         { headers: { authorization: `bearer ${jwtoken.current}` } }
       );
       const trainingsData = await trainingsResponse.json();
@@ -33,20 +36,24 @@ const CheckinCallbackPage = () => {
     loginAndGetTrainings();
   }, []);
 
-  return (
-    <div className="card w-96 bg-base-100 shadow-xl bg-primary">
+  return user.current.accountType === 3 ? (
+    <div className="card w-96 shadow-xl mx-auto">
       <div className="card-body">
-        <h1 className="card-title text-3xl text-center font-bold mb-8">Check In</h1>
-        <h4 className="text-3xl text-center font-bold mb-8 ">Select a training to check in to:</h4>
+        <h1 className="card-title text-3xl text-center font-bold mb-8">
+          Check In
+        </h1>
+        <h4 className="text-3xl text-center font-bold mb-8 ">
+          Select a training to check in to:
+        </h4>
         {isLoading ? (
-          <progress className="progress w-56" />
+          <ProgressBar />
         ) : trainings.length ? (
           trainings.map((t) => {
             return (
               <CheckinToTraining
                 training={t}
                 token={jwtoken.current}
-                user={user.current}
+                user={user.current.id}
                 setIsLoading={setIsLoading}
                 key={t.id}
               />
@@ -56,6 +63,13 @@ const CheckinCallbackPage = () => {
           <p>No trainings to check in to</p>
         )}
       </div>
+    </div>
+  ) : (
+    <div className="alert alert-error shadow-lg">
+      <h1 className="text-semibold">You must be a trainee to check in</h1>
+      <Link to="/">
+        <button className="btn btn-ghost">Back</button>
+      </Link>
     </div>
   );
 };

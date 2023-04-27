@@ -4,6 +4,7 @@ import { Training } from "../../../@types/training";
 import { useParams, useNavigate } from "react-router-dom";
 import TrainingInfo from "./components/TrainingInfo";
 import TraineeList from "./components/TraineeList";
+import ProgressBar from "../../../components/ProgressBar";
 
 export default function TrainingPage(): JSX.Element {
   const { id } = useParams();
@@ -46,9 +47,7 @@ export default function TrainingPage(): JSX.Element {
   };
 
   return isLoading ? (
-    <div className="flex justify-center py-5">
-      <progress className="progress w-56" />
-    </div>
+    <ProgressBar />
   ) : (
     <div className="max-w-md flex flex-col mx-auto">
       <TrainingInfo
