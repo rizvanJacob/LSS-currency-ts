@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SmallMenu from "./components/SmallMenu";
 import LargeMenu from "./components/LargeMenu";
+import UserMenu from "./components/UserMenu";
 
 export type MenuItem = {
   name: string;
@@ -11,9 +12,10 @@ export type MenuItem = {
 type Prop = {
   accountType: number;
   traineeId?: number;
+  title?: string;
 };
 
-const Navbar = ({ accountType, traineeId }: Prop): JSX.Element => {
+const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
   const navigate = useNavigate();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
@@ -23,18 +25,16 @@ const Navbar = ({ accountType, traineeId }: Prop): JSX.Element => {
 
   return (
     <nav className="navbar bg-cyan-800 max-h-10">
-      <div className="flex-1">
-        <button
-          className="btn btn-sm btn-ghost normal-case text-md text-neutral-200 sm:text-lg"
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          Back
-        </button>
+      <div className="navbar-start">
+        <SmallMenu className="lg:hidden" menuItems={menuItems} />
+        <LargeMenu className="hidden lg:block" menuItems={menuItems} />
       </div>
-      <SmallMenu className="sm:hidden" menuItems={menuItems} />
-      <LargeMenu className="hidden sm:block" menuItems={menuItems} />
+      <div className="navbar-center">
+        <h1 className="text-neutral">{title}</h1>
+      </div>
+      <div className="navbar-end">
+        <UserMenu />
+      </div>
     </nav>
   );
 };
@@ -48,22 +48,16 @@ const getMenuItems = (accountType: number, traineeId: number = 0) => {
       { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
-      { name: "Log Out", path: "/logout" },
     ] as MenuItem[],
     [
       { name: "My Currencies", path: `/trainees/${traineeId}` },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
-      { name: "Log Out", path: "/logout" },
     ] as MenuItem[],
-    [
-      { name: "My Currencies", path: `/trainees/${traineeId}` },
-      { name: "Log Out", path: "/logout" },
-    ] as MenuItem[],
+    [{ name: "My Currencies", path: `/trainees/${traineeId}` }] as MenuItem[],
     [
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
-      { name: "Log Out", path: "/logout" },
     ] as MenuItem[],
   ];
   return lookup[accountType];
