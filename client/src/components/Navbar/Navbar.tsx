@@ -30,7 +30,9 @@ const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
         <LargeMenu className="hidden lg:block" menuItems={menuItems} />
       </div>
       <div className="navbar-center">
-        <h1 className="text-neutral">{title}</h1>
+        <h1 className="text-lg lg:text-2xl font-extrabold text-secondary">
+          {title}
+        </h1>
       </div>
       <div className="navbar-end">
         <UserMenu />

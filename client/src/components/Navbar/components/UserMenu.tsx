@@ -1,14 +1,7 @@
-import { Link } from "react-router-dom";
+import NavLink from "./NavLink";
 
 const UserMenu = () => {
-  return (
-    <Link
-      className="btn btn-ghost normal-case text-md text-secondary sm:text-lg"
-      to="/logout"
-    >
-      Logout
-    </Link>
-  );
+  return <NavLink to="/logout" display="Logout" />;
 };
 
 export default UserMenu;

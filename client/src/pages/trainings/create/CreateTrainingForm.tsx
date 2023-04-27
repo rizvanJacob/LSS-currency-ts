@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewTraining } from "../../../@types/training";
@@ -6,6 +6,7 @@ import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import postRequest from "../../../utilities/postRequest";
 import dayjs from "dayjs";
+import { TitleContext } from "../../../App";
 export default function CreateTrainingForm(): JSX.Element {
   const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
   const [training, setTraining] = useState<NewTraining>({
@@ -20,8 +21,12 @@ export default function CreateTrainingForm(): JSX.Element {
     instruction: "",
   });
   const navigate = useNavigate();
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
 
   useEffect(() => {
+    if (setTitle) setTitle("New Training");
     getRequest(`/api/lookup/requirements`, setRequirementTypes);
   }, []);
 
@@ -72,7 +77,9 @@ export default function CreateTrainingForm(): JSX.Element {
   return (
     <fieldset>
       <div className="max-w-lg mx-auto">
-        <h1 className="text-3xl text-center font-bold mb-8">Create Training Session</h1>
+        <h1 className="text-3xl text-center font-bold mb-8">
+          Create Training Session
+        </h1>
         <div className="flex items-center justify-center">
           <Formik initialValues={training} onSubmit={handleFormSubmit}>
             {({ isSubmitting, isValidating, isValid }) => (
@@ -95,7 +102,7 @@ export default function CreateTrainingForm(): JSX.Element {
                         </option>
                       ))}
                     </Field>
-                  {/* <ErrorMessage name="name" /> */}
+                    {/* <ErrorMessage name="name" /> */}
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -114,7 +121,7 @@ export default function CreateTrainingForm(): JSX.Element {
                 </div>
                 <div className="flex items-center">
                   <label className="w-2/4">Start Time:</label>
-                    <div className="w-3/4">
+                  <div className="w-3/4">
                     <Field
                       type="time"
                       id="start_time"
@@ -128,16 +135,16 @@ export default function CreateTrainingForm(): JSX.Element {
                 </div>
                 <div className="flex items-center">
                   <label className="w-2/4">End Date:</label>
-                    <div className="w-3/4">
-                      <Field
-                        type="date"
-                        id="end"
-                        name="end"
-                        value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
-                        className="input-text input input-bordered input-primary w-full max-w-xs"
-                        onChange={handleInputChange}
-                      />
-                      {/* <ErrorMessage name="start_date" /> */}
+                  <div className="w-3/4">
+                    <Field
+                      type="date"
+                      id="end"
+                      name="end"
+                      value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
+                      className="input-text input input-bordered input-primary w-full max-w-xs"
+                      onChange={handleInputChange}
+                    />
+                    {/* <ErrorMessage name="start_date" /> */}
                   </div>
                 </div>
                 <div className="flex items-center">

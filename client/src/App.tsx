@@ -34,9 +34,13 @@ const TRAINEE_ACCOUNT_TYPES = [
 const USER_ACCOUNT_TYPES = [Account.Admin];
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
+export const TitleContext = createContext<React.Dispatch<
+  React.SetStateAction<string>
+> | null>(null);
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     if (!AUTHORISE) {
@@ -54,43 +58,48 @@ function App() {
   }, []);
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      {currentUser ? (
-        <>
-          <div className="App">
-            <Navbar
-              accountType={currentUser.accountType}
-              traineeId={currentUser.trainee?.id}
-            />
-          </div>
-          <Routes>
-            {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
-              <Route path="/users/*" element={<UserRoutes />} />
-            ) : null}
-            {TRAINEE_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
-              <Route path="/trainees/*" element={<TraineesRoutes />} />
-            ) : null}
-            {TRAINING_ACCOUNT_TYPES.includes(
-              Number(currentUser.accountType)
-            ) ? (
-              <Route path="/trainings/*" element={<TrainingRoutes />} />
-            ) : null}
-            <Route path="/logout" element={<LogoutCallback />} />
-            <Route
-              path="/"
-              element={
-                <HomePageCallback
-                  accountType={currentUser.accountType}
-                  traineeId={currentUser.trainee?.id}
-                />
-              }
-            />
-          </Routes>
-        </>
-      ) : (
-        <AuthRoutes setCurrentUser={setCurrentUser} />
-      )}
-    </CurrentUserContext.Provider>
+    <TitleContext.Provider value={setTitle}>
+      <CurrentUserContext.Provider value={currentUser}>
+        {currentUser ? (
+          <>
+            <div className="App">
+              <Navbar
+                accountType={currentUser.accountType}
+                traineeId={currentUser.trainee?.id}
+                title={title}
+              />
+            </div>
+            <Routes>
+              {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
+                <Route path="/users/*" element={<UserRoutes />} />
+              ) : null}
+              {TRAINEE_ACCOUNT_TYPES.includes(
+                Number(currentUser.accountType)
+              ) ? (
+                <Route path="/trainees/*" element={<TraineesRoutes />} />
+              ) : null}
+              {TRAINING_ACCOUNT_TYPES.includes(
+                Number(currentUser.accountType)
+              ) ? (
+                <Route path="/trainings/*" element={<TrainingRoutes />} />
+              ) : null}
+              <Route path="/logout" element={<LogoutCallback />} />
+              <Route
+                path="/"
+                element={
+                  <HomePageCallback
+                    accountType={currentUser.accountType}
+                    traineeId={currentUser.trainee?.id}
+                  />
+                }
+              />
+            </Routes>
+          </>
+        ) : (
+          <AuthRoutes setCurrentUser={setCurrentUser} />
+        )}
+      </CurrentUserContext.Provider>
+    </TitleContext.Provider>
   );
 }
 export default App;

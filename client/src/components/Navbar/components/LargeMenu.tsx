@@ -1,5 +1,5 @@
 import { MenuItem } from "../Navbar";
-import { Link } from "react-router-dom";
+import NavLink from "./NavLink";
 
 type Prop = {
   menuItems: MenuItem[];
@@ -10,15 +10,7 @@ const LargeMenu = ({ menuItems, className }: Prop) => {
   return (
     <div className={className}>
       {menuItems.map((i, index) => {
-        return (
-          <Link
-            className="btn btn-ghost normal-case text-md text-secondary sm:text-lg"
-            to={i.path}
-            key={index}
-          >
-            {i.name}
-          </Link>
-        );
+        return <NavLink to={i.path} display={i.name} key={index} />;
       })}
     </div>
   );

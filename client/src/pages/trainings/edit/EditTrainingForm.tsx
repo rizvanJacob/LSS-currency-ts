@@ -1,85 +1,96 @@
-import { useState, useEffect} from "react";
-import { useParams, useNavigate} from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Training } from "../../../@types/training";
 import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
+import { TitleContext } from "../../../App";
 export default function EditTrainingForm(): JSX.Element {
-    const navigate = useNavigate();
-    const { id } = useParams();
-    const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([])
-    const [training, setTraining] = useState<Training>({ 
-        id: 0,
-        capacity: 0,
-        start: new Date(),
-        end: new Date(),
-        complete: false,
-        requirement: 0,
-        requirements: {
-            name: ''
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
+  const [training, setTraining] = useState<Training>({
+    id: 0,
+    capacity: 0,
+    start: new Date(),
+    end: new Date(),
+    complete: false,
+    requirement: 0,
+    requirements: {
+      name: "",
+    },
+    instruction: "",
+    trainees: [
+      {
+        trainees: {
+          callsign: "",
+          categories: {
+            name: "",
+          },
+          currencies: {
+            expiry: new Date(),
+          },
         },
-        instruction: "",
-        trainees: [
-            {
-                trainees: {
-                    callsign: '',
-                    categories: {
-                        name: '',
-                    },
-                    currencies: {
-                        expiry: new Date()
-                    }
-                }
-            },   
-        ]
+      },
+    ],
+  });
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
+
+  useEffect(() => {
+    getRequest(`/api/trainings/${id}`, setTraining);
+  }, [id, setTraining]);
+
+  useEffect(() => {
+    if (setTitle) setTitle("Edit Training");
+    getRequest(`/api/lookup/requirements`, setRequirementTypes);
+  }, []);
+
+  const handleFormSubmit = async () => {
+    await putRequest(`/api/trainings/${id}`, training, setTraining);
+    navigate(`/trainings`);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setTraining((training) => {
+      if (name === "requirement") {
+        return {
+          ...training,
+          requirement:
+            requirementTypes.find((type) => value === type.name)?.id ?? 0,
+        };
+      } else if (name === "start") {
+        const newStart = dayjs(value).toDate();
+        return { ...training, start: newStart };
+      } else if (name === "end") {
+        const newEnd = dayjs(value).toDate();
+        return { ...training, end: newEnd };
+      } else if (name === "start_time") {
+        const [hours, minutes] = value.split(":");
+        const newStart = dayjs(training.start)
+          .set("hour", parseInt(hours))
+          .set("minute", parseInt(minutes))
+          .toDate();
+        return { ...training, start: newStart };
+      } else if (name === "end_time") {
+        const [hours, minutes] = value.split(":");
+        const newEnd = dayjs(training.end)
+          .set("hour", parseInt(hours))
+          .set("minute", parseInt(minutes))
+          .toDate();
+        return { ...training, end: newEnd };
+      } else {
+        return {
+          ...training,
+          [name]: name === "capacity" ? Number(value) : value,
+        };
+      }
     });
-
-    
-    useEffect(() => {
-        getRequest(`/api/trainings/${id}`, setTraining);
-    }, [id, setTraining]);
-
-    useEffect(() => {
-        getRequest(`/api/lookup/requirements`, setRequirementTypes);
-    }, [])
-
-    const handleFormSubmit = async () => {
-        await putRequest(`/api/trainings/${id}`, training, setTraining);
-        navigate(`/trainings`);
-    };
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setTraining(training => {
-            if (name === 'requirement') {
-            return {
-                ...training,
-                requirement: requirementTypes.find((type) => (value === type.name))?.id ?? 0,
-            };
-            } else if (name === 'start') {
-                const newStart = dayjs(value).toDate();
-                return { ...training, start: newStart }
-            } else if (name === 'end') {
-                const newEnd = dayjs(value).toDate();
-                return { ...training, end: newEnd }
-            } else if (name === 'start_time') {
-                const [hours, minutes] = value.split(':');
-                const newStart = dayjs(training.start).set('hour', parseInt(hours)).set('minute', parseInt(minutes)).toDate();
-                return { ...training, start: newStart }
-            } else if (name === 'end_time') {
-                const [hours, minutes] = value.split(':');
-                const newEnd = dayjs(training.end).set('hour', parseInt(hours)).set('minute', parseInt(minutes)).toDate();
-                return { ...training, end: newEnd }
-            } else {
-                return {
-                    ...training,
-                    [name]: (name==="capacity") ? Number(value) : value
-                };
-            }
-        });
-    };
+  };
 
   return (
     <fieldset>

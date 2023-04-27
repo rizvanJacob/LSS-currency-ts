@@ -5,12 +5,18 @@ import { User } from "../../../@types/user";
 import UnapprovedUsersList from "./UnapprovedUsersList";
 import ProgressBar from "../../../components/ProgressBar";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext } from "../../../App";
+import { TitleContext } from "../../../App";
 
 export default function AllUsersPage(): JSX.Element {
   const [users, setUsers] = useState<User[]>([]);
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
 
   useEffect(() => {
+    if (setTitle) {
+      setTitle("Users Index");
+    }
     getRequest(`/api/users`, setUsers);
   }, []);
 

@@ -1,4 +1,3 @@
-import { Account } from "../../../../../server/src/constants";
 import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,9 +7,8 @@ import { Trainee } from "../../../@types/trainee";
 import CurrencyFieldset from "../../../components/FormFieldsets/CurrencyFieldset";
 import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
-import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
+import { TitleContext } from "../../../App";
 
 const blankTrainee = {
   callsign: "",
@@ -27,9 +25,14 @@ const EditTraineePage = () => {
   const { id } = useParams();
   const [trainee, setTrainee] = useState<Trainee>(blankTrainee);
   const navigate = useNavigate();
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
 
   useEffect(() => {
+    if (setTitle) setTitle("Edit Trainee");
     getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
+      if (setTitle) setTitle(trainee.callsign);
       setLoading(false);
     });
   }, []);
@@ -107,9 +110,6 @@ const EditTraineePage = () => {
 
   return (
     <fieldset>
-      <h1 className="text-3xl text-center font-bold mb-8">
-        Edit Trainee Profile
-      </h1>
       <div className="flex items-center justify-center">
         {!loading ? (
           <Formik initialValues={trainee} onSubmit={handleSubmit}>

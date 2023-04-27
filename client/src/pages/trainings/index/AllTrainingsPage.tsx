@@ -5,13 +5,18 @@ import { Training } from "../../../@types/training";
 import TrainingList from "./TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext } from "../../../App";
+import { CurrentUserContext, TitleContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
+
 export default function AllTrainingsPage(): JSX.Element {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
 
   useEffect(() => {
+    if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings);
   }, []);
 
@@ -19,7 +24,6 @@ export default function AllTrainingsPage(): JSX.Element {
     <div className="p-4 space-y-4">
       {trainings.length > 0 ? (
         <>
-          <h1 className="text-lg font-bold text-black">Training Index</h1>
           {currentUser?.accountType === Account.Trainer ||
           currentUser?.accountType === Account.Admin ? (
             <CreateTrainingButton />
