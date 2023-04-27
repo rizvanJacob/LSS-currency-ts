@@ -19,10 +19,10 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   
 
   return (
-     <div className="flex items-center justify-center">
+     <div className="flex text-center">
       <fieldset>
         <label className="w-2/4">Callsign: </label>
-        <div className="w-3/4">
+        <div>
           <Field
             type="text"
             name="callsign"
@@ -32,7 +32,7 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
           />
         </div>
         <label className="w-2/4">Category: </label>
-        <div className="w-3/4">
+        <div>
           <Field
             as="select"
             type="number"
