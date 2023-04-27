@@ -12,11 +12,21 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
       <table className="table w-full">
         <thead className="bg-blue-500 text-black">
           <tr>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Callsign</th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Category</th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Overall Status</th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">Account Status</th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider" colSpan={2}>Actions</th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+              Callsign
+            </th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+              Category
+            </th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase hidden sm:table-cell tracking-wider">
+              Overall Status
+            </th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+              Account Status
+            </th>
+            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
