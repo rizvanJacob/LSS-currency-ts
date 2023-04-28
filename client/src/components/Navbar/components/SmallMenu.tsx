@@ -1,19 +1,12 @@
-import MenuIcon from "../../../assets/icons/menuIcon.svg";
-import Cross from "../../../assets/icons/cross.svg";
 import { MenuItem } from "../Navbar";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 type Prop = {
   menuItems: MenuItem[];
   className: string;
 };
 
 const SmallMenu = ({ menuItems, className }: Prop) => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const toggleCheckbox = () => {
-    setIsChecked(!isChecked);
-  };
+  const navigate = useNavigate();
   return (
     <div className={className}>
       <div className="dropdown">
@@ -37,6 +30,25 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
           tabIndex={0}
           className="dropdown-content menu bg-secondary rounded-box p-2 w-40 mt-3"
         >
+          <button
+            className="btn btn-ghost justify-start"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-primary"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
           {menuItems.map((i, index) => {
             return (
               <Link
