@@ -160,27 +160,40 @@ const usersController = {
       });
       const existingTrainee = await prisma.trainee.findUnique({
         where: { user: Number(userId) },
+        select: {
+          id: true,
+        }
       });
-
+      console.log("existing trainee id", existingTrainee?.id);
       await prisma.$transaction(async (prisma) => {
         if (existingTrainee) {
+          await prisma.traineeToTraining.deleteMany({
+            where: { trainee: Number(existingTrainee.id)}
+          })
+          await prisma.currency.deleteMany({
+            where: { trainee: Number(existingTrainee.id)},
+          })
           await prisma.trainee.delete({
             where: { user: Number(userId) },
           });
         }
+
         if (existingUser?.accountType === Account.Trainer) {
           await prisma.trainingProvided.deleteMany({
             where: { user: Number(userId) },
           });
         }
-        await prisma.user.delete({
+        
+        prisma.user.delete({
           where: { id: userId },
         });
+
       });
       res.status(200).json({
         message: "User and corresponding relations deleted successfully",
       });
     } catch (err) {
+      console.log(err);
       res.status(500).json({ err });
     }
   },
