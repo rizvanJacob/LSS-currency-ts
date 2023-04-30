@@ -15,17 +15,17 @@ router.get(
   trainingsController.getAllTrainings
 );
 router.get(
-  "/:id",
+  "/:trainingId",
   isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]),
   trainingsController.showTraining
 );
 router.put(
-  "/:id",
+  "/:trainingId",
   isAuth([Account.Admin, Account.Trainer]),
   trainingsController.updateTraining
 );
 router.delete(
-  "/:id",
+  "/:trainingId",
   isAuth([Account.Admin, Account.Trainer]),
   trainingsController.deleteTraining
 );
