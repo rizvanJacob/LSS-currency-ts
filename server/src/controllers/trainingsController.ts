@@ -52,7 +52,8 @@ const trainingsController = {
 
   showTraining: async (req: Request, res: Response, err: any) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.trainingId);
+      console.log("show training", id);
       const training = await prisma.training.findUnique({
         where: { id },
         select: {
@@ -97,7 +98,7 @@ const trainingsController = {
 
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.trainingId);
       const { requirement, start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
@@ -178,7 +179,7 @@ const trainingsController = {
 
   deleteTraining: async (req: Request, res: Response, err: any) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.trainingId);
       await prisma.$transaction(async (prisma) => {
         await prisma.traineeToTraining.deleteMany({
           where: { training: id },

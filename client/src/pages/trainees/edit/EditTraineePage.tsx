@@ -67,7 +67,6 @@ const EditTraineePage = () => {
         }
         return c;
       });
-      // console.log(updatedCurrencies);
       setTrainee({ ...trainee, currencies: updatedCurrencies });
     } else {
       const newCurrency = {

@@ -119,9 +119,10 @@ const isAuth =
     try {
       const authorization = req.headers.authorization;
       const token = authorization?.split(" ")[1].toString();
-      const id = Number(req.params.id);
+      const traineeId = Number(req.params.id);
+      const userId = Number(req.params.userId);
       const trainingId = Number(req.params.trainingId);
-
+      console.log("userId", userId);
       if (!token) {
         console.log("Missing token");
         return res
@@ -140,33 +141,54 @@ const isAuth =
       }
       if (verifiedUser.accountType === Account.TraineeAdmin) {
         console.log("Authorizing trainee admin...");
-        if (id) {
+        if (traineeId) {
           const trainee = await prisma.trainee.findUnique({
-            where: { id },
+            where: { id: traineeId },
             select: { category: true },
           });
-
-          const training = await prisma.training.findUnique({
-            where: { id },
-            select: { requirement: true },
-          });
-
           if (trainee && verifiedUser.authCategory === trainee?.category) {
             console.log("Trainee Admin authorized to access trainees");
             return next();
-          } else if (training) {
+          } else {
+            throw new Error("Trainee Admin not authorized to access trainee from other category");
+          }
+        } else if (trainingId) {
+          const training = await prisma.training.findUnique({
+            where: { id: trainingId },
+            select: { requirement: true },
+          });
+
+         if (training) {
             console.log("Trainee Admin authorized access to trainings");
             return next();
-          }
+          } 
+        } else if (userId) {
+          const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+              id: true,
+            }
+          });
+          console.log("Selected user", user)
+          const trainee = await prisma.trainee.findUnique({
+            where: { user: user?.id },
+            select: {
+              category: true
+            }
+          });
+          if (trainee && verifiedUser.authCategory === trainee.category) {
+            console.log("Trainee Admin authorised access to Trainee user")
+            return next();
+          } 
         } else {
           console.log("Trainee Admin authorized with general access");
           return next();
         }
       } else if (verifiedUser.accountType === Account.Trainee) {
         console.log("Authorizing trainee...");
-        if (id) {
+        if (traineeId) {
           const trainee = await prisma.trainee.findUnique({
-            where: { id },
+            where: { id: traineeId },
             select: { user: true },
           });
 

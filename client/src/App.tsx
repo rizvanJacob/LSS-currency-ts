@@ -31,7 +31,10 @@ const TRAINEE_ACCOUNT_TYPES = [
   Account.Trainee,
   Account.Trainer,
 ];
-const USER_ACCOUNT_TYPES = [Account.Admin];
+const USER_ACCOUNT_TYPES = [
+  Account.Admin,
+  Account.TraineeAdmin
+];
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 
