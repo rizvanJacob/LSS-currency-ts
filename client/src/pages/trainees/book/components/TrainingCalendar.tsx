@@ -7,6 +7,7 @@ import {
   TileClassNameFunc,
   NavigationLabelFunc,
 } from "react-calendar/dist/cjs/shared/types";
+import { useSearchParams } from "react-router-dom";
 
 type Prop = {
   trainings: Training[];
@@ -19,6 +20,13 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
   const datesWithTraining = trainings.map((t) => {
     return dayjs(t.start).toDate();
   });
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const bookedDateString = searchParams.get("selected") as string;
+    const bookedDate = dayjs(bookedDateString).toDate();
+    setDisplayDate(bookedDate);
+  }, []);
 
   useEffect(() => {
     setFlag(-flag);
