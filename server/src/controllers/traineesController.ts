@@ -182,6 +182,7 @@ const book = async (traineeId: number, trainingId: number) => {
         data: { status: 4, updatedAt: dayjs().toDate() },
       });
     }
+    console.log("withdraw without recording");
     return await prisma.traineeToTraining.delete({
       where: { id: existingBooking.id },
     });
@@ -189,7 +190,11 @@ const book = async (traineeId: number, trainingId: number) => {
 
   const training = await prisma.training.findUnique({
     where: { id: trainingId },
-    select: { capacity: true, trainees: { select: { id: true } } },
+    select: {
+      capacity: true,
+      trainees: { select: { id: true } },
+      requirement: true,
+    },
   });
 
   let status = 1;
@@ -197,7 +202,7 @@ const book = async (traineeId: number, trainingId: number) => {
     status = 6;
   }
   console.log("make booking. status: ", status);
-  return await prisma.traineeToTraining.upsert({
+  const upsertTransaction = prisma.traineeToTraining.upsert({
     where: {
       trainee_training: {
         trainee: traineeId,
@@ -214,6 +219,20 @@ const book = async (traineeId: number, trainingId: number) => {
       status: status,
     },
   });
+  const deleteOtherBookingsTransaction = prisma.traineeToTraining.deleteMany({
+    where: {
+      trainee: traineeId,
+      training: { not: trainingId },
+      trainings: { requirement: training?.requirement },
+      status: { in: [1, 6] },
+    },
+  });
+
+  const fulfilments = await Promise.all([
+    upsertTransaction,
+    deleteOtherBookingsTransaction,
+  ]);
+  return fulfilments[0];
 };
 
 const update = async (req: Request, res: Response) => {
