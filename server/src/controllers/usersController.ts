@@ -1,6 +1,7 @@
 import { Account } from "../constants";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+import { loggedInUser } from "../auth-service"
 import dayjs from "dayjs";
 
 const MAX_USERS = 100;
@@ -60,20 +61,42 @@ const usersController = {
   },
 
   getAllUsers: async (req: Request, res: Response, err: any) => {
+    let allUsers;
     try {
-      const allUsers = await prisma.user.findMany({
-        orderBy: {
-          id: "asc",
-        },
-        include: {
-          accountTypes: {
-            select: {
-              name: true,
+      const verifiedUser = loggedInUser(req, res);
+      console.log("Verified user", verifiedUser)
+      if (verifiedUser?.accountType === Account.TraineeAdmin) {
+        const allUsers = await prisma.user.findMany({
+          where: {
+              accountType: Account.Trainee,
+          },
+          orderBy: {
+            id: "asc",
+          },
+          include: {
+            accountTypes: {
+              select: {
+                name: true,
+              }
+            }
+          }
+        });
+        res.status(200).json(allUsers);
+      } else {
+        const allUsers = await prisma.user.findMany({
+          orderBy: {
+            id: "asc",
+          },
+          include: {
+            accountTypes: {
+              select: {
+                name: true,
+              },
             },
           },
-        },
-      });
-      res.status(200).json(allUsers);
+        });
+        res.status(200).json(allUsers);
+      }
     } catch (err) {
       res.status(500).json({ err });
     }
@@ -81,10 +104,9 @@ const usersController = {
 
   getUserById: async (req: Request, res: Response, err: any) => {
     try {
-      const id = parseInt(req.params.id);
-
+      const id = parseInt(req.params.userId);
       const userData = await prisma.user.findUniqueOrThrow({
-        where: { id },
+        where: { id: id },
         select: {
           id: true,
           displayName: true,
@@ -107,7 +129,7 @@ const usersController = {
 
   updateUserById: async (req: Request, res: Response, err: any) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = parseInt(req.params.userId);
       console.log("request body", req.body);
       const { displayName, approved, accountType, authCategory, trainee } =
         req.body;
@@ -151,7 +173,7 @@ const usersController = {
 
   deleteUserById: async (req: Request, res: Response, err: any) => {
     try {
-      const userId = parseInt(req.params.id);
+      const userId = parseInt(req.params.userId);
       const existingUser = await prisma.user.findUnique({
         where: { id: Number(userId) },
         select: {
