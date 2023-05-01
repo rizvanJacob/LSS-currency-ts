@@ -42,7 +42,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    in: [1, 6],
+                    not: 4,
                   },
                 },
                 include: {
