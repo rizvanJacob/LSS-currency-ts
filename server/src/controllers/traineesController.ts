@@ -342,8 +342,6 @@ const checkin = async (req: Request, res: Response) => {
       });
       return res.status(200).json({ message: "Check in successful!" });
     } else {
-      console.log("same day: ", isSameDay);
-      console.log("training start: ", dayjs(training?.start));
       return res
         .status(400)
         .json({ message: "Check in unsucessful. Please try again." });
