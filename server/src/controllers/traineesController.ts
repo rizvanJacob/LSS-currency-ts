@@ -108,7 +108,12 @@ const showBooking = async (req: Request, res: Response) => {
     const booking = await prisma.traineeToTraining.findFirst({
       where: {
         trainee: Number(id),
-        trainings: { requirement: Number(requirementId), complete: false },
+        trainings: {
+          requirement: Number(requirementId),
+          complete: false,
+          start: { gte: dayjs().toDate() },
+        },
+        status: { in: [1, 6] },
       },
       select: {
         status: true,
