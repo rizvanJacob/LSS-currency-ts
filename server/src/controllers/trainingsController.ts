@@ -8,7 +8,12 @@ const trainingsController = {
     try {
       const allTrainings = await prisma.training.findMany({
         where: {
-          ...(requirement ? { requirement: Number(requirement) } : {}),
+          ...(requirement
+            ? {
+                requirement: Number(requirement),
+                start: { gte: dayjs().toDate() },
+              }
+            : {}),
           ...(checkin && user
             ? {
                 trainees: {
@@ -35,6 +40,11 @@ const trainingsController = {
                 },
               },
               trainees: {
+                where: {
+                  status: {
+                    in: [1, 6],
+                  },
+                },
                 include: {
                   trainees: true,
                 },
