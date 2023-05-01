@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import {
   TileDisabledFunc,
   TileClassNameFunc,
-  NavigationLabelArgs,
   NavigationLabelFunc,
 } from "react-calendar/dist/cjs/shared/types";
 
@@ -23,8 +22,6 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
 
   useEffect(() => {
     setFlag(-flag);
-    console.log(displayDate);
-    console.log(flag);
   }, [displayDate]);
 
   const tileDisabled: TileDisabledFunc = ({ date, view }) => {
@@ -55,13 +52,7 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
     setDisplayDate(nextValue);
   };
 
-  const getNavigationLabel: NavigationLabelFunc = ({
-    date,
-    label,
-    view,
-    locale,
-  }) => {
-    console.log(date);
+  const getNavigationLabel: NavigationLabelFunc = ({ date }) => {
     const navDisplay = dayjs(date).format("MMM YY");
     return <h4 className="btn btn-sm sm:btn-wide btn-ghost">{navDisplay}</h4>;
   };

@@ -43,15 +43,16 @@ const BookTrainingPage = () => {
         if (t.id === newTraining.id) {
           return newTraining;
         }
+        t.trainees = t.trainees.filter((booking) => {
+          return (
+            booking.trainee === id &&
+            (booking.status === 1 || booking.status === 6)
+          );
+        });
         return t;
       })
     );
   };
-
-  console.log("trainings");
-  console.log(trainings);
-  console.log("trainings displayed");
-  console.log(displayTrainings);
 
   return (
     <>
