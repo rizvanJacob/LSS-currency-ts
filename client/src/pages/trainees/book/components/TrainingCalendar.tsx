@@ -49,8 +49,24 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
           return dayjs(t).isSame(dayjs(date), "day");
         })
       ) {
+        //tiles with trainings on the date are buttons"
         className = className + " btn btn-tiny";
+        const trainingsOnThisDay = trainings.filter((t) =>
+          dayjs(t.start).isSame(dayjs(date), "day")
+        );
+        //tiles are colour coded according to no of vacancies
+        const overallVacancies = trainingsOnThisDay.reduce(
+          (accumulator, currentTraining) => {
+            accumulator +=
+              currentTraining.capacity - currentTraining.trainees.length;
+            return accumulator;
+          },
+          0
+        );
+        if (overallVacancies) className = className + " btn-success";
+        else className += " btn-warning";
       }
+      //all tiles have min height of 48 px
       className = className + " min-h-[48px]";
     }
     return className;
