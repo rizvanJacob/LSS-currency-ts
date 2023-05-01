@@ -4,10 +4,22 @@ import dayjs from "dayjs";
 const MONTHS_TO_DUE_SOON = 3;
 
 const STATUSES = {
-  current: { message: "Current", color: "green", open: false },
-  dueSoonBooked: { message: "Due Soon, Booked", color: "green", open: false },
-  dueSoon: { message: "Due Soon", color: "orange", open: true },
-  expired: { message: "EXPIRED", color: "red", open: true },
+  current: {
+    message: "Current",
+    className: "badge badge-success",
+    open: false,
+  },
+  dueSoonBooked: {
+    message: "Due Soon, Booked",
+    className: "badge badge-success",
+    open: false,
+  },
+  dueSoon: {
+    message: "Due Soon",
+    className: "badge badge-warning",
+    open: true,
+  },
+  expired: { message: "Expired", className: "badge badge-error", open: true },
 };
 
 export const computeOverallStatus = (

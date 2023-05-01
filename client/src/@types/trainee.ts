@@ -36,7 +36,7 @@ export type Requirement = {
 
 export type CurrencyStatus = {
   message: string;
-  color: string;
+  className: string;
   open: boolean;
 };
 

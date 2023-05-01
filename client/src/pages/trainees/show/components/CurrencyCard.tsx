@@ -22,7 +22,7 @@ const CurrencyCard = ({ currency }: Prop) => {
   const { id } = useParams();
   const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
-    color: "",
+    className: "",
     open: false,
   });
   const [booking, setBooking] = useState<Booking>({
@@ -45,16 +45,24 @@ const CurrencyCard = ({ currency }: Prop) => {
     );
   }, [booking]);
 
+  console.log(status);
+
   return (
     <div className={"collapse collapse-arrow"}>
-      <input type="checkbox" defaultChecked={status.open} />
-      <h4 className={`collapse-title font-semibold text-${status.color}-600`}>
-        {currency?.requirements?.name}
+      <input
+        type="checkbox"
+        checked={status.open}
+        onChange={() => {
+          setStatus({ ...status, open: !status.open });
+        }}
+      />
+      <h4 className="collapse-title font-semibold">
+        <span className="pr-2">{currency?.requirements?.name}</span>
+        <span className={status.className}>{status.message}</span>
       </h4>
       <div className="collapse-content">
         <div className="flex items-center">
           <div className="flex-1 flex-col min-w-max">
-            <p>{status.message}</p>
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
             {booking.status ? (
               <p>
