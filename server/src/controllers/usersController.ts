@@ -18,9 +18,11 @@ const usersController = {
       requirementsProvided,
     } = req.body;
     try {
-      const numUsers = await prisma.user.count();
-      console.log(`There are ${numUsers} records in the database`);
-      if (numUsers < MAX_USERS) {
+      const numTrainees = await prisma.user.count({
+        where: {accountType: Account.Trainee}
+      });
+      console.log(`There are ${numTrainees} trainee user records in the database`);
+      if (numTrainees < MAX_USERS) {
         try {
           await prisma.$transaction(async (prisma) => {
             const user = await prisma.user.create({
@@ -53,7 +55,7 @@ const usersController = {
           res.status(500).json({ message: "Creation of user has failed." });
         }
       } else {
-        res.status(400).json({ message: "Users limit reached" });
+        res.status(400).json({ message: "Trainee Users limit reached" });
       }
     } catch (err) {
       res.status(500).json({ err });
@@ -206,7 +208,7 @@ const usersController = {
           });
         }
         
-        prisma.user.delete({
+        await prisma.user.delete({
           where: { id: userId },
         });
 
