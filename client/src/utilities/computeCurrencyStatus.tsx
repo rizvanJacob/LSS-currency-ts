@@ -1,7 +1,7 @@
 import { Trainee, Currency, CurrencyStatus } from "../@types/trainee";
 import dayjs from "dayjs";
 
-const MONTHS_TO_DUE_SOON = 3;
+const MONTHS_TO_DUE_SOON = 2;
 
 const STATUSES = {
   current: {
@@ -26,17 +26,33 @@ export const computeOverallStatus = (
   trainees: Trainee[],
   setTrainees: React.Dispatch<React.SetStateAction<Trainee[]>>
 ) => {
-  console.log(`trainee count: ${trainees.length}`);
+  console.log(trainees);
   const updatedTrainees = trainees.map((t) => {
-    t.currencies.forEach((c) => {
-      if (isExpired(c.expiry)) {
-        t.status = STATUSES.expired;
-      } else if (isDueSoon(c.expiry)) {
-        t.status = STATUSES.dueSoon;
-      } else {
-        t.status = STATUSES.current;
-      }
-    });
+    const overallStatus = t.currencies.reduce(
+      (status: CurrencyStatus, thisCurrency: Currency) => {
+        if (isExpired(thisCurrency.expiry)) {
+          return STATUSES.expired;
+        }
+        if (isDueSoon(thisCurrency.expiry)) {
+          if (status === STATUSES.dueSoon) return status;
+          const isBookedBeforeExpiry = t.trainings?.find((training) => {
+            return (
+              training.trainings?.requirement === thisCurrency.requirement &&
+              training.status === 1 &&
+              bookingIsBeforeExpiry(
+                thisCurrency.expiry,
+                training.trainings?.start
+              )
+            );
+          });
+          if (isBookedBeforeExpiry) return STATUSES.dueSoonBooked;
+          return STATUSES.dueSoon;
+        }
+        return status;
+      },
+      STATUSES.current
+    );
+    t.status = overallStatus;
     return t;
   });
   setTrainees(updatedTrainees);
@@ -48,6 +64,14 @@ const isExpired = (expiry: Date) => {
 
 const isDueSoon = (expiry: Date) => {
   return dayjs().add(MONTHS_TO_DUE_SOON, "month").isAfter(dayjs(expiry), "day");
+};
+
+const bookingIsBeforeExpiry = (
+  expiry: Date,
+  bookingStart: Date | undefined
+) => {
+  if (!bookingStart) return false;
+  return !dayjs(bookingStart).isAfter(dayjs(expiry), "day");
 };
 
 export const computeStatus = (
@@ -63,11 +87,10 @@ export const computeStatus = (
   if (expired) {
     setStatus(STATUSES.expired);
   } else if (dueSoon) {
-    const isBookedBeforeExpiry = !dayjs(bookedDate).isAfter(
-      dayjs(currency.expiry),
-      "day"
-    );
-    if (bookedStatus === 1 && isBookedBeforeExpiry) {
+    if (
+      bookedStatus === 1 &&
+      bookingIsBeforeExpiry(currency.expiry, bookedDate)
+    ) {
       setStatus(STATUSES.dueSoonBooked);
     } else {
       setStatus(STATUSES.dueSoon);

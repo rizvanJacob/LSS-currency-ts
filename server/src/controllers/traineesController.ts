@@ -59,7 +59,13 @@ const index = async (req: Request, res: Response) => {
               select: { statuses: { select: { name: true } } },
               orderBy: { training: "asc" },
             }
-          : {},
+          : {
+              select: {
+                training: true,
+                status: true,
+                trainings: { select: { requirement: true, start: true } },
+              },
+            },
       },
     });
     if (!trainees) return res.status(400);

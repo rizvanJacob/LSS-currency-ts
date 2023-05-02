@@ -17,7 +17,11 @@ export type Trainee = NewTrainee & {
   };
   currencies: Currency[];
   status?: CurrencyStatus;
-  trainings?: { status: number; statuses?: { name: string } }[];
+  trainings?: {
+    status: number;
+    statuses?: { name: string };
+    trainings?: { requirement: number; start: Date };
+  }[];
 };
 
 export type Currency = {
@@ -37,7 +41,7 @@ export type Requirement = {
 export type CurrencyStatus = {
   message: string;
   className: string;
-  open: boolean;
+  open?: boolean;
 };
 
 export type CompletedTrainees = {
