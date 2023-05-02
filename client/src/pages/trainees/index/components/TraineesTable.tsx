@@ -6,6 +6,11 @@ type Prop = {
   deleteTrainee: any;
 };
 
+const emptyStatus = {
+  message: "",
+  className: "",
+};
+
 const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
   return (
     <div className="overflow-x-auto">
@@ -35,7 +40,7 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
               trainee={t}
               key={t.id}
               category={t.categories.name}
-              overallStatus={t.status?.message || ""}
+              overallStatus={t.status || emptyStatus}
               deleteTrainee={deleteTrainee}
             />
           ))}
