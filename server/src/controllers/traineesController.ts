@@ -2,6 +2,7 @@ import { Account, MONTHS_TO_RECORD_WITHDRAWAL } from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
+import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -18,9 +19,27 @@ const index = async (req: Request, res: Response) => {
             users: { approved: true },
           }
         : {},
-      include: {
+      select: {
+        id: true,
+        callsign: true,
+        category: true,
+        user: true,
         users: { select: { approved: true } },
-        categories: { select: { name: true } },
+        categories: {
+          select: {
+            name: true,
+            requirements: {
+              select: {
+                requirements: {
+                  select: {
+                    id: true,
+                    seniorExtension: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         currencies: training
           ? {
               where: {
@@ -33,7 +52,7 @@ const index = async (req: Request, res: Response) => {
                 },
               },
             }
-          : { select: { expiry: true } },
+          : { select: { expiry: true, seniority: true, requirement: true } },
         trainings: training
           ? {
               where: { training: Number(training) },
@@ -42,6 +61,14 @@ const index = async (req: Request, res: Response) => {
             }
           : {},
       },
+    });
+    if (!trainees) return res.status(400);
+    if (training) return res.status(200).json(trainees);
+
+    trainees.map((trainee) => {
+      trainee.categories.requirements = trimRequirements(trainee);
+      trainee.currencies = trimCurrencies(trainee);
+      return trainee;
     });
     res.status(200).json(trainees);
   } catch (error) {
@@ -70,7 +97,12 @@ const show = async (req: Request, res: Response) => {
             requirements: {
               select: {
                 requirements: {
-                  select: { id: true, name: true, hasSeniority: true, seniorExtension: true },
+                  select: {
+                    id: true,
+                    name: true,
+                    hasSeniority: true,
+                    seniorExtension: true,
+                  },
                 },
               },
             },
@@ -91,15 +123,8 @@ const show = async (req: Request, res: Response) => {
       },
     });
     if (trainee) {
-      trainee.categories.requirements = trainee.categories.requirements.filter((r)=>{
-        if (r.requirements.seniorExtension !== -1) return true
-        const traineeCurrency = trainee.currencies.find((c)=> c.requirement === r.requirements.id)
-        return traineeCurrency?.seniority
-      })
-      trainee.currencies = trainee.currencies.filter((c)=>{
-        const currencyInRequirements = trainee.categories.requirements.find((r)=> {return c.requirement === r.requirements.id})
-        return currencyInRequirements
-      })
+      trainee.categories.requirements = trimRequirements(trainee);
+      trainee.currencies = trimCurrencies(trainee);
       res.status(200).json(trainee);
     } else {
       res.status(404);
