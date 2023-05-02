@@ -96,6 +96,10 @@ const show = async (req: Request, res: Response) => {
         const traineeCurrency = trainee.currencies.find((c)=> c.requirement === r.requirements.id)
         return traineeCurrency?.seniority
       })
+      trainee.currencies = trainee.currencies.filter((c)=>{
+        const currencyInRequirements = trainee.categories.requirements.find((r)=> {return c.requirement === r.requirements.id})
+        return currencyInRequirements
+      })
       res.status(200).json(trainee);
     } else {
       res.status(404);
