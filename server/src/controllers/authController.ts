@@ -16,7 +16,7 @@ type User = {
   };
 };
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
@@ -150,7 +150,9 @@ const isAuth =
             console.log("Trainee Admin authorized to access trainees");
             return next();
           } else {
-            throw new Error("Trainee Admin not authorized to access trainee from other category");
+            throw new Error(
+              "Trainee Admin not authorized to access trainee from other category"
+            );
           }
         } else if (trainingId) {
           const training = await prisma.training.findUnique({
@@ -158,28 +160,28 @@ const isAuth =
             select: { requirement: true },
           });
 
-         if (training) {
+          if (training) {
             console.log("Trainee Admin authorized access to trainings");
             return next();
-          } 
+          }
         } else if (userId) {
           const user = await prisma.user.findUnique({
             where: { id: userId },
             select: {
               id: true,
-            }
+            },
           });
-          console.log("Selected user", user)
+          console.log("Selected user", user);
           const trainee = await prisma.trainee.findUnique({
             where: { user: user?.id },
             select: {
-              category: true
-            }
+              category: true,
+            },
           });
           if (trainee && verifiedUser.authCategory === trainee.category) {
-            console.log("Trainee Admin authorised access to Trainee user")
+            console.log("Trainee Admin authorised access to Trainee user");
             return next();
-          } 
+          }
         } else {
           console.log("Trainee Admin authorized with general access");
           return next();

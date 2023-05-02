@@ -13,7 +13,7 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
   accountType: Account.Admin,
@@ -31,10 +31,7 @@ const TRAINEE_ACCOUNT_TYPES = [
   Account.Trainee,
   Account.Trainer,
 ];
-const USER_ACCOUNT_TYPES = [
-  Account.Admin,
-  Account.TraineeAdmin
-];
+const USER_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin];
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 export const TitleContext = createContext<React.Dispatch<
