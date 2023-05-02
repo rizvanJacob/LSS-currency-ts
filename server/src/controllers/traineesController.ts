@@ -70,7 +70,7 @@ const show = async (req: Request, res: Response) => {
             requirements: {
               select: {
                 requirements: {
-                  select: { id: true, name: true, hasSeniority: true },
+                  select: { id: true, name: true, hasSeniority: true, seniorExtension: true },
                 },
               },
             },
@@ -91,6 +91,11 @@ const show = async (req: Request, res: Response) => {
       },
     });
     if (trainee) {
+      trainee.categories.requirements = trainee.categories.requirements.filter((r)=>{
+        if (r.requirements.seniorExtension !== -1) return true
+        const traineeCurrency = trainee.currencies.find((c)=> c.requirement === r.requirements.id)
+        return traineeCurrency?.seniority
+      })
       res.status(200).json(trainee);
     } else {
       res.status(404);
