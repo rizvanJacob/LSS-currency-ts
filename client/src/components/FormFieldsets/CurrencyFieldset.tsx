@@ -37,7 +37,6 @@ const CurrencyFieldset = ({
             <label className="self-start flex py-3">
               Senior:
               <div className="flex-col">
-                {requirement.hasSeniority && (
                   <Field
                     type="checkbox"
                     id={requirement.id}
@@ -45,8 +44,8 @@ const CurrencyFieldset = ({
                     checked={currency?.seniority}
                     className="checkbox checkbox-secondary ml-4"
                     onChange={handleSeniorityChange}
+                    disabled = {!requirement.hasSeniority ? true : false}
                   />
-                )}
               </div>
             </label>
         </div>
