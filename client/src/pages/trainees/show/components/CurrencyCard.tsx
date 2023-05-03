@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
 import { Link, useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
+import ProgressBar from "../../../../components/ProgressBar";
 
 type Prop = {
   currency: Currency;
@@ -25,6 +26,7 @@ const CurrencyCard = ({ currency }: Prop) => {
     className: "",
     open: false,
   });
+  const [isLoading, setIsLoading] = useState(true);
   const [booking, setBooking] = useState<Booking>({
     status: 0,
   });
@@ -33,7 +35,9 @@ const CurrencyCard = ({ currency }: Prop) => {
     getRequest(
       `/api/trainees/${id}/bookings/${currency.requirement}`,
       setBooking
-    );
+    ).then(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -45,9 +49,9 @@ const CurrencyCard = ({ currency }: Prop) => {
     );
   }, [booking]);
 
-  console.log(status);
-
-  return (
+  return isLoading ? (
+    <ProgressBar />
+  ) : (
     <div className={"collapse collapse-arrow"}>
       <input
         type="checkbox"
