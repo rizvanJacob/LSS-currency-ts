@@ -1,6 +1,7 @@
 import { useState } from "react";
 import putRequest from "../../../../utilities/putRequest";
 import ConfirmPopup from "../../../../components/ConfirmPopup";
+import DialogModal from "../../../../components/DialogModal";
 
 type Prop = {
   traineeId: number;
@@ -14,9 +15,13 @@ const SelfCompleteButton = ({
   handleSelfComplete,
 }: Prop) => {
   const [disableButton, setDisableButton] = useState(false);
-  const [popupOpen, setPopupOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
     setDisableButton(true);
     putRequest(`/api/trainees/${traineeId}/complete/${requirementId}`, {
       completedOn: new Date(),
@@ -32,14 +37,20 @@ const SelfCompleteButton = ({
         className="break-words btn btn-sm btn-outline"
         disabled={disableButton}
         onClick={handleClick}
-      ></button>
-      <ConfirmPopup
-        open={popupOpen}
-        id="modal-1"
-        header="Confirm self-completion?"
-        message="Are you sure you have fulfilled all requirements to refresh this currency?"
-        buttonText="Yes"
-      />
+      >
+        Complete
+      </button>
+      {showModal && (
+        <DialogModal
+          title="Complete recurrency requirements?"
+          isOpened={true}
+          onProceed={handleConfirm}
+          onClose={() => {
+            setShowModal(false);
+          }}
+          message="Are you sure you want to complete this recurrency requirement?"
+        />
+      )}
     </>
   );
 };
