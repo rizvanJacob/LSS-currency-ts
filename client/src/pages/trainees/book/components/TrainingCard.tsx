@@ -19,12 +19,17 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   const bookTraining = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    const response = await fetch(`/api/trainees/${id}/book/${training.id}`, {
-      method: "PUT",
-      headers: {
-        authorization: `bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/trainees/${id}/book/${
+        training.id
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          authorization: `bearer ${token}`,
+        },
+      }
+    );
     const data = await response.json();
     updateTraineesinTraining(data, training, updateTraining);
     setIsLoading(false);

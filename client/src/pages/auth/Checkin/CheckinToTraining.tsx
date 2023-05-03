@@ -17,7 +17,11 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
     event.preventDefault();
     setIsLoading(true);
     const response = await fetch(
-      `/api/trainees/checkin/?user=${user}&training=${training.id}&checkin=true`,
+      `${
+        import.meta.env.VITE_SERVER_URL
+      }/api/trainees/checkin/?user=${user}&training=${
+        training.id
+      }&checkin=true`,
       {
         method: "PUT",
         headers: {

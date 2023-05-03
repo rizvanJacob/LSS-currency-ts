@@ -5,10 +5,11 @@ async function putRequest(
   updatedData: object,
   setState?: React.Dispatch<React.SetStateAction<any>>
 ) {
+  const fullUrl = import.meta.env.VITE_SERVER_URL + url;
   try {
     const token = localStorage.getItem("token");
     console.log("fire put request");
-    const response = await axios.put(url, updatedData, {
+    const response = await axios.put(fullUrl, updatedData, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

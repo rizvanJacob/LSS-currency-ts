@@ -19,7 +19,7 @@ const HomePage = (): JSX.Element => {
     const controller = new AbortController();
     const signal = controller.signal;
     const getAuthUrls = async () => {
-      const res = await fetch("/api", {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api`, {
         signal: signal,
       });
       const data = await res.json();

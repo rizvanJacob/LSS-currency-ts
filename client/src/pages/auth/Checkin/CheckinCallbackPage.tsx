@@ -19,14 +19,18 @@ const CheckinCallbackPage = () => {
 
   useEffect(() => {
     const loginAndGetTrainings = async () => {
-      const response = await fetch(`/api/login/${code}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/api/login/${code}`
+      );
       const data = await response.json();
       jwtoken.current = data.token;
 
       const decodedToken = jwtDecode(data.token) as DecodedToken;
       user.current = decodedToken;
       const trainingsResponse = await fetch(
-        `/api/trainings/?checkin=true&user=${user.current.id}`,
+        `${import.meta.env.VITE_SERVER_URL}/api/trainings/?checkin=true&user=${
+          user.current.id
+        }`,
         { headers: { authorization: `bearer ${jwtoken.current}` } }
       );
       const trainingsData = await trainingsResponse.json();

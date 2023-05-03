@@ -42,13 +42,16 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
     event.preventDefault();
     console.log("submit form");
     setIsLoading(true);
-    await fetch(`/api/trainings/complete/${trainingId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(completedTrainees),
-    });
+    await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/api/trainings/complete/${trainingId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completedTrainees),
+      }
+    );
     await getRequest(`/api/trainees/?training=${trainingId}`, setTrainees);
     setCompletedTrainees([]);
     setTrainingComplete();
@@ -92,7 +95,11 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
           </tbody>
         </table>
       </div>
-      <button className="btn btn-sm btn-secondary" type="submit" disabled={trainingComplete}>
+      <button
+        className="btn btn-sm btn-secondary"
+        type="submit"
+        disabled={trainingComplete}
+      >
         {trainingComplete ? "Completed" : "Complete"}
       </button>
     </form>

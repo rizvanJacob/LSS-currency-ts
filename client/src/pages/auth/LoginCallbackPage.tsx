@@ -30,9 +30,12 @@ const attemptLogin = async (
   code: string,
   navigate: any
 ) => {
-  const response = await fetch(`/api/login/${code}/`, {
-    signal: signal,
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_SERVER_URL}/api/login/${code}/`,
+    {
+      signal: signal,
+    }
+  );
   if (response.ok) {
     const data = await response.json();
     const { token } = data;

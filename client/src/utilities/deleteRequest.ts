@@ -6,8 +6,9 @@ async function deleteRequest(
 ) {
   const token = localStorage.getItem("token");
   console.log("fire delete request");
+  const fullUrl = import.meta.env.VITE_SERVER_URL + url;
   try {
-    await axios.delete(url, {
+    await axios.delete(fullUrl, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
