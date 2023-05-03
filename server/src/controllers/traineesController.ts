@@ -108,6 +108,7 @@ const show = async (req: Request, res: Response) => {
                     name: true,
                     hasSeniority: true,
                     seniorExtension: true,
+                    selfComplete: true,
                   },
                 },
               },

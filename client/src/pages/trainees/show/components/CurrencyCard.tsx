@@ -5,9 +5,12 @@ import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
 import { Link, useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
 import ProgressBar from "../../../../components/ProgressBar";
+import BookButton from "./BookButton";
+import SelfCompleteButton from "./SelfCompleteButton";
 
 type Prop = {
   currency: Currency;
+  selfComplete: boolean;
 };
 
 type Booking = {
@@ -19,7 +22,7 @@ type Booking = {
 
 const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
 
-const CurrencyCard = ({ currency }: Prop) => {
+const CurrencyCard = ({ currency, selfComplete }: Prop) => {
   const { id } = useParams();
   const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
@@ -68,19 +71,22 @@ const CurrencyCard = ({ currency }: Prop) => {
         <div className="flex items-center">
           <div className="flex-1 flex-col min-w-max">
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
-            {booking.status ? (
+            {booking.status && (
               <p>
                 {BOOKING_STATUSES[booking.status]}:{" "}
                 {dayjs(booking.trainings?.start).format("DD-MMM-YY")}
               </p>
-            ) : null}
+            )}
           </div>
-          <Link
-            className="break-words btn btn-sm btn-outline"
-            to={`book/${currency.requirement}/?selected=${booking.trainings?.start}`}
-          >
-            <button>{booking.status ? "Amend" : "Book"}</button>
-          </Link>
+          {selfComplete ? (
+            <SelfCompleteButton />
+          ) : (
+            <BookButton
+              requirement={currency.requirement}
+              trainingStart={booking.trainings?.start}
+              bookingStatus={booking.status}
+            />
+          )}
         </div>
       </div>
     </div>

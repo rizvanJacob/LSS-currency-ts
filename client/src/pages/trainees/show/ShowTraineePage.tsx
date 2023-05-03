@@ -38,7 +38,7 @@ const ShowTraineePage = () => {
             return r.requirements.id === c.requirement;
           })
         ) {
-          return <CurrencyCard currency={c} key={c.id} />;
+          return <CurrencyCard currency={c} key={c.id} selfComplete={false} />;
         }
       })}
     </div>
