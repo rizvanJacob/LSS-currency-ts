@@ -25,7 +25,7 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
   useEffect(() => {
     const bookedDateString = searchParams.get("selected") as string;
     const bookedDate = dayjs(bookedDateString).toDate();
-    setDisplayDate(bookedDate);
+    if (dayjs(bookedDate).isValid()) setDisplayDate(bookedDate);
   }, []);
 
   useEffect(() => {
@@ -92,12 +92,10 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
           prevLabel={
-            <button className="ml-16 sm:ml-5 btn btn-sm btn-outline">
-              {"<"}
-            </button>
+            <div className="ml-16 sm:ml-5 btn btn-sm btn-outline">{"<"}</div>
           }
           prev2Label={<></>}
-          nextLabel={<button className="btn btn-sm btn-outline">{">"}</button>}
+          nextLabel={<div className="btn btn-sm btn-outline">{">"}</div>}
           next2Label={<></>}
           navigationLabel={getNavigationLabel}
           showNeighboringMonth={false}

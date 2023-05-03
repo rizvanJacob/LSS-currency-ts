@@ -10,7 +10,7 @@ async function getRequest(
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     setState(response.data);
     return response;

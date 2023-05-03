@@ -51,8 +51,7 @@ const trainingsController = {
               },
             },
       });
-      console.log("trainings:");
-      console.log(allTrainings);
+      console.log(`Count of trainings: ${allTrainings.length}`);
       res.status(200).json(allTrainings);
     } catch (err) {
       console.log(err);
