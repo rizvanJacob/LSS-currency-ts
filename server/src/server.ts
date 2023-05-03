@@ -11,13 +11,26 @@ import usersRouter from "./routes/usersRouter";
 import traineesRouter from "./routes/traineesRouter";
 import lookupRouter from "./routes/lookupRouter";
 import trainingsRouter from "./routes/trainingsRouter";
+import cors from "cors";
+import client from "./config/sgid";
 
 const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../../client/dist")));
 
+const clientUrl = process.env.CLIENT_URL || null;
+if (clientUrl) {
+  const corsOptions = {
+    origin: clientUrl,
+  };
+  app.use(cors(corsOptions));
+  app.options("*", cors(corsOptions));
+} else {
+  app.use(express.static(path.join(__dirname, "../../client/dist")));
+}
+
+// allow cors from the client url
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/trainees", traineesRouter);
