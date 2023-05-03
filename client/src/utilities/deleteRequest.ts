@@ -1,4 +1,5 @@
 import axios from "axios";
+import { buildFullUrl } from "./stringManipulation";
 async function deleteRequest(
   url: string,
   id: number,
@@ -6,9 +7,8 @@ async function deleteRequest(
 ) {
   const token = localStorage.getItem("token");
   console.log("fire delete request");
-  const fullUrl = import.meta.env.VITE_SERVER_URL + url;
   try {
-    await axios.delete(fullUrl, {
+    await axios.delete(buildFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

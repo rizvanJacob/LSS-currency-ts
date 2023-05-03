@@ -1,4 +1,5 @@
 import axios from "axios";
+import { buildFullUrl } from "./stringManipulation";
 
 async function postRequest(
   url: string,
@@ -6,10 +7,9 @@ async function postRequest(
   setState: React.Dispatch<React.SetStateAction<any>>
 ) {
   const token = localStorage.getItem("token");
-  const fullUrl = import.meta.env.VITE_SERVER_URL + url;
   try {
     console.log("data fed into postrequest", data);
-    const response = await axios.post(fullUrl, data, {
+    const response = await axios.post(buildFullUrl(url), data, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

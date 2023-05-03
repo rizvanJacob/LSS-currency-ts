@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Training } from "../../../@types/training";
 import { useNavigate } from "react-router-dom";
+import { buildFullUrl } from "../../../utilities/stringManipulation";
 
 type Prop = {
   training: Training;
@@ -17,11 +18,9 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
     event.preventDefault();
     setIsLoading(true);
     const response = await fetch(
-      `${
-        import.meta.env.VITE_SERVER_URL
-      }/api/trainees/checkin/?user=${user}&training=${
-        training.id
-      }&checkin=true`,
+      buildFullUrl(
+        `/api/trainees/checkin/?user=${user}&training=${training.id}&checkin=true`
+      ),
       {
         method: "PUT",
         headers: {

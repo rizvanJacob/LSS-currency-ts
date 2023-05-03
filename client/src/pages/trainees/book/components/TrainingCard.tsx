@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { buildFullUrl } from "../../../../utilities/stringManipulation";
 
 type Prop = {
   training: Training;
@@ -20,9 +21,7 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     const response = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/api/trainees/${id}/book/${
-        training.id
-      }`,
+      buildFullUrl(`/api/trainees/${id}/book/${training.id}`),
       {
         method: "PUT",
         headers: {

@@ -5,6 +5,7 @@ import { DecodedToken } from "../../../@types/currentUser";
 import CheckinToTraining from "./CheckinToTraining";
 import { Training } from "../../../@types/training";
 import ProgressBar from "../../../components/ProgressBar";
+import { buildFullUrl } from "../../../utilities/stringManipulation";
 
 const CheckinCallbackPage = () => {
   const jwtoken = useRef("");
@@ -19,18 +20,14 @@ const CheckinCallbackPage = () => {
 
   useEffect(() => {
     const loginAndGetTrainings = async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/api/login/${code}`
-      );
+      const response = await fetch(buildFullUrl(`/api/login/${code}`));
       const data = await response.json();
       jwtoken.current = data.token;
 
       const decodedToken = jwtDecode(data.token) as DecodedToken;
       user.current = decodedToken;
       const trainingsResponse = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/api/trainings/?checkin=true&user=${
-          user.current.id
-        }`,
+        buildFullUrl(`/api/trainings/?checkin=true&user=${user.current.id}`),
         { headers: { authorization: `bearer ${jwtoken.current}` } }
       );
       const trainingsData = await trainingsResponse.json();

@@ -1,15 +1,15 @@
 import axios from "axios";
+import { buildFullUrl } from "./stringManipulation";
 
 async function putRequest(
   url: string,
   updatedData: object,
   setState?: React.Dispatch<React.SetStateAction<any>>
 ) {
-  const fullUrl = import.meta.env.VITE_SERVER_URL + url;
   try {
     const token = localStorage.getItem("token");
     console.log("fire put request");
-    const response = await axios.put(fullUrl, updatedData, {
+    const response = await axios.put(buildFullUrl(url), updatedData, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

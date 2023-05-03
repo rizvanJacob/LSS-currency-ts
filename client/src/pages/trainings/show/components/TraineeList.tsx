@@ -4,6 +4,7 @@ import getRequest from "../../../../utilities/getRequest";
 import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
 import ProgressBar from "../../../../components/ProgressBar";
+import { buildFullUrl } from "../../../../utilities/stringManipulation";
 
 type Prop = {
   trainingComplete: boolean | undefined;
@@ -42,16 +43,13 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
     event.preventDefault();
     console.log("submit form");
     setIsLoading(true);
-    await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/api/trainings/complete/${trainingId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(completedTrainees),
-      }
-    );
+    await fetch(buildFullUrl(`/api/trainings/complete/${trainingId}`), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(completedTrainees),
+    });
     await getRequest(`/api/trainees/?training=${trainingId}`, setTrainees);
     setCompletedTrainees([]);
     setTrainingComplete();

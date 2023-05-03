@@ -6,4 +6,13 @@ const toTitleCase = (str: string | undefined) => {
   } else return undefined;
 };
 
-export { toTitleCase };
+const buildFullUrl = (url: string) => {
+  const serverUrl = import.meta.env.VITE_SERVER_URL;
+  if (serverUrl) {
+    return serverUrl + url;
+  } else {
+    return url;
+  }
+};
+
+export { toTitleCase, buildFullUrl };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { buildFullUrl } from "../../utilities/stringManipulation";
 type AuthURLs = {
   login: string;
   checkin: string;
@@ -19,7 +20,7 @@ const HomePage = (): JSX.Element => {
     const controller = new AbortController();
     const signal = controller.signal;
     const getAuthUrls = async () => {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api`, {
+      const res = await fetch(buildFullUrl(`/api`), {
         signal: signal,
       });
       const data = await res.json();
