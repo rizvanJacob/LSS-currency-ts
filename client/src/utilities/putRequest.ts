@@ -15,9 +15,11 @@ async function putRequest(
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response from put request", response);
+    console.log("res status:", !!response.status);
+    console.log("setState func:", !!setState);
     if (response.status === 200 && setState) {
-      setState(response.data);
+      console.log("updating state");
+      await setState(response.data);
     }
     return response;
   } catch (err) {

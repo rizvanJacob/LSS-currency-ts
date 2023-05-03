@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
+import { getNextExpiry } from "./trainingsController";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -159,7 +160,14 @@ const showBooking = async (req: Request, res: Response) => {
       select: {
         status: true,
         trainings: {
-          select: { start: true },
+          select: {
+            start: true,
+            requirements: {
+              select: {
+                selfComplete: true,
+              },
+            },
+          },
         },
       },
     });
@@ -204,81 +212,56 @@ const updateBooking = async (req: Request, res: Response) => {
   console.log(`trainee: ${id}, training: ${trainingId}`);
 };
 
-const book = async (traineeId: number, trainingId: number) => {
-  const existingBooking = await prisma.traineeToTraining.findFirst({
-    where: { trainee: traineeId, training: trainingId },
-    include: {
-      trainings: {
-        select: {
-          start: true,
+const completeRequirement = async (req: Request, res: Response) => {
+  const { id, requirementId } = req.params;
+  const { completedOn } = req.body;
+  try {
+    const currencyTransaction = prisma.currency.findUnique({
+      where: {
+        trainee_requirement: {
+          trainee: Number(id),
+          requirement: Number(requirementId),
         },
       },
-    },
-  });
-  if (existingBooking && existingBooking.status !== 4) {
-    console.log("delete booking");
-    if (
-      dayjs()
-        .add(MONTHS_TO_RECORD_WITHDRAWAL, "months")
-        .isAfter(dayjs(existingBooking.trainings.start))
-    ) {
-      console.log("record withdrawal");
-      return await prisma.traineeToTraining.update({
-        where: { id: existingBooking.id },
-        data: { status: 4, updatedAt: dayjs().toDate() },
-      });
-    }
-    console.log("withdraw without recording");
-    return await prisma.traineeToTraining.delete({
-      where: { id: existingBooking.id },
     });
+    const requirementTransaction = prisma.requirement.findUnique({
+      where: { id: Number(requirementId) },
+    });
+
+    const [currency, requirement] = await Promise.all([
+      currencyTransaction,
+      requirementTransaction,
+    ]);
+
+    if (currency && requirement) {
+      const nextExpiry = getNextExpiry(
+        currency?.expiry,
+        dayjs(completedOn).toDate(),
+        requirement?.rehackPeriod,
+        requirement?.extensionPeriod,
+        true
+      );
+
+      const updatedCurrency = await prisma.currency.update({
+        where: {
+          trainee_requirement: {
+            trainee: Number(id),
+            requirement: Number(requirementId),
+          },
+        },
+        data: {
+          expiry: nextExpiry.toDate(),
+          updatedAt: dayjs().toDate(),
+        },
+      });
+      res.status(200).json(updatedCurrency);
+    } else {
+      res.status(400);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500);
   }
-
-  const training = await prisma.training.findUnique({
-    where: { id: trainingId },
-    select: {
-      capacity: true,
-      trainees: { select: { id: true } },
-      requirement: true,
-    },
-  });
-
-  let status = 1;
-  if (training && training?.trainees.length >= training?.capacity) {
-    status = 6;
-  }
-  console.log("make booking. status: ", status);
-  const upsertTransaction = prisma.traineeToTraining.upsert({
-    where: {
-      trainee_training: {
-        trainee: traineeId,
-        training: trainingId,
-      },
-    },
-    update: {
-      status: status,
-      updatedAt: dayjs().toDate(),
-    },
-    create: {
-      trainee: traineeId,
-      training: trainingId,
-      status: status,
-    },
-  });
-  const deleteOtherBookingsTransaction = prisma.traineeToTraining.deleteMany({
-    where: {
-      trainee: traineeId,
-      training: { not: trainingId },
-      trainings: { requirement: training?.requirement },
-      status: { in: [1, 6] },
-    },
-  });
-
-  const fulfilments = await Promise.all([
-    upsertTransaction,
-    deleteOtherBookingsTransaction,
-  ]);
-  return fulfilments[0];
 };
 
 const update = async (req: Request, res: Response) => {
@@ -423,6 +406,84 @@ export {
   create,
   update,
   updateBooking,
+  completeRequirement,
   checkin,
   deleteController as delete,
+};
+
+const book = async (traineeId: number, trainingId: number) => {
+  const existingBooking = await prisma.traineeToTraining.findFirst({
+    where: { trainee: traineeId, training: trainingId },
+    include: {
+      trainings: {
+        select: {
+          start: true,
+        },
+      },
+    },
+  });
+  if (existingBooking && existingBooking.status !== 4) {
+    console.log("delete booking");
+    if (
+      dayjs()
+        .add(MONTHS_TO_RECORD_WITHDRAWAL, "months")
+        .isAfter(dayjs(existingBooking.trainings.start))
+    ) {
+      console.log("record withdrawal");
+      return await prisma.traineeToTraining.update({
+        where: { id: existingBooking.id },
+        data: { status: 4, updatedAt: dayjs().toDate() },
+      });
+    }
+    console.log("withdraw without recording");
+    return await prisma.traineeToTraining.delete({
+      where: { id: existingBooking.id },
+    });
+  }
+
+  const training = await prisma.training.findUnique({
+    where: { id: trainingId },
+    select: {
+      capacity: true,
+      trainees: { select: { id: true } },
+      requirement: true,
+    },
+  });
+
+  let status = 1;
+  if (training && training?.trainees.length >= training?.capacity) {
+    status = 6;
+  }
+  console.log("make booking. status: ", status);
+  const upsertTransaction = prisma.traineeToTraining.upsert({
+    where: {
+      trainee_training: {
+        trainee: traineeId,
+        training: trainingId,
+      },
+    },
+    update: {
+      status: status,
+      updatedAt: dayjs().toDate(),
+    },
+    create: {
+      trainee: traineeId,
+      training: trainingId,
+      status: status,
+    },
+  });
+  const deleteOtherBookingsTransaction = prisma.traineeToTraining.deleteMany({
+    where: {
+      trainee: traineeId,
+      training: { not: trainingId },
+      trainings: { requirement: training?.requirement },
+      status: { in: [1, 6] },
+    },
+  });
+
+  const fulfilments = await Promise.all([
+    upsertTransaction,
+    deleteOtherBookingsTransaction,
+  ]);
+  return fulfilments[0];
 };

@@ -11,6 +11,7 @@ import SelfCompleteButton from "./SelfCompleteButton";
 type Prop = {
   currency: Currency;
   selfComplete: boolean;
+  handleSelfComplete: (currencyId: number, newExpiry: Date) => void;
 };
 
 type Booking = {
@@ -22,7 +23,7 @@ type Booking = {
 
 const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
 
-const CurrencyCard = ({ currency, selfComplete }: Prop) => {
+const CurrencyCard = ({ currency, selfComplete, handleSelfComplete }: Prop) => {
   const { id } = useParams();
   const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
@@ -50,7 +51,7 @@ const CurrencyCard = ({ currency, selfComplete }: Prop) => {
       booking.trainings?.start,
       setStatus
     );
-  }, [booking]);
+  }, [booking, currency]);
 
   return isLoading ? (
     <ProgressBar />
@@ -79,7 +80,11 @@ const CurrencyCard = ({ currency, selfComplete }: Prop) => {
             )}
           </div>
           {selfComplete ? (
-            <SelfCompleteButton />
+            <SelfCompleteButton
+              traineeId={Number(id)}
+              requirementId={currency.requirement || 0}
+              handleSelfComplete={handleSelfComplete}
+            />
           ) : (
             <BookButton
               requirement={currency.requirement}

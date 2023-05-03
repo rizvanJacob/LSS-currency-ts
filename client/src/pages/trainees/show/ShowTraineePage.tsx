@@ -27,18 +27,38 @@ const ShowTraineePage = () => {
     if (setTitle && trainee) setTitle(trainee?.callsign);
   }, [trainee]);
 
+  const handleSelfComplete = (requirementId: number, newExpiry: Date) => {
+    if (!trainee) return;
+    setTrainee({
+      ...trainee,
+      currencies: trainee?.currencies.map((c) => {
+        if (c.requirement === requirementId) {
+          return { ...c, expiry: newExpiry };
+        } else {
+          return c;
+        }
+      }),
+    });
+  };
+
   return isLoading ? (
     <ProgressBar />
   ) : (
     <div className="flex flex-col mx-auto items-stretch w-screen max-w-md p-3">
       <p className="text-lg">{trainee?.categories.name}</p>
       {trainee?.currencies.map((c) => {
-        if (
-          trainee.categories.requirements?.find((r) => {
-            return r.requirements.id === c.requirement;
-          })
-        ) {
-          return <CurrencyCard currency={c} key={c.id} selfComplete={false} />;
+        const requirement = trainee.categories.requirements?.find((r) => {
+          return r.requirements.id === c.requirement;
+        });
+        if (requirement) {
+          return (
+            <CurrencyCard
+              currency={c}
+              key={c.id}
+              selfComplete={requirement.requirements.selfComplete || false}
+              handleSelfComplete={handleSelfComplete}
+            />
+          );
         }
       })}
     </div>

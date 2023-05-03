@@ -272,12 +272,7 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         ? requirement?.seniorExtension
         : requirement?.extensionPeriod) || 0;
 
-    if (
-      currency?.expiry !== undefined &&
-      training?.end !== undefined &&
-      requirement?.rehackPeriod !== undefined &&
-      extension !== undefined
-    ) {
+    if (currency && requirement && training) {
       const newExpiry = getNextExpiry(
         currency?.expiry,
         training?.end,
@@ -295,11 +290,13 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         },
         data: { expiry: newExpiry.toDate(), updatedAt: dayjs().toDate() },
       });
+    } else {
+      return null;
     }
   } catch (error) {}
 };
 
-function getNextExpiry(
+export function getNextExpiry(
   expiry: Date,
   lastAttended: Date,
   reattemptPeriod: number,

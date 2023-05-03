@@ -41,6 +41,11 @@ router.put(
   ]),
   traineesController.updateBooking
 );
+router.put(
+  "/:id/complete/:requirementId",
+  isAuth([Account.Trainee, Account.TraineeAdmin]),
+  traineesController.completeRequirement
+);
 router.delete(
   "/:id",
   isAuth([Account.Admin, Account.TraineeAdmin]),

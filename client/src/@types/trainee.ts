@@ -36,6 +36,7 @@ export type Requirement = {
   id: number;
   name?: string;
   hasSeniority?: boolean;
+  selfComplete?: boolean;
 };
 
 export type CurrencyStatus = {
