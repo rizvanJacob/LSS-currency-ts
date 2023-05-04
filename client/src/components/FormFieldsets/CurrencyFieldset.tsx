@@ -26,7 +26,7 @@ const CurrencyFieldset = ({
               type="date"
               id={requirement.id}
               name="currencies"
-              className="input-text input input-bordered input-primary w-full max-w-xs text-primary"
+              className="input-text text-primary input input-bordered input-primary w-full max-w-xs"
               value={
                 currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""
               }

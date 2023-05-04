@@ -35,7 +35,11 @@ const TraineeFieldset = ({ trainee, setTrainee }: Props) => {
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setTrainee({ ...trainee, [name]: value });
+    if (name === "category") {
+      setTrainee({ ...trainee, [name]: parseInt(value)})
+    } else {
+      setTrainee({ ...trainee, [name]: value });
+    }
   };
 
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {

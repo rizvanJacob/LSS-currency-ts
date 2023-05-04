@@ -9,7 +9,7 @@ import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import * as Yup from "yup";
 import { TitleContext } from "../../../App";
-
+import { userSchema } from "../../../yupSchemas/userSchema"
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
@@ -44,32 +44,6 @@ export default function EditUserForm(): JSX.Element {
     getRequest(`/api/lookup/categories`, setCategoryTypes);
     getRequest("/api/lookup/requirements", setRequirements);
   }, []);
-
-  const schema =
-    Yup.object().shape({
-      accountType: Yup.number()
-        .default(user.accountType)
-        .required("Account Type is required"),
-      displayName: Yup.string()
-        .default(user.displayName)
-        .required("Display Name is required"),
-      approved: Yup.boolean().default(user.approved),
-      authCategory: Yup.number().default(user.authCategory),
-      categories: Yup.object().default(user.categories),
-      trainee: Yup.object().default(user.trainee),
-      category: Yup.number().when("accountType", () => {
-       return Number(user.accountType) === Account.Trainee
-          ? Yup.number().default(user?.trainee?.category).required("Category is required")
-          : Yup.number().notRequired()
-      }),
-      callsign: Yup.string().when('accountType', () => {
-        return Number(user.accountType) === Account.Trainee
-          ? Yup.string()
-            .default(user.trainee?.callsign)
-            .required("Callsign is required")
-          : Yup.string().notRequired()
-      }),
-    });
 
   const handleFormSubmit = async () => {
     if (!user.approved) {
@@ -143,7 +117,7 @@ export default function EditUserForm(): JSX.Element {
         <div className="flex items-center justify-center">
           <Formik
             initialValues={user}
-            validationSchema={schema}
+            validationSchema={userSchema(user)}
             onSubmit={handleFormSubmit}
           >
             {({ isSubmitting, isValidating, isValid }) => (
