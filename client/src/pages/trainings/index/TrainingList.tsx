@@ -15,7 +15,7 @@ export default function TrainingList({
 }: TrainingListProps): JSX.Element {
   return (
     <div className="overflow-x-auto">
-      <table className="table w-screen">
+      <table className="table w-full">
         <TrainingTableRow />
         <tbody className="bg-white divide-y divide-gray-200">
           {trainings.map((training: Training) => {
@@ -24,15 +24,18 @@ export default function TrainingList({
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
                   {training.requirements.name}
                 </td>
-                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden xs:table-cell">
                   {training.capacity - Object.keys(training.trainees).length}/
                   {training.capacity}
                 </td>
-                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden md:table-cell">
-                  {dayjs(training.start).format("YYYY-MM-DD, HH:mm a")}
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.start).format("D MMM YY")}
                 </td>
-                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden md:table-cell">
-                  {dayjs(training.end).format("YYYY-MM-DD, HH:mm a")}
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.start).format("HH:mm")}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.end).format("HH:mm")}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
                   <ShowTrainingButton training={training} />
