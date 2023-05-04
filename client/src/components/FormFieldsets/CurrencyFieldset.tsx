@@ -34,20 +34,26 @@ const CurrencyFieldset = ({
               required={true}
             />
           </div>
-            <label className="self-start flex py-3">
-              Senior:
-              <div className="flex-col">
-                  <Field
-                    type="checkbox"
-                    id={requirement.id}
-                    name="seniority"
-                    checked={currency?.seniority}
-                    className="checkbox checkbox-secondary ml-4"
-                    onChange={handleSeniorityChange}
-                    disabled = {!requirement.hasSeniority ? true : false}
-                  />
-              </div>
-            </label>
+          <label
+            {...(requirement.hasSeniority
+              ? {
+                  className: "self-start flex py-3",
+                }
+              : { className: "self-start flex py-3 invisible" })}
+          >
+            Senior:
+            <div className="flex-col">
+              <Field
+                type="checkbox"
+                id={requirement.id}
+                name="seniority"
+                checked={currency?.seniority}
+                className="checkbox checkbox-secondary ml-4"
+                onChange={handleSeniorityChange}
+                disabled={!requirement.hasSeniority ? true : false}
+              />
+            </div>
+          </label>
         </div>
       </fieldset>
     </div>
