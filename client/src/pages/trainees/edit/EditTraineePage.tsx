@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
+import { traineeSchema } from "../../../yupSchemas/traineeSchema";
 
 const blankTrainee = {
   callsign: "",
@@ -55,7 +56,11 @@ const EditTraineePage = () => {
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setTrainee({ ...trainee, [name]: value });
+    if (name === "category") {
+      setTrainee({ ...trainee, [name]: parseInt(value)})
+    } else {
+      setTrainee({ ...trainee, [name]: value });
+    }
   };
 
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,9 +116,13 @@ const EditTraineePage = () => {
     <fieldset className="justify-center">
       <div className="flex justify-center">
         {!loading ? (
-          <Formik initialValues={trainee} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={trainee}
+            onSubmit={handleSubmit}
+            validationSchema={traineeSchema(trainee)}
+          >
             {({ isSubmitting, isValidating, isValid }) => (
-              <Form className="space-y-6 text-center m-auto">
+              <Form className="space-y-6 text-center m-auto py-6">
                 <div className="flex justify-center">
                   <TraineeParticularsFieldset
                     trainee={trainee}
@@ -136,7 +145,11 @@ const EditTraineePage = () => {
                   );
                 })}
                 <div className="flex justify-center">
-                  <button className="btn btn-primary" type="submit">
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    disabled={isSubmitting || isValidating || !isValid}
+                  >
                     Update Trainee
                   </button>
                 </div>
