@@ -19,7 +19,6 @@ export default function DeleteUserButton({
   const handleConfirmDelete = async () => {
     try {
       await deleteRequest(`api/users/${user.id}`, user.id, setUsers);
-      // console.log("simulate delete");
     } catch (err) {
       console.error(err);
     }

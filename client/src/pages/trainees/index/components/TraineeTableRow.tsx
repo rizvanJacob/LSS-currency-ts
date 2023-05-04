@@ -1,7 +1,9 @@
 import { CurrencyStatus, Trainee } from "../../../../@types/trainee";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import Edit from "../../../../assets/icons/editIcon.svg";
 import RedCross from "../../../../assets/icons/redCross.svg";
+import DialogModal from "../../../../components/DialogModal";
 
 type Prop = {
   trainee: Trainee;
@@ -16,6 +18,8 @@ const TraineeTableRow = ({
   overallStatus,
   deleteTrainee,
 }: Prop): JSX.Element => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <tr>
       <td>
@@ -44,10 +48,23 @@ const TraineeTableRow = ({
         </Link>
         <button
           className="btn btn-circle btn-outline"
-          onClick={deleteTrainee(trainee.id)}
+          onClick={() => {
+            setShowModal(true);
+          }}
         >
           <img src={RedCross} alt="redCross" />
         </button>
+        {showModal && (
+          <DialogModal
+            title="Delete Trainee?"
+            message={`Do you want to delete ${trainee.callsign}? This action cannot be undone.`}
+            isOpened={showModal}
+            proceedButtonText="Delete"
+            onProceed={deleteTrainee(trainee.id)}
+            closeButtonText="Cancel"
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </td>
     </tr>
   );
