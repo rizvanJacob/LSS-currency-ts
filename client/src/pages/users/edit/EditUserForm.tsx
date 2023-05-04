@@ -46,7 +46,6 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   const schema =
-    user.accountType !== 0 &&
     Yup.object().shape({
       accountType: Yup.number()
         .default(user.accountType)
@@ -58,18 +57,18 @@ export default function EditUserForm(): JSX.Element {
       authCategory: Yup.number().default(user.authCategory),
       categories: Yup.object().default(user.categories),
       trainee: Yup.object().default(user.trainee),
-      category: Yup.number().when("accountType", (accountType) =>
-        Number(accountType) === Account.Trainee
-          ? Yup.number().default(user.category).required("Category is required")
-          : Yup.number().nullable().default(user.category)
-      ),
-      callsign: Yup.string().when("accountType", (accountType) =>
-        Number(accountType) === Account.Trainee
+      category: Yup.number().when("accountType", () => {
+       return Number(user.accountType) === Account.Trainee
+          ? Yup.number().default(user?.trainee?.category).required("Category is required")
+          : Yup.number().notRequired()
+      }),
+      callsign: Yup.string().when('accountType', () => {
+        return Number(user.accountType) === Account.Trainee
           ? Yup.string()
-              .default(user.trainee?.callsign)
-              .required("Callsign is required")
-          : Yup.string().nullable().default(user.trainee?.callsign)
-      ),
+            .default(user.trainee?.callsign)
+            .required("Callsign is required")
+          : Yup.string().notRequired()
+      }),
     });
 
   const handleFormSubmit = async () => {
@@ -148,7 +147,7 @@ export default function EditUserForm(): JSX.Element {
             onSubmit={handleFormSubmit}
           >
             {({ isSubmitting, isValidating, isValid }) => (
-              <Form className="space-y-6">
+              <Form className="space-y-6 py-4">
                 <div className="flex items-center">
                   <label htmlFor="displayName" className="w-2/4">
                     Display Name:
@@ -163,10 +162,9 @@ export default function EditUserForm(): JSX.Element {
                       value={user?.displayName || ""}
                       onChange={handleInputChange}
                     />
-                    <ErrorMessage
-                      name="displayName"
-                      className="error-message"
-                    />
+                    <div className="error-message text-error">
+                      <ErrorMessage name="displayName" />
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -192,10 +190,9 @@ export default function EditUserForm(): JSX.Element {
                         );
                       })}
                     </Field>
-                    <ErrorMessage
-                      name="accountType"
-                      className="error-message"
-                    />
+                    <div className="error-message text-error">
+                      <ErrorMessage name="accountType" />
+                    </div>
                   </div>
                 </div>
 
@@ -221,10 +218,9 @@ export default function EditUserForm(): JSX.Element {
                           </option>
                         ))}
                       </Field>
-                      <ErrorMessage
-                        name="authCategory"
-                        className="error-message"
-                      />
+                      <div className="error-message text-error">
+                        <ErrorMessage name="authCategory" />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -245,10 +241,9 @@ export default function EditUserForm(): JSX.Element {
                           onChange={handleInputChange}
                           className="input-text input input-bordered input-primary w-full max-w-xs"
                         />
-                        <ErrorMessage
-                          name="callsign"
-                          className="error-message"
-                        />
+                        <div className="error-message text-error">
+                          <ErrorMessage name="callsign" />
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center">
@@ -270,17 +265,15 @@ export default function EditUserForm(): JSX.Element {
                           onChange={handleInputChange}
                           className="input-select select select-primary w-full max-w-xs"
                         >
-                          <option value="">Select a category</option>
                           {categoryTypes.map((type) => (
                             <option value={type.name} key={type.id}>
                               {type.name}
                             </option>
                           ))}
                         </Field>
-                        <ErrorMessage
-                          name="category"
-                          className="error-message"
-                        />
+                        <div className="error-message text-error">
+                          <ErrorMessage name="category" />
+                        </div>
                       </div>
                     </div>
                   </>
