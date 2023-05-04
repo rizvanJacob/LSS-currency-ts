@@ -17,7 +17,7 @@ const CurrencyFieldset = ({
 }: Prop) => {
   return (
     <div className="flex justify-center">
-      <fieldset className="card w-72 px-5 bg-primary text-info">
+      <fieldset className="card w-sm px-5 bg-primary text-secondary">
         <label className="card-title py-3">{requirement.name}</label>
         <div className="flex flex-row">
           <label className="self-start py-3 mr-4">Expires:</label>
@@ -26,7 +26,7 @@ const CurrencyFieldset = ({
               type="date"
               id={requirement.id}
               name="currencies"
-              className="input-text input text-primary input-bordered input-primary w-full max-w-xs"
+              className="input-text input input-bordered input-primary w-full max-w-xs"
               value={
                 currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""
               }
@@ -34,20 +34,26 @@ const CurrencyFieldset = ({
               required={true}
             />
           </div>
-            <label className="self-start flex py-3">
-              Senior:
-              <div className="flex-col">
-                  <Field
-                    type="checkbox"
-                    id={requirement.id}
-                    name="seniority"
-                    checked={currency?.seniority}
-                    className="checkbox checkbox-secondary ml-4"
-                    onChange={handleSeniorityChange}
-                    disabled = {!requirement.hasSeniority ? true : false}
-                  />
-              </div>
-            </label>
+          <label
+            {...(requirement.hasSeniority
+              ? {
+                  className: "self-start flex py-3",
+                }
+              : { className: "self-start flex py-3 invisible" })}
+          >
+            Senior:
+            <div className="flex-col">
+              <Field
+                type="checkbox"
+                id={requirement.id}
+                name="seniority"
+                checked={currency?.seniority}
+                className="checkbox checkbox-secondary ml-4"
+                onChange={handleSeniorityChange}
+                disabled={!requirement.hasSeniority ? true : false}
+              />
+            </div>
+          </label>
         </div>
       </fieldset>
     </div>

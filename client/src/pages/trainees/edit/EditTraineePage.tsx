@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
-import { traineeSchema } from "../../../yupSchemas/traineeSchema";
+import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
 
 const blankTrainee = {
   callsign: "",
@@ -119,40 +119,13 @@ const EditTraineePage = () => {
           <Formik
             initialValues={trainee}
             onSubmit={handleSubmit}
-            validationSchema={traineeSchema(trainee)}
           >
             {({ isSubmitting, isValidating, isValid }) => (
-              <Form className="space-y-6 text-center m-auto py-6">
-                <div className="flex justify-center">
-                  <TraineeParticularsFieldset
-                    trainee={trainee}
-                    handleChange={handleTraineeChange}
-                  />
-                </div>
-                {trainee.categories.requirements?.map((r) => {
-                  const { requirements } = r;
-                  const currency = trainee.currencies.find(
-                    (c) => c.requirement === requirements.id
-                  );
-                  return (
-                    <CurrencyFieldset
-                      key={r.requirements.id}
-                      requirement={requirements}
-                      currency={currency}
-                      handleExpiryChange={handleExpiryChange}
-                      handleSeniorityChange={handleSeniorityChange}
-                    />
-                  );
-                })}
-                <div className="flex justify-center">
-                  <button
-                    className="btn btn-primary"
-                    type="submit"
-                    disabled={isSubmitting || isValidating || !isValid}
-                  >
-                    Update Trainee
-                  </button>
-                </div>
+              <Form className="space-y-6 text-center m-auto">
+                <TraineeFieldset trainee={trainee} setTrainee={setTrainee} />
+                <button className="btn btn-primary" type="submit">
+                  Update Trainee
+                </button>
               </Form>
             )}
           </Formik>
