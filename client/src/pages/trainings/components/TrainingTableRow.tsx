@@ -5,7 +5,7 @@ export default function TrainingTableRow() {
         <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
           Requirement
         </th>
-        <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden xs:table-cell">
+        <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden 2xs:table-cell">
           Capacity
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
