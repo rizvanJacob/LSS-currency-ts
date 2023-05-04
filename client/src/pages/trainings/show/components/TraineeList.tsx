@@ -5,6 +5,7 @@ import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
 import ProgressBar from "../../../../components/ProgressBar";
 import { buildFullUrl } from "../../../../utilities/stringManipulation";
+import DialogModal from "../../../../components/DialogModal";
 
 type Prop = {
   trainingComplete: boolean | undefined;
@@ -16,6 +17,7 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [completedTrainees, setCompletedTrainees] = useState<number[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getRequest(`/api/trainees/?training=${trainingId}`, setTrainees).then(
@@ -39,8 +41,7 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const confirmSubmit = async () => {
     console.log("submit form");
     setIsLoading(true);
     await fetch(buildFullUrl(`/api/trainings/complete/${trainingId}`), {
@@ -59,46 +60,65 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   return isLoading ? (
     <ProgressBar />
   ) : (
-    <form className="text-center m-auto" onSubmit={handleSubmit}>
-      <table className="table w-full">
-        <thead className="text-black">
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-            Trainee
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-            Category
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-            Expiry
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden xs:table-cell">
-            Status
-          </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-            Complete
-          </th>
-        </thead>
-        <tbody>
-          {trainees.map((t) => {
-            return (
-              <TraineeListRow
-                trainee={t}
-                key={t.id}
-                handleChange={handleCheck}
-                trainingComplete={trainingComplete}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-      <button
-        className="btn btn-block btn-secondary mt-4 item-left"
-        type="submit"
-        disabled={trainingComplete}
+    <>
+      <form
+        className="text-center m-auto"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setShowModal(true);
+        }}
       >
-        {trainingComplete ? "Completed" : "Complete"}
-      </button>
-    </form>
+        <table className="table w-full">
+          <thead className="text-black">
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+              Trainee
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+              Category
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+              Expiry
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden xs:table-cell">
+              Status
+            </th>
+            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+              Complete
+            </th>
+          </thead>
+          <tbody>
+            {trainees.map((t) => {
+              return (
+                <TraineeListRow
+                  trainee={t}
+                  key={t.id}
+                  handleChange={handleCheck}
+                  trainingComplete={trainingComplete}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+        <button
+          className="btn btn-block btn-secondary mt-4 item-left"
+          type="submit"
+          disabled={trainingComplete}
+        >
+          {trainingComplete ? "Completed" : "Complete"}
+        </button>
+      </form>
+      {showModal && (
+        <DialogModal
+          title="Complete Training?"
+          message="Are you sure you want to complete this training? All trainees marked complete will have their currencies updated. This action cannot be undone."
+          isOpened={showModal}
+          proceedButtonText="Complete"
+          onProceed={confirmSubmit}
+          closeButtonText="Cancel"
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </>
   );
 };
 
