@@ -17,7 +17,7 @@ const CurrencyFieldset = ({
 }: Prop) => {
   return (
     <div className="flex justify-center">
-      <fieldset className="card w-72 px-5 bg-primary text-secondary">
+      <fieldset className="card w-sm px-5 bg-primary text-secondary">
         <label className="card-title py-3">{requirement.name}</label>
         <div className="flex flex-row">
           <label className="self-start py-3 mr-4">Expires:</label>
@@ -26,7 +26,7 @@ const CurrencyFieldset = ({
               type="date"
               id={requirement.id}
               name="currencies"
-              className="input-text input input-bordered input-primary w-full max-w-xs"
+              className="input-text input input-bordered input-primary w-full max-w-xs text-primary"
               value={
                 currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""
               }

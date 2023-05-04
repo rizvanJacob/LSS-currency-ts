@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 const categories = async (req: Request, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
-       orderBy: {
-        name: "asc"
-      }
+      orderBy: {
+        name: "asc",
+      },
     });
     res.status(200).json(categories);
   } catch (error) {
@@ -17,11 +17,22 @@ const categories = async (req: Request, res: Response) => {
 const statuses = async (req: Request, res: Response) => {};
 
 const requirements = async (req: Request, res: Response) => {
+  const { category } = req.query;
+
   try {
     const requirements = await prisma.requirement.findMany({
+      where: category
+        ? {
+            categories: {
+              some: {
+                category: Number(category),
+              },
+            },
+          }
+        : {},
       orderBy: {
-        name: "asc"
-      }
+        name: "asc",
+      },
     });
     res.status(200).json(requirements);
   } catch (error) {
@@ -32,9 +43,9 @@ const requirements = async (req: Request, res: Response) => {
 const accountTypes = async (req: Request, res: Response) => {
   try {
     const accountTypes = await prisma.accountType.findMany({
-       orderBy: {
-        name: "asc"
-      }
+      orderBy: {
+        name: "asc",
+      },
     });
     res.status(200).json(accountTypes);
   } catch (error) {

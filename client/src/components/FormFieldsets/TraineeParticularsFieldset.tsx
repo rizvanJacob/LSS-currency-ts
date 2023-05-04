@@ -4,6 +4,7 @@ import getRequest from "../../utilities/getRequest";
 
 import { NewTrainee } from "../../@types/trainee";
 import { SimpleLookup } from "../../@types/lookup";
+import { CancelTokenSource } from "axios";
 
 type Prop = {
   trainee: NewTrainee;
@@ -14,12 +15,17 @@ const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
-    getRequest("/api/lookup/categories", setCategories);
+    let cancelToken: CancelTokenSource;
+    getRequest("/api/lookup/categories", setCategories).then(({ source }) => {
+      cancelToken = source;
+    });
+    return () => {
+      cancelToken?.cancel();
+    };
   }, []);
-  
 
   return (
-     <div className="flex text-center">
+    <div className="flex text-center">
       <fieldset>
         <label className="w-2/4">Callsign: </label>
         <div>
