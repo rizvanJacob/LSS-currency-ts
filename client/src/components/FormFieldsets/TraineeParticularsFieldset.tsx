@@ -5,6 +5,7 @@ import getRequest from "../../utilities/getRequest";
 import { NewTrainee } from "../../@types/trainee";
 import { SimpleLookup } from "../../@types/lookup";
 import { CancelTokenSource } from "axios";
+import ProgressBar from "../ProgressBar";
 
 type Prop = {
   trainee: NewTrainee;
@@ -12,19 +13,24 @@ type Prop = {
 };
 
 const TraineeParticularsFieldset = ({ trainee, handleChange }: Prop) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
     let cancelToken: CancelTokenSource;
     getRequest("/api/lookup/categories", setCategories).then(({ source }) => {
       cancelToken = source;
+      setIsLoading(false);
     });
     return () => {
       cancelToken?.cancel();
     };
   }, []);
 
-  return (
+  return isLoading ? (
+    <ProgressBar />
+  ) : (
     <div className="flex text-center">
       <fieldset>
         <label className="w-2/4">Callsign: </label>
