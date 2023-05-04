@@ -68,7 +68,7 @@ function App() {
                 traineeId={currentUser.trainee?.id}
                 title={title}
               />
-              <div className="flex-1 overflow-y-scroll">
+              <div className="flex-1 overflow-auto">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
