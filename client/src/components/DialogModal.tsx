@@ -2,18 +2,22 @@ import { useRef, useEffect } from "react";
 
 type Props = {
   title: string;
+  message: string;
   isOpened: boolean;
+  proceedButtonText?: string;
   onProceed: () => void;
+  closeButtonText?: string;
   onClose: () => void;
-  message: React.ReactNode;
 };
 
 const DialogModal = ({
   title,
-  isOpened,
-  onProceed,
-  onClose,
   message,
+  isOpened,
+  proceedButtonText = "Proceed",
+  onProceed,
+  closeButtonText = "Close",
+  onClose,
 }: Props) => {
   const ref: any = useRef(null);
 
@@ -36,20 +40,23 @@ const DialogModal = ({
 
   return (
     <dialog
-      className="card w-96 bg-neutral text-primary"
+      className="card shadow-xl w-96 bg-neutral text-primary overflow-hidden"
       ref={ref}
       onClick={onClose}
       onKeyDown={onClose}
     >
-      <div className="flex flex-col gap-y-2" onClick={preventAutoClose}>
+      <div
+        className="flex flex-col gap-y-2 max-w-sm"
+        onClick={preventAutoClose}
+      >
         <h3 className="font-bold text-lg capitalize">{title}</h3>
-        <p>{message}</p>
+        <p className="py-2 whitespace-normal break-normal text-left">{message}</p>
         <div className="flex justify-end gap-x-2">
           <button className="btn btn-primary btn-sm" onClick={onClose}>
-            Close
+            {closeButtonText}
           </button>
           <button className="btn btn-primary btn-sm" onClick={proceedAndClose}>
-            Proceed
+            {proceedButtonText}
           </button>
         </div>
       </div>
