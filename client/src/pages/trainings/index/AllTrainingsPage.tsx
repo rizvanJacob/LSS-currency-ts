@@ -25,11 +25,9 @@ export default function AllTrainingsPage(): JSX.Element {
       {trainings.length > 0 ? (
         <>
           {currentUser?.accountType === Account.Trainer ||
-          currentUser?.accountType === Account.Admin ? (
-            <CreateTrainingButton />
-          ) : (
-            <></>
-          )}
+            (currentUser?.accountType === Account.Admin && (
+              <CreateTrainingButton />
+            ))}
           <TrainingList
             trainings={trainings as Training[]}
             setTrainings={

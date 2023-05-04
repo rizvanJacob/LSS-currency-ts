@@ -62,38 +62,42 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         {currentUser ? (
           <>
-            <div className="App">
+            <div className="App h-screen flex flex-col">
               <Navbar
                 accountType={currentUser.accountType}
                 traineeId={currentUser.trainee?.id}
                 title={title}
               />
-            </div>
-            <Routes>
-              {USER_ACCOUNT_TYPES.includes(Number(currentUser.accountType)) ? (
-                <Route path="/users/*" element={<UserRoutes />} />
-              ) : null}
-              {TRAINEE_ACCOUNT_TYPES.includes(
-                Number(currentUser.accountType)
-              ) ? (
-                <Route path="/trainees/*" element={<TraineesRoutes />} />
-              ) : null}
-              {TRAINING_ACCOUNT_TYPES.includes(
-                Number(currentUser.accountType)
-              ) ? (
-                <Route path="/trainings/*" element={<TrainingRoutes />} />
-              ) : null}
-              <Route path="/logout" element={<LogoutCallback />} />
-              <Route
-                path="/"
-                element={
-                  <HomePageCallback
-                    accountType={currentUser.accountType}
-                    traineeId={currentUser.trainee?.id}
+              <div className="flex-1 overflow-y-scroll">
+                <Routes>
+                  {USER_ACCOUNT_TYPES.includes(
+                    Number(currentUser.accountType)
+                  ) ? (
+                    <Route path="/users/*" element={<UserRoutes />} />
+                  ) : null}
+                  {TRAINEE_ACCOUNT_TYPES.includes(
+                    Number(currentUser.accountType)
+                  ) ? (
+                    <Route path="/trainees/*" element={<TraineesRoutes />} />
+                  ) : null}
+                  {TRAINING_ACCOUNT_TYPES.includes(
+                    Number(currentUser.accountType)
+                  ) ? (
+                    <Route path="/trainings/*" element={<TrainingRoutes />} />
+                  ) : null}
+                  <Route path="/logout" element={<LogoutCallback />} />
+                  <Route
+                    path="/"
+                    element={
+                      <HomePageCallback
+                        accountType={currentUser.accountType}
+                        traineeId={currentUser.trainee?.id}
+                      />
+                    }
                   />
-                }
-              />
-            </Routes>
+                </Routes>
+              </div>
+            </div>
           </>
         ) : (
           <AuthRoutes setCurrentUser={setCurrentUser} />
