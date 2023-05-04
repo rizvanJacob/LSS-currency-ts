@@ -121,7 +121,7 @@ const EditTraineePage = () => {
             onSubmit={handleSubmit}
           >
             {({ isSubmitting, isValidating, isValid }) => (
-              <Form className="space-y-6 text-center m-auto">
+              <Form className="space-y-6 text-center m-auto py-6">
                 <TraineeFieldset trainee={trainee} setTrainee={setTrainee} />
                 <button className="btn btn-primary" type="submit">
                   Update Trainee
