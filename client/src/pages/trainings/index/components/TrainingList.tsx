@@ -37,6 +37,14 @@ export default function TrainingList({
                 <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
                   {dayjs(training.end).format("HH:mm")}
                 </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-xs"
+                    disabled
+                    checked={training.complete}
+                  />
+                </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
                   <ShowTrainingButton training={training} />
                 </td>

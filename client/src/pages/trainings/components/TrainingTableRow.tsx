@@ -5,7 +5,7 @@ export default function TrainingTableRow() {
         <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
           Requirement
         </th>
-        <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden 2xs:table-cell">
+        <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden 2xs:table-cell">
           Capacity
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
@@ -14,8 +14,11 @@ export default function TrainingTableRow() {
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
           Start
         </th>
-        <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
+        <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
           End
+        </th>
+        <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
+          Complete
         </th>
         <th className="px-0 py-2 text-center text-xs font-medium uppercase tracking-wider">
           Actions
