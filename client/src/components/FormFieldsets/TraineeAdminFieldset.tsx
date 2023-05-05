@@ -1,4 +1,4 @@
-import { Field } from "formik";
+import { Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import getRequest from "../../utilities/getRequest";
 
@@ -34,49 +34,55 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
   }, [includeTrainee, user]);
 
   return (
-     <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <fieldset>
         <label className="w-2/4">Display Name:</label>
-          <div className="w-3/4">
-            <Field
-              type="text"
-              id="displayName"
-              name="displayName"
-              value={user.displayName}
-              onChange={handleChange}
-              className="input-text input input-bordered input-primary w-full max-w-xs"
-            />
+        <div className="w-3/4">
+          <Field
+            type="text"
+            id="displayName"
+            name="displayName"
+            value={user.displayName}
+            onChange={handleChange}
+            className="input-text input input-bordered input-primary w-full max-w-xs"
+          />
+          <div className="error-message text-error">
+            <ErrorMessage name="displayName" />
           </div>
+        </div>
         <label className="w-2/4">Authorized Category: </label>
-           <div className="w-3/4">
-              <Field
-                as="select"
-                name="authCategory"
-                value={user.authCategory}
-                className="input-select select select-primary w-full max-w-xs"
-                onChange={handleChange}
-              >
-                <option value="">Select Authorized Category</option>
-                {categories?.map((c) => {
-                  return (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  );
-                })}
-              </Field>
+        <div className="w-3/4">
+          <Field
+            as="select"
+            name="authCategory"
+            value={user.authCategory}
+            className="input-select select select-primary w-full max-w-xs"
+            onChange={handleChange}
+          >
+            <option value="">Select Authorized Category</option>
+            {categories?.map((c) => {
+              return (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              );
+            })}
+          </Field>
+          <div className="error-message text-error">
+            <ErrorMessage name="authCategory" />
           </div>
-        
+        </div>
+
         <label className="w-2/4">Include Trainee account:</label>
-          <div className="w-3/4">
-            <Field
-              name="includeTrainee"
-              type="checkbox"
-              checked={includeTrainee}
-              className="checkbox"
-              onChange={() => setIncludeTrainee(!includeTrainee)}
-            />
-          </div>
+        <div className="w-3/4">
+          <Field
+            name="includeTrainee"
+            type="checkbox"
+            checked={includeTrainee}
+            className="checkbox"
+            onChange={() => setIncludeTrainee(!includeTrainee)}
+          />
+        </div>
       </fieldset>
     </div>
   );

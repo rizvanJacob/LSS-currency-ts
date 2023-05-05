@@ -14,6 +14,7 @@ import TrainerFieldset from "../../components/FormFieldsets/TrainerFieldset";
 import { SimpleLookup } from "../../@types/lookup";
 import { NewUser } from "../../@types/user";
 import { NewTrainee } from "../../@types/trainee";
+import { signUpPageSchema } from "../../yupSchemas/signUpPageSchema";
 
 const blankUser = {
   displayName: "",
@@ -95,21 +96,27 @@ const SignUpPage = (): JSX.Element => {
       [name]: name === "accountType" ? Number(value) : value,
     });
   };
-
-  const handleTraineeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  
+  const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setTrainee({
-      ...trainee,
-      [name]: name === "category" ? Number(value) : value,
-    });
+    if (name === "category") {
+      setTrainee({ ...trainee, [name]: parseInt(value) });
+    } else {
+      setTrainee({ ...trainee, [name]: value });
+    }
   };
 
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-3xl text-center font-bold mb-8">Request for an account</h1>
       <div className="flex items-center justify-center">
-        <Formik initialValues={user as any} onSubmit={handleSubmit}>
-          {({ isSubmitting, isValidating, isValid }) => (
+        <Formik
+          initialValues={{ ...user, ...trainee }}
+          onSubmit={handleSubmit}
+          enableReinitialize
+          validationSchema={signUpPageSchema(user)}
+        >
+          {({ isSubmitting, isValidating, isValid}) => (
             <Form className="space-y-6">
               <div className="flex items-center">
                 <fieldset>
