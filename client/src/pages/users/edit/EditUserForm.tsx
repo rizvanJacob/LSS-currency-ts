@@ -10,6 +10,8 @@ import putRequest from "../../../utilities/putRequest";
 import * as Yup from "yup";
 import { TitleContext } from "../../../App";
 import { userSchema } from "../../../yupSchemas/userSchema"
+import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
+
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
@@ -89,28 +91,6 @@ export default function EditUserForm(): JSX.Element {
     });
   };
 
-  /*   const changeRequirementsProvided = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = Number(event.target.value);
-    if (requirements.includes(value)) {
-      setRequirements(requirements.filter((r) => r !== value));
-      setUser({
-      ...user,
-      trainings: user.trainings?.filter((t) => t.requirement !== value)
-    });
-    } else {
-      setRequirements([...requirements, value]);
-      setUser({
-      ...user,
-      trainings: [
-        ...(user.trainings ?? []),
-        { requirement: value }
-      ]
-    });
-    }
-  }; */
-
   return (
     <fieldset>
       <div className="max-w-lg mx-auto">
@@ -122,6 +102,7 @@ export default function EditUserForm(): JSX.Element {
           >
             {({ isSubmitting, isValidating, isValid }) => (
               <Form className="space-y-6 py-4">
+                {/* <AdminFieldSet user={user} handleChange={handleInputChange} /> */} 
                 <div className="flex items-center">
                   <label htmlFor="displayName" className="w-2/4">
                     Display Name:
@@ -252,26 +233,6 @@ export default function EditUserForm(): JSX.Element {
                     </div>
                   </>
                 )}
-                {/*               {user.accountType === Account.Trainer && (
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <label htmlFor="requirements">Training Provided:</label>
-                      {requirements?.map((r) => {
-                        return (
-                          <label key={r.id}>
-                            <Field
-                              type="checkbox"
-                              name="requirements"
-                              value={r.id}
-                              checked={requirements.includes(r.id)}
-                              onChange={changeRequirementsProvided}
-                            />
-                            {r.name}
-                          </label>
-                        );
-                      })}
-                    <ErrorMessage name="requirementsProvided" />
-                  </div>
-                )} */}
                 <div className="flex justify-center">
                   {!user?.approved ? (
                     <button
