@@ -68,7 +68,7 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   ) : (
     <>
       <form
-        className="text-center m-auto"
+        className="text-center"
         onSubmit={(e) => {
           e.preventDefault();
           setShowModal(true);

@@ -68,7 +68,7 @@ function App() {
                 traineeId={currentUser.trainee?.id}
                 title={title}
               />
-              <div className="flex-1 overflow-auto w-screen max-w-3xl flex flex-col items-stretch self-center p-2 space-y-2">
+              <div className="flex-1 overflow-auto w-screen max-w-3xl flex flex-col items-stretch self-center p-2 space-y-2 justify-start">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
