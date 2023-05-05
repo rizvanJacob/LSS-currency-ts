@@ -24,10 +24,10 @@ export default function AllUsersPage(): JSX.Element {
   const approvedUsers = users.filter((user) => user.approved);
 
   return users.length ? (
-    <div className="p-4 space-y-4">
+    <>
       {notApprovedUsers.length > 0 ? (
         <>
-          <h1 className="text-lg font-bold">Pending approval:</h1>
+          <h1 className="text-lg font-bold self-start">Pending approval:</h1>
           <UnapprovedUsersList
             users={notApprovedUsers as User[]}
             setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
@@ -37,12 +37,12 @@ export default function AllUsersPage(): JSX.Element {
         <></>
       )}
 
-      <h1 className="text-lg font-bold"> Approved Users:</h1>
+      <h1 className="text-lg font-bold self-start"> Approved Users:</h1>
       <ApprovedUsersList
         users={approvedUsers as User[]}
         setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
       />
-    </div>
+    </>
   ) : (
     <ProgressBar />
   );

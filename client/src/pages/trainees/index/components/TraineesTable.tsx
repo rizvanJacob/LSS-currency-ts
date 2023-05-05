@@ -13,7 +13,7 @@ const emptyStatus = {
 
 const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-y-auto overflow-x-hidden">
       <table className="table w-full">
         <thead className="bg-blue-500 text-black">
           <tr>

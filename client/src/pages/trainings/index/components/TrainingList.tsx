@@ -14,35 +14,37 @@ export default function TrainingList({
   setTrainings,
 }: TrainingListProps): JSX.Element {
   return (
-    <table className="table w-full">
-      <TrainingTableRow />
-      <tbody className="bg-white divide-y divide-gray-200">
-        {trainings.map((training: Training) => {
-          return (
-            <tr key={training.id} className="hover:bg-gray-100">
-              <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
-                {training.requirements.name}
-              </td>
-              <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden 2xs:table-cell">
-                {training.capacity - Object.keys(training.trainees).length}/
-                {training.capacity}
-              </td>
-              <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
-                {dayjs(training.start).format("D MMM YY")}
-              </td>
-              <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
-                {dayjs(training.start).format("HH:mm")}
-              </td>
-              <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
-                {dayjs(training.end).format("HH:mm")}
-              </td>
-              <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
-                <ShowTrainingButton training={training} />
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="overflow-y-auto overflow-x-hidden">
+      <table className="table w-full">
+        <TrainingTableRow />
+        <tbody className="bg-white divide-y divide-gray-200">
+          {trainings.map((training: Training) => {
+            return (
+              <tr key={training.id} className="hover:bg-gray-100">
+                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+                  {training.requirements.name}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden 2xs:table-cell">
+                  {training.capacity - Object.keys(training.trainees).length}/
+                  {training.capacity}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.start).format("D MMM YY")}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.start).format("HH:mm")}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.end).format("HH:mm")}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+                  <ShowTrainingButton training={training} />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }

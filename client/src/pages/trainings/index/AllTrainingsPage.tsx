@@ -30,10 +30,6 @@ export default function AllTrainingsPage(): JSX.Element {
     <ProgressBar />
   ) : (
     <>
-      {currentUser?.accountType === Account.Trainer ||
-        (currentUser?.accountType === Account.Admin && (
-          <CreateTrainingButton />
-        ))}
       <TrainingsFilterControls
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
@@ -47,6 +43,10 @@ export default function AllTrainingsPage(): JSX.Element {
       ) : (
         <p>No trainings to show</p>
       )}
+      {currentUser?.accountType === Account.Trainer ||
+        (currentUser?.accountType === Account.Admin && (
+          <CreateTrainingButton />
+        ))}
     </>
   );
 }
