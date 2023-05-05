@@ -53,6 +53,7 @@ const getMenuItems = (accountType: number, traineeId: number = 0) => {
     ] as MenuItem[],
     [
       { name: "My Currencies", path: `/trainees/${traineeId}` },
+      { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
     ] as MenuItem[],
