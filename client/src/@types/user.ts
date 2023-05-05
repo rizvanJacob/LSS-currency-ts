@@ -5,30 +5,36 @@ export type BasicUser = {
 };
 
 export type TrainerUser = {
-    trainings?: {
-      id?: number;
-      user?: number;
-      requirement?: number;
+  trainings?: {
+    id?: number;
+    user?: number;
+    requirement?: number;
   }[];
-}
-
-export type NewUser = BasicUser & TrainerUser & {
-  openId: string;
-  requirementsProvided?: number[];
 };
 
-export type User = BasicUser & TrainerUser & {
-  id: number;
-  category?: number
-  categories?: {
-    name: string;
-  }
-  accountTypes?: {
-    name: string;
+export type NewUser = BasicUser &
+  TrainerUser & {
+    openId: string;
+    requirementsProvided?: number[];
   };
-  approved: boolean;
-  trainee?: {
-    callsign?: string;
+
+export type User = BasicUser &
+  TrainerUser & {
+    id: number;
     category?: number;
-  }
+    categories?: {
+      name: string;
+    };
+    accountTypes?: {
+      name: string;
+    };
+    approved: boolean;
+    trainee?: {
+      callsign?: string;
+      category?: number;
+    };
+  };
+
+export type UserFilterOptions = {
+  accountType: number;
 };
