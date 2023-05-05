@@ -13,7 +13,7 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
   accountType: Account.Admin,
