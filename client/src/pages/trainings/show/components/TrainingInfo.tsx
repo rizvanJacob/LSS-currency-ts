@@ -14,18 +14,17 @@ export default function TrainingInfo({
   setTrainings,
 }: TrainingProps): JSX.Element {
   return (
-    <div className="card w-full sm:w-96 text-white shadow-xl bg-primary m-auto mt-8 mb-8">
+    <div className="card w-full 2xs:w-96 text-white shadow-xl bg-primary m-auto mt-8 mb-8">
       <div className="card-body">
-        <div>
-          <h2 className="card-title">{training.requirements.name}</h2>
-          <h2>Date: {dayjs(training.start).format("DD MMM YY")}</h2>
-          <h2>Start: {dayjs(training.start).format("HH:mm")}</h2>
-          <h2>End: {dayjs(training.end).format("HH:mm")}</h2>
-          <h2>
-            Vacancies:{" "}
-            {training.capacity - Object.keys(training.trainees).length}/
-            {training.capacity}
-          </h2>
+        <h2 className="card-title">{training.requirements.name}</h2>
+        <div className="text-left">
+          <p>Date: {dayjs(training.start).format("DD MMM YY")}</p>
+          <p>Start: {dayjs(training.start).format("HH:mm")}</p>
+          <p>End: {dayjs(training.end).format("HH:mm")}</p>
+        <p>
+          Vacancies: {training.capacity - Object.keys(training.trainees).length}
+          /{training.capacity}
+        </p>
         </div>
         <div className="card-actions justify-end">
           <EditTrainingButton training={training} />
