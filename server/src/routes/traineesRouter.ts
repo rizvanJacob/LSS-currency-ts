@@ -43,7 +43,7 @@ router.put(
 );
 router.put(
   "/:id/complete/:requirementId",
-  isAuth([Account.Trainee, Account.TraineeAdmin]),
+  isAuth([Account.Trainee, Account.TraineeAdmin, Account.Admin]),
   traineesController.completeRequirement
 );
 router.delete(

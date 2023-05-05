@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { Training } from "../../../@types/training";
-import TrainingTableRow from "../components/TrainingTableRow";
-import ShowTrainingButton from "../show/components/ShowTrainingButton";
+import { Training } from "../../../../@types/training";
+import TrainingTableRow from "../../components/TrainingTableRow";
+import ShowTrainingButton from "../../show/components/ShowTrainingButton";
 
 export type TrainingListProps = {
   trainings: Training[];

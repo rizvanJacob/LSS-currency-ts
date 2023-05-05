@@ -30,3 +30,8 @@ export type Training = NewTraining & {
     };
   }[];
 };
+
+export type TrainingFilterOptions = {
+  requirement: number;
+  showCompleted: boolean;
+};
