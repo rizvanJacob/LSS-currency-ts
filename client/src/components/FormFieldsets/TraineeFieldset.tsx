@@ -12,7 +12,7 @@ type Props = {
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
 };
 
-const TraineeFieldset = ({ trainee, setTrainee }: Props) => {
+const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
   const [requirements, setRequirements] = useState<Requirement[]>(
     trainee.categories.requirements?.map((r) => r.requirements) || []
   );
@@ -33,10 +33,11 @@ const TraineeFieldset = ({ trainee, setTrainee }: Props) => {
     };
   }, [trainee.category]);
 
+
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "category") {
-      setTrainee({ ...trainee, [name]: parseInt(value)})
+      setTrainee({ ...trainee, [name]: parseInt(value) });
     } else {
       setTrainee({ ...trainee, [name]: value });
     }

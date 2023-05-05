@@ -1,15 +1,15 @@
-import { Field } from "formik";
+import { Field, ErrorMessage } from "formik";
 
-import { NewUser } from "../../@types/user";
+import { User } from "../../@types/user";
 
 type Props = {
-  user: NewUser;
+  user: User;
   handleChange: any;
 };
 
 const AdminFieldSet = ({ user, handleChange }: Props) => {
   return (
-     <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <fieldset>
         <label className="w-2/4">
           <div className="w-3/4">
@@ -22,6 +22,9 @@ const AdminFieldSet = ({ user, handleChange }: Props) => {
               value={user.displayName}
               onChange={handleChange}
             />
+            <div className="error-message text-error">
+              <ErrorMessage name="displayName" />
+            </div>
           </div>
         </label>
       </fieldset>

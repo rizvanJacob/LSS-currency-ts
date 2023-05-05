@@ -2,14 +2,13 @@ import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
-import TraineeParticularsFieldset from "../../../components/FormFieldsets/TraineeParticularsFieldset";
 import { Trainee } from "../../../@types/trainee";
-import CurrencyFieldset from "../../../components/FormFieldsets/CurrencyFieldset";
-import dayjs from "dayjs";
 import putRequest from "../../../utilities/putRequest";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
 import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
+import { traineeSchema } from "../../../yupSchemas/traineeSchema";
+import * as Yup from 'yup';
 
 const blankTrainee = {
   callsign: "",
@@ -20,6 +19,7 @@ const blankTrainee = {
   users: { approved: false },
   currencies: [],
 };
+
 
 const EditTraineePage = () => {
   const [loading, setLoading] = useState(true);
@@ -54,73 +54,27 @@ const EditTraineePage = () => {
     }
   };
 
-  const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    if (name === "category") {
-      setTrainee({ ...trainee, [name]: parseInt(value) });
-    } else {
-      setTrainee({ ...trainee, [name]: value });
-    }
-  };
-
-  const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, name, value } = event.target;
-    console.log("expiry change");
-    console.log(id, value);
-
-    if (trainee.currencies.find((c) => c.requirement === Number(id))) {
-      const updatedCurrencies = trainee.currencies.map((c) => {
-        if (c.requirement === Number(id)) {
-          c.expiry = dayjs(value).toDate();
-        }
-        return c;
-      });
-      setTrainee({ ...trainee, currencies: updatedCurrencies });
-    } else {
-      const newCurrency = {
-        requirement: Number(id),
-        expiry: dayjs(value).toDate(),
-      };
-      const updatedCurrencies = [...trainee.currencies, newCurrency];
-      setTrainee({ ...trainee, currencies: updatedCurrencies });
-    }
-  };
-
-  const handleSeniorityChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, name, checked } = event.target;
-    console.log(id, checked);
-    if (trainee.currencies.find((c) => c.requirement === Number(id))) {
-      console.log("update");
-      const updatedCurrencies = trainee.currencies.map((c) => {
-        if (c.requirement === Number(id)) {
-          c.seniority = Boolean(checked);
-        }
-        return c;
-      });
-      setTrainee({ ...trainee, currencies: updatedCurrencies });
-    } else {
-      console.log("create");
-      const newCurrency = {
-        requirement: Number(id),
-        expiry: dayjs().toDate(),
-        seniority: !Boolean(checked),
-      };
-      const updatedCurrencies = [...trainee.currencies, newCurrency];
-      setTrainee({ ...trainee, currencies: updatedCurrencies });
-    }
-  };
-
   return (
     <fieldset className="justify-center">
       <div className="flex justify-center">
         {!loading ? (
-          <Formik initialValues={trainee} onSubmit={handleSubmit}>
-            {({ isSubmitting, isValidating, isValid }) => (
+          <Formik
+            initialValues={trainee}
+            enableReinitialize
+            validationSchema={traineeSchema(trainee)}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting, isValidating, isValid}) => (
               <Form className="space-y-6 text-center m-auto py-6">
-                <TraineeFieldset trainee={trainee} setTrainee={setTrainee} />
-                <button className="btn btn-primary" type="submit">
+                <TraineeFieldset
+                  trainee={trainee}
+                  setTrainee={setTrainee}
+                />
+                <button
+                  disabled={isSubmitting || isValidating || !isValid}
+                  className="btn btn-primary"
+                  type="submit"
+                >
                   Update Trainee
                 </button>
               </Form>
