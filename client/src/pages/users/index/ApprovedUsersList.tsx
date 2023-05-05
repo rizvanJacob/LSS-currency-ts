@@ -13,7 +13,7 @@ export default function ApprovedUsersList({
   setUsers,
 }: UsersListProps): JSX.Element {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-y-auto overflow-x-clip">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">
@@ -35,7 +35,7 @@ export default function ApprovedUsersList({
             }
             return (
               <tr key={user.id} className="hover:bg-gray-100">
-                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+                <td className="px-2 py-4 whitespace-nowrap text-left overflow-clip whitespace-nowrap text-sm font-medium text-slate-950">
                   {user.displayName}
                 </td>
                 <td

@@ -68,6 +68,7 @@ const index = async (req: Request, res: Response) => {
               },
             },
       },
+      orderBy: { callsign: "asc" },
     });
     if (!trainees) return res.status(400);
     if (training) return res.status(200).json(trainees);

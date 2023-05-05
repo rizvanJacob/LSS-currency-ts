@@ -23,7 +23,7 @@ const trainingsController = {
             : {}),
         },
         orderBy: {
-          requirement: "asc",
+          start: "desc",
         },
         include: checkin
           ? {

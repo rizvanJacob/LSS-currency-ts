@@ -34,6 +34,10 @@ router.post(
   isAuth([Account.Admin, Account.Trainer]),
   trainingsController.createTraining
 );
-router.put("/complete/:id", trainingsController.completeTraining);
+router.put(
+  "/complete/:id",
+  isAuth([Account.Admin, Account.Trainer]),
+  trainingsController.completeTraining
+);
 
 export default router;
