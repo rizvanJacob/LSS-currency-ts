@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import getRequest from "../../../../utilities/getRequest";
 import TraineeListRow from "./TraineeListRow";
@@ -6,6 +6,9 @@ import { Trainee } from "../../../../@types/trainee";
 import ProgressBar from "../../../../components/ProgressBar";
 import { buildFullUrl } from "../../../../utilities/stringManipulation";
 import DialogModal from "../../../../components/DialogModal";
+import { CurrentUserContext } from "../../../../App";
+import { CurrentUser } from "../../../../@types/currentUser";
+import { CHANGE_TRAINING_ACCESS } from "../../routes/TrainingRoutes";
 
 type Prop = {
   trainingComplete: boolean | undefined;
@@ -18,6 +21,9 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [completedTrainees, setCompletedTrainees] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
+  const showEditControls =
+    currentUser && CHANGE_TRAINING_ACCESS.includes(currentUser.accountType);
 
   useEffect(() => {
     getRequest(`/api/trainees/?training=${trainingId}`, setTrainees).then(
@@ -99,13 +105,15 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
             })}
           </tbody>
         </table>
-        <button
-          className="btn btn-block btn-secondary mt-4 item-left"
-          type="submit"
-          disabled={trainingComplete}
-        >
-          {trainingComplete ? "Completed" : "Complete"}
-        </button>
+        {showEditControls && (
+          <button
+            className="btn btn-block btn-primary mt-4 item-left"
+            type="submit"
+            disabled={trainingComplete}
+          >
+            {trainingComplete ? "Completed" : "Complete"}
+          </button>
+        )}
       </form>
       {showModal && (
         <DialogModal

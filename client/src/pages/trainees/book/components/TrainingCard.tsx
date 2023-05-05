@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -56,7 +56,7 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   return (
     <div className="my-2 py-5 px-5 card bg-sky-50 shadow-xl">
       <div className="flex items-center ">
-        <div className="flex-1 flex-col">
+        <div className="flex-1 flex-col items-start text-left">
           <h4 className="card-title">
             {dayjs(training.start).format("DD MMM YY")}
           </h4>
@@ -66,13 +66,21 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
             Vacancies: {vacancies}/{training.capacity}
           </p>
         </div>
-        <button
-          className="btn btn-outline min-w-max"
-          onClick={bookTraining}
-          disabled={isLoading}
-        >
-          {buttonText}
-        </button>
+        <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
+          <button
+            className="btn btn-secondary min-w-max capitalize"
+            onClick={bookTraining}
+            disabled={isLoading}
+          >
+            {buttonText}
+          </button>
+          <Link
+            className="btn btn-secondary min-w-max"
+            to={`/trainings/${training.id}`}
+          >
+            <button>Details</button>
+          </Link>
+        </div>
       </div>
     </div>
   );

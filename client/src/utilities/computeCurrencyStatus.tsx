@@ -6,22 +6,22 @@ const MONTHS_TO_DUE_SOON = 2;
 const STATUSES = {
   current: {
     message: "Current",
-    className: "badge badge-outline badge-success",
+    className: "badge badge-success",
     open: false,
   },
   dueSoonBooked: {
     message: "Due Soon, Booked",
-    className: "badge badge-outline badge-success",
+    className: "badge badge-success",
     open: false,
   },
   dueSoon: {
     message: "Due Soon",
-    className: "badge badge-outline badge-warning",
+    className: "badge badge-warning",
     open: true,
   },
   expired: {
     message: "Expired",
-    className: "badge badge-outline badge-error",
+    className: "badge badge-error",
     open: true,
   },
 };

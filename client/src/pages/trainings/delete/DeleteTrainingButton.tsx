@@ -33,7 +33,7 @@ export default function DeleteTrainingButton({
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="flex-0 btn btn-square btn-sm btn-secondary text-white"
+        className="flex-0 btn btn-square btn-outline btn-sm btn-primary text-white shadow-md"
       >
         <img src={RedCross} alt="redCross" />
       </button>

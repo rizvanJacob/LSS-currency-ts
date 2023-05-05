@@ -16,7 +16,12 @@ router.get(
 );
 router.get(
   "/:trainingId",
-  isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainer]),
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainee,
+    Account.Trainer,
+  ]),
   trainingsController.showTraining
 );
 router.put(

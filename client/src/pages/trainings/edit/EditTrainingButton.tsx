@@ -8,7 +8,7 @@ export default function EditUserButton({
 }): JSX.Element {
   return (
     <Link className="flex-0" to={`/trainings/${training.id}/edit`}>
-      <button className="mr-4 btn btn-square btn-sm btn-secondary text-white">
+      <button className="mr-4 btn btn-square btn-sm btn-primary btn-outline shadow-md text-white">
         <img src={Edit} alt="edit" />
       </button>
     </Link>

@@ -165,6 +165,7 @@ const showBooking = async (req: Request, res: Response) => {
         status: true,
         trainings: {
           select: {
+            id: true,
             start: true,
             requirements: {
               select: {
