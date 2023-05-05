@@ -190,21 +190,23 @@ const usersController = {
           id: true,
         },
       });
+      console.log("userid", userId);
       console.log("existing trainee id", existingTrainee?.id);
-      await prisma.$transaction(async (prisma) => {
+      await prisma.$transaction(async () => {
         if (existingTrainee) {
           await prisma.traineeToTraining.deleteMany({
-            where: { trainee: Number(existingTrainee.id) },
-          });
-          console.log("traineetotraining deleted");
+
+            where: { trainee: Number(existingTrainee.id)}
+          })
+
           await prisma.currency.deleteMany({
-            where: { trainee: Number(existingTrainee.id) },
-          });
-          console.log("currency deleted");
+            where: { trainee: Number(existingTrainee.id)},
+          })
+
           await prisma.trainee.delete({
             where: { id: Number(existingTrainee.id) },
           });
-          console.log("trainee deleted");
+
         }
 
         if (existingUser?.accountType === Account.Trainer) {
@@ -212,10 +214,14 @@ const usersController = {
             where: { user: Number(userId) },
           });
         }
-
-        prisma.user.delete({
+        
+        await prisma.user.delete({
           where: { id: userId },
         });
+
+      },
+      {
+        timeout: 10000, // default: 5000
       });
       res.status(200).json({
         message: "User and corresponding relations deleted successfully",
