@@ -17,42 +17,44 @@ const CurrencyFieldset = ({
 }: Prop) => {
   return (
     <div className="flex justify-center">
-      <fieldset className="card w-sm px-5 bg-primary text-secondary">
-        <label className="card-title py-3">{requirement.name}</label>
-        <div className="flex flex-row">
-          <label className="self-start py-3 mr-4">Expires:</label>
-          <div className="w-3/4 mr-4">
-            <Field
-              type="date"
-              id={requirement.id}
-              name="currencies"
-              className="input-text text-primary input input-bordered input-primary w-full max-w-xs"
-              value={
-                currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""
-              }
-              onChange={handleExpiryChange}
-              required={true}
-            />
+      <fieldset className="card px-3 bg-primary text-secondary">
+        <label className="card-title py-2 text-md xs:text-xl">
+          {requirement.name}
+        </label>
+        <div className="flex flex-row text-md items-center pb-2 ">
+          <div className="flex flex-col items-start xs:flex-row xs:items-center">
+            <label className="mr-4">Expires:</label>
+            <div className="w-3/4 mr-2">
+              <Field
+                type="date"
+                id={requirement.id}
+                name="currencies"
+                className="input-text text-primary input input-bordered input-primary w-full max-w-xs input-xs xs:input-md"
+                value={
+                  currency ? dayjs(currency?.expiry).format("YYYY-MM-DD") : ""
+                }
+                onChange={handleExpiryChange}
+                required={true}
+              />
+            </div>
           </div>
           <label
             {...(requirement.hasSeniority
               ? {
-                  className: "self-start flex py-3",
+                  className: "flex items-center",
                 }
-              : { className: "self-start flex py-3 invisible" })}
+              : { className: "flex items-center invisible" })}
           >
-            Senior:
-            <div className="flex-col">
-              <Field
-                type="checkbox"
-                id={requirement.id}
-                name="seniority"
-                checked={currency?.seniority}
-                className="checkbox checkbox-secondary ml-4"
-                onChange={handleSeniorityChange}
-                disabled={!requirement.hasSeniority ? true : false}
-              />
-            </div>
+            <Field
+              type="checkbox"
+              id={requirement.id}
+              name="seniority"
+              checked={currency?.seniority}
+              className="checkbox checkbox-secondary mx- checkbox-sm xs:checkbox-md"
+              onChange={handleSeniorityChange}
+              disabled={!requirement.hasSeniority ? true : false}
+            />
+            Senior
           </label>
         </div>
       </fieldset>
