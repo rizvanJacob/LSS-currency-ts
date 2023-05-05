@@ -64,13 +64,13 @@ const CurrencyCard = ({ currency, selfComplete, handleSelfComplete }: Prop) => {
           setStatus({ ...status, open: !status.open });
         }}
       />
-      <h4 className="collapse-title font-semibold">
+      <h4 className="collapse-title font-semibold text-left">
         <span className="pr-2">{currency?.requirements?.name}</span>
         <span className={status.className}>{status.message}</span>
       </h4>
       <div className="collapse-content">
         <div className="flex items-center">
-          <div className="flex-1 flex-col min-w-max">
+          <div className="flex-1 flex-col min-w-max text-left">
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
             {booking.status && (
               <p>
