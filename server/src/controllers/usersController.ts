@@ -1,7 +1,7 @@
 import { Account } from "../constants";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
-import { loggedInUser } from "../auth-service"
+import { loggedInUser } from "../auth-service";
 import dayjs from "dayjs";
 
 const MAX_USERS = 100;
@@ -19,9 +19,11 @@ const usersController = {
     } = req.body;
     try {
       const numTrainees = await prisma.user.count({
-        where: {accountType: Account.Trainee}
+        where: { accountType: Account.Trainee },
       });
-      console.log(`There are ${numTrainees} trainee user records in the database`);
+      console.log(
+        `There are ${numTrainees} trainee user records in the database`
+      );
       if (numTrainees < MAX_USERS) {
         try {
           await prisma.$transaction(async (prisma) => {
@@ -66,28 +68,28 @@ const usersController = {
     let allUsers;
     try {
       const verifiedUser = loggedInUser(req, res);
-      console.log("Verified user", verifiedUser)
+      console.log("Verified user", verifiedUser);
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
         const allUsers = await prisma.user.findMany({
           where: {
-              accountType: Account.Trainee,
+            accountType: Account.Trainee,
           },
           orderBy: {
-            id: "asc",
+            displayName: "asc",
           },
           include: {
             accountTypes: {
               select: {
                 name: true,
-              }
-            }
-          }
+              },
+            },
+          },
         });
         res.status(200).json(allUsers);
       } else {
         const allUsers = await prisma.user.findMany({
           orderBy: {
-            id: "asc",
+            displayName: "asc",
           },
           include: {
             accountTypes: {
@@ -186,18 +188,18 @@ const usersController = {
         where: { user: Number(userId) },
         select: {
           id: true,
-        }
+        },
       });
       console.log("existing trainee id", existingTrainee?.id);
       await prisma.$transaction(async (prisma) => {
         if (existingTrainee) {
           await prisma.traineeToTraining.deleteMany({
-            where: { trainee: Number(existingTrainee.id)}
-          })
+            where: { trainee: Number(existingTrainee.id) },
+          });
           console.log("traineetotraining deleted");
           await prisma.currency.deleteMany({
-            where: { trainee: Number(existingTrainee.id)},
-          })
+            where: { trainee: Number(existingTrainee.id) },
+          });
           console.log("currency deleted");
           await prisma.trainee.delete({
             where: { id: Number(existingTrainee.id) },
@@ -210,11 +212,10 @@ const usersController = {
             where: { user: Number(userId) },
           });
         }
-        
+
         prisma.user.delete({
           where: { id: userId },
         });
-
       });
       res.status(200).json({
         message: "User and corresponding relations deleted successfully",
