@@ -32,7 +32,7 @@ const EditTraineePage = () => {
 
   useEffect(() => {
     if (setTitle) setTitle("Edit Trainee");
-    getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
+    getRequest(`/api/trainees/${id}/?noTrim=true`, setTrainee).then(() => {
       if (setTitle) setTitle(trainee.callsign);
       setLoading(false);
     });
@@ -57,7 +57,7 @@ const EditTraineePage = () => {
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "category") {
-      setTrainee({ ...trainee, [name]: parseInt(value)})
+      setTrainee({ ...trainee, [name]: parseInt(value) });
     } else {
       setTrainee({ ...trainee, [name]: value });
     }
@@ -116,10 +116,7 @@ const EditTraineePage = () => {
     <fieldset className="justify-center">
       <div className="flex justify-center">
         {!loading ? (
-          <Formik
-            initialValues={trainee}
-            onSubmit={handleSubmit}
-          >
+          <Formik initialValues={trainee} onSubmit={handleSubmit}>
             {({ isSubmitting, isValidating, isValid }) => (
               <Form className="space-y-6 text-center m-auto py-6">
                 <TraineeFieldset trainee={trainee} setTrainee={setTrainee} />

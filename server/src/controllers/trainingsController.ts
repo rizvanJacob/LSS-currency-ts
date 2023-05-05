@@ -165,7 +165,7 @@ const trainingsController = {
     });
 
     const updateTraineeCurrencies = completedTrainees.map((t) =>
-      updateCurrency(t, Number(trainingId))
+      updateCurrencyByTraining(t, Number(trainingId))
     );
 
     const updateTraining = prisma.training.update({
@@ -226,7 +226,10 @@ const trainingsController = {
 };
 export default trainingsController;
 
-const updateCurrency = async (traineeId: number, trainingId: number) => {
+const updateCurrencyByTraining = async (
+  traineeId: number,
+  trainingId: number
+) => {
   const getRequirement = prisma.requirement.findFirst({
     where: {
       trainings: {
@@ -280,6 +283,15 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
         extension,
         true
       );
+      console.log(`extend refresh ${requirement.name} expiry to ${newExpiry}}`);
+
+      if (requirement.alsoCompletes) {
+        await updateCurrencyByRequirement(
+          traineeId,
+          requirement.alsoCompletes,
+          training.end
+        );
+      }
 
       return prisma.currency.update({
         where: {
@@ -294,6 +306,65 @@ const updateCurrency = async (traineeId: number, trainingId: number) => {
       return null;
     }
   } catch (error) {}
+};
+
+const updateCurrencyByRequirement = async (
+  traineeId: number,
+  requirementId: number,
+  completedOn: Date
+) => {
+  const getRequirement = prisma.requirement.findUnique({
+    where: { id: requirementId },
+  });
+
+  const getTrainee = prisma.trainee.findUnique({
+    where: { id: traineeId },
+    select: {
+      currencies: {
+        where: {
+          requirement: requirementId,
+        },
+        select: { seniority: true, expiry: true },
+      },
+    },
+  });
+
+  try {
+    const [requirement, trainee] = await Promise.all([
+      getRequirement,
+      getTrainee,
+    ]);
+    const currency = trainee?.currencies[0];
+    const extension =
+      (currency?.seniority
+        ? requirement?.seniorExtension
+        : requirement?.extensionPeriod) || 0;
+
+    if (currency && requirement) {
+      const newExpiry = getNextExpiry(
+        currency?.expiry,
+        completedOn,
+        requirement?.rehackPeriod,
+        extension,
+        false
+      );
+      console.log(`extend ${requirement.name} expiry to ${newExpiry}`);
+
+      return prisma.currency.update({
+        where: {
+          trainee_requirement: {
+            trainee: traineeId,
+            requirement: requirement.id,
+          },
+        },
+        data: { expiry: newExpiry.toDate(), updatedAt: dayjs().toDate() },
+      });
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
 };
 
 export function getNextExpiry(

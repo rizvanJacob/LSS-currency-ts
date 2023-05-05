@@ -1,11 +1,14 @@
 const trimRequirements = (trainee: any) => {
   const trimmedRequirements = trainee.categories.requirements.filter(
     (r: any) => {
-      if (r.requirements.seniorExtension !== -1) return true;
+      const notRequiredForSenior = r.requirements.seniorExtension === -1;
       const traineeCurrency = trainee.currencies.find(
         (c: any) => c.requirement === r.requirements.id
       );
-      return traineeCurrency?.seniority;
+      const isSenior = traineeCurrency?.seniority;
+      if (notRequiredForSenior && isSenior) return false;
+
+      return true;
     }
   );
   return trimmedRequirements;
@@ -18,7 +21,9 @@ const trimCurrencies = (trainee: any) => {
         return c.requirement === r.requirements.id;
       }
     );
-    return currencyInRequirements;
+
+    const hasDistictExpiry = true;
+    return currencyInRequirements && hasDistictExpiry;
   });
   return trimmedCurrencies;
 };

@@ -86,6 +86,7 @@ const index = async (req: Request, res: Response) => {
 
 const show = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const { noTrim } = req.query;
   try {
     const trainee = await prisma.trainee.findUnique({
       where: { id: Number(id) },
@@ -110,6 +111,7 @@ const show = async (req: Request, res: Response) => {
                     hasSeniority: true,
                     seniorExtension: true,
                     selfComplete: true,
+                    alsoCompletes: true,
                   },
                 },
               },
@@ -131,6 +133,7 @@ const show = async (req: Request, res: Response) => {
       },
     });
     if (trainee) {
+      if (noTrim) return res.status(200).json(trainee);
       trainee.categories.requirements = trimRequirements(trainee);
       trainee.currencies = trimCurrencies(trainee);
       res.status(200).json(trainee);
@@ -232,13 +235,16 @@ const completeRequirement = async (req: Request, res: Response) => {
       currencyTransaction,
       requirementTransaction,
     ]);
+    const extension = currency?.seniority
+      ? requirement?.seniorExtension
+      : requirement?.extensionPeriod;
 
-    if (currency && requirement) {
+    if (currency && requirement && extension) {
       const nextExpiry = getNextExpiry(
         currency?.expiry,
         dayjs(completedOn).toDate(),
         requirement?.rehackPeriod,
-        requirement?.extensionPeriod,
+        extension,
         true
       );
 
