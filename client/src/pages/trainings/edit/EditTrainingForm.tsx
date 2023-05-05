@@ -7,6 +7,8 @@ import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
 import { TitleContext } from "../../../App";
+import { trainingSchema } from "../../../yupSchemas/trainingSchema";
+
 export default function EditTrainingForm(): JSX.Element {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -65,7 +67,8 @@ export default function EditTrainingForm(): JSX.Element {
         };
       } else if (name === "start") {
         const newStart = dayjs(value).toDate();
-        return { ...training, start: newStart };
+        const newEnd = dayjs(value).toDate();
+        return { ...training, start: newStart, end: newEnd };
       } else if (name === "end") {
         const newEnd = dayjs(value).toDate();
         return { ...training, end: newEnd };
@@ -100,11 +103,18 @@ export default function EditTrainingForm(): JSX.Element {
         {dayjs(training?.start).format("YYYY-MM-DD")}
       </h1>
       <div className="flex items-center justify-center">
-        <Formik initialValues={training} onSubmit={handleFormSubmit}>
+        <Formik
+          initialValues={training}
+          onSubmit={handleFormSubmit}
+          enableReinitialize
+          validationSchema={trainingSchema(training)}
+        >
           {({ isSubmitting, isValidating, isValid }) => (
             <Form className="space-y-6" m-auto>
               <div className="flex items-center">
-                <label className="w-3/5">Requirement Type:</label>
+                <label htmlFor="requirement" className="w-3/5">
+                  Requirement Type:
+                </label>
                 <div className="w-2/5">
                   <Field
                     as="select"
@@ -128,7 +138,9 @@ export default function EditTrainingForm(): JSX.Element {
                       );
                     })}
                   </Field>
-                  <ErrorMessage name="requirement" className="error-message" />
+                  <div className="error-message text-error">
+                    <ErrorMessage name="requirement" />
+                  </div>
                 </div>
               </div>
               <div className="flex items-center">
@@ -142,7 +154,9 @@ export default function EditTrainingForm(): JSX.Element {
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="start_date" className="error-message" />
+                  <div className="error-message text-error">
+                    <ErrorMessage name="start" />
+                  </div>
                 </div>
               </div>
               <div className="flex items-center">
@@ -156,7 +170,6 @@ export default function EditTrainingForm(): JSX.Element {
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="start_time" className="error-message" />
                 </div>
               </div>
               <div className="flex items-center">
@@ -170,7 +183,9 @@ export default function EditTrainingForm(): JSX.Element {
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="start_date" className="error-message" />
+                  <div className="error-message text-error">
+                    <ErrorMessage name="end" />
+                  </div>
                 </div>
               </div>
               <div className="flex items-center">
@@ -184,7 +199,6 @@ export default function EditTrainingForm(): JSX.Element {
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="end_time" className="error-message" />
                 </div>
               </div>
               <div className="flex items-center">
@@ -194,11 +208,13 @@ export default function EditTrainingForm(): JSX.Element {
                     type="number"
                     id="capacity"
                     name="capacity"
-                    value={training?.capacity || ""}
+                    value={(training?.capacity) || null}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="capacity" className="error-message" />
+                  <div className="error-message text-error">
+                    <ErrorMessage name="capacity" />
+                  </div>
                 </div>
               </div>
               <div className="flex items-center">
@@ -213,7 +229,6 @@ export default function EditTrainingForm(): JSX.Element {
                     className="textarea textarea-primary"
                     onChange={handleInputChange}
                   />
-                  <ErrorMessage name="instruction" className="error-message" />
                 </div>
               </div>
               <div className="flex justify-center">

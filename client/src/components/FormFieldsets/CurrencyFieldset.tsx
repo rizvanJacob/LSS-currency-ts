@@ -1,5 +1,5 @@
 import { Currency, Requirement } from "../../@types/trainee";
-import { Field } from "formik";
+import { Field, ErrorMessage } from "formik";
 import dayjs from "dayjs";
 
 type Prop = {
