@@ -24,11 +24,13 @@ const TraineeTableRow = ({
     <tr>
       <td>
         <Link
-          className="btn btn-primary btn-sm btn-block text-sm"
+          className="btn btn-primary btn-sm btn-block text-sm flex-nowrap"
           to={trainee.id.toString()}
         >
           <span className={overallStatus.className + " badge-xs mx-2"}></span>
-          <span className="flex-1 text-left">{trainee.callsign}</span>
+          <span className="flex-1 text-left overflow-clip">
+            {trainee.callsign}
+          </span>
         </Link>
       </td>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
