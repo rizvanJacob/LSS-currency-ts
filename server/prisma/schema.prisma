@@ -70,6 +70,7 @@ model Requirement {
   seniorExtension Int?
   selfComplete    Boolean @default(false)
   alsoCompletes   Int?
+  refreshToMonthEnd Boolean @default(true)
   trainingsProvided TrainingProvided[]
   currencies      Currency[]
   categories      CategoryToRequirement[]

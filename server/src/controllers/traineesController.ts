@@ -245,7 +245,7 @@ const completeRequirement = async (req: Request, res: Response) => {
         dayjs(completedOn).toDate(),
         requirement?.rehackPeriod,
         extension,
-        true
+        requirement.refreshToMonthEnd
       );
 
       const updatedCurrency = await prisma.currency.update({

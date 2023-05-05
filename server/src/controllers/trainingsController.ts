@@ -346,7 +346,7 @@ const updateCurrencyByRequirement = async (
         completedOn,
         requirement?.rehackPeriod,
         extension,
-        false
+        requirement.refreshToMonthEnd
       );
       console.log(`extend ${requirement.name} expiry to ${newExpiry}`);
 
