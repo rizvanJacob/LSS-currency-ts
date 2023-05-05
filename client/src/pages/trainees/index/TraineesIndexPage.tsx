@@ -5,15 +5,20 @@ import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext, TitleContext } from "../../../App";
 import getRequest from "../../../utilities/getRequest";
 import TraineesTable from "./components/TraineesTable";
-import { Trainee } from "../../../@types/trainee";
+import { Trainee, TraineeFilterOptions } from "../../../@types/trainee";
 import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
 import deleteRequest from "../../../utilities/deleteRequest";
 import ProgressBar from "../../../components/ProgressBar";
+import TraineesFilterControls from "./components/TraineesFilterControls";
+
+const DEL_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [fetchFlag, setFetchFlag] = useState<boolean>(false);
-  const DEL_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
+  const [filterOptions, setFilterOptions] = useState<TraineeFilterOptions>({
+    category: 0,
+  });
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
@@ -43,9 +48,21 @@ const TraineesIndexPage = (): JSX.Element => {
   return (
     <>
       {trainees.length > 0 ? (
-        <div className="p-4 space-y-4">
-          <TraineesTable trainees={trainees} deleteTrainee={deleteTrainee} />
-        </div>
+        <>
+          <TraineesFilterControls
+            filterOptions={filterOptions}
+            setFilterOptions={setFilterOptions}
+            trainees={trainees}
+          />
+          <TraineesTable
+            trainees={
+              filterOptions.category
+                ? trainees.filter((t) => t.category === filterOptions.category)
+                : trainees
+            }
+            deleteTrainee={deleteTrainee}
+          />
+        </>
       ) : (
         <ProgressBar />
       )}

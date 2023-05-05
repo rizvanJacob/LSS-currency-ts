@@ -49,3 +49,7 @@ export type CompletedTrainees = {
   trainee: number;
   training: number;
 };
+
+export type TraineeFilterOptions = {
+  category: number;
+};
