@@ -194,12 +194,15 @@ const usersController = {
           await prisma.traineeToTraining.deleteMany({
             where: { trainee: Number(existingTrainee.id)}
           })
+          console.log("traineetotraining deleted");
           await prisma.currency.deleteMany({
             where: { trainee: Number(existingTrainee.id)},
           })
+          console.log("currency deleted");
           await prisma.trainee.delete({
-            where: { user: Number(userId) },
+            where: { id: Number(existingTrainee.id) },
           });
+          console.log("trainee deleted");
         }
 
         if (existingUser?.accountType === Account.Trainer) {
@@ -208,7 +211,7 @@ const usersController = {
           });
         }
         
-        await prisma.user.delete({
+        prisma.user.delete({
           where: { id: userId },
         });
 
