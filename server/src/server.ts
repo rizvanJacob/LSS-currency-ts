@@ -21,11 +21,11 @@ app.use(express.json());
 
 const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
-  const corsOptions = {
-    origin: clientUrl,
+  const options: cors.CorsOptions = {
+    origin: clientUrl
   };
-  app.use(cors(corsOptions));
-  app.options("*", cors(corsOptions));
+  app.use(cors(options));
+  app.options("*", cors(options));
 } else {
   app.use(express.static(path.join(__dirname, "../../client/dist")));
 }
