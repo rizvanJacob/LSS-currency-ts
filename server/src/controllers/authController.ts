@@ -119,10 +119,11 @@ const isAuth =
     try {
       const authorization = req.headers.authorization;
       const token = authorization?.split(" ")[1].toString();
-      const traineeId = Number(req.params.id);
+      const traineeId = Number(req.params.traineeId);
       const userId = Number(req.params.userId);
       const trainingId = Number(req.params.trainingId);
       console.log("userId", userId);
+      console.log("traineeId", traineeId);
       if (!token) {
         console.log("Missing token");
         return res

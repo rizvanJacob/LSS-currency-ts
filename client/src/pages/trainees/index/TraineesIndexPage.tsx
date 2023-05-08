@@ -37,11 +37,9 @@ const TraineesIndexPage = (): JSX.Element => {
   }, [fetchFlag]);
 
   const deleteTrainee = (id: number) => async () => {
-    useEffect(() => {
-      if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
-        navigate(`/`);
-      }
-    }, []);
+    if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
+      navigate(`/`);
+    }
     deleteRequest(`/api/trainees/${id}`, id, setTrainees);
   };
 

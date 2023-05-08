@@ -86,11 +86,11 @@ const index = async (req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { traineeId } = req.params;
   const { noTrim } = req.query;
   try {
     const trainee = await prisma.trainee.findUnique({
-      where: { id: Number(id) },
+      where: { id: Number(traineeId) },
       select: {
         category: true,
         callsign: true,
@@ -148,12 +148,12 @@ const show = async (req: Request, res: Response) => {
 };
 
 const showBooking = async (req: Request, res: Response) => {
-  const { id, requirementId } = req.params;
+  const { traineeId, requirementId } = req.params;
 
   try {
     const booking = await prisma.traineeToTraining.findFirst({
       where: {
-        trainee: Number(id),
+        trainee: Number(traineeId),
         trainings: {
           requirement: Number(requirementId),
           complete: false,
@@ -203,27 +203,27 @@ const create = async (req: Request, res: Response) => {
 };
 
 const updateBooking = async (req: Request, res: Response) => {
-  const { id, trainingId } = req.params;
+  const { traineeId, trainingId } = req.params;
 
   try {
     console.log("attempt booking");
-    const booking = await book(Number(id), Number(trainingId));
+    const booking = await book(Number(traineeId), Number(trainingId));
     res.status(200).json(booking);
   } catch (error) {
     res.status(500);
   }
 
-  console.log(`trainee: ${id}, training: ${trainingId}`);
+  console.log(`trainee: ${traineeId}, training: ${trainingId}`);
 };
 
 const completeRequirement = async (req: Request, res: Response) => {
-  const { id, requirementId } = req.params;
+  const { traineeId, requirementId } = req.params;
   const { completedOn } = req.body;
   try {
     const currencyTransaction = prisma.currency.findUnique({
       where: {
         trainee_requirement: {
-          trainee: Number(id),
+          trainee: Number(traineeId),
           requirement: Number(requirementId),
         },
       },
@@ -252,7 +252,7 @@ const completeRequirement = async (req: Request, res: Response) => {
       const updatedCurrency = await prisma.currency.update({
         where: {
           trainee_requirement: {
-            trainee: Number(id),
+            trainee: Number(traineeId),
             requirement: Number(requirementId),
           },
         },
@@ -330,28 +330,28 @@ const update = async (req: Request, res: Response) => {
 };
 
 const deleteController = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { traineeId } = req.params;
 
   try {
     const trainee = await prisma.trainee.findUnique({
-      where: { id: Number(id) },
+      where: { id: Number(traineeId) },
       select: { users: { select: { id: true, accountType: true } } },
     });
     const userId = trainee?.users.id;
 
     const deleteCurrencies = prisma.currency.deleteMany({
       where: {
-        trainee: Number(id),
+        trainee: Number(traineeId),
       },
     });
     const deleteTrainings = prisma.traineeToTraining.deleteMany({
       where: {
-        trainee: Number(id),
+        trainee: Number(traineeId),
       },
     });
     const deleteTrainee = prisma.trainee.delete({
       where: {
-        id: Number(id),
+        id: Number(traineeId),
       },
     });
 
@@ -363,7 +363,7 @@ const deleteController = async (req: Request, res: Response) => {
     if (trainee?.users.accountType === Account.Trainee) {
       await prisma.user.delete({ where: { id: Number(userId) } });
     }
-    res.status(200);
+    res.status(200).json({message: `${traineeId} had been deleted successfully`});
   } catch (error) {
     res.status(500).json({ error });
   }

@@ -15,7 +15,7 @@ router.get(
   traineesController.index
 );
 router.get(
-  "/:id",
+  "/:traineeId",
   isAuth([
     Account.Admin,
     Account.TraineeAdmin,
@@ -27,12 +27,12 @@ router.get(
 router.post("/", traineesController.create);
 router.put("/checkin", isAuth([Account.Trainee]), traineesController.checkin);
 router.put(
-  "/:id",
+  "/:traineeId",
   isAuth([Account.Admin, Account.TraineeAdmin, Account.Trainee]),
   traineesController.update
 );
 router.put(
-  "/:id/book/:trainingId",
+  "/:traineeId/book/:trainingId",
   isAuth([
     Account.Admin,
     Account.TraineeAdmin,
@@ -42,17 +42,17 @@ router.put(
   traineesController.updateBooking
 );
 router.put(
-  "/:id/complete/:requirementId",
+  "/:traineeId/complete/:requirementId",
   isAuth([Account.Trainee, Account.TraineeAdmin, Account.Admin]),
   traineesController.completeRequirement
 );
 router.delete(
-  "/:id",
+  "/:traineeId",
   isAuth([Account.Admin, Account.TraineeAdmin]),
   traineesController.delete
 );
 router.get(
-  "/:id/bookings/:requirementId",
+  "/:traineeId/bookings/:requirementId",
   isAuth([Account.Admin, Account.Trainee, Account.Trainer]),
   traineesController.showBooking
 );
