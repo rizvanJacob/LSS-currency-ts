@@ -17,9 +17,8 @@ import client from "./config/sgid";
 const app = express();
 
 app.use(logger("dev"));
-app.use(express.json());
 
-const clientUrl = process.env.CLIENT_URL || null;
+const clientUrl = process.env.CLIENT_URL || null; 
 if (clientUrl) {
   const corsOptions = {
     origin: clientUrl,
@@ -29,6 +28,8 @@ if (clientUrl) {
 } else {
   app.use(express.static(path.join(__dirname, "../../client/dist")));
 }
+
+app.use(express.json());
 
 // allow cors from the client url
 app.use("/api", authRouter);
