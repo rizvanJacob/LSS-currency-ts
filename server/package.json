@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "nodemon ./src/server.ts",
-    "build": "npx prisma generate && tsc -p ."
+    "build": "npx prisma generate && tsc -p . && npm run start"
   },
   "keywords": [],
   "author": "",

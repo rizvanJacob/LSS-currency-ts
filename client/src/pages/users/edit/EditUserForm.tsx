@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { TitleContext } from "../../../App";
 import { userSchema } from "../../../yupSchemas/userSchema"
 import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
-
+import TraineeAdminFieldSet from "../../../components/FormFieldsets/TraineeAdminFieldset"
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
@@ -102,26 +102,7 @@ export default function EditUserForm(): JSX.Element {
           >
             {({ isSubmitting, isValidating, isValid }) => (
               <Form className="space-y-6 py-4">
-                {/* <AdminFieldSet user={user} handleChange={handleInputChange} /> */} 
-                <div className="flex items-center">
-                  <label htmlFor="displayName" className="w-2/4">
-                    Display Name:
-                  </label>
-                  <div className="w-3/4">
-                    <Field
-                      type="text"
-                      id="displayName"
-                      name="displayName"
-                      placeholder="Enter your name"
-                      className="input-text input input-bordered input-primary w-full max-w-xs"
-                      value={user?.displayName || ""}
-                      onChange={handleInputChange}
-                    />
-                    <div className="error-message text-error">
-                      <ErrorMessage name="displayName" />
-                    </div>
-                  </div>
-                </div>
+                <AdminFieldSet user={user} handleChange={handleInputChange} />
                 <div className="flex items-center">
                   <label htmlFor="accountType" className="w-2/4">
                     Account Type:

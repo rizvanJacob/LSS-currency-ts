@@ -43,7 +43,7 @@ const TraineeParticularsFieldset = ({
             type="text"
             id="callsign"
             name="callsign"
-            value={trainee?.callsign || ""}
+            value={trainee.callsign || ""}
             onChange={handleChange}
             className="input-text input input-bordered input-primary w-full max-w-xs"
           />
