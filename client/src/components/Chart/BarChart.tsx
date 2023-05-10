@@ -1,6 +1,6 @@
 import { Bar } from 'react-chartjs-2';
 import { Trainee } from "../../@types/trainee";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, ChartOptions, ChartType } from 'chart.js';
 
 ChartJS.register(
   BarElement,
@@ -38,7 +38,7 @@ const BarChart = ({ data }: Prop) => {
     datasets,
   };
 
-  const chartOptions = {
+  const chartOptions: ChartOptions<'bar'> = {
     scales: {
       y: {
         beginAtZero: true,
