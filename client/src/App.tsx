@@ -4,6 +4,7 @@ import { useState, useEffect, createContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
+import DashboardRoutes from "./pages/dashboard/DashboardRoutes";
 import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
@@ -73,7 +74,10 @@ function App() {
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
                   ) ? (
+                    <>
                     <Route path="/users/*" element={<UserRoutes />} />
+                    <Route path="/dashboard/*" element={<DashboardRoutes />} />
+                    </>
                   ) : null}
                   {TRAINEE_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
