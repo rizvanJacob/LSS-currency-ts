@@ -18,7 +18,7 @@ const app = express();
 
 app.use(logger("dev"));
 
-const clientUrl = process.env.CLIENT_URL || null; 
+const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
   const corsOptions = {
     origin: clientUrl,
