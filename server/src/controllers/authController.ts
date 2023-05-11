@@ -24,6 +24,7 @@ const DEV_PORT = "5173";
 
 const generateUrl = async (req: Request, res: Response) => {
   const clientUrl = formURL(req);
+  console.log("clientUrl from generateURL", clientUrl);
   const login = client.authorizationUrl(
     "login",
     "openid",
