@@ -53,4 +53,6 @@ const accountTypes = async (req: Request, res: Response) => {
   }
 };
 
+const trainingsProvided = async (req: Request, res: Response) => {};
+
 export { categories, statuses, requirements, accountTypes };
