@@ -213,7 +213,21 @@ const isAuth =
         }
       } else if (verifiedUser.accountType === Account.Trainer) {
         console.log("Authorizing trainer...");
-        if (Number(trainingId)) {
+        const trainingReq = req.body.requirement;
+        const trainingsProvided = await prisma.trainingProvided.findMany({
+          where: { user: verifiedUser.id },
+          select: { requirement: true },
+        });
+        if (
+          trainingReq &&
+          !trainingsProvided.some(
+            (training) => training.requirement === trainingReq
+          )
+        ) {
+          throw new Error(
+            "You are not authorized to create a training you did not specify before"
+          );
+        } else if (Number(trainingId)) {
           const training = await prisma.training.findUnique({
             where: { id: trainingId },
             select: { requirement: true },
@@ -226,9 +240,6 @@ const isAuth =
 
           for (const training of trainingsProvided) {
             if (training.user === verifiedUser.id) {
-              res.status(200).json({
-                message: "You are authorized to book training for trainees",
-              });
               console.log(
                 "Trainer authorized with access to trainings provided"
               );
