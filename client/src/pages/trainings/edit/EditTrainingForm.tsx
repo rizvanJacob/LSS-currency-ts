@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Training } from "../../../@types/training";
-import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
@@ -16,7 +15,6 @@ export default function EditTrainingForm(): JSX.Element {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
-  const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
   const [training, setTraining] = useState<Training>({
     id: 0,
     capacity: 0,
@@ -53,7 +51,6 @@ export default function EditTrainingForm(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
-    getRequest(`/api/lookup/requirements`, setRequirementTypes);
   }, []);
 
   const handleFormSubmit = async () => {
@@ -68,7 +65,7 @@ export default function EditTrainingForm(): JSX.Element {
         return {
           ...training,
           requirement:
-            requirementTypes.find((type) => value === type.name)?.id ?? 0,
+            trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0,
         };
       } else if (name === "start") {
         const newStart = dayjs(value).toDate();
@@ -128,9 +125,9 @@ export default function EditTrainingForm(): JSX.Element {
                     name="requirement"
                     className="input-select select select-primary w-full max-w-xs"
                     value={
-                      requirementTypes.find(
-                        (type) => training?.requirement === type.id
-                      )?.name || ""
+                      trainingsProvided.find(
+                        (type) => training?.requirement === type?.requirement
+                      )?.requirements?.name || ""
                     }
                     onChange={handleInputChange}
                   >
