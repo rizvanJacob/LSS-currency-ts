@@ -11,3 +11,12 @@ export type Requirement = {
   extensionPeriod: number;
   seniorExtension: number;
 };
+
+export type trainingProvided = {
+  id: number;
+  user: number;
+  requirement: number;
+  requirements?: {
+    name: string;
+  };
+};
