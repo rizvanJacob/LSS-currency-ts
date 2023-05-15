@@ -53,6 +53,24 @@ const accountTypes = async (req: Request, res: Response) => {
   }
 };
 
-const trainingsProvided = async (req: Request, res: Response) => {};
+const trainingsProvided = async (req: Request, res: Response) => {
+  try {
+    const trainingsProvided = await prisma.trainingProvided.findMany({
+      select: {
+        id: true,
+        user: true,
+        requirement: true,
+        requirements: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    res.status(200).json(trainingsProvided);
+  } catch (error) {
+    res.status(500);
+  }
+};
 
-export { categories, statuses, requirements, accountTypes };
+export { categories, statuses, requirements, accountTypes, trainingsProvided };

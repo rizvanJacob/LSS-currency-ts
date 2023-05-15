@@ -2,15 +2,17 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewTraining } from "../../../@types/training";
-import { SimpleLookup } from "../../../@types/lookup";
+import { SimpleLookup, trainingProvided } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import postRequest from "../../../utilities/postRequest";
 import dayjs from "dayjs";
-import { TitleContext } from "../../../App";
 import { newTrainingSchema } from "../../../yupSchemas/trainingSchema";
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext, TitleContext } from "../../../App";
 
 export default function CreateTrainingForm(): JSX.Element {
   const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
+  const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
   const [training, setTraining] = useState<NewTraining>({
     id: 0,
     capacity: 0,
@@ -22,6 +24,7 @@ export default function CreateTrainingForm(): JSX.Element {
     },
     instruction: "",
   });
+  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
@@ -30,7 +33,10 @@ export default function CreateTrainingForm(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("New Training");
     getRequest(`/api/lookup/requirements`, setRequirementTypes);
+    getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
   }, []);
+  
+  console.log(trainingsProvided);
 
   const handleFormSubmit = async () => {
     await postRequest(`/api/trainings`, training, setTraining);
@@ -103,10 +109,12 @@ export default function CreateTrainingForm(): JSX.Element {
                       className="input-select select select-primary w-full max-w-xs"
                       onChange={handleInputChange}
                     >
-                      {requirementTypes.map((type) => (
-                        <option value={type.name} key={type.id}>
-                          {type.name}
+                      {trainingsProvided.map((type) => (
+                        type.user === currentUser?.id ? (
+                        <option value={type?.requirements?.name} key={type.requirement}>
+                          {type?.requirements?.name}
                         </option>
+                      ) : null
                       ))}
                     </Field>
                   </div>
