@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewTraining } from "../../../@types/training";
-import { SimpleLookup, trainingProvided } from "../../../@types/lookup";
+import { trainingProvided } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import postRequest from "../../../utilities/postRequest";
 import dayjs from "dayjs";
@@ -11,7 +11,6 @@ import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext, TitleContext } from "../../../App";
 
 export default function CreateTrainingForm(): JSX.Element {
-  const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
   const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
   const [training, setTraining] = useState<NewTraining>({
     id: 0,
@@ -32,11 +31,8 @@ export default function CreateTrainingForm(): JSX.Element {
 
   useEffect(() => {
     if (setTitle) setTitle("New Training");
-    getRequest(`/api/lookup/requirements`, setRequirementTypes);
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
   }, []);
-  
-  console.log(trainingsProvided);
 
   const handleFormSubmit = async () => {
     await postRequest(`/api/trainings`, training, setTraining);
@@ -72,7 +68,7 @@ export default function CreateTrainingForm(): JSX.Element {
         return {
           ...training,
           requirement:
-            requirementTypes.find((type) => value === type.name)?.id ?? 0,
+            trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0,
         };
       } else {
         return {

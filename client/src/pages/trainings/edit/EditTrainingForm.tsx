@@ -6,10 +6,14 @@ import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
-import { TitleContext } from "../../../App";
 import { trainingSchema } from "../../../yupSchemas/trainingSchema";
+import { CurrentUser } from "../../../@types/currentUser";
+import { CurrentUserContext, TitleContext } from "../../../App";
+import { trainingProvided } from "../../../@types/lookup";
 
 export default function EditTrainingForm(): JSX.Element {
+  const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
+  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [requirementTypes, setRequirementTypes] = useState<SimpleLookup[]>([]);
@@ -48,6 +52,7 @@ export default function EditTrainingForm(): JSX.Element {
 
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
+    getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
     getRequest(`/api/lookup/requirements`, setRequirementTypes);
   }, []);
 
@@ -129,14 +134,13 @@ export default function EditTrainingForm(): JSX.Element {
                     }
                     onChange={handleInputChange}
                   >
-                    <option value="">Select a requirement</option>
-                    {requirementTypes.map((type) => {
-                      return (
-                        <option value={type.name} key={type.id}>
-                          {type.name}
+                  {trainingsProvided.map((type) => (
+                      type.user === currentUser?.id ? (
+                        <option value={type?.requirements?.name} key={type.requirement}>
+                          {type?.requirements?.name}
                         </option>
-                      );
-                    })}
+                      ) : null
+                  ))}
                   </Field>
                   <div className="error-message text-error">
                     <ErrorMessage name="requirement" />
