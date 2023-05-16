@@ -35,7 +35,7 @@ const HomePage = (): JSX.Element => {
     }
 
     return () => {
-      controller.abort;
+      controller.abort();
     };
   }, []);
 

@@ -18,10 +18,10 @@ async function putRequest(
     console.log("PUT RESPONSE", response);
     console.log("res status:", !!response.status);
     console.log("setState func:", !!setState);
-    /*     if (response.status === 200 && setState) {
-      //console.log("updating state");
-      //await setState(response.data);
-    } */ //deleted to resolve memory leak issue in edituserform. putrequest for trainee runs after navigating to /users
+    /*  if (response.status === 200 && setState) {
+      console.log("updating state");
+      setState(response.data);
+    } */ //deleted to resolve trainee state change in edituserform. useeffect for trainee runs after navigating to /users due to dependency in useeffect hook
     return response;
   } catch (err) {
     console.error(err);
