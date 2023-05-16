@@ -20,7 +20,7 @@ const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
-const CLIENT_URL = process.env.CLIENT_URL;
+const CLIENT_URL = process.env.CLIENT_URL + "/"
 
 const generateUrl = async (req: Request, res: Response) => {
   console.log("clientUrl: ", CLIENT_URL);

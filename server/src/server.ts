@@ -17,20 +17,19 @@ const app = express();
 
 app.use(logger("dev"));
 
+// allow cors from the client url
 const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
   const corsOptions = {
     origin: clientUrl,
   };
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.options("*", cors(corsOptions));
 } else {
   app.use(express.static(path.join(__dirname, "../../client/dist")));
 }
-
 app.use(express.json());
 
-// allow cors from the client url
 app.use("/api", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/trainees", traineesRouter);
