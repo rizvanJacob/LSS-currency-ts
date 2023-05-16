@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Training } from "../../../@types/training";
@@ -47,7 +47,7 @@ export default function EditTrainingForm(): JSX.Element {
   useEffect(() => {
     getRequest(`/api/trainings/${id}`, setTraining);
   }, [id, setTraining]);
-
+  
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
@@ -101,8 +101,8 @@ export default function EditTrainingForm(): JSX.Element {
     <fieldset>
       <div className="max-w-lg mx-auto"></div>
       <h1 className="text-xl text-center font-bold mb-8">
-        Edit {training?.requirements?.name} on{" "}
-        {dayjs(training?.start).format("YYYY-MM-DD")}
+        Edit {training.requirements?.name} on {""}
+        {dayjs(training.start).format("YYYY-MM-DD")}
       </h1>
       <div className="flex items-center justify-center">
         <Formik
