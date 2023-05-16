@@ -12,7 +12,6 @@ import traineesRouter from "./routes/traineesRouter";
 import lookupRouter from "./routes/lookupRouter";
 import trainingsRouter from "./routes/trainingsRouter";
 import cors from "cors";
-import client from "./config/sgid";
 
 const app = express();
 
@@ -23,7 +22,7 @@ if (clientUrl) {
   const corsOptions = {
     origin: clientUrl,
   };
-  app.use(cors(corsOptions));
+  app.use(cors());
   app.options("*", cors(corsOptions));
 } else {
   app.use(express.static(path.join(__dirname, "../../client/dist")));
