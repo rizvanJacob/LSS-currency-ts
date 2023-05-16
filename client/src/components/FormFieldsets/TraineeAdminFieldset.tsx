@@ -37,7 +37,7 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
     <div className="flex items-center justify-center">
       <fieldset>
         <label className="w-2/4">Display Name:</label>
-        <div className="w-3/4">
+        <div className="w-4/4">
           <Field
             type="text"
             id="displayName"
@@ -51,7 +51,7 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
           </div>
         </div>
         <label className="w-2/4">Authorized Category: </label>
-        <div className="w-3/4">
+        <div className="w-4/4">
           <Field
             as="select"
             name="authCategory"
@@ -73,8 +73,8 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
           </div>
         </div>
 
-        <label className="w-2/4">Include Trainee account:</label>
-        <div className="w-3/4">
+        <label className="w-1/4">Include Trainee account:</label>
+        <div className="w-4/4">
           <Field
             name="includeTrainee"
             type="checkbox"

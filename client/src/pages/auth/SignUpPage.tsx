@@ -118,7 +118,7 @@ const SignUpPage = (): JSX.Element => {
         >
           {({ isSubmitting, isValidating, isValid}) => (
             <Form className="space-y-6">
-              <div className="flex items-center">
+              <div className="flex items-center justify-center">
                 <fieldset>
                   <label className="w-1/4">Account Type:</label>
                   <div className="w-4/4">
@@ -142,7 +142,7 @@ const SignUpPage = (): JSX.Element => {
                 </fieldset>
               </div>
               {user.accountType == Account.Admin && (
-                <AdminFieldSet user={user} handleChange={handleUserChange} />
+                  <AdminFieldSet user={user} handleChange={handleUserChange} />
               )}
               {user.accountType == Account.TraineeAdmin && (
                 <TraineeAdminFieldset
