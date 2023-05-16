@@ -7,11 +7,12 @@ import { Requirement } from "../../../@types/lookup";
 import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
-import * as Yup from "yup";
 import { TitleContext } from "../../../App";
 import { userSchema } from "../../../yupSchemas/userSchema"
 import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
-import TraineeAdminFieldSet from "../../../components/FormFieldsets/TraineeAdminFieldset"
+import TraineeFieldSet from "../../../components/FormFieldsets/TraineeFieldset";
+import { Trainee } from "../../../@types/trainee";
+
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
@@ -31,6 +32,18 @@ export default function EditUserForm(): JSX.Element {
       category: 0,
     },
   });
+
+  const blankTrainee = {
+    callsign: "",
+    category: 0,
+    id: 0,
+    categories: { name: "" },
+    user: 0,
+    users: { approved: false },
+    currencies: [],
+  };
+
+  const [trainee, setTrainee] = useState<Trainee>(blankTrainee);
   const navigate = useNavigate();
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
@@ -39,6 +52,12 @@ export default function EditUserForm(): JSX.Element {
   useEffect(() => {
     getRequest(`/api/users/${id}`, setUser);
   }, [id]);
+
+  useEffect(() => {
+    if (user && user.trainee && user.trainee.id) {
+      getRequest(`/api/trainees/${Number(user.trainee.id)}`, setTrainee);
+    }
+  }, [user?.trainee?.id]);
 
   useEffect(() => {
     if (setTitle) setTitle("Update User");
@@ -51,13 +70,19 @@ export default function EditUserForm(): JSX.Element {
     if (!user.approved) {
       const updatedUser = { ...user, approved: !user.approved };
       setUser(updatedUser);
+      if (updatedUser.accountType === Account.Trainee) {
+        await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
+      }
       await putRequest(`/api/users/${id}`, updatedUser, setUser);
     } else {
-      await putRequest(`/api/users/${id}`, user, setUser);
-    }
-    navigate(`/users`);
+        if (user.accountType === Account.Trainee) {
+          await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
+        }
+        await putRequest(`/api/users/${id}`, user, setUser);
+      }
+    navigate("/users");
   };
-
+  console.log(user);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const parsedValue =
@@ -91,6 +116,8 @@ export default function EditUserForm(): JSX.Element {
     });
   };
 
+  console.log("Trainee Check here please 2", trainee);
+  console.log("User check here please", user)
   return (
     <fieldset>
       <div className="max-w-lg mx-auto">
@@ -102,8 +129,7 @@ export default function EditUserForm(): JSX.Element {
           >
             {({ isSubmitting, isValidating, isValid }) => (
               <Form className="space-y-6 py-4">
-                <AdminFieldSet user={user} handleChange={handleInputChange} />
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                   <label htmlFor="accountType" className="w-2/4">
                     Account Type:
                   </label>
@@ -131,7 +157,7 @@ export default function EditUserForm(): JSX.Element {
                     </div>
                   </div>
                 </div>
-
+                <AdminFieldSet user={user} handleChange={handleInputChange} />
                 {user.accountType === Account.TraineeAdmin && (
                   <div className="flex items-center">
                     <label htmlFor="authCategory" className="w-2/4">
@@ -162,56 +188,10 @@ export default function EditUserForm(): JSX.Element {
                 )}
                 {user.accountType === Account.Trainee && (
                   <>
-                    <div className="flex items-center">
-                      <label htmlFor="callsign" className="w-2/4">
-                        Callsign:
-                      </label>
-                      <div className="w-3/4">
-                        <Field
-                          type="text"
-                          id="callsign"
-                          name="callsign"
-                          placeholder="Enter your callsign"
-                          disabled={user.accountType !== Account.Trainee}
-                          value={user?.trainee?.callsign || ""}
-                          onChange={handleInputChange}
-                          className="input-text input input-bordered input-primary w-full max-w-xs"
-                        />
-                        <div className="error-message text-error">
-                          <ErrorMessage name="callsign" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <label htmlFor="category" className="w-2/4">
-                        Category:
-                      </label>
-                      <div className="w-3/4">
-                        <Field
-                          as="select"
-                          type="text"
-                          id="category"
-                          name="category"
-                          disabled={user.accountType !== Account.Trainee}
-                          value={
-                            categoryTypes.find(
-                              (type) => user?.trainee?.category === type.id
-                            )?.name || ""
-                          }
-                          onChange={handleInputChange}
-                          className="input-select select select-primary w-full max-w-xs"
-                        >
-                          {categoryTypes.map((type) => (
-                            <option value={type.name} key={type.id}>
-                              {type.name}
-                            </option>
-                          ))}
-                        </Field>
-                        <div className="error-message text-error">
-                          <ErrorMessage name="category" />
-                        </div>
-                      </div>
-                    </div>
+                    <TraineeFieldSet
+                      trainee={trainee}
+                      setTrainee={setTrainee}
+                    />
                   </>
                 )}
                 <div className="flex justify-center">

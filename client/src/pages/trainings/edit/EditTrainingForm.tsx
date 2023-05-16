@@ -1,3 +1,4 @@
+import { Account } from "../../../../../server/src/constants";
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -5,6 +6,7 @@ import { Training } from "../../../@types/training";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
+import { SimpleLookup } from "../../../@types/lookup";
 import { trainingSchema } from "../../../yupSchemas/trainingSchema";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext, TitleContext } from "../../../App";
@@ -12,6 +14,7 @@ import { trainingProvided } from "../../../@types/lookup";
 
 export default function EditTrainingForm(): JSX.Element {
   const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
+  const [requirements, setRequirements] = useState<SimpleLookup[]>([]);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -51,6 +54,9 @@ export default function EditTrainingForm(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
+    (currentUser?.accountType === Account.Admin) 
+      ? getRequest(`/api/lookup/requirements`, setRequirements)
+      : null;
   }, []);
 
   const handleFormSubmit = async () => {
@@ -65,7 +71,9 @@ export default function EditTrainingForm(): JSX.Element {
         return {
           ...training,
           requirement:
-            trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0,
+            (currentUser?.accountType !== Account.Admin) 
+              ? trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0
+              : requirements.find((type) => value === type.name)?.id ?? 0,
         };
       } else if (name === "start") {
         const newStart = dayjs(value).toDate();
@@ -125,19 +133,32 @@ export default function EditTrainingForm(): JSX.Element {
                     name="requirement"
                     className="input-select select select-primary w-full max-w-xs"
                     value={
-                      trainingsProvided.find(
-                        (type) => training?.requirement === type?.requirement
-                      )?.requirements?.name || ""
+                      currentUser?.accountType !== Account.Admin ? (
+                        trainingsProvided.find(
+                          (type) => training?.requirement === type?.requirement
+                        )?.requirements?.name || ""
+                      ) : (
+                        requirements.find((type) => training?.requirement === type?.id)?.name || ""
+                      )
                     }
                     onChange={handleInputChange}
                   >
-                  {trainingsProvided.map((type) => (
-                      type.user === currentUser?.id ? (
-                        <option value={type?.requirements?.name} key={type.requirement}>
-                          {type?.requirements?.name}
-                        </option>
-                      ) : null
-                  ))}
+                  {currentUser?.accountType !== Account.Admin ? (
+                      trainingsProvided.map((type) =>
+                        type.user === currentUser?.id ? (
+                          <option value={type.requirements?.name} key={type.requirement}>
+                            {type.requirements?.name}
+                          </option>
+                        ) : null
+                      )
+                  ) : (
+                    requirements.map((type) => (
+                      <option value={type.name} key={type.id}>
+                        {type.name}
+                      </option>
+                    ))
+                  )
+                  }
                   </Field>
                   <div className="error-message text-error">
                     <ErrorMessage name="requirement" />

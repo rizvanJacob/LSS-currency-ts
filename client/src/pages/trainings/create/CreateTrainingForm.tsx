@@ -1,8 +1,10 @@
+import { Account } from "../../../../../server/src/constants";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { NewTraining } from "../../../@types/training";
 import { trainingProvided } from "../../../@types/lookup";
+import { SimpleLookup } from "../../../@types/lookup";
 import getRequest from "../../../utilities/getRequest";
 import postRequest from "../../../utilities/postRequest";
 import dayjs from "dayjs";
@@ -12,6 +14,7 @@ import { CurrentUserContext, TitleContext } from "../../../App";
 
 export default function CreateTrainingForm(): JSX.Element {
   const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
+  const [requirements, setRequirements] = useState<SimpleLookup[]>([]);
   const [training, setTraining] = useState<NewTraining>({
     id: 0,
     capacity: 0,
@@ -32,11 +35,13 @@ export default function CreateTrainingForm(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("New Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
+    (currentUser?.accountType === Account.Admin) 
+      ? getRequest(`/api/lookup/requirements`, setRequirements)
+      : null;
   }, []);
 
   const handleFormSubmit = async () => {
     await postRequest(`/api/trainings`, training, setTraining);
-    console.log(training);
     navigate(`/trainings`);
   };
 
@@ -68,8 +73,10 @@ export default function CreateTrainingForm(): JSX.Element {
         return {
           ...training,
           requirement:
-            trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0,
-        };
+            (currentUser?.accountType !== Account.Admin) 
+              ? trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0
+              : requirements.find((type) => value === type.name)?.id ?? 0,
+            };
       } else {
         return {
           ...training,
@@ -105,13 +112,21 @@ export default function CreateTrainingForm(): JSX.Element {
                       className="input-select select select-primary w-full max-w-xs"
                       onChange={handleInputChange}
                     >
-                      {trainingsProvided.map((type) => (
-                        type.user === currentUser?.id ? (
-                        <option value={type?.requirements?.name} key={type.requirement}>
-                          {type?.requirements?.name}
-                        </option>
-                      ) : null
-                      ))}
+                      {currentUser?.accountType !== Account.Admin ? (
+                        trainingsProvided.map((type) =>
+                          type.user === currentUser?.id ? (
+                            <option value={type.requirements?.name} key={type.requirement}>
+                              {type.requirements?.name}
+                            </option>
+                          ) : null
+                        )
+                      ) : (
+                        requirements.map((type) => (
+                          <option value={type.name} key={type.id}>
+                            {type.name}
+                          </option>
+                        ))
+                      )}
                     </Field>
                   </div>
                 </div>

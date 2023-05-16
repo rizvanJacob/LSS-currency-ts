@@ -15,12 +15,13 @@ async function putRequest(
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("PUT RESPONSE", response);
     console.log("res status:", !!response.status);
     console.log("setState func:", !!setState);
-    if (response.status === 200 && setState) {
-      console.log("updating state");
-      await setState(response.data);
-    }
+    /*     if (response.status === 200 && setState) {
+      //console.log("updating state");
+      //await setState(response.data);
+    } */ //deleted to resolve memory leak issue in edituserform. putrequest for trainee runs after navigating to /users
     return response;
   } catch (err) {
     console.error(err);

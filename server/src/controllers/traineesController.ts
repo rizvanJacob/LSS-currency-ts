@@ -92,6 +92,7 @@ const show = async (req: Request, res: Response) => {
     const trainee = await prisma.trainee.findUnique({
       where: { id: Number(traineeId) },
       select: {
+        id: true,
         category: true,
         callsign: true,
         user: true,
@@ -275,8 +276,7 @@ const completeRequirement = async (req: Request, res: Response) => {
 const update = async (req: Request, res: Response) => {
   console.log("Update trainee");
   const trainee = req.body;
-  const { id: traineeId } = req.params;
-
+  const { traineeId } = req.params;
   const upsertCurrencies = trainee.currencies?.map((c: any) => {
     console.log(c);
     const upsertTransaction = prisma.currency.upsert({
@@ -364,7 +364,9 @@ const deleteController = async (req: Request, res: Response) => {
     if (trainee?.users.accountType === Account.Trainee) {
       await prisma.user.delete({ where: { id: Number(userId) } });
     }
-    res.status(200).json({message: `${traineeId} had been deleted successfully`});
+    res
+      .status(200)
+      .json({ message: `${traineeId} had been deleted successfully` });
   } catch (error) {
     res.status(500).json({ error });
   }

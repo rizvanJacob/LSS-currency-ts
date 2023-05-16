@@ -4,7 +4,6 @@ import getRequest from "../../../utilities/getRequest";
 import { User, UserFilterOptions } from "../../../@types/user";
 import UnapprovedUsersList from "./components/UnapprovedUsersList";
 import ProgressBar from "../../../components/ProgressBar";
-import { CurrentUser } from "../../../@types/currentUser";
 import { TitleContext } from "../../../App";
 import UsersFilterControls from "./components/UsersFilterControls";
 
