@@ -33,7 +33,7 @@ const TraineeParticularsFieldset = ({
   return isLoading ? (
     <ProgressBar />
   ) : (
-    <div className="flex text-center">
+    <div className="flex">
       <fieldset>
         <label htmlFor="callsign" className="w-2/4">
           Callsign:

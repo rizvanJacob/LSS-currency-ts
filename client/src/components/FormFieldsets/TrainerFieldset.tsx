@@ -48,10 +48,10 @@ const TrainerFieldset = ({
     }
   };
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center m-auto justify-content text-center">
       <fieldset>
-        <label className="w-2/4">Display Name:</label>
-        <div className="w-3/4">
+        <label className="w-1/4">Display Name:</label>
+        <div className="w-4/4">
           <Field
             type="text"
             id="displayName"
@@ -64,8 +64,8 @@ const TrainerFieldset = ({
             <ErrorMessage name="displayName" />
           </div>
         </div>
-        <label className="w-2/4"> Training Provided:</label>
-        <div className="w-3/4">
+        <label className="w-1/4"> Training Provided:</label>
+        <div className="w-4/4">
           {requirements?.map((r) => {
             return (
               <label key={r.id}>
