@@ -119,6 +119,7 @@ const usersController = {
           authCategory: true,
           trainee: {
             select: {
+              id: true,
               callsign: true,
               category: true,
             },
@@ -192,37 +193,36 @@ const usersController = {
       });
       console.log("userid", userId);
       console.log("existing trainee id", existingTrainee?.id);
-      await prisma.$transaction(async () => {
-        if (existingTrainee) {
-          await prisma.traineeToTraining.deleteMany({
+      await prisma.$transaction(
+        async () => {
+          if (existingTrainee) {
+            await prisma.traineeToTraining.deleteMany({
+              where: { trainee: Number(existingTrainee.id) },
+            });
 
-            where: { trainee: Number(existingTrainee.id)}
-          })
+            await prisma.currency.deleteMany({
+              where: { trainee: Number(existingTrainee.id) },
+            });
 
-          await prisma.currency.deleteMany({
-            where: { trainee: Number(existingTrainee.id)},
-          })
+            await prisma.trainee.delete({
+              where: { id: Number(existingTrainee.id) },
+            });
+          }
 
-          await prisma.trainee.delete({
-            where: { id: Number(existingTrainee.id) },
+          if (existingUser?.accountType === Account.Trainer) {
+            await prisma.trainingProvided.deleteMany({
+              where: { user: Number(userId) },
+            });
+          }
+
+          await prisma.user.delete({
+            where: { id: userId },
           });
-
+        },
+        {
+          timeout: 10000, // default: 5000
         }
-
-        if (existingUser?.accountType === Account.Trainer) {
-          await prisma.trainingProvided.deleteMany({
-            where: { user: Number(userId) },
-          });
-        }
-        
-        await prisma.user.delete({
-          where: { id: userId },
-        });
-
-      },
-      {
-        timeout: 10000, // default: 5000
-      });
+      );
       res.status(200).json({
         message: "User and corresponding relations deleted successfully",
       });

@@ -13,6 +13,7 @@ type Props = {
 };
 
 const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
+  console.log("trainee check here please", trainee)
   const [requirements, setRequirements] = useState<Requirement[]>(
     trainee.categories.requirements?.map((r) => r.requirements) || []
   );
@@ -91,6 +92,7 @@ const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
       setTrainee({ ...trainee, currencies: updatedCurrencies });
     }
   };
+
   return (
     <div className="flex flex-col items-center gap-2">
       <TraineeParticularsFieldset
