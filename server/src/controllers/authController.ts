@@ -20,23 +20,22 @@ const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
-const DEV_PORT = "5173";
+const CLIENT_URL = process.env.CLIENT_URL;
 
 const generateUrl = async (req: Request, res: Response) => {
-  const clientUrl = formURL(req);
-  console.log("clientUrl from generateURL", clientUrl);
+  console.log("clientUrl: ", CLIENT_URL);
   const login = client.authorizationUrl(
     "login",
     "openid",
     null,
-    clientUrl.toString()
+    CLIENT_URL
   ).url;
 
   const checkin = client.authorizationUrl(
     "checkin",
     "openid",
     null,
-    clientUrl.toString()
+    CLIENT_URL
   ).url;
 
   res.status(200).json({ login, checkin });
@@ -44,13 +43,12 @@ const generateUrl = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { code } = req.params;
-  const clientUrl = formURL(req);
 
   try {
     const { sub: openId } = await client.callback(
       code as string,
       null,
-      clientUrl.toString()
+      CLIENT_URL
     );
     try {
       const userData = await prisma.user.findUniqueOrThrow({
@@ -265,14 +263,14 @@ const isAuth =
 
 export { generateUrl, isAuth, login, findUser };
 
-const formURL = (req: Request) => {
-  const newURL = new URL("https://example.com");
-  newURL.hostname = req.hostname;
-  if (newURL.hostname === "localhost") {
-    newURL.port = DEV_PORT;
-    newURL.protocol = "http";
-  } else {
-    newURL.protocol = "https";
-  }
-  return newURL;
-};
+// const formURL = (req: Request) => {
+//   const newURL = new URL("https://example.com");
+//   newURL.hostname = req.hostname;
+//   if (newURL.hostname === "localhost") {
+//     newURL.port = DEV_PORT;
+//     newURL.protocol = "http";
+//   } else {
+//     newURL.protocol = "https";
+//   }
+//   return newURL;
+// };
