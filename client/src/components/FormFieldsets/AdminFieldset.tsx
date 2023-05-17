@@ -9,7 +9,7 @@ type Props = {
 
 const AdminFieldSet = ({ user, handleChange }: Props) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center flex-col">
       <fieldset>
         <label htmlFor="displayName" className="w-2/4">
           Display Name:

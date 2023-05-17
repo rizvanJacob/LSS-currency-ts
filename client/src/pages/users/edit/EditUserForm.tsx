@@ -82,7 +82,7 @@ export default function EditUserForm(): JSX.Element {
       }
     navigate("/users");
   };
-  console.log(user);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const parsedValue =
@@ -116,8 +116,6 @@ export default function EditUserForm(): JSX.Element {
     });
   };
 
-  console.log("Trainee Check here please 2", trainee);
-  console.log("User check here please", user)
   return (
     <fieldset>
       <div className="max-w-lg mx-auto">
@@ -159,8 +157,8 @@ export default function EditUserForm(): JSX.Element {
                 </div>
                 <AdminFieldSet user={user} handleChange={handleInputChange} />
                 {user.accountType === Account.TraineeAdmin && (
-                  <div className="flex items-center">
-                    <label htmlFor="authCategory" className="w-2/4">
+                  <div className="flex items-center justify-center flex-col">
+                    <label htmlFor="authCategory" className="w-4/4">
                       Authorization Category:
                     </label>
                     <div className="w-3/4">
