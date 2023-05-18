@@ -43,14 +43,25 @@ export default function EditTrainingForm(): JSX.Element {
       },
     ],
   });
+
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
 
+  const initialTraining = useRef<Training>();
+  const [updated, setUpdated] = useState<boolean>(false);
+
   useEffect(() => {
-    getRequest(`/api/trainings/${id}`, setTraining);
-  }, [id, setTraining]);
-  
+    getRequest(`/api/trainings/${id}`, setTraining)
+      .then((response) => {
+        initialTraining.current = response?.response?.data;
+        setUpdated(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [id, updated]);
+
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
@@ -109,8 +120,8 @@ export default function EditTrainingForm(): JSX.Element {
     <fieldset>
       <div className="max-w-lg mx-auto"></div>
       <h1 className="text-xl text-center font-bold mb-8">
-        Edit {training.requirements?.name} on {""}
-        {dayjs(training.start).format("YYYY-MM-DD")}
+        Edit {initialTraining?.current?.requirements?.name} on {""}
+        {dayjs(initialTraining?.current?.start).format("YYYY-MM-DD")}
       </h1>
       <div className="flex items-center justify-center">
         <Formik
@@ -120,7 +131,7 @@ export default function EditTrainingForm(): JSX.Element {
           validationSchema={trainingSchema(training)}
         >
           {({ isSubmitting, isValidating, isValid }) => (
-            <Form className="space-y-6" m-auto>
+            <Form className="space-y-6 m-auto">
               <div className="flex items-center">
                 <label htmlFor="requirement" className="w-3/5">
                   Requirement Type:
