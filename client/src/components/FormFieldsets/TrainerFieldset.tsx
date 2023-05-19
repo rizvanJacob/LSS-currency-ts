@@ -1,7 +1,7 @@
 import { Field, ErrorMessage } from "formik";
 import { useState, useEffect } from "react";
 import getRequest from "../../utilities/getRequest";
-
+import ProgressBar from "../ProgressBar";
 import { User } from "../../@types/user";
 import { Requirement } from "../../@types/lookup";
 
@@ -47,8 +47,7 @@ const TrainerFieldset = ({
     });
     }
   };
-  console.log("user",user)
-  return (
+  return requirements ? (
     <div className="flex items-center justify-center m-auto justify-content text-center">
       <fieldset>
         <label className="w-1/4">Display Name:</label>
@@ -66,10 +65,10 @@ const TrainerFieldset = ({
           </div>
         </div>
         <label className="w-1/4"> Training Provided:</label>
-        <div className="w-4/4">
+        <div className="w-4/4 flex flex-col">
           {requirements?.map((r) => {
             return (
-              <label key={r.id}>
+              <label key={r.id} className="self-start">
                 <Field
                   type="checkbox"
                   name="requirementsProvided"
@@ -85,6 +84,8 @@ const TrainerFieldset = ({
         </div>
       </fieldset>
     </div>
+  ) : (
+    <ProgressBar />
   );
 };
 

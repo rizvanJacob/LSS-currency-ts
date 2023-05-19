@@ -122,7 +122,7 @@ export default function EditUserForm(): JSX.Element {
   };
 
   return (
-    ((user.id ) ? (
+    ((user) ? (
       <fieldset>
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-center">
@@ -193,18 +193,20 @@ export default function EditUserForm(): JSX.Element {
                       </div>
                     </div>
                   )}
-                  {((trainee.id && user?.trainee?.id) ? (
-                  user.accountType === Account.Trainee && (
-                    <>
-                      <TraineeFieldSet
-                        trainee={trainee}
-                        setTrainee={setTrainee}
-                      />
-                    </>
-                  )
-                  ) : (
+                  {(trainee.id && user?.trainee?.id && user.accountType === Account.Trainee) ? (
+                    (
+                      <>
+                        <TraineeFieldSet
+                          trainee={trainee}
+                          setTrainee={setTrainee}
+                        />
+                      </>
+                    )
+                  ) : (user.accountType === Account.Trainee) ? (
                     <ProgressBar />
-                  ))}
+                  ) : (
+                    null
+                  )}
                   {user.accountType === Account.Trainer && (
                     <>
                       <TrainerFieldSet
