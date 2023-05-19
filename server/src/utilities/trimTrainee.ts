@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const trimRequirements = (trainee: any) => {
   const trimmedRequirements = trainee.categories.requirements.filter(
     (r: any) => {
@@ -22,7 +24,16 @@ const trimCurrencies = (trainee: any) => {
       }
     );
 
-    const hasDistictExpiry = true;
+    const parentRequirement = trainee.categories.requirements.find((r: any) => {
+      return c.requirement === r.requirements.alsoCompletes;
+    })?.requirements;
+    const parentCurrency = trainee.currencies.find((c: any) => {
+      return c.requirement === parentRequirement?.id;
+    });
+    const hasDistictExpiry =
+      !parentCurrency ||
+      !dayjs(c.expiry).isSame(dayjs(parentCurrency.expiry), "day");
+
     return currencyInRequirements && hasDistictExpiry;
   });
   return trimmedCurrencies;

@@ -1,6 +1,6 @@
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
-import { trimRequirementsForTraining } from "../utilities/trimLookups";
+import { trimRequirementsForTraining } from "../utilities/trimTraining";
 
 const categories = async (req: Request, res: Response) => {
   try {
