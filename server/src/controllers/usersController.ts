@@ -124,6 +124,11 @@ const usersController = {
               category: true,
             },
           },
+          trainings: {
+            select: {
+              requirement: true,
+            },
+          },
         },
       });
       res.status(200).json(userData);
@@ -135,9 +140,37 @@ const usersController = {
   updateUserById: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.userId);
-      console.log("request body", req.body);
-      const { displayName, approved, accountType, authCategory, trainee } =
-        req.body;
+      const {
+        displayName,
+        approved,
+        accountType,
+        authCategory,
+        trainee,
+        trainings,
+      } = req.body;
+
+      const existingUser = await prisma.user.findUnique({
+        where: { id: Number(id) },
+        select: {
+          id: true,
+          trainings: true,
+        },
+      });
+
+      if (trainings !== existingUser?.trainings) {
+        await prisma.trainingProvided.deleteMany({
+          where: { user: Number(id) },
+        });
+        const trainingProvidedData = trainings.map((training: any) => ({
+          user: Number(id),
+          requirement: training.requirement,
+        }));
+
+        await prisma.trainingProvided.createMany({
+          data: trainingProvidedData,
+        });
+      }
+
       const updatedData = await prisma.user.update({
         where: { id: id },
         data: {
@@ -169,7 +202,6 @@ const usersController = {
           },
         },
       });
-      console.log("Backendsendrequest", updatedData);
       res.status(200).json(updatedData);
     } catch (err) {
       res.status(500).json({ err });
