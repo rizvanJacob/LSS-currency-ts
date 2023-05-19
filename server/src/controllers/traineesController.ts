@@ -362,7 +362,7 @@ const deleteController = async (req: Request, res: Response) => {
       deleteTrainee,
     ]);
     if (trainee?.users.accountType === Account.Trainee) {
-      await prisma.user.delete({ where: { id: Number(userId) } });
+      await prisma.userModel.delete({ where: { id: Number(userId) } });
     }
     res
       .status(200)

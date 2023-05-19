@@ -20,7 +20,7 @@ const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
-const CLIENT_URL = process.env.CLIENT_URL + "/"
+const CLIENT_URL = process.env.CLIENT_URL + "/";
 
 const generateUrl = async (req: Request, res: Response) => {
   console.log("clientUrl: ", CLIENT_URL);
@@ -51,7 +51,7 @@ const login = async (req: Request, res: Response) => {
       CLIENT_URL
     );
     try {
-      const userData = await prisma.user.findUniqueOrThrow({
+      const userData = await prisma.userModel.findUniqueOrThrow({
         where: { openId } as any,
         select: {
           id: true,
@@ -94,7 +94,7 @@ const login = async (req: Request, res: Response) => {
 const findUser = async (req: Request, res: Response) => {
   const { openId } = req.params;
 
-  const userData = await prisma.user.findUniqueOrThrow({
+  const userData = await prisma.userModel.findUniqueOrThrow({
     where: { openId } as any,
     select: {
       id: true,
@@ -165,7 +165,7 @@ const isAuth =
             return next();
           }
         } else if (userId) {
-          const user = await prisma.user.findUnique({
+          const user = await prisma.userModel.findUnique({
             where: { id: userId },
             select: {
               id: true,

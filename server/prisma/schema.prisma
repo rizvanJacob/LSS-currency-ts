@@ -4,11 +4,11 @@ generator client {
 }
 
 datasource db {
-  provider = env("DB_PROVIDER", default = "postgresql)
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
+model UserModel {
   id              Int         @id @default(autoincrement())
   openId          String      @unique
   displayName     String  
@@ -17,15 +17,15 @@ model User {
   categories      Category?   @relation(fields: [authCategory], references: [id])
   authCategory    Int?
   trainee         Trainee?    
-  createdAt       DateTime    @default(now()) @db.DateTime2
-  updatedAt       DateTime    @default(now()) @db.DateTime2
+  createdAt       DateTime    @default(now()) @db.TimeStamp(6)
+  updatedAt       DateTime    @default(now()) @db.TimeStamp(6)
   trainings       TrainingProvided[]
   approved        Boolean     @default(false)
 }
 
 model TrainingProvided {
   id            Int         @id @default(autoincrement())
-  users         User?       @relation(fields: [user], references: [id])
+  users         UserModel?       @relation(fields: [user], references: [id])
   user          Int?
   requirements  Requirement? @relation(fields: [requirement], references: [id])
   requirement   Int?
@@ -37,7 +37,7 @@ model TrainingProvided {
 model AccountType {
   id            Int   @id @default(autoincrement())
   name          String
-  users         User[]
+  users         UserModel[]
 }
 
 model Trainee {
@@ -47,7 +47,7 @@ model Trainee {
   category      Int
   createdAt     DateTime  @default(now()) @db.DateTime2
   updatedAt     DateTime  @default(now()) @db.DateTime2
-  users         User      @relation(fields: [user], references: [id])
+  users         UserModel      @relation(fields: [user], references: [id])
   user          Int       @unique
   trainings     TraineeToTraining[]
   currencies    Currency[]
@@ -56,7 +56,7 @@ model Trainee {
 model Category {
   id        Int     @id @default(autoincrement())
   name      String
-  users     User[]
+  users     UserModel[]
   trainees  Trainee[]
   requirements  CategoryToRequirement[]
 }
