@@ -2,12 +2,12 @@ import { Field, ErrorMessage } from "formik";
 import { useState, useEffect } from "react";
 import getRequest from "../../utilities/getRequest";
 
-import { NewUser } from "../../@types/user";
+import { User } from "../../@types/user";
 import { Requirement } from "../../@types/lookup";
 
 type Props = {
-  user: NewUser & { trainings?: { id?: number; user?: number; requirement?: number }[] };
-  setUser: React.Dispatch<React.SetStateAction<NewUser>>
+  user: User & { trainings?: { id?: number; user?: number; requirement?: number }[] };
+  setUser: React.Dispatch<React.SetStateAction<User>>
   handleChange: any;
   requirementsProvided: number[];
   setRequirementsProvided: React.Dispatch<React.SetStateAction<number[]>>;
@@ -47,6 +47,7 @@ const TrainerFieldset = ({
     });
     }
   };
+  console.log("user",user)
   return (
     <div className="flex items-center justify-center m-auto justify-content text-center">
       <fieldset>
@@ -74,7 +75,7 @@ const TrainerFieldset = ({
                   name="requirementsProvided"
                   value={r.id}
                   className="checkbox"
-                  checked={requirementsProvided.includes(r.id)}
+                  checked={user?.trainings?.some((training) => training.requirement === r.id)}
                   onChange={changeRequirementsProvided}
                 />
                 {r.name}

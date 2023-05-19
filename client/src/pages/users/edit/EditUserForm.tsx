@@ -12,6 +12,7 @@ import { TitleContext } from "../../../App";
 import { userSchema } from "../../../yupSchemas/userSchema"
 import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
 import TraineeFieldSet from "../../../components/FormFieldsets/TraineeFieldset";
+import TrainerFieldSet from "../../../components/FormFieldsets/TrainerFieldset";
 import ProgressBar from "../../../components/ProgressBar";
 
 export default function EditUserForm(): JSX.Element {
@@ -19,6 +20,9 @@ export default function EditUserForm(): JSX.Element {
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
   const [categoryTypes, setCategoryTypes] = useState<SimpleLookup[]>([]);
   const [requirements, setRequirements] = useState<Requirement[]>([]);
+  const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
+    []
+  );
   const [user, setUser] = useState<User>({
     id: 0,
     displayName: "",
@@ -118,13 +122,14 @@ export default function EditUserForm(): JSX.Element {
   };
 
   return (
-    ((trainee.id && user?.trainee?.id) ? (
+    ((user.id ) ? (
       <fieldset>
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-center">
             <Formik
               initialValues={user}
               validationSchema={userSchema(user)}
+              enableReinitialize
               onSubmit={handleFormSubmit}
             >
               {({ isSubmitting, isValidating, isValid }) => (
@@ -157,7 +162,9 @@ export default function EditUserForm(): JSX.Element {
                       </div>
                     </div>
                   </div>
-                  <AdminFieldSet user={user} handleChange={handleInputChange} />
+                  {user.accountType !== Account.Trainer &&
+                    <AdminFieldSet user={user} handleChange={handleInputChange} />
+                  }
                   {user.accountType === Account.TraineeAdmin && (
                     <div className="flex items-center justify-center flex-col">
                       <label htmlFor="authCategory" className="w-4/4">
@@ -186,11 +193,26 @@ export default function EditUserForm(): JSX.Element {
                       </div>
                     </div>
                   )}
-                  {user.accountType === Account.Trainee && (
+                  {((trainee.id && user?.trainee?.id) ? (
+                  user.accountType === Account.Trainee && (
                     <>
                       <TraineeFieldSet
                         trainee={trainee}
                         setTrainee={setTrainee}
+                      />
+                    </>
+                  )
+                  ) : (
+                    <ProgressBar />
+                  ))}
+                  {user.accountType === Account.Trainer && (
+                    <>
+                      <TrainerFieldSet
+                        user={user}
+                        setUser={setUser}
+                        handleChange={handleInputChange}
+                        requirementsProvided={requirementsProvided}
+                        setRequirementsProvided={setRequirementsProvided}
                       />
                     </>
                   )}
