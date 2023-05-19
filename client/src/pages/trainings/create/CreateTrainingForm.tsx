@@ -36,7 +36,7 @@ export default function CreateTrainingForm(): JSX.Element {
     if (setTitle) setTitle("New Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
     (currentUser?.accountType === Account.Admin) 
-      ? getRequest(`/api/lookup/requirements`, setRequirements)
+      ? getRequest(`/api/lookup/requirements?forTraining=true`, setRequirements)
       : null;
   }, []);
 
