@@ -12,6 +12,7 @@ type Prop = {
   currency: Currency;
   selfComplete: boolean;
   handleSelfComplete: (currencyId: number, newExpiry: Date) => void;
+  incrementCount: () => void;
 };
 
 type Booking = {
@@ -24,14 +25,14 @@ type Booking = {
 
 const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
 
-const CurrencyCard = ({ currency, selfComplete, handleSelfComplete }: Prop) => {
+const CurrencyCard = ({ currency, selfComplete, handleSelfComplete, incrementCount }: Prop) => {
   const { id } = useParams();
   const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
     className: "",
     open: false,
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [booking, setBooking] = useState<Booking>({
     status: 0,
   });
@@ -42,6 +43,7 @@ const CurrencyCard = ({ currency, selfComplete, handleSelfComplete }: Prop) => {
       setBooking
     ).then(() => {
       setIsLoading(false);
+      incrementCount();
     });
   }, []);
 
