@@ -37,6 +37,7 @@ const trainingsController = {
               requirements: {
                 select: {
                   name: true,
+                  alsoCompletes: true,
                 },
               },
               trainees: {

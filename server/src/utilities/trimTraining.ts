@@ -1,4 +1,4 @@
-import { Requirement } from "@prisma/client";
+import { Requirement, Training, TrainingPayload } from "@prisma/client";
 
 export const trimRequirementsForTraining = (requirements: Requirement[]) => {
   // get all requirements that are alsoCompleted by another requirement
@@ -27,4 +27,15 @@ export const trimRequirementsForTraining = (requirements: Requirement[]) => {
       requirement.name = requirement.name.replace(/ *\([^)]*\) */g, "");
     }
   });
+};
+
+export const trimTrainingNames = (training: any) => {
+  //check if requirement is alsoCompleted by another requirement
+  if (training.requirements.alsoCompletes) {
+    //remove string in () for requirements which have alsoCompletes
+    training.requirements.name = training.requirements.name.replace(
+      / *\([^)]*\) */g,
+      ""
+    );
+  }
 };
