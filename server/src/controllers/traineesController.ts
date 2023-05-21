@@ -4,6 +4,7 @@ import { prisma } from "../config/database";
 import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
+import { mapTrainingForBooking } from "../utilities/trimTraining";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -457,11 +458,18 @@ const book = async (traineeId: number, trainingId: number) => {
       capacity: true,
       trainees: { select: { id: true } },
       requirement: true,
+      requirements: { select: { alsoCompletes: true } },
+      createdAt: true,
     },
   });
 
+  const mappedTraining = await mapTrainingForBooking(training);
+
   let status = 1;
-  if (training && training?.trainees.length >= training?.capacity) {
+  if (
+    mappedTraining &&
+    mappedTraining?.trainees.length >= mappedTraining?.capacity
+  ) {
     status = 6;
   }
   console.log("make booking. status: ", status);

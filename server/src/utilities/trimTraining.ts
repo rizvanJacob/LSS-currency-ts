@@ -111,7 +111,8 @@ export const mapTrainingsForBookingCalendar = async (allTrainings: any) => {
       capacity: true,
       trainees: {
         select: {
-          id: true,
+          trainee: true,
+          status: true,
         },
       },
     },
@@ -135,4 +136,49 @@ export const mapTrainingsForBookingCalendar = async (allTrainings: any) => {
   });
 
   return trainings;
+};
+
+export const mapTrainingForBooking = async (training: any) => {
+  const relatedRequirement = training.requirements.alsoCompletes
+    ? { id: training.requirements.alsoCompletes }
+    : await prisma.requirement.findFirst({
+        where: { alsoCompletes: Number(training.requirement) },
+        select: { id: true },
+      });
+
+  if (!relatedRequirement) {
+    return training;
+  }
+  console.log(`related requirement: ${relatedRequirement.id}`);
+
+  const relatedTraining = await prisma.training.findFirst({
+    where: {
+      requirement: relatedRequirement.id,
+      createdAt: training.createdAt,
+    },
+    select: {
+      id: true,
+      capacity: true,
+      trainees: {
+        select: {
+          trainee: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  if (!relatedTraining) {
+    return training;
+  }
+
+  //take related training's capacity if training doesn't have a capacity
+  if (!training.capacity) {
+    training.capacity = relatedTraining.capacity;
+  }
+
+  //add related training's trainees to training's trainees
+  training.trainees.push(...relatedTraining.trainees);
+
+  return training;
 };
