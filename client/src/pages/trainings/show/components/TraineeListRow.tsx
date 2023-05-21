@@ -11,11 +11,9 @@ type Prop = {
 const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
   return (
     <tr>
-      <Link to={`/trainees/${trainee.id}`}>
-        <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
-          {trainee.callsign}
-        </td>
-      </Link>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+        <Link to={`/trainees/${trainee.id}`}>{trainee.callsign}</Link>
+      </td>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
         {trainee.categories.name}
       </td>

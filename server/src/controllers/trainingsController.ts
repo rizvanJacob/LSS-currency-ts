@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -207,19 +208,54 @@ const trainingsController = {
   },
 
   createTraining: async (req: Request, res: Response, err: any) => {
+    console.log(req.body);
     try {
       const { start, end, capacity, instruction, requirement } = req.body;
-      const newTraining = await prisma.training.create({
-        data: {
+      const newTrainingData: Prisma.TrainingCreateInput[] = [
+        {
           start: start,
           end: end,
           capacity: parseInt(capacity),
           instruction: instruction,
-          requirement: parseInt(requirement),
+          requirements: {
+            connect: {
+              id: parseInt(requirement),
+            },
+          },
           complete: false,
         },
+      ];
+      const primaryRequirement = await prisma.requirement.findUnique({
+        where: { id: parseInt(requirement) },
+        select: { alsoCompletes: true },
       });
-      res.status(200).json(newTraining);
+      if (!primaryRequirement) {
+        return res.status(400).json({ message: "No such requirement" });
+      }
+      const { alsoCompletes } = primaryRequirement;
+      if (alsoCompletes) {
+        newTrainingData.push({
+          start: start,
+          end: end,
+          capacity: 0,
+          instruction: instruction,
+          requirements: {
+            connect: {
+              id: alsoCompletes,
+            },
+          },
+          complete: false,
+        });
+      }
+      const newTrainings = await Promise.all(
+        newTrainingData.map(async (t) => {
+          return await prisma.training.create({
+            data: t,
+          });
+        })
+      );
+      console.log(newTrainings);
+      res.status(200).json(newTrainings);
     } catch (err) {
       res.status(500).json({ err });
     }

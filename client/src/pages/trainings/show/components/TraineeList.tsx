@@ -11,12 +11,16 @@ import { CurrentUser } from "../../../../@types/currentUser";
 import { CHANGE_TRAINING_ACCESS } from "../../routes/TrainingRoutes";
 
 type Prop = {
+  trainingId: number;
   trainingComplete: boolean | undefined;
   setTrainingComplete: any;
 };
 
-const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
-  const { id: trainingId } = useParams();
+const TraineeList = ({
+  trainingId,
+  trainingComplete,
+  setTrainingComplete,
+}: Prop) => {
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [completedTrainees, setCompletedTrainees] = useState<number[]>([]);
@@ -76,21 +80,23 @@ const TraineeList = ({ trainingComplete, setTrainingComplete }: Prop) => {
       >
         <table className="table w-full">
           <thead className="text-black">
-            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-              Trainee
-            </th>
-            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-              Category
-            </th>
-            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
-              Expiry
-            </th>
-            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden xs:table-cell">
-              Status
-            </th>
-            <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
-              Complete
-            </th>
+            <tr>
+              <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+                Trainee
+              </th>
+              <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+                Category
+              </th>
+              <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+                Expiry
+              </th>
+              <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden xs:table-cell">
+                Status
+              </th>
+              <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+                Complete
+              </th>
+            </tr>
           </thead>
           <tbody>
             {trainees.map((t) => {
