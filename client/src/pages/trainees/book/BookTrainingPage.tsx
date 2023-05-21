@@ -21,7 +21,7 @@ const BookTrainingPage = () => {
   useEffect(() => {
     if (setTitle) setTitle("Book Training");
     getRequest(
-      `/api/trainings/?trainee=${id}&requirement=${requirement}`,
+      `/api/trainings/?requirement=${requirement}`,
       setTrainings
     ).then(() => {
       setIsLoaded(true);

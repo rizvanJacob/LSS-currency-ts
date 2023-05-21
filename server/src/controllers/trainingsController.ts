@@ -2,9 +2,14 @@ import dayjs from "dayjs";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
+import {
+  mapTrainingsForBookingCalendar,
+  trimTrainingsForIndex,
+} from "../utilities/trimTraining";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
+    console.log("trainings index");
     const { requirement, checkin, user } = req.query;
     try {
       const allTrainings = await prisma.training.findMany({
@@ -31,6 +36,7 @@ const trainingsController = {
               requirements: {
                 select: {
                   name: true,
+                  alsoCompletes: true,
                 },
               },
             }
@@ -54,6 +60,19 @@ const trainingsController = {
             },
       });
       console.log(`Count of trainings: ${allTrainings.length}`);
+
+      if (!requirement && !checkin && !user) {
+        console.log("trim trainings for Index");
+        const trainings = trimTrainingsForIndex(allTrainings);
+        return res.status(200).json(trainings);
+      } else if (requirement) {
+        console.log("trim trainings for booking calendar");
+        const trainings = await mapTrainingsForBookingCalendar(allTrainings);
+        return res.status(200).json(trainings);
+      }
+      // const trainings = trimTrainingsForBookingCalendar(allTrainings);
+      // return res.status(200).json(trainings);
+
       res.status(200).json(allTrainings);
     } catch (err) {
       console.log(err);
@@ -208,7 +227,6 @@ const trainingsController = {
   },
 
   createTraining: async (req: Request, res: Response, err: any) => {
-    console.log(req.body);
     try {
       const { start, end, capacity, instruction, requirement } = req.body;
       const newTrainingData: Prisma.TrainingCreateInput[] = [
