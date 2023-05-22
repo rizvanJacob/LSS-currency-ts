@@ -8,4 +8,5 @@ router.get("/statuses", lookupController.statuses);
 router.get("/requirements", lookupController.requirements);
 router.get("/accountTypes", lookupController.accountTypes);
 router.get("/trainingsProvided", lookupController.trainingsProvided);
+router.get("/categoryToRequirement", lookupController.categoryToRequirement);
 export default router;

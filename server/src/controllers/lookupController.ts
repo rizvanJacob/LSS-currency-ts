@@ -73,4 +73,35 @@ const trainingsProvided = async (req: Request, res: Response) => {
   }
 };
 
-export { categories, statuses, requirements, accountTypes, trainingsProvided };
+const categoryToRequirement = async (req: Request, res: Response) => {
+  try {
+    const categoryToRequirement = await prisma.categoryToRequirement.findMany({
+      select: {
+        category: true,
+        categories: {
+          select: {
+            name: true,
+          },
+        },
+        requirement: true,
+        requirements: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    console.log(categoryToRequirement);
+    res.status(200).json(categoryToRequirement);
+  } catch (err) {
+    res.status(500);
+  }
+};
+export {
+  categories,
+  statuses,
+  requirements,
+  accountTypes,
+  trainingsProvided,
+  categoryToRequirement,
+};
