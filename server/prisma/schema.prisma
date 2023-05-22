@@ -25,10 +25,10 @@ model UserModel {
 
 model TrainingProvided {
   id            Int         @id @default(autoincrement())
-  users         UserModel?       @relation(fields: [user], references: [id])
-  user          Int?
-  requirements  Requirement? @relation(fields: [requirement], references: [id])
-  requirement   Int?
+  users         UserModel?   @relation(fields: [user], references: [id])
+  user          Int? 
+  requirements  Requirement @relation(fields: [requirement], references: [id])
+  requirement   Int
   createdAt     DateTime    @default(now()) @db.Timestamp(6)
   updatedAt     DateTime    @default(now()) @db.Timestamp(6)
   @@unique([user, requirement])
