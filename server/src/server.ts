@@ -20,11 +20,21 @@ app.use(logger("dev"));
 // allow cors from the client url
 const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
-  const corsOptions = {
+  const options: cors.CorsOptions = {
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "X-Access-Token",
+    ],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
     origin: clientUrl,
+    preflightContinue: false,
   };
-  app.use(cors(corsOptions));
-  app.options("*", cors(corsOptions));
+  app.use(cors(options));
+  app.options("*", cors(options));
 } else {
   app.use(express.static(path.join(__dirname, "../../client/dist")));
 }

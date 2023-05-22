@@ -43,7 +43,7 @@ model AccountType {
 model Trainee {
   id            Int       @id @default(autoincrement())
   callsign      String?
-  categories    Category  @relation(fields: [category], references: [id])
+  categories    Category  @relation(fields: [category], references: [id], onUpdate: NoAction)
   category      Int
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @default(now()) @db.Timestamp(6)
