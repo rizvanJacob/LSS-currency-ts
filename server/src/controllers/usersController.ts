@@ -18,7 +18,7 @@ const usersController = {
       requirementsProvided,
     } = req.body;
     try {
-      const numTrainees = await prisma.user.count({
+      const numTrainees = await prisma.userModel.count({
         where: { accountType: Account.Trainee },
       });
       console.log(
@@ -27,7 +27,7 @@ const usersController = {
       if (numTrainees < MAX_USERS) {
         try {
           await prisma.$transaction(async (prisma) => {
-            const user = await prisma.user.create({
+            const user = await prisma.userModel.create({
               data: {
                 openId: openId,
                 accountType: Number(accountType),
@@ -70,7 +70,7 @@ const usersController = {
       const verifiedUser = loggedInUser(req, res);
       console.log("Verified user", verifiedUser);
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
-        const allUsers = await prisma.user.findMany({
+        const allUsers = await prisma.userModel.findMany({
           where: {
             accountType: Account.Trainee,
           },
@@ -87,7 +87,7 @@ const usersController = {
         });
         res.status(200).json(allUsers);
       } else {
-        const allUsers = await prisma.user.findMany({
+        const allUsers = await prisma.userModel.findMany({
           orderBy: {
             displayName: "asc",
           },
@@ -109,7 +109,7 @@ const usersController = {
   getUserById: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.userId);
-      const userData = await prisma.user.findUniqueOrThrow({
+      const userData = await prisma.userModel.findUniqueOrThrow({
         where: { id: id },
         select: {
           id: true,
@@ -149,7 +149,7 @@ const usersController = {
         trainings,
       } = req.body;
 
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.userModel.findUnique({
         where: { id: Number(id) },
         select: {
           id: true,
@@ -171,7 +171,7 @@ const usersController = {
         });
       }
 
-      const updatedData = await prisma.user.update({
+      const updatedData = await prisma.userModel.update({
         where: { id: id },
         data: {
           displayName,
@@ -211,7 +211,7 @@ const usersController = {
   deleteUserById: async (req: Request, res: Response, err: any) => {
     try {
       const userId = parseInt(req.params.userId);
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.userModel.findUnique({
         where: { id: Number(userId) },
         select: {
           accountType: true,
@@ -247,7 +247,7 @@ const usersController = {
             });
           }
 
-          await prisma.user.delete({
+          await prisma.userModel.delete({
             where: { id: userId },
           });
         },

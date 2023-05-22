@@ -51,7 +51,7 @@ const login = async (req: Request, res: Response) => {
       CLIENT_URL
     );
     try {
-      const userData = await prisma.user.findUniqueOrThrow({
+      const userData = await prisma.userModel.findUniqueOrThrow({
         where: { openId } as any,
         select: {
           id: true,
@@ -94,7 +94,7 @@ const login = async (req: Request, res: Response) => {
 const findUser = async (req: Request, res: Response) => {
   const { openId } = req.params;
 
-  const userData = await prisma.user.findUniqueOrThrow({
+  const userData = await prisma.userModel.findUniqueOrThrow({
     where: { openId } as any,
     select: {
       id: true,
@@ -165,7 +165,7 @@ const isAuth =
             return next();
           }
         } else if (userId) {
-          const user = await prisma.user.findUnique({
+          const user = await prisma.userModel.findUnique({
             where: { id: userId },
             select: {
               id: true,
