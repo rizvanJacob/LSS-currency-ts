@@ -19,6 +19,7 @@ const trainingsController = {
             ? {
                 requirement: Number(requirement),
                 start: { gte: dayjs().toDate() },
+                complete: false,
               }
             : {}),
           ...(checkin && user
