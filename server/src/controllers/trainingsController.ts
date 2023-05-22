@@ -4,7 +4,8 @@ import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import {
   mapTrainingsForBookingCalendar,
-  trimTrainingsForIndex,
+  mapTrainingsForIndex,
+  transformTrainingForShow,
 } from "../utilities/trimTraining";
 
 const trainingsController = {
@@ -63,7 +64,7 @@ const trainingsController = {
 
       if (!requirement && !checkin && !user) {
         console.log("trim trainings for Index");
-        const trainings = trimTrainingsForIndex(allTrainings);
+        const trainings = mapTrainingsForIndex(allTrainings);
         return res.status(200).json(trainings);
       } else if (requirement) {
         console.log("trim trainings for booking calendar");
@@ -97,6 +98,7 @@ const trainingsController = {
           requirements: {
             select: {
               name: true,
+              alsoCompletes: true,
             },
           },
           trainees: {
@@ -118,9 +120,13 @@ const trainingsController = {
               },
             },
           },
+          createdAt: true,
         },
       });
-      res.status(200).json(training);
+
+      const transformedTraining = await transformTrainingForShow(training);
+      console.log(transformedTraining);
+      res.status(200).json(transformedTraining);
     } catch (err) {
       res.status(500).json({ err });
     }

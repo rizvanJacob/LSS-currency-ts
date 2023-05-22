@@ -4,7 +4,7 @@ import { prisma } from "../config/database";
 import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
-import { mapTrainingForBooking } from "../utilities/trimTraining";
+import { transformTrainingForBooking } from "../utilities/trimTraining";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -463,7 +463,7 @@ const book = async (traineeId: number, trainingId: number) => {
     },
   });
 
-  const mappedTraining = await mapTrainingForBooking(training);
+  const mappedTraining = await transformTrainingForBooking(training);
 
   let status = 1;
   if (

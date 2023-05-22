@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 type Prop = {
   trainee: Trainee;
-  handleChange: any;
+  handleChange: (event: React.FormEvent<HTMLInputElement>) => void;
   trainingComplete: boolean | undefined;
 };
 const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {

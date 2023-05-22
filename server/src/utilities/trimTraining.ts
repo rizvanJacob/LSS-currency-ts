@@ -26,7 +26,7 @@ export const trimRequirementsForTraining = (requirements: Requirement[]) => {
   //remove string in () for requirements which have alsoCompletes
   requirements.forEach((requirement) => {
     if (requirement.alsoCompletes) {
-      requirement.name = requirement.name.replace(/ *\([^)]*\) */g, "");
+      requirement.name = removeBracketedText(requirement.name);
     }
   });
 };
@@ -34,21 +34,18 @@ export const trimRequirementsForTraining = (requirements: Requirement[]) => {
 export const trimTrainingNames = (training: any) => {
   //check if requirement also completes another requirement
   if (training.requirements.alsoCompletes) {
-    //remove string in () for requirements which have alsoCompletes
-    training.requirements.name = training.requirements.name.replace(
-      / *\([^)]*\) */g,
-      ""
+    training.requirements.name = removeBracketedText(
+      training.requirements.name
     );
   }
 };
 
-export const trimTrainingsForIndex = (allTrainings: any) => {
+export const mapTrainingsForIndex = (allTrainings: any) => {
   allTrainings.forEach((training: any) => {
     if (training.requirements.alsoCompletes) {
       //remove string in () for requirements which have alsoCompletes
-      training.requirements.name = training.requirements.name.replace(
-        / *\([^)]*\) */g,
-        ""
+      training.requirements.name = removeBracketedText(
+        training.requirements.name
       );
 
       //create alsoCompletes key for requirements which have alsoCompletes, with a value of the trainingId which is also completed
@@ -90,33 +87,12 @@ export const trimTrainingsForIndex = (allTrainings: any) => {
 };
 
 export const mapTrainingsForBookingCalendar = async (allTrainings: any) => {
-  const relatedRequirement = allTrainings[0].requirements.alsoCompletes
-    ? { id: allTrainings[0].requirements.alsoCompletes }
-    : await prisma.requirement.findFirst({
-        where: { alsoCompletes: Number(allTrainings[0].requirement) },
-        select: { id: true },
-      });
-
+  const relatedRequirement = await findRelatedRequirement(allTrainings[0]);
   if (!relatedRequirement) {
     return allTrainings;
   }
 
-  const relatedTrainings = await prisma.training.findMany({
-    where: {
-      requirement: relatedRequirement.id,
-    },
-    select: {
-      id: true,
-      createdAt: true,
-      capacity: true,
-      trainees: {
-        select: {
-          trainee: true,
-          status: true,
-        },
-      },
-    },
-  });
+  const relatedTrainings = await findRelatedTrainings(relatedRequirement);
 
   const trainings = allTrainings.map((training: any) => {
     //find the related training
@@ -138,36 +114,16 @@ export const mapTrainingsForBookingCalendar = async (allTrainings: any) => {
   return trainings;
 };
 
-export const mapTrainingForBooking = async (training: any) => {
-  const relatedRequirement = training.requirements.alsoCompletes
-    ? { id: training.requirements.alsoCompletes }
-    : await prisma.requirement.findFirst({
-        where: { alsoCompletes: Number(training.requirement) },
-        select: { id: true },
-      });
-
+export const transformTrainingForBooking = async (training: any) => {
+  const relatedRequirement = await findRelatedRequirement(training);
   if (!relatedRequirement) {
     return training;
   }
-  console.log(`related requirement: ${relatedRequirement.id}`);
 
-  const relatedTraining = await prisma.training.findFirst({
-    where: {
-      requirement: relatedRequirement.id,
-      createdAt: training.createdAt,
-    },
-    select: {
-      id: true,
-      capacity: true,
-      trainees: {
-        select: {
-          trainee: true,
-          status: true,
-        },
-      },
-    },
-  });
-
+  const relatedTraining = await findRelatedTraining(
+    relatedRequirement,
+    training
+  );
   if (!relatedTraining) {
     return training;
   }
@@ -181,4 +137,107 @@ export const mapTrainingForBooking = async (training: any) => {
   training.trainees.push(...relatedTraining.trainees);
 
   return training;
+};
+
+export const transformTrainingForShow = async (training: any) => {
+  const relatedRequirement = await findRelatedRequirement(training);
+  if (!relatedRequirement) {
+    return training;
+  }
+
+  const relatedTraining = await findRelatedTraining(
+    relatedRequirement,
+    training
+  );
+  if (!relatedTraining) {
+    return training;
+  }
+
+  let returnTraining: any = {};
+  if (training.capacity) {
+    returnTraining = mergeTrainings(training, relatedTraining);
+  } else {
+    returnTraining = mergeTrainings(relatedTraining, training);
+  }
+  returnTraining.requirements.name = removeBracketedText(
+    returnTraining.requirements.name
+  );
+
+  console.log(returnTraining);
+  return returnTraining;
+};
+
+const mergeTrainings = (primaryTraining: any, secondaryTraining: any) => {
+  let mergedTraining: any = primaryTraining;
+
+  mergedTraining.relatedTraining = secondaryTraining.id;
+  mergedTraining.requirementName = keepTextInBrackets(
+    primaryTraining.requirements.name
+  );
+  mergedTraining.relatedRequirementName = keepTextInBrackets(
+    secondaryTraining.requirements.name
+  );
+  mergedTraining.trainees.push(...secondaryTraining.trainees);
+
+  return mergedTraining;
+};
+
+const findRelatedRequirement = async (training: any) => {
+  const relatedRequirement = training.requirements.alsoCompletes
+    ? { id: training.requirements.alsoCompletes }
+    : await prisma.requirement.findFirst({
+        where: { alsoCompletes: Number(training.requirement) },
+        select: { id: true },
+      });
+
+  return relatedRequirement;
+};
+
+const findRelatedTrainings = async (relatedRequirement: { id: any }) => {
+  const relatedTrainings = await prisma.training.findMany({
+    where: {
+      requirement: relatedRequirement.id,
+    },
+    select: relatedTrainingSelection,
+  });
+  return relatedTrainings;
+};
+
+const findRelatedTraining = async (
+  relatedRequirement: { id: any },
+  training: any
+) => {
+  const relatedTraining = await prisma.training.findFirst({
+    where: {
+      requirement: relatedRequirement.id,
+      createdAt: training.createdAt,
+    },
+    select: relatedTrainingSelection,
+  });
+  return relatedTraining;
+};
+
+const relatedTrainingSelection = {
+  id: true,
+  createdAt: true,
+  capacity: true,
+  trainees: {
+    select: {
+      trainee: true,
+      status: true,
+    },
+  },
+  requirements: {
+    select: {
+      name: true,
+    },
+  },
+};
+
+const removeBracketedText = (text: string) => {
+  return text.replace(/ *\([^)]*\) */g, "");
+};
+
+const keepTextInBrackets = (text: string) => {
+  return text.replace(/.*\(|\).*/g, "");
 };
