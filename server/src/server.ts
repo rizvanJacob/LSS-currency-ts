@@ -21,10 +21,8 @@ app.use(logger("dev"));
 const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
   const options: cors.CorsOptions = {
-    credentials: true,
     methods: "GET,PUT,POST,DELETE",
     origin: clientUrl,
-    preflightContinue: false,
   };
   app.use(cors(options));
   app.options("*", cors(options));
