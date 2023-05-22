@@ -25,7 +25,7 @@ model UserModel {
 
 model TrainingProvided {
   id            Int         @id @default(autoincrement())
-  users         User?       @relation(fields: [user], references: [id])
+  users         UserModel?       @relation(fields: [user], references: [id])
   user          Int?
   requirements  Requirement? @relation(fields: [requirement], references: [id])
   requirement   Int?
