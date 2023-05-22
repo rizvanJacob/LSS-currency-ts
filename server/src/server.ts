@@ -21,17 +21,8 @@ app.use(logger("dev"));
 const clientUrl = process.env.CLIENT_URL || null;
 if (clientUrl) {
   const options: cors.CorsOptions = {
-    allowedHeaders: [
-      "Origin",
-      "X-Requested-With",
-      "Content-Type",
-      "Accept",
-      "X-Access-Token",
-    ],
-    credentials: true,
-    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    methods: "GET,PUT,POST,DELETE",
     origin: clientUrl,
-    preflightContinue: false,
   };
   app.use(cors(options));
   app.options("*", cors(options));
