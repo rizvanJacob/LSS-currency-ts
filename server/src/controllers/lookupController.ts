@@ -72,6 +72,7 @@ const trainingsProvided = async (req: Request, res: Response) => {
         },
       },
     });
+    
     res.status(200).json(trainingsProvided);
   } catch (error) {
     res.status(500);
