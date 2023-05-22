@@ -67,14 +67,18 @@ export default function TrainingPage(): JSX.Element {
         setTraining={setTraining}
         setTrainings={setTrainings}
       />
-      <TraineeList
-        trainingId={training.id}
-        trainingComplete={training.complete}
-        setTrainingComplete={setTrainingComplete}
-        relatedTraining={training.relatedTraining}
-        name={training.requirementName}
-        relatedName={training.relatedRequirementName}
-      />
+      {training.trainees.length ? (
+        <TraineeList
+          trainingId={training.id}
+          trainingComplete={training.complete}
+          setTrainingComplete={setTrainingComplete}
+          relatedTraining={training.relatedTraining}
+          name={training.requirementName}
+          relatedName={training.relatedRequirementName}
+        />
+      ) : (
+        <p>No Trainees</p>
+      )}
     </>
   );
 }

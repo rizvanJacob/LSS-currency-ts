@@ -3,6 +3,7 @@ import { prisma } from "../config/database";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import {
+  findRelatedTraining,
   mapTrainingsForBookingCalendar,
   mapTrainingsForIndex,
   transformTrainingForShow,
@@ -136,7 +137,7 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      const { requirement, start, end, capacity, instruction } = req.body;
+      const { start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
         data: {
@@ -144,7 +145,6 @@ const trainingsController = {
           end,
           capacity,
           instruction,
-          requirement,
           updatedAt: dayjs().toDate(),
         },
         select: {
@@ -154,8 +154,34 @@ const trainingsController = {
           capacity: true,
           instruction: true,
           requirement: true,
+          requirements: {
+            select: {
+              alsoCompletes: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
       });
+
+      if (updatedTraining.requirements.alsoCompletes) {
+        const relatedTraining = await findRelatedTraining(
+          { id: updatedTraining.requirements.alsoCompletes },
+          updatedTraining
+        );
+        if (relatedTraining) {
+          await prisma.training.update({
+            where: { id: relatedTraining.id },
+            data: {
+              start: updatedTraining.start,
+              end: updatedTraining.end,
+              instruction: updatedTraining.instruction,
+              updatedAt: updatedTraining.updatedAt,
+            },
+          });
+        }
+      }
+
       res.status(200).json(updatedTraining);
     } catch (err) {
       res.status(500).json({ err });
@@ -217,14 +243,39 @@ const trainingsController = {
   deleteTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      await prisma.$transaction(async (prisma) => {
-        await prisma.traineeToTraining.deleteMany({
+
+      const [, training] = await prisma.$transaction([
+        prisma.traineeToTraining.deleteMany({
           where: { training: id },
-        });
-        await prisma.training.delete({
+        }),
+        prisma.training.delete({
           where: { id },
-        });
-      });
+          include: {
+            requirements: {
+              select: {
+                alsoCompletes: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+      if (training.requirements.alsoCompletes) {
+        const relatedTraining = await findRelatedTraining(
+          { id: training.requirements.alsoCompletes },
+          training
+        );
+        if (relatedTraining) {
+          await prisma.$transaction([
+            prisma.traineeToTraining.deleteMany({
+              where: { training: relatedTraining.id },
+            }),
+            prisma.training.delete({
+              where: { id: relatedTraining.id },
+            }),
+          ]);
+        }
+      }
       res
         .status(200)
         .json({ message: "Training and Bookings deleted successfully" });

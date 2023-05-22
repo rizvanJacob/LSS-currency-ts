@@ -203,7 +203,7 @@ const findRelatedTrainings = async (relatedRequirement: { id: any }) => {
   return relatedTrainings;
 };
 
-const findRelatedTraining = async (
+export const findRelatedTraining = async (
   relatedRequirement: { id: any },
   training: any
 ) => {
