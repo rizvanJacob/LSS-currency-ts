@@ -31,39 +31,6 @@ export const trimRequirementsForTraining = (requirements: Requirement[]) => {
   });
 };
 
-export const trimTrainingsProvided = (trainingsProvided: any) => {
-  //get requirements that are completed by another requirement
-  const secondaryRequirements = trainingsProvided.reduce(
-    (acc: number[], training: any) => {
-      if (training.requirements.alsoCompletes) {
-        acc.push(training.requirements.alsoCompletes);
-      }
-      return acc;
-    },
-    [] as number[]
-  );
-
-  //sort secondaryRequirements in descending order
-  secondaryRequirements.sort((a: number, b: number) => b - a);
-
-  //splice trainingsProvided to requirements which are in secondaryRequirements
-  secondaryRequirements.forEach((id: number) => {
-    const index = trainingsProvided.findIndex((training: any) => {
-      return training.requirement === id;
-    });
-    trainingsProvided.splice(index, 1);
-  });
-
-  //remove string in () for requirements which have alsoCompletes
-  trainingsProvided.forEach((training: any) => {
-    if (training.requirements.alsoCompletes) {
-      training.requirements.name = removeBracketedText(
-        training.requirements.name
-      );
-    }
-  });
-};
-
 export const trimTrainingNames = (training: any) => {
   //check if requirement also completes another requirement
   if (training.requirements.alsoCompletes) {
