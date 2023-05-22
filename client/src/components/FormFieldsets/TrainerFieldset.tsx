@@ -1,13 +1,13 @@
 import { Field, ErrorMessage } from "formik";
 import { useState, useEffect } from "react";
 import getRequest from "../../utilities/getRequest";
-
-import { NewUser } from "../../@types/user";
+import ProgressBar from "../ProgressBar";
+import { User } from "../../@types/user";
 import { Requirement } from "../../@types/lookup";
 
 type Props = {
-  user: NewUser & { trainings?: { id?: number; user?: number; requirement?: number }[] };
-  setUser: React.Dispatch<React.SetStateAction<NewUser>>
+  user: User & { trainings?: { id?: number; user?: number; requirement?: number }[] };
+  setUser: React.Dispatch<React.SetStateAction<User>>
   handleChange: any;
   requirementsProvided: number[];
   setRequirementsProvided: React.Dispatch<React.SetStateAction<number[]>>;
@@ -23,7 +23,7 @@ const TrainerFieldset = ({
   const [requirements, setRequirements] = useState<Requirement[] | null>(null);
 
   useEffect(() => {
-    getRequest("/api/lookup/requirements", setRequirements);
+    getRequest("/api/lookup/requirements?forTraining=true", setRequirements);
   }, []);
 
   const changeRequirementsProvided = (
@@ -47,7 +47,7 @@ const TrainerFieldset = ({
     });
     }
   };
-  return (
+  return requirements ? (
     <div className="flex items-center justify-center m-auto justify-content text-center">
       <fieldset>
         <label className="w-1/4">Display Name:</label>
@@ -65,16 +65,16 @@ const TrainerFieldset = ({
           </div>
         </div>
         <label className="w-1/4"> Training Provided:</label>
-        <div className="w-4/4">
+        <div className="w-4/4 flex flex-col">
           {requirements?.map((r) => {
             return (
-              <label key={r.id}>
+              <label key={r.id} className="self-start">
                 <Field
                   type="checkbox"
                   name="requirementsProvided"
                   value={r.id}
                   className="checkbox"
-                  checked={requirementsProvided.includes(r.id)}
+                  checked={user?.trainings?.some((training) => training.requirement === r.id)}
                   onChange={changeRequirementsProvided}
                 />
                 {r.name}
@@ -84,6 +84,8 @@ const TrainerFieldset = ({
         </div>
       </fieldset>
     </div>
+  ) : (
+    <ProgressBar />
   );
 };
 

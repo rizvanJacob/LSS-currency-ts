@@ -13,6 +13,7 @@ export default function TrainingPage(): JSX.Element {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [training, setTraining] = useState<Training>({
     id: 0,
+    relatedTraining: 0,
     capacity: 0,
     start: new Date(),
     end: new Date(),
@@ -21,6 +22,8 @@ export default function TrainingPage(): JSX.Element {
     requirements: {
       name: "",
     },
+    requirementName: "",
+    relatedRequirementName: "",
     instruction: "",
     trainees: [
       {
@@ -64,10 +67,18 @@ export default function TrainingPage(): JSX.Element {
         setTraining={setTraining}
         setTrainings={setTrainings}
       />
-      <TraineeList
-        trainingComplete={training.complete}
-        setTrainingComplete={setTrainingComplete}
-      />
+      {training.trainees.length ? (
+        <TraineeList
+          trainingId={training.id}
+          trainingComplete={training.complete}
+          setTrainingComplete={setTrainingComplete}
+          relatedTraining={training.relatedTraining}
+          name={training.requirementName}
+          relatedName={training.relatedRequirementName}
+        />
+      ) : (
+        <p>No Trainees</p>
+      )}
     </>
   );
 }

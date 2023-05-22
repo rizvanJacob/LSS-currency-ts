@@ -13,7 +13,9 @@ import { CurrentUserContext, TitleContext } from "../../../App";
 import { trainingProvided } from "../../../@types/lookup";
 
 export default function EditTrainingForm(): JSX.Element {
-  const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>([]);
+  const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>(
+    []
+  );
   const [requirements, setRequirements] = useState<SimpleLookup[]>([]);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ export default function EditTrainingForm(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
     getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
-    (currentUser?.accountType === Account.Admin) 
+    currentUser?.accountType === Account.Admin
       ? getRequest(`/api/lookup/requirements`, setRequirements)
       : null;
   }, []);
@@ -82,8 +84,10 @@ export default function EditTrainingForm(): JSX.Element {
         return {
           ...training,
           requirement:
-            (currentUser?.accountType !== Account.Admin) 
-              ? trainingsProvided.find((type) => value === type?.requirements?.name)?.requirement ?? 0
+            currentUser?.accountType !== Account.Admin
+              ? trainingsProvided.find(
+                  (type) => value === type?.requirements?.name
+                )?.requirement ?? 0
               : requirements.find((type) => value === type.name)?.id ?? 0,
         };
       } else if (name === "start") {
@@ -121,7 +125,7 @@ export default function EditTrainingForm(): JSX.Element {
       <div className="max-w-lg mx-auto"></div>
       <h1 className="text-xl text-center font-bold mb-8">
         Edit {initialTraining?.current?.requirements?.name} on {""}
-        {dayjs(initialTraining?.current?.start).format("YYYY-MM-DD")}
+        {dayjs(initialTraining?.current?.start).format("DD MMM YY")}
       </h1>
       <div className="flex items-center justify-center">
         <Formik
@@ -133,52 +137,8 @@ export default function EditTrainingForm(): JSX.Element {
           {({ isSubmitting, isValidating, isValid }) => (
             <Form className="space-y-6 m-auto">
               <div className="flex items-center">
-                <label htmlFor="requirement" className="w-3/5">
-                  Requirement Type:
-                </label>
-                <div className="w-2/5">
-                  <Field
-                    as="select"
-                    type="text"
-                    id="requirement"
-                    name="requirement"
-                    className="input-select select select-primary w-full max-w-xs"
-                    value={
-                      currentUser?.accountType !== Account.Admin ? (
-                        trainingsProvided.find(
-                          (type) => training?.requirement === type?.requirement
-                        )?.requirements?.name || ""
-                      ) : (
-                        requirements.find((type) => training?.requirement === type?.id)?.name || ""
-                      )
-                    }
-                    onChange={handleInputChange}
-                  >
-                  {currentUser?.accountType !== Account.Admin ? (
-                      trainingsProvided.map((type) =>
-                        type.user === currentUser?.id ? (
-                          <option value={type.requirements?.name} key={type.requirement}>
-                            {type.requirements?.name}
-                          </option>
-                        ) : null
-                      )
-                  ) : (
-                    requirements.map((type) => (
-                      <option value={type.name} key={type.id}>
-                        {type.name}
-                      </option>
-                    ))
-                  )
-                  }
-                  </Field>
-                  <div className="error-message text-error">
-                    <ErrorMessage name="requirement" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-3/5">Start Date:</label>
-                <div className="w-2/5">
+                <label className="text-left w-2/5">Start Date:</label>
+                <div className="flex-1">
                   <Field
                     type="date"
                     id="start"
@@ -193,8 +153,8 @@ export default function EditTrainingForm(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <label className="w-3/5">Start Time:</label>
-                <div className="w-2/5">
+                <label className="w-2/5 text-left">Start Time:</label>
+                <div className="flex-1">
                   <Field
                     type="time"
                     id="start_time"
@@ -206,8 +166,8 @@ export default function EditTrainingForm(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <label className="w-3/5">End Date:</label>
-                <div className="w-2/5">
+                <label className="w-2/5 text-left">End Date:</label>
+                <div className="flex-1">
                   <Field
                     type="date"
                     id="end"
@@ -222,8 +182,8 @@ export default function EditTrainingForm(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <label className="w-3/5">End Time:</label>
-                <div className="w-2/5">
+                <label className="w-2/5 text-left">End Time:</label>
+                <div className="flex-1">
                   <Field
                     type="time"
                     id="end_time"
@@ -235,13 +195,13 @@ export default function EditTrainingForm(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <label className="w-3/5">Capacity:</label>
-                <div className="w-2/5">
+                <label className="w-2/5 text-left">Capacity:</label>
+                <div className="flex-1">
                   <Field
                     type="number"
                     id="capacity"
                     name="capacity"
-                    value={(training?.capacity) || null}
+                    value={training?.capacity || null}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={handleInputChange}
                   />
@@ -251,15 +211,17 @@ export default function EditTrainingForm(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <label className="w-3/5">Additional Instructions:</label>
-                <div className="w-2/5">
+                <label className="w-2/5 text-left">
+                  Additional Instructions:
+                </label>
+                <div className="flex-1">
                   <Field
                     as="textarea"
                     type="text"
                     id="instruction"
                     name="instruction"
                     value={training?.instruction || ""}
-                    className="textarea textarea-primary"
+                    className="textarea textarea-primary w-full"
                     onChange={handleInputChange}
                   />
                 </div>

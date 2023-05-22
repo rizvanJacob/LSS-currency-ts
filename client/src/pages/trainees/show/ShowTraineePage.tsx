@@ -41,7 +41,12 @@ const ShowTraineePage = () => {
     });
   };
 
-  return isLoading ? (
+  const [count, setCount]= useState(0);
+  const incrementCount = () => {
+    setCount(count + 1);
+  }
+
+  return isLoading || count === trainee?.categories?.requirements?.length ? (
     <ProgressBar />
   ) : (
     <div className="flex flex-col mx-auto items-stretch w-screen max-w-md p-3">
@@ -57,6 +62,7 @@ const ShowTraineePage = () => {
               key={c.id}
               selfComplete={requirement.requirements.selfComplete || false}
               handleSelfComplete={handleSelfComplete}
+              incrementCount={incrementCount}
             />
           );
         }

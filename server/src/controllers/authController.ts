@@ -16,7 +16,7 @@ type User = {
   };
 };
 
-const AUTHORISE = true;
+const AUTHORISE = false;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
