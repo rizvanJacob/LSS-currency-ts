@@ -1,9 +1,17 @@
 import dayjs from "dayjs";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+import { Prisma } from "@prisma/client";
+import {
+  findRelatedTraining,
+  mapTrainingsForBookingCalendar,
+  mapTrainingsForIndex,
+  transformTrainingForShow,
+} from "../utilities/trimTraining";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
+    console.log("trainings index");
     const { requirement, checkin, user } = req.query;
     try {
       const allTrainings = await prisma.training.findMany({
@@ -12,6 +20,7 @@ const trainingsController = {
             ? {
                 requirement: Number(requirement),
                 start: { gte: dayjs().toDate() },
+                complete: false,
               }
             : {}),
           ...(checkin && user
@@ -30,6 +39,7 @@ const trainingsController = {
               requirements: {
                 select: {
                   name: true,
+                  alsoCompletes: true,
                 },
               },
             }
@@ -37,6 +47,7 @@ const trainingsController = {
               requirements: {
                 select: {
                   name: true,
+                  alsoCompletes: true,
                 },
               },
               trainees: {
@@ -52,6 +63,19 @@ const trainingsController = {
             },
       });
       console.log(`Count of trainings: ${allTrainings.length}`);
+
+      if (!requirement && !checkin && !user) {
+        console.log("trim trainings for Index");
+        const trainings = mapTrainingsForIndex(allTrainings);
+        return res.status(200).json(trainings);
+      } else if (requirement) {
+        console.log("trim trainings for booking calendar");
+        const trainings = await mapTrainingsForBookingCalendar(allTrainings);
+        return res.status(200).json(trainings);
+      }
+      // const trainings = trimTrainingsForBookingCalendar(allTrainings);
+      // return res.status(200).json(trainings);
+
       res.status(200).json(allTrainings);
     } catch (err) {
       console.log(err);
@@ -76,6 +100,7 @@ const trainingsController = {
           requirements: {
             select: {
               name: true,
+              alsoCompletes: true,
             },
           },
           trainees: {
@@ -97,9 +122,13 @@ const trainingsController = {
               },
             },
           },
+          createdAt: true,
         },
       });
-      res.status(200).json(training);
+
+      const transformedTraining = await transformTrainingForShow(training);
+      console.log(transformedTraining);
+      res.status(200).json(transformedTraining);
     } catch (err) {
       res.status(500).json({ err });
     }
@@ -108,7 +137,7 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      const { requirement, start, end, capacity, instruction } = req.body;
+      const { start, end, capacity, instruction } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
         data: {
@@ -116,7 +145,6 @@ const trainingsController = {
           end,
           capacity,
           instruction,
-          requirement,
           updatedAt: dayjs().toDate(),
         },
         select: {
@@ -126,8 +154,34 @@ const trainingsController = {
           capacity: true,
           instruction: true,
           requirement: true,
+          requirements: {
+            select: {
+              alsoCompletes: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
       });
+
+      if (updatedTraining.requirements.alsoCompletes) {
+        const relatedTraining = await findRelatedTraining(
+          { id: updatedTraining.requirements.alsoCompletes },
+          updatedTraining
+        );
+        if (relatedTraining) {
+          await prisma.training.update({
+            where: { id: relatedTraining.id },
+            data: {
+              start: updatedTraining.start,
+              end: updatedTraining.end,
+              instruction: updatedTraining.instruction,
+              updatedAt: updatedTraining.updatedAt,
+            },
+          });
+        }
+      }
+
       res.status(200).json(updatedTraining);
     } catch (err) {
       res.status(500).json({ err });
@@ -189,14 +243,39 @@ const trainingsController = {
   deleteTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      await prisma.$transaction(async (prisma) => {
-        await prisma.traineeToTraining.deleteMany({
+
+      const [, training] = await prisma.$transaction([
+        prisma.traineeToTraining.deleteMany({
           where: { training: id },
-        });
-        await prisma.training.delete({
+        }),
+        prisma.training.delete({
           where: { id },
-        });
-      });
+          include: {
+            requirements: {
+              select: {
+                alsoCompletes: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+      if (training.requirements.alsoCompletes) {
+        const relatedTraining = await findRelatedTraining(
+          { id: training.requirements.alsoCompletes },
+          training
+        );
+        if (relatedTraining) {
+          await prisma.$transaction([
+            prisma.traineeToTraining.deleteMany({
+              where: { training: relatedTraining.id },
+            }),
+            prisma.training.delete({
+              where: { id: relatedTraining.id },
+            }),
+          ]);
+        }
+      }
       res
         .status(200)
         .json({ message: "Training and Bookings deleted successfully" });
@@ -208,17 +287,51 @@ const trainingsController = {
   createTraining: async (req: Request, res: Response, err: any) => {
     try {
       const { start, end, capacity, instruction, requirement } = req.body;
-      const newTraining = await prisma.training.create({
-        data: {
+      const newTrainingData: Prisma.TrainingCreateInput[] = [
+        {
           start: start,
           end: end,
           capacity: parseInt(capacity),
           instruction: instruction,
-          requirement: parseInt(requirement),
+          requirements: {
+            connect: {
+              id: parseInt(requirement),
+            },
+          },
           complete: false,
         },
+      ];
+      const primaryRequirement = await prisma.requirement.findUnique({
+        where: { id: parseInt(requirement) },
+        select: { alsoCompletes: true },
       });
-      res.status(200).json(newTraining);
+      if (!primaryRequirement) {
+        return res.status(400).json({ message: "No such requirement" });
+      }
+      const { alsoCompletes } = primaryRequirement;
+      if (alsoCompletes) {
+        newTrainingData.push({
+          start: start,
+          end: end,
+          capacity: 0,
+          instruction: instruction,
+          requirements: {
+            connect: {
+              id: alsoCompletes,
+            },
+          },
+          complete: false,
+        });
+      }
+      const newTrainings = await Promise.all(
+        newTrainingData.map(async (t) => {
+          return await prisma.training.create({
+            data: t,
+          });
+        })
+      );
+      console.log(newTrainings);
+      res.status(200).json(newTrainings);
     } catch (err) {
       res.status(500).json({ err });
     }

@@ -23,7 +23,7 @@ const TrainerFieldset = ({
   const [requirements, setRequirements] = useState<Requirement[] | null>(null);
 
   useEffect(() => {
-    getRequest("/api/lookup/requirements", setRequirements);
+    getRequest("/api/lookup/requirements?forTraining=true", setRequirements);
   }, []);
 
   const changeRequirementsProvided = (

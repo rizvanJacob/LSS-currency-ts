@@ -1,5 +1,6 @@
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
+import { trimRequirementsForTraining } from "../utilities/trimTraining";
 
 const categories = async (req: Request, res: Response) => {
   try {
@@ -17,7 +18,7 @@ const categories = async (req: Request, res: Response) => {
 const statuses = async (req: Request, res: Response) => {};
 
 const requirements = async (req: Request, res: Response) => {
-  const { category } = req.query;
+  const { category, forTraining } = req.query;
 
   try {
     const requirements = await prisma.requirement.findMany({
@@ -34,6 +35,9 @@ const requirements = async (req: Request, res: Response) => {
         name: "asc",
       },
     });
+    if (forTraining) {
+      trimRequirementsForTraining(requirements);
+    }
     res.status(200).json(requirements);
   } catch (error) {
     res.send(500);
@@ -63,6 +67,7 @@ const trainingsProvided = async (req: Request, res: Response) => {
         requirements: {
           select: {
             name: true,
+            alsoCompletes: true,
           },
         },
       },

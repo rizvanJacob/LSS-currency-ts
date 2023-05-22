@@ -1,10 +1,13 @@
 export type NewTraining = {
   id: number;
+  relatedTraining?: number;
   start: Date;
   end: Date;
   capacity: number;
   instruction: string;
   requirement: number;
+  requirementName?: string;
+  relatedRequirementName?: string;
   requirements?: {
     name: string;
   };

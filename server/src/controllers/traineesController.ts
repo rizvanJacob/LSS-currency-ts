@@ -4,6 +4,7 @@ import { prisma } from "../config/database";
 import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
+import { transformTrainingForBooking } from "../utilities/trimTraining";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -362,7 +363,7 @@ const deleteController = async (req: Request, res: Response) => {
       deleteTrainee,
     ]);
     if (trainee?.users.accountType === Account.Trainee) {
-      await prisma.user.delete({ where: { id: Number(userId) } });
+      await prisma.userModel.delete({ where: { id: Number(userId) } });
     }
     res
       .status(200)
@@ -457,11 +458,18 @@ const book = async (traineeId: number, trainingId: number) => {
       capacity: true,
       trainees: { select: { id: true } },
       requirement: true,
+      requirements: { select: { alsoCompletes: true } },
+      createdAt: true,
     },
   });
 
+  const mappedTraining = await transformTrainingForBooking(training);
+
   let status = 1;
-  if (training && training?.trainees.length >= training?.capacity) {
+  if (
+    mappedTraining &&
+    mappedTraining?.trainees.length >= mappedTraining?.capacity
+  ) {
     status = 6;
   }
   console.log("make booking. status: ", status);
