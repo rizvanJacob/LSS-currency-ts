@@ -67,6 +67,7 @@ const trainingsProvided = async (req: Request, res: Response) => {
         requirements: {
           select: {
             name: true,
+            alsoCompletes: true,
           },
         },
       },
