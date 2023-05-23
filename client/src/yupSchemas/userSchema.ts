@@ -11,7 +11,11 @@ export const userSchema = (user: User) => {
       .required("Display Name is required"),
     approved: Yup.boolean().default(user.approved),
     categories: Yup.object().default(user.categories),
-    trainee: Yup.object().default(user.trainee),
+    trainee: Yup.object().when("accountType", () => {
+      return Number(user.accountType) === Account.Trainee
+        ? Yup.object().default(user?.trainee).required("Trainee is required")
+        : Yup.object().notRequired();
+    }),
     category: Yup.number().when("accountType", () => {
       return Number(user.accountType) === Account.Trainee
         ? Yup.number()
