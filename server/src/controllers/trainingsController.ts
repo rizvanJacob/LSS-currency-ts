@@ -97,6 +97,7 @@ const trainingsController = {
           complete: true,
           instruction: true,
           requirement: true,
+          passphrase: true,
           requirements: {
             select: {
               name: true,
