@@ -129,7 +129,7 @@ export default function EditUserForm(): JSX.Element {
         <div className="flex items-center justify-center">
           <Formik
             initialValues={user}
-            // validationSchema={userSchema(user)}
+            validationSchema={userSchema(user)}
             enableReinitialize
             onSubmit={handleFormSubmit}
           >
