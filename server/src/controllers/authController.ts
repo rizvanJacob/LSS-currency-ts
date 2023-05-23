@@ -210,6 +210,8 @@ const isAuth =
             console.log("Trainee authorized for query");
             return next();
           }
+          console.log("Trainee authorized for general access");
+          return next();
         }
       } else if (verifiedUser.accountType === Account.Trainer) {
         console.log("Authorizing trainer...");
