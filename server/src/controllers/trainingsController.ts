@@ -286,7 +286,8 @@ const trainingsController = {
 
   createTraining: async (req: Request, res: Response, err: any) => {
     try {
-      const { start, end, capacity, instruction, requirement } = req.body;
+      const { start, end, capacity, instruction, requirement, passphrase } =
+        req.body;
       const newTrainingData: Prisma.TrainingCreateInput[] = [
         {
           start: start,
@@ -299,6 +300,7 @@ const trainingsController = {
             },
           },
           complete: false,
+          passphrase: passphrase,
         },
       ];
       const primaryRequirement = await prisma.requirement.findUnique({
@@ -321,6 +323,7 @@ const trainingsController = {
             },
           },
           complete: false,
+          passphrase: passphrase,
         });
       }
       const newTrainings = await Promise.all(
