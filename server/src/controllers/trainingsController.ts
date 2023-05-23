@@ -148,7 +148,7 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      const { start, end, capacity, instruction } = req.body;
+      const { start, end, capacity, instruction, passphrase } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
         data: {
@@ -157,6 +157,7 @@ const trainingsController = {
           capacity,
           instruction,
           updatedAt: dayjs().toDate(),
+          passphrase,
         },
         select: {
           id: true,
@@ -165,6 +166,7 @@ const trainingsController = {
           capacity: true,
           instruction: true,
           requirement: true,
+          passphrase: true,
           requirements: {
             select: {
               alsoCompletes: true,
@@ -188,6 +190,7 @@ const trainingsController = {
               end: updatedTraining.end,
               instruction: updatedTraining.instruction,
               updatedAt: updatedTraining.updatedAt,
+              passphrase: updatedTraining.passphrase,
             },
           });
         }
