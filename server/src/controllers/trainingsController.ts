@@ -8,6 +8,7 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
+import * as jwt from "jsonwebtoken";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -126,6 +127,15 @@ const trainingsController = {
           createdAt: true,
         },
       });
+
+      const jsonUser = req.headers.authorization;
+      if (jsonUser && training) {
+        const user = JSON.parse(jsonUser);
+        const { accountType } = user;
+        if (![1, 4].includes(accountType)) {
+          training.passphrase = "";
+        }
+      }
 
       const transformedTraining = await transformTrainingForShow(training);
       console.log(transformedTraining);

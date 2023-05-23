@@ -16,7 +16,7 @@ type User = {
   };
 };
 
-const AUTHORISE = false;
+const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRY = "1h";
@@ -134,6 +134,8 @@ const isAuth =
         token as string,
         process.env.JWT_SECRET as string
       ) as User;
+
+      req.headers.authorization = JSON.stringify(verifiedUser);
       console.log("verified jwt token", verifiedUser);
 
       if (!authorized.includes(verifiedUser.accountType)) {
