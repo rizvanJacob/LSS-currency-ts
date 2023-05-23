@@ -11,6 +11,7 @@ export type NewTraining = {
   requirements?: {
     name: string;
   };
+  checkInCode?: string;
 };
 
 export type Training = NewTraining & {
