@@ -74,11 +74,10 @@ export default function EditUserForm(): JSX.Element {
   const handleFormSubmit = async () => {
     console.log("submit form");
     if (!user.approved) {
-      const updatedUser = { ...user, approved: !user.approved };
-      setUser(updatedUser);
-      if (updatedUser.accountType === Account.Trainee) {
+      if (user.accountType === Account.Trainee) {
         await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
       }
+      const updatedUser = { ...user, approved: !user.approved };
       console.log("update and approve user");
       await putRequest(`/api/users/${id}`, updatedUser, setUser);
     } else {
@@ -222,7 +221,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info "
+                      className="btn btn-info btn-block "
                     >
                       Update User and Approve
                     </button>
@@ -230,7 +229,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info"
+                      className="btn btn-info btn-block"
                     >
                       Update User
                     </button>
