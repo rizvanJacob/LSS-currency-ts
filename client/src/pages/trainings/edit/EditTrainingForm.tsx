@@ -31,6 +31,7 @@ export default function EditTrainingForm(): JSX.Element {
       name: "",
     },
     instruction: "",
+    passphrase: "",
     trainees: [
       {
         trainees: {
@@ -226,15 +227,25 @@ export default function EditTrainingForm(): JSX.Element {
                   />
                 </div>
               </div>
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting || isValidating || !isValid}
-                  className="btn btn-info "
-                >
-                  Update Training
-                </button>
+              <div className="flex items-center">
+                <label className="w-2/5 text-left">Check In Passphrase:</label>
+                <Field
+                  as="input"
+                  type="text"
+                  id="passphrase"
+                  name="passphrase"
+                  value={training?.passphrase || ""}
+                  className="input-text input input-bordered input-primary flex-1"
+                  onChange={handleInputChange}
+                />
               </div>
+              <button
+                type="submit"
+                disabled={isSubmitting || isValidating || !isValid}
+                className="btn btn-primary btn-block "
+              >
+                Update Training
+              </button>
             </Form>
           )}
         </Formik>

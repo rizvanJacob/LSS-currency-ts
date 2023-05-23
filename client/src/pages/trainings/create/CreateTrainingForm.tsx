@@ -28,7 +28,7 @@ export default function CreateTrainingForm(): JSX.Element {
       name: "",
     },
     instruction: "",
-    checkInCode: "",
+    passphrase: "",
   });
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
@@ -229,9 +229,9 @@ export default function CreateTrainingForm(): JSX.Element {
               <Field
                 as="input"
                 type="text"
-                id="checkInCode"
-                name="checkInCode"
-                value={training?.checkInCode || ""}
+                id="passphrase"
+                name="passphrase"
+                value={training?.passphrase || ""}
                 className="input-text input input-bordered input-primary flex-1"
                 onChange={handleInputChange}
               />
