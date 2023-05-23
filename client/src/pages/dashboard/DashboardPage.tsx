@@ -17,7 +17,6 @@ export default function DashboardPage(): JSX.Element {
     const [currencyData, setCurrencyData] = useState<CurrencyData[]>([]);
     const [catRequirements, setCatRequirements] = useState<CategoryToRequirement[]>([]);
     const [filterOptions, setFilterOptions] = useState<CurrencyFilter>({
-        category: 0,
         requirement: 0,
       });
 
@@ -30,19 +29,26 @@ export default function DashboardPage(): JSX.Element {
         getRequest(`/api/lookup/categoryToRequirement`, setCatRequirements);
         getRequest(`/api/trainees`, setTrainees);
         getRequest(`/api/trainings`, setTrainings);
-        getRequest(`/api/analytics/requirement/${filterOptions.requirement}/category/${filterOptions.category}`, setCurrencyData);
     }, []);
 
+    useEffect(() => {
+        getRequest(`/api/analytics/requirement/${filterOptions.requirement}`, setCurrencyData);
+    }, [filterOptions]);
+    
     return  (
         <>
-            {/* {trainees.length ? <BarChart data = { trainees } /> : <ProgressBar />}
-            {trainings.length ? <ScatterPlot data = { trainings } /> : <ProgressBar />} */}
             <AreaChart 
                 filterOptions={filterOptions}
                 setFilterOptions={setFilterOptions}
                 catRequirements={catRequirements}
                 data ={currencyData}
             />
+            {trainees.length ? <BarChart 
+                data = { trainees } 
+            /> : <ProgressBar />}
+            {trainings.length ? <ScatterPlot 
+                data = { trainings } 
+            /> : <ProgressBar />}
         </>
     )
 }

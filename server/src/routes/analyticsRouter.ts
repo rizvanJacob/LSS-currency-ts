@@ -3,9 +3,6 @@ const router = express.Router();
 
 import analyticsController from "../controllers/analyticsController";
 
-router.get(
-  "/analytics/requirement/:requirementId/category/:categoryId",
-  analyticsController.currencyChart
-);
+router.get("/requirement/:requirementId", analyticsController.currencyChart);
 
 export default router;

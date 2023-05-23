@@ -1,5 +1,4 @@
 export type CurrencyFilter = {
-  category: number;
   requirement: number;
 };
 
