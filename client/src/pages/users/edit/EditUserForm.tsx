@@ -14,12 +14,12 @@ import AdminFieldSet from "../../../components/FormFieldsets/AdminFieldset";
 import TraineeFieldSet from "../../../components/FormFieldsets/TraineeFieldset";
 import TrainerFieldSet from "../../../components/FormFieldsets/TrainerFieldset";
 import ProgressBar from "../../../components/ProgressBar";
+import LoadingPage from "../../../components/LoadingPage";
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
   const [categoryTypes, setCategoryTypes] = useState<SimpleLookup[]>([]);
-  const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [requirementsProvided, setRequirementsProvided] = useState<number[]>(
     []
   );
@@ -53,6 +53,7 @@ export default function EditUserForm(): JSX.Element {
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getRequest(`/api/users/${id}`, setUser);
@@ -68,7 +69,6 @@ export default function EditUserForm(): JSX.Element {
     if (setTitle) setTitle("Update User");
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
-    getRequest("/api/lookup/requirements", setRequirements);
   }, []);
 
   const handleFormSubmit = async () => {
@@ -122,8 +122,9 @@ export default function EditUserForm(): JSX.Element {
     });
   };
 
-  return user ? (
+  return (
     <fieldset>
+      {isLoading && <LoadingPage />}
       <div className="max-w-lg mx-auto">
         <div className="flex items-center justify-center">
           <Formik
@@ -213,6 +214,7 @@ export default function EditUserForm(): JSX.Element {
                       handleChange={handleInputChange}
                       requirementsProvided={requirementsProvided}
                       setRequirementsProvided={setRequirementsProvided}
+                      setIsLoading={setIsLoading}
                     />
                   </>
                 )}
@@ -241,7 +243,5 @@ export default function EditUserForm(): JSX.Element {
         </div>
       </div>
     </fieldset>
-  ) : (
-    <ProgressBar />
-  );
+  ) 
 }

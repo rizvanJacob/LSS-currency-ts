@@ -11,6 +11,7 @@ type Props = {
   handleChange: any;
   requirementsProvided: number[];
   setRequirementsProvided: React.Dispatch<React.SetStateAction<number[]>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TrainerFieldset = ({
@@ -19,13 +20,27 @@ const TrainerFieldset = ({
   handleChange,
   requirementsProvided,
   setRequirementsProvided,
+  setIsLoading
 }: Props) => {
+  const [loadedCount, setLoadedCount] = useState<number>(0);
   const [requirements, setRequirements] = useState<Requirement[] | null>(null);
 
   useEffect(() => {
     getRequest("/api/lookup/requirements?forTraining=true", setRequirements);
   }, []);
 
+  useEffect(() => {
+    if (loadedCount === requirements?.length) {
+      setIsLoading(false);
+    }
+  }, [loadedCount])
+
+  useEffect(() => {
+    if (requirements) {
+      setLoadedCount(requirements.length);
+    }
+  }, [requirements]);
+  
   const changeRequirementsProvided = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -47,6 +62,8 @@ const TrainerFieldset = ({
     });
     }
   };
+
+
   return requirements ? (
     <div className="flex items-center justify-center m-auto justify-content text-center">
       <fieldset>
