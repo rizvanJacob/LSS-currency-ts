@@ -8,7 +8,7 @@ import { CurrentUser } from "../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 
-const INDEX_PAGE_ACCESS = [
+export const INDEX_PAGE_ACCESS = [
   Account.Admin,
   Account.TraineeAdmin,
   Account.Trainer,
