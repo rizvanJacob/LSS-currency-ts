@@ -35,7 +35,7 @@ export default function UnapprovedUsersList({
             }
             return (
               <tr key={user.id} className="hover:bg-gray-100">
-                <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+                <td className="px-2 py-4 whitespace-nowrap text-left overflow-clip text-sm font-medium text-slate-950">
                   {user.displayName}
                 </td>
                 <td
