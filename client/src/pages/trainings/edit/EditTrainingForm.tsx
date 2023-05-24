@@ -6,18 +6,11 @@ import { Training } from "../../../@types/training";
 import getRequest from "../../../utilities/getRequest";
 import putRequest from "../../../utilities/putRequest";
 import dayjs from "dayjs";
-import { SimpleLookup } from "../../../@types/lookup";
 import { trainingSchema } from "../../../yupSchemas/trainingSchema";
-import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext } from "../../../App";
-import { trainingProvided } from "../../../@types/lookup";
+import { TitleContext } from "../../../App";
+import ProgressBar from "../../../components/ProgressBar";
 
 export default function EditTrainingForm(): JSX.Element {
-  const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>(
-    []
-  );
-  const [requirements, setRequirements] = useState<SimpleLookup[]>([]);
-  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [training, setTraining] = useState<Training>({
@@ -31,6 +24,7 @@ export default function EditTrainingForm(): JSX.Element {
       name: "",
     },
     instruction: "",
+    passphrase: "",
     trainees: [
       {
         trainees: {
@@ -45,31 +39,25 @@ export default function EditTrainingForm(): JSX.Element {
       },
     ],
   });
-
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
-
   const initialTraining = useRef<Training>();
-  const [updated, setUpdated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getRequest(`/api/trainings/${id}`, setTraining)
       .then((response) => {
         initialTraining.current = response?.response?.data;
-        setUpdated(true);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [id, updated]);
+  }, [id]);
 
   useEffect(() => {
     if (setTitle) setTitle("Edit Training");
-    getRequest(`/api/lookup/trainingsProvided`, setTrainingProvided);
-    currentUser?.accountType === Account.Admin
-      ? getRequest(`/api/lookup/requirements`, setRequirements)
-      : null;
   }, []);
 
   const handleFormSubmit = async () => {
@@ -80,17 +68,7 @@ export default function EditTrainingForm(): JSX.Element {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setTraining((training) => {
-      if (name === "requirement") {
-        return {
-          ...training,
-          requirement:
-            currentUser?.accountType !== Account.Admin
-              ? trainingsProvided.find(
-                  (type) => value === type?.requirements?.name
-                )?.requirement ?? 0
-              : requirements.find((type) => value === type.name)?.id ?? 0,
-        };
-      } else if (name === "start") {
+      if (name === "start") {
         const newStart = dayjs(value).toDate();
         const newEnd = dayjs(value).toDate();
         return { ...training, start: newStart, end: newEnd };
@@ -120,11 +98,12 @@ export default function EditTrainingForm(): JSX.Element {
     });
   };
 
-  return (
-    <fieldset>
-      <div className="max-w-lg mx-auto"></div>
-      <h1 className="text-xl text-center font-bold mb-8">
-        Edit {initialTraining?.current?.requirements?.name} on {""}
+  return isLoading ? (
+    <ProgressBar />
+  ) : (
+    <div className="max-w-lg mx-auto">
+      <h1 className="text-lg text-center font-bold mb-8">
+        {initialTraining?.current?.requirements?.name} on {""}
         {dayjs(initialTraining?.current?.start).format("DD MMM YY")}
       </h1>
       <div className="flex items-center justify-center">
@@ -226,19 +205,29 @@ export default function EditTrainingForm(): JSX.Element {
                   />
                 </div>
               </div>
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting || isValidating || !isValid}
-                  className="btn btn-info "
-                >
-                  Update Training
-                </button>
+              <div className="flex items-center">
+                <label className="w-2/5 text-left">Check In Passphrase:</label>
+                <Field
+                  as="input"
+                  type="text"
+                  id="passphrase"
+                  name="passphrase"
+                  value={training?.passphrase || ""}
+                  className="input-text input input-bordered input-primary flex-1"
+                  onChange={handleInputChange}
+                />
               </div>
+              <button
+                type="submit"
+                disabled={isSubmitting || isValidating || !isValid}
+                className="btn btn-primary btn-block "
+              >
+                Update Training
+              </button>
             </Form>
           )}
         </Formik>
       </div>
-    </fieldset>
+    </div>
   );
 }

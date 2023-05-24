@@ -21,3 +21,14 @@ export type trainingProvided = {
     alsoCompletes: number
   };
 };
+
+export type CategoryToRequirement = {
+  category: number;
+  categories: {
+    name: string;
+  };
+  requirement: number;
+  requirements: {
+    name: string;
+  };
+};

@@ -11,6 +11,7 @@ export type NewTraining = {
   requirements?: {
     name: string;
   };
+  passphrase?: string;
 };
 
 export type Training = NewTraining & {

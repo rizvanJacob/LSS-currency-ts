@@ -2,6 +2,9 @@ import { Trainee } from "../../../../@types/trainee";
 import dayjs from "dayjs";
 import { toTitleCase } from "../../../../utilities/stringManipulation";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { CurrentUserContext } from "../../../../App";
+import { INDEX_PAGE_ACCESS } from "../../../trainees/TraineesRoutes";
 
 type Prop = {
   trainee: Trainee;
@@ -9,10 +12,24 @@ type Prop = {
   trainingComplete: boolean | undefined;
 };
 const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
+  const currentUser = useContext(CurrentUserContext);
+  let showTraineesAsLinks = false;
+  if (
+    currentUser &&
+    INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType))
+  ) {
+    showTraineesAsLinks = true;
+  }
   return (
     <tr>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
-        <Link to={`/trainees/${trainee.id}`}>{trainee.callsign}</Link>
+        {showTraineesAsLinks ? (
+          <Link to={`/trainees/${trainee.id}`} className="link">
+            {trainee.callsign}
+          </Link>
+        ) : (
+          trainee.callsign
+        )}
       </td>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
         {trainee.categories.name}

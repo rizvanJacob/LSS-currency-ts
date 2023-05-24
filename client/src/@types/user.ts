@@ -14,7 +14,7 @@ export type TrainerUser = {
 
 export type NewUser = BasicUser &
   TrainerUser & {
-    openId: string;
+    openId?: string;
     requirementsProvided?: number[];
   };
 
