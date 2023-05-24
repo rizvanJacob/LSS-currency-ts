@@ -25,7 +25,12 @@ type Booking = {
 
 const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
 
-const CurrencyCard = ({ currency, selfComplete, handleSelfComplete, incrementCount }: Prop) => {
+const CurrencyCard = ({
+  currency,
+  selfComplete,
+  handleSelfComplete,
+  incrementCount,
+}: Prop) => {
   const { id } = useParams();
   const [status, setStatus] = useState<CurrencyStatus>({
     message: "",
@@ -38,12 +43,12 @@ const CurrencyCard = ({ currency, selfComplete, handleSelfComplete, incrementCou
   });
 
   useEffect(() => {
-    incrementCount();
     getRequest(
       `/api/trainees/${id}/bookings/${currency.requirement}`,
       setBooking
     ).then(() => {
       setIsLoading(false);
+      incrementCount();
     });
   }, []);
 
