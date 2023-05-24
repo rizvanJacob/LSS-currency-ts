@@ -8,6 +8,7 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
+import * as jwt from "jsonwebtoken";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -97,6 +98,7 @@ const trainingsController = {
           complete: true,
           instruction: true,
           requirement: true,
+          passphrase: true,
           requirements: {
             select: {
               name: true,
@@ -126,6 +128,15 @@ const trainingsController = {
         },
       });
 
+      const jsonUser = req.headers.authorization;
+      if (jsonUser && training) {
+        const user = JSON.parse(jsonUser);
+        const { accountType } = user;
+        if (![1, 4].includes(accountType)) {
+          training.passphrase = "";
+        }
+      }
+
       const transformedTraining = await transformTrainingForShow(training);
       console.log(transformedTraining);
       res.status(200).json(transformedTraining);
@@ -137,7 +148,7 @@ const trainingsController = {
   updateTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      const { start, end, capacity, instruction } = req.body;
+      const { start, end, capacity, instruction, passphrase } = req.body;
       const updatedTraining = await prisma.training.update({
         where: { id },
         data: {
@@ -146,6 +157,7 @@ const trainingsController = {
           capacity,
           instruction,
           updatedAt: dayjs().toDate(),
+          passphrase,
         },
         select: {
           id: true,
@@ -154,6 +166,7 @@ const trainingsController = {
           capacity: true,
           instruction: true,
           requirement: true,
+          passphrase: true,
           requirements: {
             select: {
               alsoCompletes: true,
@@ -177,6 +190,7 @@ const trainingsController = {
               end: updatedTraining.end,
               instruction: updatedTraining.instruction,
               updatedAt: updatedTraining.updatedAt,
+              passphrase: updatedTraining.passphrase,
             },
           });
         }
@@ -286,7 +300,8 @@ const trainingsController = {
 
   createTraining: async (req: Request, res: Response, err: any) => {
     try {
-      const { start, end, capacity, instruction, requirement } = req.body;
+      const { start, end, capacity, instruction, requirement, passphrase } =
+        req.body;
       const newTrainingData: Prisma.TrainingCreateInput[] = [
         {
           start: start,
@@ -299,6 +314,7 @@ const trainingsController = {
             },
           },
           complete: false,
+          passphrase: passphrase,
         },
       ];
       const primaryRequirement = await prisma.requirement.findUnique({
@@ -321,6 +337,7 @@ const trainingsController = {
             },
           },
           complete: false,
+          passphrase: passphrase,
         });
       }
       const newTrainings = await Promise.all(

@@ -12,8 +12,6 @@ type Prop = {
 };
 
 const LineChart = ({ data }: Prop) => {
-    const trainingStart = data.map(item=>dayjs(item.start).toDate());
-
     const datasets = data.map(item => {
         const start = dayjs(item.start).toDate();
         const end = dayjs(item.end).toDate();
@@ -30,9 +28,7 @@ const LineChart = ({ data }: Prop) => {
             fill: false,
         }
     })
-    console.log(datasets);
   const chartData = {
-    
     datasets,
   };
 

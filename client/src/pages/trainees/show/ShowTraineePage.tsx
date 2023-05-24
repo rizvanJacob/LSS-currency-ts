@@ -14,7 +14,11 @@ const ShowTraineePage = () => {
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
-
+  const [count, setCount]= useState(0);
+  const incrementCount = () => {
+    setCount(count + 1);
+  }
+  
   useEffect(() => {
     if (setTitle) setTitle("Trainee Currencies");
     getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
@@ -41,12 +45,7 @@ const ShowTraineePage = () => {
     });
   };
 
-  const [count, setCount]= useState(0);
-  const incrementCount = () => {
-    setCount(count + 1);
-  }
-
-  return isLoading || count === trainee?.categories?.requirements?.length ? (
+  return isLoading && count !== trainee?.categories?.requirements?.length ? (
     <ProgressBar />
   ) : (
     <div className="flex flex-col mx-auto items-stretch w-screen max-w-md p-3">

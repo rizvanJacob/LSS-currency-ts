@@ -38,12 +38,12 @@ const CurrencyCard = ({ currency, selfComplete, handleSelfComplete, incrementCou
   });
 
   useEffect(() => {
+    incrementCount();
     getRequest(
       `/api/trainees/${id}/bookings/${currency.requirement}`,
       setBooking
     ).then(() => {
       setIsLoading(false);
-      incrementCount();
     });
   }, []);
 

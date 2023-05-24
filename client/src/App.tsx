@@ -75,14 +75,20 @@ function App() {
                     Number(currentUser.accountType)
                   ) ? (
                     <>
-                    <Route path="/users/*" element={<UserRoutes />} />
-                    <Route path="/dashboard/*" element={<DashboardRoutes />} />
+                      <Route path="/users/*" element={<UserRoutes />} />
+                      <Route
+                        path="/dashboard/*"
+                        element={<DashboardRoutes />}
+                      />
                     </>
                   ) : null}
                   {TRAINEE_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
                   ) ? (
-                    <Route path="/trainees/*" element={<TraineesRoutes />} />
+                    <>
+                      <Route path="/trainees/*" element={<TraineesRoutes />} />
+                      <Route path="/trainings/*" element={<TrainingRoutes />} />
+                    </>
                   ) : null}
                   {TRAINING_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)

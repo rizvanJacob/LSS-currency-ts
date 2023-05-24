@@ -28,6 +28,7 @@ export default function CreateTrainingForm(): JSX.Element {
       name: "",
     },
     instruction: "",
+    passphrase: "",
   });
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export default function CreateTrainingForm(): JSX.Element {
           .set("hour", parseInt(hours))
           .set("minute", parseInt(minutes))
           .toDate();
-        return { ...training, start: newStart };
+        return { ...training, start: newStart, end: newStart };
       } else if (name === "end_time") {
         const [hours, minutes] = value.split(":");
         const newEnd = dayjs(training.end)
@@ -94,149 +95,157 @@ export default function CreateTrainingForm(): JSX.Element {
 
   return trainingsProvided.length || requirements.length ? (
     <div className="max-w-lg mx-auto">
-      <div className="flex items-center justify-center">
-        <Formik
-          initialValues={training}
-          onSubmit={handleFormSubmit}
-          enableReinitialize
-          validationSchema={newTrainingSchema(training)}
-        >
-          {({ isSubmitting, isValidating, isValid }) => (
-            <Form className="space-y-6">
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">Requirement:</label>
-                <div className="flex-1">
-                  <Field
-                    as="select"
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="input-select select select-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  >
-                    <option value={0}>Select an option</option>
-                    {currentUser?.accountType !== Account.Admin
-                      ? trainingsProvided.map((type) =>
-                          type.user === currentUser?.id ? (
-                            <option
-                              value={type.requirements?.name}
-                              key={type.requirement}
-                            >
-                              {type.requirements?.name}
-                            </option>
-                          ) : null
-                        )
-                      : requirements.map((type) => (
-                          <option value={type.name} key={type.id}>
-                            {type.name}
-                          </option>
-                        ))}
-                  </Field>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">Start Date:</label>
-                <div className="flex-1">
-                  <Field
-                    type="date"
-                    id="start"
-                    name="start"
-                    value={dayjs(training?.start).format("YYYY-MM-DD") || ""}
-                    className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  />
-                  <div className="error-message text-error">
-                    <ErrorMessage name="start" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">Start Time:</label>
-                <div className="flex-1">
-                  <Field
-                    type="time"
-                    id="start_time"
-                    name="start_time"
-                    value={dayjs(training?.start).format("HH:mm") || ""}
-                    className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">End Date:</label>
-                <div className="flex-1">
-                  <Field
-                    type="date"
-                    id="end"
-                    name="end"
-                    value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
-                    className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  />
-                  <div className="error-message text-error">
-                    <ErrorMessage name="end" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">End Time:</label>
-                <div className="flex-1">
-                  <Field
-                    type="time"
-                    id="end_time"
-                    name="end_time"
-                    value={dayjs(training?.end).format("HH:mm") || ""}
-                    className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">Capacity:</label>
-                <div className="flex-1">
-                  <Field
-                    type="number"
-                    id="capacity"
-                    name="capacity"
-                    value={training?.capacity || ""}
-                    className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
-                  />
-                  <div className="error-message text-error">
-                    <ErrorMessage name="capacity" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <label className="w-2/5 text-left">
-                  Additional Instructions:
-                </label>
-                <div className="flex-1">
-                  <Field
-                    as="textarea"
-                    type="text"
-                    id="instruction"
-                    name="instruction"
-                    value={training?.instruction || ""}
-                    className="textarea textarea-primary w-full"
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting || isValidating || !isValid}
-                  className="btn btn-info "
+      <Formik
+        initialValues={training}
+        onSubmit={handleFormSubmit}
+        enableReinitialize
+        validationSchema={newTrainingSchema(training)}
+      >
+        {({ isSubmitting, isValidating, isValid }) => (
+          <Form className="space-y-6">
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">Requirement:</label>
+              <div className="flex-1">
+                <Field
+                  as="select"
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="input-select select select-primary w-full max-w-xs"
+                  onChange={handleInputChange}
                 >
-                  Create
-                </button>
+                  <option value={0}>Select an option</option>
+                  {currentUser?.accountType !== Account.Admin
+                    ? trainingsProvided.map((type) =>
+                        type.user === currentUser?.id ? (
+                          <option
+                            value={type.requirements?.name}
+                            key={type.requirement}
+                          >
+                            {type.requirements?.name}
+                          </option>
+                        ) : null
+                      )
+                    : requirements.map((type) => (
+                        <option value={type.name} key={type.id}>
+                          {type.name}
+                        </option>
+                      ))}
+                </Field>
               </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">Start Date:</label>
+              <div className="flex-1">
+                <Field
+                  type="date"
+                  id="start"
+                  name="start"
+                  value={dayjs(training?.start).format("YYYY-MM-DD") || ""}
+                  className="input-text input input-bordered input-primary w-full max-w-xs"
+                  onChange={handleInputChange}
+                />
+                <div className="error-message text-error">
+                  <ErrorMessage name="start" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">Start Time:</label>
+              <div className="flex-1">
+                <Field
+                  type="time"
+                  id="start_time"
+                  name="start_time"
+                  value={dayjs(training?.start).format("HH:mm") || ""}
+                  className="input-text input input-bordered input-primary w-full max-w-xs"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">End Date:</label>
+              <div className="flex-1">
+                <Field
+                  type="date"
+                  id="end"
+                  name="end"
+                  value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
+                  className="input-text input input-bordered input-primary w-full max-w-xs"
+                  onChange={handleInputChange}
+                />
+                <div className="error-message text-error">
+                  <ErrorMessage name="end" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">End Time:</label>
+              <div className="flex-1">
+                <Field
+                  type="time"
+                  id="end_time"
+                  name="end_time"
+                  value={dayjs(training?.end).format("HH:mm") || ""}
+                  className="input-text input input-bordered input-primary w-full max-w-xs"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">Capacity:</label>
+              <div className="flex-1">
+                <Field
+                  type="number"
+                  id="capacity"
+                  name="capacity"
+                  value={training?.capacity || ""}
+                  className="input-text input input-bordered input-primary w-full max-w-xs"
+                  onChange={handleInputChange}
+                />
+                <div className="error-message text-error">
+                  <ErrorMessage name="capacity" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">
+                Additional Instructions:
+              </label>
+              <div className="flex-1">
+                <Field
+                  as="textarea"
+                  type="text"
+                  id="instruction"
+                  name="instruction"
+                  value={training?.instruction || ""}
+                  className="textarea textarea-primary w-full"
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="flex items-center">
+              <label className="w-2/5 text-left">Check In Passphrase:</label>
+              <Field
+                as="input"
+                type="text"
+                id="passphrase"
+                name="passphrase"
+                value={training?.passphrase || ""}
+                className="input-text input input-bordered input-primary flex-1"
+                onChange={handleInputChange}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting || isValidating || !isValid}
+              className="btn btn-primary btn-block "
+            >
+              Create
+            </button>
+          </Form>
+        )}
+      </Formik>
     </div>
   ) : (
     <ProgressBar />
