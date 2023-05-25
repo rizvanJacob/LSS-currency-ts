@@ -97,6 +97,7 @@ export default function EditUserForm(): JSX.Element {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleInputChange");
     const { name, value } = event.target;
     const parsedValue =
       name === "authCategory" || name === "accountType"
@@ -120,7 +121,18 @@ export default function EditUserForm(): JSX.Element {
               categoryTypes?.find((type) => parsedValue === type.name)?.id ?? 0,
           },
         };
+      } else if (name === "accountType") {
+        if (parsedValue === Account.Trainee) {
+          user.authCategory = undefined;
+        } else {
+          user.authCategory = trainee.category;
+        }
+        return {
+          ...user,
+          [name]: parsedValue,
+        };
       } else {
+        console.log("setUser", name, parsedValue);
         return {
           ...user,
           [name]: parsedValue,
@@ -155,7 +167,7 @@ export default function EditUserForm(): JSX.Element {
                       name="accountType"
                       disabled={[1, 4].includes(user?.accountType)}
                       className="input-select select select-primary w-full max-w-xs"
-                      value={user?.accountType || ""}
+                      value={user.accountType}
                       onChange={handleInputChange}
                     >
                       {accountTypes?.map((type) => {
@@ -175,14 +187,7 @@ export default function EditUserForm(): JSX.Element {
                 {user.accountType !== Account.Trainer && (
                   <AdminFieldSet
                     user={user}
-                    handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleInputChange(e);
-                      if (Number(e.target.value) !== Account.TraineeAdmin) {
-                        setUser({ ...user, authCategory: undefined });
-                      } else {
-                        setUser({ ...user, authCategory: trainee.category });
-                      }
-                    }}
+                    handleChange={handleInputChange}
                     setIsLoadingAdmin={setIsLoadingAdmin}
                   />
                 )}
