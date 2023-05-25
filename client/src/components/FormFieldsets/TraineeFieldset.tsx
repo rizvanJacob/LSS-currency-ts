@@ -14,15 +14,21 @@ type Props = {
   isLoadingAdmin: boolean;
 };
 
-const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAdmin}: Props) => {
-  console.log("trainee check here please", trainee)
+const TraineeFieldset = ({
+  trainee,
+  setTrainee,
+  setIsLoadingTrainee,
+  isLoadingAdmin,
+}: Props) => {
+  console.log("trainee check here please", trainee);
   const [requirements, setRequirements] = useState<Requirement[]>(
     trainee.categories.requirements?.map((r) => r.requirements) || []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [isLoadingParticulars, setIsLoadingParticulars] = useState<boolean>(true);  
-  
+  const [isLoadingParticulars, setIsLoadingParticulars] =
+    useState<boolean>(true);
+
   useEffect(() => {
     setIsLoading(true);
     let cancelToken: CancelTokenSource;
@@ -39,7 +45,11 @@ const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAd
   }, [trainee.category]);
 
   useEffect(() => {
-    if (loadedCount === requirements.length && !isLoadingParticulars && !isLoadingAdmin) {
+    if (
+      loadedCount === requirements.length &&
+      !isLoadingParticulars &&
+      !isLoadingAdmin
+    ) {
       setIsLoadingTrainee(false);
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
