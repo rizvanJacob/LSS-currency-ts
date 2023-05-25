@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
 import postRequest from "../../utilities/postRequest";
 import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
 
 import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
 import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
@@ -12,13 +11,15 @@ import TraineeParticularsFieldset from "../../components/FormFieldsets/TraineePa
 import TrainerFieldset from "../../components/FormFieldsets/TrainerFieldset";
 
 import { SimpleLookup } from "../../@types/lookup";
-import { NewUser } from "../../@types/user";
+import { User } from "../../@types/user";
 import { NewTrainee } from "../../@types/trainee";
 import { signUpPageSchema } from "../../yupSchemas/signUpPageSchema";
 
 const blankUser = {
   displayName: "",
   accountType: 0,
+  id: 0,
+  approved: false,
 };
 
 const blankTrainee = {
@@ -30,7 +31,7 @@ const blankTrainee = {
 const SignUpPage = (): JSX.Element => {
   const location = useLocation();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
-  const [user, setUser] = useState<NewUser>({
+  const [user, setUser] = useState<User>({
     ...blankUser,
     openId: location.state?.openId,
     requirementsProvided: [],

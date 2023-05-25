@@ -53,6 +53,8 @@ export default function EditUserForm(): JSX.Element {
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
+
+  const [isLoadingAdmin, setIsLoadingAdmin] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -70,6 +72,14 @@ export default function EditUserForm(): JSX.Element {
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
   }, []);
+
+  useEffect(() => {
+    if (user.accountType === Account.Admin || user.accountType === Account.TraineeAdmin) {
+      if (!isLoadingAdmin) {
+        setIsLoading(false);
+      }
+    }
+  },[isLoadingAdmin]);
 
   const handleFormSubmit = async () => {
     console.log("submit form");
@@ -122,6 +132,7 @@ export default function EditUserForm(): JSX.Element {
     });
   };
 
+  console.log("isloading", isLoading)
   return (
     <fieldset>
       {isLoading && <LoadingPage />}
@@ -164,7 +175,7 @@ export default function EditUserForm(): JSX.Element {
                   </div>
                 </div>
                 {user.accountType !== Account.Trainer && (
-                  <AdminFieldSet user={user} handleChange={handleInputChange} />
+                  <AdminFieldSet user={user} handleChange={handleInputChange} setIsLoadingAdmin={setIsLoadingAdmin} />
                 )}
                 {user.accountType === Account.TraineeAdmin && (
                   <div className="flex items-center justify-center flex-col">
@@ -201,6 +212,8 @@ export default function EditUserForm(): JSX.Element {
                     <TraineeFieldSet
                       trainee={trainee}
                       setTrainee={setTrainee}
+                      setIsLoadingTrainee={setIsLoading}
+                      isLoadingAdmin={isLoadingAdmin}
                     />
                   </>
                 ) : user.accountType === Account.Trainee ? (

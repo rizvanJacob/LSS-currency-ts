@@ -11,7 +11,7 @@ type Props = {
   handleChange: any;
   requirementsProvided: number[];
   setRequirementsProvided: React.Dispatch<React.SetStateAction<number[]>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TrainerFieldset = ({
@@ -30,7 +30,7 @@ const TrainerFieldset = ({
   }, []);
 
   useEffect(() => {
-    if (loadedCount === requirements?.length) {
+    if (loadedCount === requirements?.length && setIsLoading) {
       setIsLoading(false);
     }
   }, [loadedCount])

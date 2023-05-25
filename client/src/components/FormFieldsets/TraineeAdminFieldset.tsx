@@ -16,7 +16,7 @@ type Prop = {
 
 const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, setIncludeTrainee }: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
-  //const [includeTrainee, setIncludeTrainee] = useState<boolean>(false);
+
 
   useEffect(() => {
     getRequest("/api/lookup/categories", setCategories);

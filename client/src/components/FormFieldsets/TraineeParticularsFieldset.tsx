@@ -9,26 +9,33 @@ import * as Yup from "yup";
 type Prop = {
   trainee: NewTrainee;
   handleChange: any;
+  setIsLoadingParticulars?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TraineeParticularsFieldset = ({
   trainee,
   handleChange,
+  setIsLoadingParticulars
 }: Prop) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
     let cancelToken: CancelTokenSource;
     getRequest("/api/lookup/categories", setCategories).then(({ source }) => {
       cancelToken = source;
-      setIsLoading(false);
     });
     return () => {
       cancelToken?.cancel();
     };
   }, []);
+
+  useEffect(() => {
+    if (trainee.callsign && trainee.category && setIsLoadingParticulars) {
+      setIsLoading(false);
+      setIsLoadingParticulars(false);
+    }
+  }, [trainee]);
 
   return isLoading ? (
     <ProgressBar />
