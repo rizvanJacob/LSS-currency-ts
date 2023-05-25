@@ -53,7 +53,12 @@ router.delete(
 );
 router.get(
   "/:traineeId/bookings/:requirementId",
-  isAuth([Account.Admin, Account.Trainee, Account.Trainer]),
+  isAuth([
+    Account.Admin,
+    Account.TraineeAdmin,
+    Account.Trainee,
+    Account.Trainer,
+  ]),
   traineesController.showBooking
 );
 
