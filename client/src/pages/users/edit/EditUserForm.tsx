@@ -203,9 +203,6 @@ export default function EditUserForm(): JSX.Element {
                         <ErrorMessage name="authCategory" />
                       </div>
                     </div>
-                    <label htmlFor="currencies" className="w-4/4">
-                      Au:
-                    </label>
                   </div>
                 )}
                 {trainee.id &&
