@@ -10,14 +10,14 @@ import { CancelTokenSource } from "axios";
 type Props = {
   trainee: Trainee;
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
-  setIsLoadingTrainee: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin: boolean;
 };
 
 const TraineeFieldset = ({
   trainee,
   setTrainee,
-  setIsLoadingTrainee,
+  setIsLoadingTrainee = () => {},
   isLoadingAdmin,
 }: Props) => {
   console.log("trainee check here please", trainee);

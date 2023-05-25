@@ -73,13 +73,8 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (
-      user.accountType === Account.Admin ||
-      user.accountType === Account.TraineeAdmin
-    ) {
-      if (!isLoadingAdmin) {
-        setIsLoading(false);
-      }
+    if (user.accountType === Account.Admin) {
+      setIsLoading(isLoadingAdmin);
     }
   }, [isLoadingAdmin]);
 
