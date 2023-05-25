@@ -10,15 +10,19 @@ import { CancelTokenSource } from "axios";
 type Props = {
   trainee: Trainee;
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
+  setIsLoadingTrainee: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoadingAdmin: boolean;
 };
 
-const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
+const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAdmin}: Props) => {
   console.log("trainee check here please", trainee)
   const [requirements, setRequirements] = useState<Requirement[]>(
     trainee.categories.requirements?.map((r) => r.requirements) || []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const [loadedCount, setLoadedCount] = useState<number>(0);
+  const [isLoadingParticulars, setIsLoadingParticulars] = useState<boolean>(true);  
+  
   useEffect(() => {
     setIsLoading(true);
     let cancelToken: CancelTokenSource;
@@ -34,6 +38,11 @@ const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
     };
   }, [trainee.category]);
 
+  useEffect(() => {
+    if (loadedCount === requirements.length && !isLoadingParticulars && !isLoadingAdmin) {
+      setIsLoadingTrainee(false);
+    }
+  }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
 
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -47,7 +56,6 @@ const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, name, value } = event.target;
     console.log("expiry change");
-    console.log(id, value);
 
     if (trainee.currencies.find((c) => c.requirement === Number(id))) {
       const updatedCurrencies = trainee.currencies.map((c) => {
@@ -98,6 +106,7 @@ const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
       <TraineeParticularsFieldset
         trainee={trainee}
         handleChange={handleTraineeChange}
+        setIsLoadingParticulars={setIsLoadingParticulars}
       />
       {isLoading ? (
         <ProgressBar />
@@ -113,6 +122,7 @@ const TraineeFieldset = ({ trainee, setTrainee}: Props) => {
               currency={currency}
               handleExpiryChange={handleExpiryChange}
               handleSeniorityChange={handleSeniorityChange}
+              incrementCount={() => setLoadedCount((prev) => prev + 1)}
             />
           );
         })
