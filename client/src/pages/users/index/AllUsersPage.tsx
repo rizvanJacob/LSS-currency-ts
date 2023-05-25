@@ -34,7 +34,7 @@ export default function AllUsersPage(): JSX.Element {
           <input
             type="checkbox"
             checked={showUnapproved}
-            onClick={() => {
+            onChange={() => {
               setShowUnapproved(!showUnapproved);
             }}
           />
@@ -43,7 +43,7 @@ export default function AllUsersPage(): JSX.Element {
               Pending approval:
             </h1>
             <label className="swap swap-rotate h-min px-2">
-              <input type="checkbox" checked={showUnapproved} />
+              <input type="checkbox" checked={showUnapproved} readOnly />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
