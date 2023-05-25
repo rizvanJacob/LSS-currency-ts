@@ -6,13 +6,41 @@ on:
       - main
 
 jobs:
-  start:
+  frontend:
     runs-on: ubuntu-latest
     
     steps: 
       - name: Checkout
         uses: actions/checkout@v3
+        
+      - name: npm install and build
+        run: |
+          npm install
+          npm run build
 
+      - name: Upload to S3
+        uses: shallwefootball/s3-upload-action@master
+        id: assets
+        with:
+          aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: lss-currency-web-staging
+          source_dir: dist/assets/*
+      
+      - name: Upload to S3
+        uses: shallwefootball/s3-upload-action@master
+        id: index
+        with:
+          aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: lss-currency-web-staging
+          source_dir: dist/index.html
+  
+  backend: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: AWS SSM Command
         uses: peterkimzz/aws-ssm-send-command@master
         id: ssm
@@ -36,4 +64,3 @@ jobs:
             pm2 start "npm run start"
             pm2 save
             pm2 startup
-
