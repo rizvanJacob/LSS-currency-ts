@@ -1,7 +1,6 @@
 import { Account } from "../constants";
 import { prisma } from "../config/database";
 import { Request, Response } from "express";
-import { loggedInUser } from "../auth-service";
 import dayjs from "dayjs";
 
 const MAX_USERS = 100;
@@ -65,9 +64,11 @@ const usersController = {
   },
 
   getAllUsers: async (req: Request, res: Response, err: any) => {
-    let allUsers;
     try {
-      const verifiedUser = loggedInUser(req, res);
+      let verifiedUser;
+      if (req.headers.authorization) {
+        verifiedUser = JSON.parse(req.headers.authorization);
+      }
       console.log("Verified user", verifiedUser);
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
         const allUsers = await prisma.userModel.findMany({
