@@ -18,23 +18,22 @@ export type NewUser = BasicUser &
     requirementsProvided?: number[];
   };
 
-export type User = BasicUser &
-  TrainerUser & {
-    id: number;
-    category?: number;
-    categories?: {
-      name: string;
-    };
-    accountTypes?: {
-      name: string;
-    };
-    approved: boolean;
-    trainee?: {
-      id?: number;
-      callsign?: string;
-      category?: number;
-    };
+export type User = NewUser & {
+  id: number;
+  category?: number;
+  categories?: {
+    name: string;
   };
+  accountTypes?: {
+    name: string;
+  };
+  approved: boolean;
+  trainee?: {
+    id?: number;
+    callsign?: string;
+    category?: number;
+  };
+};
 
 export type UserFilterOptions = {
   accountType: number;

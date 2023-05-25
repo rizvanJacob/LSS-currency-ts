@@ -1,12 +1,14 @@
 import { Currency, Requirement } from "../../@types/trainee";
 import { Field, ErrorMessage } from "formik";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 type Prop = {
   requirement: Requirement;
   currency: Currency | undefined;
   handleExpiryChange: any;
   handleSeniorityChange: any;
+  incrementCount: () => void;
 };
 
 const CurrencyFieldset = ({
@@ -14,7 +16,13 @@ const CurrencyFieldset = ({
   currency,
   handleExpiryChange,
   handleSeniorityChange,
+  incrementCount
 }: Prop) => {
+
+  useEffect(() => {
+    incrementCount();
+  }, []);
+
   return (
     <div className="flex justify-center">
       <fieldset className="card px-3 bg-primary text-secondary">
