@@ -15,6 +15,8 @@ import TrainerFieldSet from "../../../components/FormFieldsets/TrainerFieldset";
 import ProgressBar from "../../../components/ProgressBar";
 import LoadingPage from "../../../components/LoadingPage";
 
+const NON_TRAINEE_ACCOUNTS = [1, 4]
+
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[]>([]);
@@ -165,13 +167,13 @@ export default function EditUserForm(): JSX.Element {
                       type="number"
                       id="accountType"
                       name="accountType"
-                      disabled={[1, 4].includes(user?.accountType)}
+                      disabled={NON_TRAINEE_ACCOUNTS.includes(user?.accountType)}
                       className="input-select select select-primary w-full max-w-xs"
                       value={user.accountType}
                       onChange={handleInputChange}
                     >
                       {accountTypes?.map((type) => {
-                        if ([1, 4].includes(type.id)) return null;
+                        if (NON_TRAINEE_ACCOUNTS.includes(type.id)) return null;
                         return (
                           <option value={type.id} key={type.id}>
                             {type.name}
