@@ -1,4 +1,4 @@
-import { Account } from "../constants";
+import { Account, JWT_EXPIRIES } from "../constants";
 import client from "../config/sgid";
 import { prisma } from "../config/database";
 import { Request, Response, NextFunction } from "express";
@@ -19,7 +19,6 @@ type User = {
 const AUTHORISE = true;
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-const JWT_EXPIRY = "1h";
 const CLIENT_URL = process.env.CLIENT_URL + "/";
 
 const generateUrl = async (req: Request, res: Response) => {
@@ -67,8 +66,9 @@ const login = async (req: Request, res: Response) => {
         },
       });
       if (userData.approved) {
+        const jwtExpiry = JWT_EXPIRIES[userData.accountType as Account];
         const token = await jwt.sign(userData, JWT_SECRET, {
-          expiresIn: JWT_EXPIRY,
+          expiresIn: jwtExpiry,
         });
         res.status(200).json({ token });
       } else {
