@@ -12,9 +12,10 @@ jobs:
     steps: 
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: npm install and build
         run: |
+          cd client
           npm install
           npm run build
 
@@ -25,7 +26,7 @@ jobs:
           aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: lss-currency-web-staging
-          source_dir: dist/assets/*
+          source_dir: client/dist/assets/*
       
       - name: Upload to S3
         uses: shallwefootball/s3-upload-action@master
@@ -34,7 +35,7 @@ jobs:
           aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: lss-currency-web-staging
-          source_dir: dist/index.html
+          source_dir: client/dist/index.html
   
   backend: 
     runs-on: ubuntu-latest
