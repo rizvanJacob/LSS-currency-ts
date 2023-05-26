@@ -6,25 +6,39 @@ import dayjs from "dayjs";
 import getRequest from "../../utilities/getRequest";
 import ProgressBar from "../ProgressBar";
 import { CancelTokenSource } from "axios";
+import { set } from "date-fns";
 
 type Props = {
   trainee: Trainee;
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
-  setIsLoadingTrainee: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin: boolean;
+  forceCallsign?: string;
+  forceCategory?: number | null;
 };
 
-const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAdmin}: Props) => {
-  console.log("trainee check here please", trainee)
+const TraineeFieldset = ({
+  trainee,
+  setTrainee,
+  setIsLoadingTrainee = () => {},
+  isLoadingAdmin,
+  forceCallsign = "",
+  forceCategory = 0,
+}: Props) => {
+  console.log("trainee check here please", trainee);
   const [requirements, setRequirements] = useState<Requirement[]>(
     trainee.categories.requirements?.map((r) => r.requirements) || []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [isLoadingParticulars, setIsLoadingParticulars] = useState<boolean>(true);  
-  
+  const [isLoadingParticulars, setIsLoadingParticulars] =
+    useState<boolean>(true);
+  const [initialCallsign, setInitialCallsign] = useState<string>("");
+
   useEffect(() => {
     setIsLoading(true);
+    setInitialCallsign(forceCallsign);
+
     let cancelToken: CancelTokenSource;
     getRequest(
       `/api/lookup/requirements/?category=${trainee.category}`,
@@ -39,7 +53,20 @@ const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAd
   }, [trainee.category]);
 
   useEffect(() => {
-    if (loadedCount === requirements.length && !isLoadingParticulars && !isLoadingAdmin) {
+    if (forceCallsign) {
+      setTrainee({ ...trainee, callsign: forceCallsign });
+    }
+    if (forceCategory) {
+      setTrainee({ ...trainee, category: forceCategory });
+    }
+  }, [forceCallsign, forceCategory]);
+
+  useEffect(() => {
+    if (
+      loadedCount === requirements.length &&
+      !isLoadingParticulars &&
+      !isLoadingAdmin
+    ) {
       setIsLoadingTrainee(false);
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
@@ -54,7 +81,7 @@ const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAd
   };
 
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, name, value } = event.target;
+    const { id, value } = event.target;
     console.log("expiry change");
 
     if (trainee.currencies.find((c) => c.requirement === Number(id))) {
@@ -107,6 +134,8 @@ const TraineeFieldset = ({ trainee, setTrainee, setIsLoadingTrainee, isLoadingAd
         trainee={trainee}
         handleChange={handleTraineeChange}
         setIsLoadingParticulars={setIsLoadingParticulars}
+        forceCallsign={initialCallsign}
+        forceCategory={forceCategory}
       />
       {isLoading ? (
         <ProgressBar />

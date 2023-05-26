@@ -73,7 +73,10 @@ const usersController = {
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
         const allUsers = await prisma.userModel.findMany({
           where: {
-            accountType: Account.Trainee,
+            OR: [
+              { accountType: Account.Trainee },
+              { accountType: Account.TraineeAdmin },
+            ],
           },
           orderBy: {
             displayName: "asc",
