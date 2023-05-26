@@ -1,13 +1,23 @@
 import { Field, ErrorMessage } from "formik";
 
 import { NewUser } from "../../@types/user";
+import { useEffect } from "react";
 
 type Props = {
   user: NewUser;
   handleChange: any;
+  setIsLoadingAdmin?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const AdminFieldSet = ({ user, handleChange }: Props) => {
+
+const AdminFieldSet = ({ user, handleChange, setIsLoadingAdmin }: Props) => {
+
+  useEffect(() => {
+    if (user.displayName && setIsLoadingAdmin) { 
+      setIsLoadingAdmin(false);
+    }
+  }, [user]);
+
   return (
     <div className="flex items-center justify-center flex-col">
       <fieldset>

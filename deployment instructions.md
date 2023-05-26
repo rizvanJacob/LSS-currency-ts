@@ -35,3 +35,5 @@ Run instructions: server/$npm run start
 7. PRIVATE_KEY: SgID client private key
 8. PUBLIC_KEY: SgID client public key
 9. SCOPE: SgID scope
+
+### Database Creation SQL Commands

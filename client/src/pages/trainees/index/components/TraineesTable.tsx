@@ -14,22 +14,22 @@ const emptyStatus = {
 const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
   return (
     <div className="overflow-y-auto overflow-x-hidden">
-      <table className="table w-full">
+      <table className="table table-auto">
         <thead className="bg-blue-500 text-black">
           <tr>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+            <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider overflow-x-hidden">
               Callsign
             </th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+            <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
               Category
             </th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase hidden sm:table-cell tracking-wider">
+            <th className="px-4 py-3 text-center text-xs font-medium uppercase hidden sm:table-cell tracking-wider">
               Overall Status
             </th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+            <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
               Account Status
             </th>
-            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
+            <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider">
               Actions
             </th>
           </tr>

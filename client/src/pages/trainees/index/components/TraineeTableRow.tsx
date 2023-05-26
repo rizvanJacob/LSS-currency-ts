@@ -1,10 +1,12 @@
+import { Account } from "../../../../../../server/src/constants";
 import { CurrencyStatus, Trainee } from "../../../../@types/trainee";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Edit from "../../../../assets/icons/editIcon.svg";
 import RedCross from "../../../../assets/icons/redCross.svg";
 import DialogModal from "../../../../components/DialogModal";
-
+import { CurrentUser } from "../../../../@types/currentUser";
+import { CurrentUserContext } from "../../../../App";
 type Prop = {
   trainee: Trainee;
   category: string;
@@ -19,6 +21,7 @@ const TraineeTableRow = ({
   deleteTrainee,
 }: Prop): JSX.Element => {
   const [showModal, setShowModal] = useState(false);
+  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
 
   return (
     <tr>
@@ -28,7 +31,7 @@ const TraineeTableRow = ({
           to={trainee.id.toString()}
         >
           <span className={overallStatus.className + " badge-xs mx-2"}></span>
-          <span className="flex-1 text-left overflow-clip">
+          <span className="flex-1 text-left overflow-clip w-36">
             {trainee.callsign}
           </span>
         </Link>
@@ -42,20 +45,26 @@ const TraineeTableRow = ({
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
         {trainee.users.approved ? "Active" : "Inactive"}
       </td>
-      <td className="text-center flex items-center justify-evenly">
-        <Link to={`${trainee.id}/edit`}>
-          <button className="btn btn-circle btn-outline">
-            <img src={Edit} alt="edit" />
-          </button>
-        </Link>
-        <button
-          className="btn btn-circle btn-outline"
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          <img src={RedCross} alt="redCross" />
-        </button>
+      <td className="text-center items-center justify-evenly">
+        {currentUser?.id !== trainee.user ? (
+          <>
+            <Link to={`${trainee.id}/edit`}>
+              <button className="btn btn-circle btn-outline">
+                <img src={Edit} alt="edit" />
+              </button>
+            </Link>
+            <button
+              className="btn btn-circle btn-outline"
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              <img src={RedCross} alt="redCross" />
+            </button>
+          </>
+        ) : (
+          null
+        )}
         {showModal && (
           <DialogModal
             title="Delete Trainee?"
