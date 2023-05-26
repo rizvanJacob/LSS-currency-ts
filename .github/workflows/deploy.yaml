@@ -26,7 +26,7 @@ jobs:
           aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: lss-currency-web-staging
-          source_dir: client/dist/assets/*
+          source_dir: ../client/dist/assets/*
       
       - name: Upload to S3
         uses: shallwefootball/s3-upload-action@master
@@ -35,7 +35,7 @@ jobs:
           aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: lss-currency-web-staging
-          source_dir: client/dist/index.html
+          source_dir: ../client/dist/index.html
   
   backend: 
     runs-on: ubuntu-latest
