@@ -54,8 +54,8 @@ export default function EditUserForm(): JSX.Element {
     React.SetStateAction<string>
   > | null>(TitleContext);
 
-  const [isLoadingAdmin, setIsLoadingAdmin] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAdmin, setIsLoadingAdmin] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getRequest(`/api/users/${id}`, setUser);
