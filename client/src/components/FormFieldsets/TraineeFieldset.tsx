@@ -14,7 +14,7 @@ type Props = {
   setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin: boolean;
   forceCallsign?: string;
-  forceCategory?: number;
+  forceCategory?: number | null;
 };
 
 const TraineeFieldset = ({
@@ -33,12 +33,11 @@ const TraineeFieldset = ({
   const [loadedCount, setLoadedCount] = useState<number>(0);
   const [isLoadingParticulars, setIsLoadingParticulars] =
     useState<boolean>(true);
+  const [initialCallsign, setInitialCallsign] = useState<string>("");
 
   useEffect(() => {
     setIsLoading(true);
-
-    if (forceCallsign) setTrainee({ ...trainee, callsign: forceCallsign });
-    if (forceCategory) setTrainee({ ...trainee, category: forceCategory });
+    setInitialCallsign(forceCallsign);
 
     let cancelToken: CancelTokenSource;
     getRequest(
@@ -52,6 +51,15 @@ const TraineeFieldset = ({
       cancelToken?.cancel();
     };
   }, [trainee.category]);
+
+  useEffect(() => {
+    if (forceCallsign) {
+      setTrainee({ ...trainee, callsign: forceCallsign });
+    }
+    if (forceCategory) {
+      setTrainee({ ...trainee, category: forceCategory });
+    }
+  }, [forceCallsign, forceCategory]);
 
   useEffect(() => {
     if (
@@ -126,7 +134,7 @@ const TraineeFieldset = ({
         trainee={trainee}
         handleChange={handleTraineeChange}
         setIsLoadingParticulars={setIsLoadingParticulars}
-        forceCallsign={forceCallsign}
+        forceCallsign={initialCallsign}
         forceCategory={forceCategory}
       />
       {isLoading ? (

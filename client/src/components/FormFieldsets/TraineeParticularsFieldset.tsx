@@ -11,7 +11,7 @@ type Prop = {
   handleChange: any;
   setIsLoadingParticulars?: React.Dispatch<React.SetStateAction<boolean>>;
   forceCallsign?: string;
-  forceCategory?: number;
+  forceCategory?: number | null;
 };
 
 const TraineeParticularsFieldset = ({

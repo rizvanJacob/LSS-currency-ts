@@ -134,6 +134,15 @@ export default function EditUserForm(): JSX.Element {
           ...user,
           [name]: parsedValue,
         };
+      } else if (name === "authCategory") {
+        if (parsedValue !== 0) {
+          return {
+            ...user,
+            [name]: parsedValue,
+          };
+        } else {
+          return user;
+        }
       } else {
         console.log("setUser", name, parsedValue);
         return {
