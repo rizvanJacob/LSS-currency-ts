@@ -74,7 +74,7 @@ export default function AllUsersPage(): JSX.Element {
               </svg>
             </label>
           </div>
-          <div className="collapse-content p-0">
+          <div className="collapse-content overflow-y-auto p-0">
             <UnapprovedUsersList
               users={notApprovedUsers as User[]}
               setUsers={
