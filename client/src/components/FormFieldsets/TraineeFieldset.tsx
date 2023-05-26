@@ -6,12 +6,15 @@ import dayjs from "dayjs";
 import getRequest from "../../utilities/getRequest";
 import ProgressBar from "../ProgressBar";
 import { CancelTokenSource } from "axios";
+import { set } from "date-fns";
 
 type Props = {
   trainee: Trainee;
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
   setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin: boolean;
+  forceCallsign?: string;
+  forceCategory?: number;
 };
 
 const TraineeFieldset = ({
@@ -19,6 +22,8 @@ const TraineeFieldset = ({
   setTrainee,
   setIsLoadingTrainee = () => {},
   isLoadingAdmin,
+  forceCallsign = "",
+  forceCategory = 0,
 }: Props) => {
   console.log("trainee check here please", trainee);
   const [requirements, setRequirements] = useState<Requirement[]>(
@@ -31,6 +36,10 @@ const TraineeFieldset = ({
 
   useEffect(() => {
     setIsLoading(true);
+
+    if (forceCallsign) setTrainee({ ...trainee, callsign: forceCallsign });
+    if (forceCategory) setTrainee({ ...trainee, category: forceCategory });
+
     let cancelToken: CancelTokenSource;
     getRequest(
       `/api/lookup/requirements/?category=${trainee.category}`,
@@ -64,7 +73,7 @@ const TraineeFieldset = ({
   };
 
   const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, name, value } = event.target;
+    const { id, value } = event.target;
     console.log("expiry change");
 
     if (trainee.currencies.find((c) => c.requirement === Number(id))) {
@@ -117,6 +126,8 @@ const TraineeFieldset = ({
         trainee={trainee}
         handleChange={handleTraineeChange}
         setIsLoadingParticulars={setIsLoadingParticulars}
+        forceCallsign={forceCallsign}
+        forceCategory={forceCategory}
       />
       {isLoading ? (
         <ProgressBar />

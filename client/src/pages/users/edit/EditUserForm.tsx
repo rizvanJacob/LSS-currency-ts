@@ -15,7 +15,7 @@ import TrainerFieldSet from "../../../components/FormFieldsets/TrainerFieldset";
 import ProgressBar from "../../../components/ProgressBar";
 import LoadingPage from "../../../components/LoadingPage";
 
-const NON_TRAINEE_ACCOUNTS = [1, 4]
+const NON_TRAINEE_ACCOUNTS = [1, 4];
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
@@ -125,7 +125,8 @@ export default function EditUserForm(): JSX.Element {
         };
       } else if (name === "accountType") {
         if (parsedValue === Account.Trainee) {
-          user.authCategory = undefined;
+          console.log("clear user.authCategory");
+          user.authCategory = null;
         } else {
           user.authCategory = trainee.category;
         }
@@ -167,7 +168,9 @@ export default function EditUserForm(): JSX.Element {
                       type="number"
                       id="accountType"
                       name="accountType"
-                      disabled={NON_TRAINEE_ACCOUNTS.includes(user?.accountType)}
+                      disabled={NON_TRAINEE_ACCOUNTS.includes(
+                        user?.accountType
+                      )}
                       className="input-select select select-primary w-full max-w-xs"
                       value={user.accountType}
                       onChange={handleInputChange}
@@ -229,6 +232,8 @@ export default function EditUserForm(): JSX.Element {
                       setTrainee={setTrainee}
                       setIsLoadingTrainee={setIsLoading}
                       isLoadingAdmin={isLoadingAdmin}
+                      forceCallsign={user.displayName}
+                      forceCategory={user.authCategory}
                     />
                   </>
                 ) : user.accountType === Account.Trainee ? (

@@ -67,7 +67,7 @@ const login = async (req: Request, res: Response) => {
       });
       if (userData.approved) {
         const jwtExpiry = JWT_EXPIRIES[userData.accountType as Account];
-        const token = await jwt.sign(userData, JWT_SECRET, {
+        const token = jwt.sign(userData, JWT_SECRET, {
           expiresIn: jwtExpiry,
         });
         res.status(200).json({ token });
