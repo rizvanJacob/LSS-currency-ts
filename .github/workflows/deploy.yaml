@@ -3,7 +3,7 @@ name: Deploy LSS Currency to AWS environment
 on:
   push:
     branches: 
-      - origin/infra
+      - main
 
 jobs:
   frontend:
