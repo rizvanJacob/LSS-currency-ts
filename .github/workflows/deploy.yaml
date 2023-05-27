@@ -3,7 +3,7 @@ name: Deploy LSS Currency to AWS environment
 on:
   push:
     branches: 
-      - origin/infra
+      - main
 
 jobs:
   frontend:
@@ -16,6 +16,9 @@ jobs:
       - name: npm install and build
         run: |
           cd client
+          cat > .env << EOF
+          VITE_SERVER_URL="https://api.lss-currency.swiftoffice.org"
+          EOF
           npm install
           npm run build
       
