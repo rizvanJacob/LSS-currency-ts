@@ -91,7 +91,11 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
             </select>
             </div>
             <h1>Expiry Overview by Requirement</h1>
-            <Line data={chartData} options={chartOptions} />
+            {filterOptions.requirement !== 0 ? (
+                <Line data={chartData} options={chartOptions} />
+            ) : (
+                <h4 className="text-center text-xs underline decoration-solid">Select a requirement in the drop down above to view currency expiry overview for all trainees</h4>
+            )}
         </>
       );
 };

@@ -128,7 +128,7 @@ export default function EditUserForm(): JSX.Element {
           console.log("clear user.authCategory");
           user.authCategory = null;
         } else {
-          user.authCategory = trainee.category;
+          user.authCategory = Number(trainee.category);
         }
         return {
           ...user,
@@ -181,11 +181,12 @@ export default function EditUserForm(): JSX.Element {
                         user?.accountType
                       )}
                       className="input-select select select-primary w-full max-w-xs"
-                      value={user.accountType}
+                      value={Number(user.accountType)}
                       onChange={handleInputChange}
                     >
                       {accountTypes?.map((type) => {
-                        if (NON_TRAINEE_ACCOUNTS.includes(type.id)) return null;
+                        if (NON_TRAINEE_ACCOUNTS.includes(type.id)) 
+                          return <option value={type.id} key={type.id} disabled>{type.name}</option>;
                         return (
                           <option value={type.id} key={type.id}>
                             {type.name}
@@ -234,17 +235,19 @@ export default function EditUserForm(): JSX.Element {
                     </div>
                   </div>
                 )}
-                {trainee.id && user?.trainee?.id ? (
-                  <>
-                    <TraineeFieldSet
-                      trainee={trainee}
-                      setTrainee={setTrainee}
-                      setIsLoadingTrainee={setIsLoading}
-                      isLoadingAdmin={isLoadingAdmin}
-                      forceCallsign={user.displayName}
-                      forceCategory={user.authCategory}
-                    />
-                  </>
+                {(user.accountType === Account.Trainee || user.accountType === Account.TraineeAdmin) 
+                  && trainee.id 
+                  && user?.trainee?.id ? (
+                    <>
+                      <TraineeFieldSet
+                        trainee={trainee}
+                        setTrainee={setTrainee}
+                        setIsLoadingTrainee={setIsLoading}
+                        isLoadingAdmin={isLoadingAdmin}
+                        forceCallsign={user.displayName}
+                        forceCategory={user.authCategory}
+                      />
+                    </>
                 ) : user.accountType === Account.Trainee ? (
                   <ProgressBar />
                 ) : null}
