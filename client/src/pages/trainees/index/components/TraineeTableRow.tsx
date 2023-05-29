@@ -1,4 +1,3 @@
-import { Account } from "../../../../../../server/src/constants";
 import { CurrencyStatus, Trainee } from "../../../../@types/trainee";
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
@@ -62,9 +61,7 @@ const TraineeTableRow = ({
               <img src={RedCross} alt="redCross" />
             </button>
           </>
-        ) : (
-          null
-        )}
+        ) : null}
         {showModal && (
           <DialogModal
             title="Delete Trainee?"
