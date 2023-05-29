@@ -451,39 +451,39 @@ const getAllBookings = async (req: Request, res: Response) => {
     });
 
     const csvData = [
-      {
-        "Booking ID": "Booking ID",
-        "Trainee ID": "Trainee ID",
-        "Trainee Callsign": "Trainee Callsign",
-        "Trainee Category": "Trainee Category",
-        "Category Name": "Category Name",
-        "Training Requirement": "Training Requirement",
-        "Requirement Name": "Requirement Name",
-        "Training Capacity": "Training Capacity",
-        "Training Start": "Training Start",
-        "Training End": "Training End",
-        "Training Complete": "Training Complete",
-        "Booking Status": "Booking Status",
-        "Status Name": "Status Name",
-      },
+      [
+        "Booking ID",
+        "Trainee ID",
+        "Trainee Callsign",
+        "Trainee Category",
+        "Category Name",
+        "Training Requirement",
+        "Requirement Name",
+        "Training Capacity",
+        "Training Start",
+        "Training End",
+        "Training Complete",
+        "Booking Status",
+        "Status Name",
+      ],
     ];
 
     bookings.forEach((booking) => {
-      const row: any = {
-        "Booking ID": booking.id,
-        "Trainee ID": booking.trainees.id,
-        "Trainee Callsign": booking.trainees.callsign,
-        "Trainee Category": booking.trainees.category,
-        "Category Name": booking.trainees.categories.name,
-        "Training Requirement": booking.trainings.requirement,
-        "Requirement Name": booking.trainings.requirements.name,
-        "Training Capacity": booking.trainings.capacity,
-        "Training Start": booking.trainings.start,
-        "Training End": booking.trainings.end,
-        "Training Complete": booking.trainings.complete,
-        "Booking Status": booking.status,
-        "Status Name": booking.statuses.name,
-      };
+      const row: any = [
+        booking.id,
+        booking.trainees.id,
+        booking.trainees.callsign,
+        booking.trainees.category,
+        booking.trainees.categories.name,
+        booking.trainings.requirement,
+        booking.trainings.requirements.name,
+        booking.trainings.capacity,
+        booking.trainings.start,
+        booking.trainings.end,
+        booking.trainings.complete,
+        booking.status,
+        booking.statuses.name,
+      ];
       csvData.push(row);
     });
 
