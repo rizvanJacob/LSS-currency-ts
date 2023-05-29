@@ -19,7 +19,7 @@ const BookingCSVButton = () => {
                 title: 'Bookings Data',
                 useTextFile: false,
                 useBom: true,
-                useKeysAsHeaders: true,
+                useKeysAsHeaders: false,
               };
               const csvExporter = new ExportToCsv(options);
               csvExporter.generateCsv(csvData);
