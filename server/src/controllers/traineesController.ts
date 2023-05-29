@@ -410,6 +410,94 @@ const checkin = async (req: Request, res: Response) => {
   }
 };
 
+const getAllBookings = async (req: Request, res: Response) => {
+  try {
+    const bookings = await prisma.traineeToTraining.findMany({
+      select: {
+        id: true,
+        trainees: {
+          select: {
+            id: true,
+            callsign: true,
+            category: true,
+            categories: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        trainings: {
+          select: {
+            requirement: true,
+            requirements: {
+              select: {
+                name: true,
+              },
+            },
+            capacity: true,
+            start: true,
+            end: true,
+            complete: true,
+          },
+        },
+        status: true,
+        statuses: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const csvData = [
+      {
+        "Booking ID": "Booking ID",
+        "Trainee ID": "Trainee ID",
+        "Trainee Callsign": "Trainee Callsign",
+        "Trainee Category": "Trainee Category",
+        "Category Name": "Category Name",
+        "Training Requirement": "Training Requirement",
+        "Requirement Name": "Requirement Name",
+        "Training Capacity": "Training Capacity",
+        "Training Start": "Training Start",
+        "Training End": "Training End",
+        "Training Complete": "Training Complete",
+        "Booking Status": "Booking Status",
+        "Status Name": "Status Name",
+      },
+    ];
+
+    bookings.forEach((booking) => {
+      const row: any = {
+        "Booking ID": booking.id,
+        "Trainee ID": booking.trainees.id,
+        "Trainee Callsign": booking.trainees.callsign,
+        "Trainee Category": booking.trainees.category,
+        "Category Name": booking.trainees.categories.name,
+        "Training Requirement": booking.trainings.requirement,
+        "Requirement Name": booking.trainings.requirements.name,
+        "Training Capacity": booking.trainings.capacity,
+        "Training Start": booking.trainings.start,
+        "Training End": booking.trainings.end,
+        "Training Complete": booking.trainings.complete,
+        "Booking Status": booking.status,
+        "Status Name": booking.statuses.name,
+      };
+      csvData.push(row);
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Bookings_Data.csv"
+    );
+    res.setHeader("Content-Type", "text/csv");
+    res.status(200).json(csvData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 export {
   index,
   show,
@@ -420,6 +508,7 @@ export {
   completeRequirement,
   checkin,
   deleteController as delete,
+  getAllBookings,
 };
 
 const book = async (traineeId: number, trainingId: number) => {

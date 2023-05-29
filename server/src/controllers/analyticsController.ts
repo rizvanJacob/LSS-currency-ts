@@ -22,11 +22,6 @@ const analyticsController = {
         },
       });
 
-      const formattedCurrency = currency.map((c) => ({
-        ...c,
-        expiry: dayjs(c.expiry).format("MM-YYYY"),
-      }));
-
       const currencyMap: { [key: string]: number } = {};
       currency.forEach((c) => {
         const formattedExpiry = dayjs(c.expiry).format("MM-YYYY");

@@ -61,5 +61,10 @@ router.get(
   ]),
   traineesController.showBooking
 );
+router.get(
+  "/bookings/csv",
+  isAuth([Account.Admin]),
+  traineesController.getAllBookings
+);
 
 export default router;
