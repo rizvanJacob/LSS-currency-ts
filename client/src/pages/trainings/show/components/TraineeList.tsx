@@ -17,6 +17,9 @@ type Prop = {
   relatedName: string | undefined;
   trainingComplete: boolean | undefined;
   setTrainingComplete: any;
+  trainingRequirement: number;
+  relatedRequirement: number | undefined;
+  trainingDate: Date;
 };
 
 const TraineeList = ({
@@ -26,6 +29,9 @@ const TraineeList = ({
   relatedTraining,
   name,
   relatedName,
+  trainingRequirement,
+  relatedRequirement = 0,
+  trainingDate,
 }: Prop) => {
   const [isLoading, setIsLoading] = useState(true);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -131,6 +137,8 @@ const TraineeList = ({
           trainees={trainees}
           handleCheck={handleCheck}
           trainingComplete={trainingComplete}
+          trainingRequirement={trainingRequirement}
+          trainingDate={trainingDate}
         />
         {relatedTraining && (
           <>
@@ -139,6 +147,8 @@ const TraineeList = ({
               trainees={relatedTrainees}
               handleCheck={handleRelatedCheck}
               trainingComplete={trainingComplete}
+              trainingRequirement={relatedRequirement}
+              trainingDate={trainingDate}
             />
           </>
         )}

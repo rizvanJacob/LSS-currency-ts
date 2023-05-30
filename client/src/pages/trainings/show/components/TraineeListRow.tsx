@@ -10,8 +10,16 @@ type Prop = {
   trainee: Trainee;
   handleChange: (event: React.FormEvent<HTMLInputElement>) => void;
   trainingComplete: boolean | undefined;
+  trainingRequirement: number;
+  trainingDate: Date;
 };
-const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
+const TraineeListRow = ({
+  trainee,
+  handleChange,
+  trainingComplete,
+  trainingRequirement,
+  trainingDate,
+}: Prop) => {
   const currentUser = useContext(CurrentUserContext);
   let showTraineesAsLinks = false;
   if (
@@ -24,7 +32,10 @@ const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
     <tr>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
         {showTraineesAsLinks ? (
-          <Link to={`/trainees/${trainee.id}`} className="link">
+          <Link
+            to={`/trainees/${trainee.id}/book/${trainingRequirement}/?selected=${trainingDate}`}
+            className="link"
+          >
             {trainee.callsign}
           </Link>
         ) : (
