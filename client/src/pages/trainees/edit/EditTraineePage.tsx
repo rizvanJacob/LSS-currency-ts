@@ -5,6 +5,7 @@ import { Formik, Form } from "formik";
 import { Trainee } from "../../../@types/trainee";
 import putRequest from "../../../utilities/putRequest";
 import ProgressBar from "../../../components/ProgressBar";
+import LoadingPage from "../../../components/LoadingPage";
 import { TitleContext } from "../../../App";
 import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
 import { traineeSchema } from "../../../yupSchemas/traineeSchema";
@@ -22,7 +23,7 @@ const blankTrainee = {
 
 
 const EditTraineePage = () => {
-  const [loading, setLoading] = useState(true);
+  const [loadingTrainee, setIsLoadingTrainee] = useState(true);
   const { id } = useParams();
   const [trainee, setTrainee] = useState<Trainee>(blankTrainee);
   const navigate = useNavigate();
@@ -31,20 +32,18 @@ const EditTraineePage = () => {
   > | null>(TitleContext);
 
   useEffect(() => {
-    if (setTitle) setTitle("Edit Trainee");
     getRequest(`/api/trainees/${id}/?noTrim=true`, setTrainee).then(() => {
       if (setTitle) setTitle(trainee.callsign);
-      setLoading(false);
     });
-  }, []);
+  }, [loadingTrainee]);
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setIsLoadingTrainee(true);
     const response = (await putRequest(
       `/api/trainees/${id}`,
       trainee
     )) as Response;
-    setLoading(false);
+    setIsLoadingTrainee(false);
 
     if (response.status === 200) {
       navigate("/trainees");
@@ -53,11 +52,11 @@ const EditTraineePage = () => {
       alert("Update unsuccessful. Please try again later");
     }
   };
-
+  console.log("loading trainee", loadingTrainee);
   return (
     <fieldset className="justify-center">
       <div className="flex justify-center">
-        {!loading ? (
+        {loadingTrainee && <LoadingPage/>}
           <Formik
             initialValues={trainee}
             enableReinitialize
@@ -69,6 +68,7 @@ const EditTraineePage = () => {
                 <TraineeFieldset
                   trainee={trainee}
                   setTrainee={setTrainee}
+                  setIsLoadingTrainee={setIsLoadingTrainee}
                 />
                 <button
                   disabled={isSubmitting || isValidating || !isValid}
@@ -80,9 +80,6 @@ const EditTraineePage = () => {
               </Form>
             )}
           </Formik>
-        ) : (
-          <ProgressBar />
-        )}
       </div>
     </fieldset>
   );
