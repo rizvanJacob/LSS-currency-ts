@@ -8,6 +8,7 @@ import TrainingCard from "./components/TrainingCard";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
 import { Trainee } from "../../../@types/trainee";
+import { Value } from "react-calendar/dist/cjs/shared/types";
 
 const BookTrainingPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -33,7 +34,7 @@ const BookTrainingPage = () => {
 
   useEffect(() => {
     const display = trainings.filter((t) =>
-      dayjs(t.start).isSame(dayjs(displayDate), "day")
+      dayjs(t.start).isSame(dayjs(displayDate), "month")
     );
     setDisplayTrainings(display);
     if (setTitle && trainings.length && trainings[0].requirements)
@@ -57,6 +58,16 @@ const BookTrainingPage = () => {
     );
   };
 
+  const handleFocus = (value: Value) => {
+    const displayTraining = trainings.find((t) =>
+      dayjs(t.start).isSame(dayjs(value?.toString()), "date")
+    );
+
+    document.querySelector(`#training${displayTraining?.id}`)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       {isLoaded ? (
@@ -66,6 +77,7 @@ const BookTrainingPage = () => {
               trainings={trainings}
               displayDate={displayDate}
               setDisplayDate={setDisplayDate}
+              handleFocus={handleFocus}
             />
             {displayTrainings.map((t) => {
               return (

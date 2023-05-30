@@ -32,7 +32,7 @@ const trainingsController = {
             : {}),
         },
         orderBy: {
-          start: "desc",
+          start: requirement ? "asc" : "desc",
         },
         include: checkin
           ? {

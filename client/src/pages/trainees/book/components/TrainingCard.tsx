@@ -54,7 +54,10 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
   }, [training]);
 
   return (
-    <div className="my-2 py-5 px-5 card bg-sky-50 shadow-xl">
+    <div
+      className="my-2 py-5 px-5 card bg-sky-50 shadow-xl"
+      id={`training${training.id}`}
+    >
       <div className="flex items-center ">
         <div className="flex-1 flex-col items-start text-left">
           <h4 className="card-title">
