@@ -41,6 +41,7 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div className="flex flex-col mx-auto items-center h-48 justify-evenly">
+      <h1 className="badge badge-lg badge-primary badge-outline">LSS Currency App</h1>
       <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
       </a>
