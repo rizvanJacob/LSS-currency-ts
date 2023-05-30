@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Currency, CurrencyStatus } from "../../../../@types/trainee";
 import dayjs from "dayjs";
 import { computeStatus } from "../../../../utilities/computeCurrencyStatus";
@@ -7,6 +7,11 @@ import getRequest from "../../../../utilities/getRequest";
 import ProgressBar from "../../../../components/ProgressBar";
 import BookButton from "./BookButton";
 import SelfCompleteButton from "./SelfCompleteButton";
+import {
+  TRAINEE_ACTIONS_ACCESS,
+  TRAINEE_AMEND_ACCESS,
+} from "../../TraineesRoutes";
+import { CurrentUserContext } from "../../../../App";
 
 type Prop = {
   currency: Currency;
@@ -41,6 +46,10 @@ const CurrencyCard = ({
   const [booking, setBooking] = useState<Booking>({
     status: 0,
   });
+  const currentUser = useContext(CurrentUserContext);
+  const canAccessActions =
+    TRAINEE_ACTIONS_ACCESS.includes(currentUser?.accountType || 0) ||
+    Number(id) === currentUser?.trainee?.id;
 
   useEffect(() => {
     getRequest(
@@ -87,19 +96,20 @@ const CurrencyCard = ({
               </Link>
             )}
           </div>
-          {selfComplete ? (
-            <SelfCompleteButton
-              traineeId={Number(id)}
-              requirementId={currency.requirement || 0}
-              handleSelfComplete={handleSelfComplete}
-            />
-          ) : (
-            <BookButton
-              requirement={currency.requirement}
-              trainingStart={booking.trainings?.start}
-              bookingStatus={booking.status}
-            />
-          )}
+          {canAccessActions &&
+            (selfComplete ? (
+              <SelfCompleteButton
+                traineeId={Number(id)}
+                requirementId={currency.requirement || 0}
+                handleSelfComplete={handleSelfComplete}
+              />
+            ) : (
+              <BookButton
+                requirement={currency.requirement}
+                trainingStart={booking.trainings?.start}
+                bookingStatus={booking.status}
+              />
+            ))}
         </div>
       </div>
     </div>

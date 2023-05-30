@@ -13,9 +13,7 @@ export const TRAINEE_INDEX_ACCESS = [
   Account.TraineeAdmin,
   Account.Trainer,
 ];
-
 export const TRAINEE_ACTIONS_ACCESS = [Account.Admin, Account.Trainer];
-
 export const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin];
 
 const TraineesRoutes = (): JSX.Element => {
@@ -32,15 +30,16 @@ const TraineesRoutes = (): JSX.Element => {
           {TRAINEE_INDEX_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
+          {TRAINEE_INDEX_ACCESS.includes(Number(currentUser.accountType)) ||
+          isSpecificTrainee ? (
+            <Route path="/:id" element={<ShowTraineePage />} />
+          ) : null}
           {TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType)) ||
           isSpecificTrainee ? (
-            <>
-              <Route path="/:id" element={<ShowTraineePage />} />
-              <Route
-                path="/:id/book/:requirement"
-                element={<BookTrainingPage />}
-              />
-            </>
+            <Route
+              path="/:id/book/:requirement"
+              element={<BookTrainingPage />}
+            />
           ) : null}
           {TRAINEE_AMEND_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/:id/edit" element={<EditTraineePage />} />
