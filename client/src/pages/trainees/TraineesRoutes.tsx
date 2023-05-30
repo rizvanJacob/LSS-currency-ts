@@ -13,17 +13,13 @@ export const INDEX_PAGE_ACCESS = [
   Account.TraineeAdmin,
   Account.Trainer,
 ];
-const TRAINEE_SHOW_ACCESS = [
+const TRAINEE_ACTIONS_ACCESS = [
   Account.Admin,
   Account.TraineeAdmin,
   Account.Trainee,
   Account.Trainer,
 ];
-const TRAINEE_AMEND_ACCESS = [
-  Account.Admin,
-  Account.TraineeAdmin,
-  Account.Trainee,
-];
+const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin];
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   return (
@@ -33,17 +29,17 @@ const TraineesRoutes = (): JSX.Element => {
           {INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
-          {TRAINEE_SHOW_ACCESS.includes(Number(currentUser.accountType)) ? (
-            <Route path="/:id" element={<ShowTraineePage />} />
-          ) : null}
-          {TRAINEE_AMEND_ACCESS.includes(Number(currentUser.accountType)) ? (
+          {TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType)) ? (
             <>
-              <Route path="/:id/edit" element={<EditTraineePage />} />
+              <Route path="/:id" element={<ShowTraineePage />} />
               <Route
                 path="/:id/book/:requirement"
                 element={<BookTrainingPage />}
               />
             </>
+          ) : null}
+          {TRAINEE_AMEND_ACCESS.includes(Number(currentUser.accountType)) ? (
+            <Route path="/:id/edit" element={<EditTraineePage />} />
           ) : null}
           <Route path="/new" />
         </Routes>
