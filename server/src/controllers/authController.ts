@@ -109,12 +109,11 @@ const findUser = async (req: Request, res: Response) => {
 };
 
 const isAuth =
-  (authorized: number[]) =>
+  (authorized: number[], generalAccess = false) =>
   async (req: Request, res: Response, next: NextFunction) => {
     if (!AUTHORISE) {
       return next();
     }
-
     const authorization = req.headers.authorization;
     const token = authorization?.split(" ")[1].toString();
     const traineeId = Number(req.params.traineeId);
@@ -139,7 +138,7 @@ const isAuth =
       if (verifiedUser.trainee?.id) {
         console.log("Verifying trainee access...");
         if (authorized.includes(Account.Trainee)) {
-          if (traineeId) {
+          if (traineeId && !generalAccess) {
             if (verifiedUser.trainee.id === traineeId) {
               console.log("Trainee authorized to access own resources");
               return next();
@@ -158,7 +157,7 @@ const isAuth =
 
       if (verifiedUser.accountType === Account.TraineeAdmin) {
         console.log("Verifying trainee admin access...");
-        if (traineeId) {
+        if (traineeId && !generalAccess) {
           const trainee = await prisma.trainee.findUnique({
             where: { id: traineeId },
             select: { category: true },
@@ -171,7 +170,7 @@ const isAuth =
           console.log(
             `Trainee Admin authorized to access trainee ${traineeId}`
           );
-        } else if (userId) {
+        } else if (userId && !generalAccess) {
           const trainee = await prisma.trainee.findUnique({
             where: { user: userId },
             select: { category: true },
@@ -191,7 +190,7 @@ const isAuth =
       if (verifiedUser.accountType === Account.Trainer) {
         console.log("Verifying trainer access");
         console.log(trainingId, requirementId);
-        if (trainingId) {
+        if (trainingId && !generalAccess) {
           const trainingQuery = prisma.training.findUnique({
             where: { id: trainingId },
             select: { requirement: true },
@@ -216,7 +215,7 @@ const isAuth =
             throw new Error("Not authorized to access training");
           }
           console.log(`Trainer authorized to access training ${trainingId}`);
-        } else if (requirementId) {
+        } else if (requirementId && !generalAccess) {
           const trainingsProvided = await prisma.trainingProvided.findMany({
             where: { user: verifiedUser.id },
             select: { requirement: true },
