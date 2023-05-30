@@ -49,10 +49,10 @@ jobs:
             sudo su
             pm2 stop all
             cd ..
-            rm -rf lss-currency-application
+            rm -rf lss-currency-app
             git clone https://${{ secrets.TOKEN_PAT }}@github.com/rswiftoffice/lss-currency-app.git
-            cp .env lss-currency-application/server
-            cd lss-currency-application/server
+            cp .env lss-currency-app/server
+            cd lss-currency-app/server
             npm install
             npm run build
             pm2 start "npm run start"
