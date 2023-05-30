@@ -8,27 +8,32 @@ import { CurrentUser } from "../../@types/currentUser";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../App";
 
-export const INDEX_PAGE_ACCESS = [
+export const TRAINEE_INDEX_ACCESS = [
   Account.Admin,
   Account.TraineeAdmin,
   Account.Trainer,
 ];
-const TRAINEE_ACTIONS_ACCESS = [Account.Admin, Account.Trainer];
-const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin];
+
+export const TRAINEE_ACTIONS_ACCESS = [Account.Admin, Account.Trainer];
+
+export const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin];
+
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const params = useParams();
+
   const id = Number(params["*"]?.replace(/\/.*/, ""));
-  
+  const isSpecificTrainee = currentUser?.trainee?.id === id;
+
   return (
     <>
       {currentUser ? (
         <Routes>
-          {INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
+          {TRAINEE_INDEX_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
           {TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType)) ||
-          id === currentUser.trainee?.id ? (
+          isSpecificTrainee ? (
             <>
               <Route path="/:id" element={<ShowTraineePage />} />
               <Route

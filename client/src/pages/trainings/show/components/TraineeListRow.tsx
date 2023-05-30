@@ -4,7 +4,7 @@ import { toTitleCase } from "../../../../utilities/stringManipulation";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../../App";
-import { INDEX_PAGE_ACCESS } from "../../../trainees/TraineesRoutes";
+import { TRAINEE_INDEX_ACCESS } from "../../../trainees/TraineesRoutes";
 
 type Prop = {
   trainee: Trainee;
@@ -24,7 +24,7 @@ const TraineeListRow = ({
   let showTraineesAsLinks = false;
   if (
     currentUser &&
-    INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType))
+    TRAINEE_INDEX_ACCESS.includes(Number(currentUser.accountType))
   ) {
     showTraineesAsLinks = true;
   }

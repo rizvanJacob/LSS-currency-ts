@@ -20,7 +20,7 @@ const index = async (req: Request, res: Response) => {
             },
             users: { approved: true },
           }
-        : {},
+        : { users: { approved: true } },
       select: {
         id: true,
         callsign: true,
