@@ -23,4 +23,7 @@ export type DecodedToken = {
   authCategory?: number;
   displayName: string;
   accountType: number;
+  trainee: {
+    id: number;
+  };
 };
