@@ -43,6 +43,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
 
+  console.log("Version Control Check: 30th May 2023 11:59am");
+
   useEffect(() => {
     if (!AUTHORISE) {
       setCurrentUser(CURRENT_USER);
