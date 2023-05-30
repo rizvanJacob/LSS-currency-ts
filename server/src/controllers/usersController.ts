@@ -188,8 +188,8 @@ const usersController = {
           trainee: trainee
             ? {
                 update: {
-                  callsign: trainee?.callsign,
-                  category: Number(trainee?.category),
+                  callsign: displayName,
+                  category: Number(authCategory || trainee?.category),
                 },
               }
             : undefined,
