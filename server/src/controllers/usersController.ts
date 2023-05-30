@@ -69,7 +69,6 @@ const usersController = {
       if (req.headers.authorization) {
         verifiedUser = JSON.parse(req.headers.authorization);
       }
-      console.log("Verified user", verifiedUser);
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
         const allUsers = await prisma.userModel.findMany({
           where: {
@@ -77,6 +76,9 @@ const usersController = {
               { accountType: Account.Trainee },
               { accountType: Account.TraineeAdmin },
             ],
+            trainee: {
+              category: verifiedUser.authCategory,
+            },
           },
           orderBy: {
             displayName: "asc",
@@ -106,6 +108,7 @@ const usersController = {
         res.status(200).json(allUsers);
       }
     } catch (err) {
+      console.log(err);
       res.status(500).json({ err });
     }
   },

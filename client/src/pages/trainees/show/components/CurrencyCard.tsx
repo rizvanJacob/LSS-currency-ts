@@ -89,7 +89,7 @@ const CurrencyCard = ({
         <div className="flex items-center">
           <div className="flex-1 flex-col min-w-max text-left">
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
-            {booking.status && (
+            {booking.status > 0 && (
               <Link to={`/trainings/${booking.trainings?.id}`} className="link">
                 {BOOKING_STATUSES[booking.status]}:{" "}
                 {dayjs(booking.trainings?.start).format("DD-MMM-YY")}

@@ -94,10 +94,12 @@ const TraineeList = ({
     console.log("submit form");
     setIsLoading(true);
 
+    const token = localStorage.getItem("token");
     const putPromises = [
       fetch(buildFullUrl(`/api/trainings/complete/${trainingId}`), {
         method: "PUT",
         headers: {
+          authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(completedTrainees),
@@ -108,6 +110,7 @@ const TraineeList = ({
         fetch(buildFullUrl(`/api/trainings/complete/${relatedTraining}`), {
           method: "PUT",
           headers: {
+            authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(relatedCompletedTrainees),

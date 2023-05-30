@@ -379,32 +379,41 @@ const checkin = async (req: Request, res: Response) => {
   const { user: userId, training: trainingId } = req.query;
 
   try {
-    const trainee = await prisma.trainee.findUnique({
+    const traineeQuery = prisma.trainee.findUnique({
       where: { user: Number(userId) },
     });
-    const training = await prisma.training.findUnique({
+    const trainingQuery = prisma.training.findUnique({
       where: { id: Number(trainingId) },
     });
+    const [trainee, training] = await Promise.all([
+      traineeQuery,
+      trainingQuery,
+    ]);
+
+    if (!trainee || !training) {
+      return res.status(400).json({ message: "Trainee or training not found" });
+    }
 
     const isCorrectPassphrase = passphrase === training?.passphrase;
-    const isSameDay = dayjs(training?.start).isSame(dayjs(), "day");
-
-    if (trainee && isCorrectPassphrase && isSameDay) {
-      await prisma.traineeToTraining.update({
-        where: {
-          trainee_training: {
-            trainee: trainee?.id,
-            training: Number(trainingId),
-          },
-        },
-        data: { status: 2, updatedAt: dayjs().toDate() },
-      });
-      return res.status(200).json({ message: "Check in successful!" });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Check in unsucessful. Please try again." });
+    if (!isCorrectPassphrase) {
+      return res.status(400).json({ message: "Incorrect passphrase" });
     }
+    const dateDifference = dayjs(training?.start).diff(dayjs(), "hours");
+    const isWithin24h = dateDifference <= 24 && dateDifference >= 0;
+    if (!isWithin24h) {
+      return res.status(400).json({ message: "Training is not today" });
+    }
+
+    await prisma.traineeToTraining.update({
+      where: {
+        trainee_training: {
+          trainee: trainee?.id,
+          training: Number(trainingId),
+        },
+      },
+      data: { status: 2, updatedAt: dayjs().toDate() },
+    });
+    return res.status(200).json({ message: "Check in successful!" });
   } catch (error) {
     return res.status(500).json(error);
   }
