@@ -1,3 +1,4 @@
+import { Account } from "../../../../../../server/src/constants";
 import { CurrencyStatus, Trainee } from "../../../../@types/trainee";
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
@@ -6,6 +7,7 @@ import RedCross from "../../../../assets/icons/redCross.svg";
 import DialogModal from "../../../../components/DialogModal";
 import { CurrentUser } from "../../../../@types/currentUser";
 import { CurrentUserContext } from "../../../../App";
+import { userSchema } from "../../../../yupSchemas/userSchema";
 type Prop = {
   trainee: Trainee;
   category: string;
@@ -45,7 +47,7 @@ const TraineeTableRow = ({
         {trainee.users.approved ? "Active" : "Inactive"}
       </td>
       <td className="text-center items-center justify-evenly">
-        {currentUser?.id !== trainee.user ? (
+        {currentUser?.id !== trainee.user && currentUser?.accountType !== Account.Trainer ? (
           <>
             <Link to={`${trainee.id}/edit`}>
               <button className="btn btn-circle btn-outline">
