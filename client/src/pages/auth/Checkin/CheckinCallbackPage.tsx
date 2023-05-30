@@ -12,6 +12,7 @@ const CheckinCallbackPage = () => {
   const user = useRef({
     id: 0,
     accountType: 0,
+    trainee: { id: 0 },
   });
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +38,7 @@ const CheckinCallbackPage = () => {
     loginAndGetTrainings();
   }, []);
 
-  return user.current.accountType === 3 ? (
+  return user.current.trainee.id ? (
     <div className="card w-96 shadow-xl mx-auto">
       <div className="card-body">
         <h1 className="card-title text-3xl text-center font-bold mb-8">

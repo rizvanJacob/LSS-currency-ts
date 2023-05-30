@@ -44,7 +44,7 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
 
   return (
     <>
-      <h2>{training.requirements.name}</h2>
+      <h2>{training.requirements?.name}</h2>
       <form className="space-y-6" onSubmit={handleCheckin}>
         <div className="flex items-evenly">
           <input
@@ -58,7 +58,7 @@ const CheckinToTraining = ({ training, token, user, setIsLoading }: Prop) => {
               setPassphrase(e.target.value);
             }}
           />
-          <button className=" px-1 btn btn-info">Check In</button>;
+          <button className=" px-1 btn btn-info">Check In</button>
         </div>
       </form>
     </>
