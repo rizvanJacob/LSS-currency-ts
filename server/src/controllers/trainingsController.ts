@@ -32,7 +32,7 @@ const trainingsController = {
             : {}),
         },
         orderBy: {
-          start: "desc",
+          start: requirement ? "asc" : "desc",
         },
         include: checkin
           ? {
@@ -202,7 +202,7 @@ const trainingsController = {
   },
 
   completeTraining: async (req: Request, res: Response) => {
-    const { id: trainingId } = req.params;
+    const { trainingId } = req.params;
     const completedTrainees = req.body as number[];
 
     const updateCompletedStatuses = prisma.traineeToTraining.updateMany({

@@ -6,6 +6,8 @@ import {
   TileDisabledFunc,
   TileClassNameFunc,
   NavigationLabelFunc,
+  OnArgs,
+  Value,
 } from "react-calendar/dist/cjs/shared/types";
 import { useSearchParams } from "react-router-dom";
 
@@ -13,9 +15,10 @@ type Prop = {
   trainings: Training[];
   displayDate: Date;
   setDisplayDate: React.Dispatch<React.SetStateAction<Date>>;
+  handleFocus: (value: Value) => void;
 };
 
-const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
+const TrainingCalendar = ({ trainings, displayDate, setDisplayDate, handleFocus }: Prop) => {
   const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
     return dayjs(t.start).toDate();
@@ -72,8 +75,10 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
     return className;
   };
 
-  const onChange = (nextValue: any) => {
-    setDisplayDate(nextValue);
+  const handleActiveStartDateChange = ({ activeStartDate, view }: OnArgs) => {
+    if (view === "month" && activeStartDate) {
+      setDisplayDate(activeStartDate);
+    }
   };
 
   const getNavigationLabel: NavigationLabelFunc = ({ date }) => {
@@ -85,11 +90,12 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
 
   return (
     <div className="mx-auto py-5">
-      <div className="flex flex-col h-[360px] items-center">
+      <div className="flex flex-col h-fit items-center">
         <Calendar
           className="flex-1 max-w-sm"
           value={displayDate}
-          onChange={onChange}
+          onActiveStartDateChange={handleActiveStartDateChange}
+          onChange={handleFocus}
           minDate={dayjs().toDate()}
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}

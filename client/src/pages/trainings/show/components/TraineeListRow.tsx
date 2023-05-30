@@ -4,19 +4,27 @@ import { toTitleCase } from "../../../../utilities/stringManipulation";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../../App";
-import { INDEX_PAGE_ACCESS } from "../../../trainees/TraineesRoutes";
+import { TRAINEE_ACTIONS_ACCESS } from "../../../trainees/TraineesRoutes";
 
 type Prop = {
   trainee: Trainee;
   handleChange: (event: React.FormEvent<HTMLInputElement>) => void;
   trainingComplete: boolean | undefined;
+  trainingRequirement: number;
+  trainingDate: Date;
 };
-const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
+const TraineeListRow = ({
+  trainee,
+  handleChange,
+  trainingComplete,
+  trainingRequirement,
+  trainingDate,
+}: Prop) => {
   const currentUser = useContext(CurrentUserContext);
   let showTraineesAsLinks = false;
   if (
     currentUser &&
-    INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType))
+    TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType))
   ) {
     showTraineesAsLinks = true;
   }
@@ -24,7 +32,10 @@ const TraineeListRow = ({ trainee, handleChange, trainingComplete }: Prop) => {
     <tr>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
         {showTraineesAsLinks ? (
-          <Link to={`/trainees/${trainee.id}`} className="link">
+          <Link
+            to={`/trainees/${trainee.id}/book/${trainingRequirement}/?selected=${trainingDate}`}
+            className="link"
+          >
             {trainee.callsign}
           </Link>
         ) : (

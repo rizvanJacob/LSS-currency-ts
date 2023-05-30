@@ -5,12 +5,16 @@ type Prop = {
   trainees: Trainee[];
   handleCheck: (event: React.FormEvent<HTMLInputElement>) => void;
   trainingComplete: boolean | undefined;
+  trainingRequirement: number;
+  trainingDate: Date;
 };
 
 const TraineeListTable = ({
   trainees,
   handleCheck,
   trainingComplete,
+  trainingRequirement,
+  trainingDate,
 }: Prop) => {
   return (
     <table className="table w-full">
@@ -41,6 +45,8 @@ const TraineeListTable = ({
               key={t.id}
               handleChange={handleCheck}
               trainingComplete={trainingComplete}
+              trainingRequirement={trainingRequirement}
+              trainingDate={trainingDate}
             />
           );
         })}

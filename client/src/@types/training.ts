@@ -10,14 +10,12 @@ export type NewTraining = {
   relatedRequirementName?: string;
   requirements?: {
     name: string;
+    alsoCompletes?: number;
   };
   passphrase?: string;
 };
 
 export type Training = NewTraining & {
-  requirements: {
-    name: string;
-  };
   complete?: boolean;
   trainees: {
     trainee?: number;

@@ -20,7 +20,7 @@ const index = async (req: Request, res: Response) => {
             },
             users: { approved: true },
           }
-        : {},
+        : { users: { approved: true } },
       select: {
         id: true,
         callsign: true,
@@ -149,45 +149,6 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
-const showBooking = async (req: Request, res: Response) => {
-  const { traineeId, requirementId } = req.params;
-
-  try {
-    const booking = await prisma.traineeToTraining.findFirst({
-      where: {
-        trainee: Number(traineeId),
-        trainings: {
-          requirement: Number(requirementId),
-          complete: false,
-          start: { gte: dayjs().toDate() },
-        },
-        status: { in: [1, 6] },
-      },
-      select: {
-        status: true,
-        trainings: {
-          select: {
-            id: true,
-            start: true,
-            requirements: {
-              select: {
-                selfComplete: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    if (booking) {
-      res.status(200).json(booking);
-    } else {
-      res.status(204).json({ message: "no bookings found" });
-    }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
-
 const create = async (req: Request, res: Response) => {
   try {
     const { callsign, category, user } = req.body;
@@ -202,75 +163,6 @@ const create = async (req: Request, res: Response) => {
     res.status(200).json(newTrainee);
   } catch (err) {
     res.status(500).json({ err });
-  }
-};
-
-const updateBooking = async (req: Request, res: Response) => {
-  const { traineeId, trainingId } = req.params;
-
-  try {
-    console.log("attempt booking");
-    const booking = await book(Number(traineeId), Number(trainingId));
-    res.status(200).json(booking);
-  } catch (error) {
-    res.status(500);
-  }
-
-  console.log(`trainee: ${traineeId}, training: ${trainingId}`);
-};
-
-const completeRequirement = async (req: Request, res: Response) => {
-  const { traineeId, requirementId } = req.params;
-  const { completedOn } = req.body;
-  try {
-    const currencyTransaction = prisma.currency.findUnique({
-      where: {
-        trainee_requirement: {
-          trainee: Number(traineeId),
-          requirement: Number(requirementId),
-        },
-      },
-    });
-    const requirementTransaction = prisma.requirement.findUnique({
-      where: { id: Number(requirementId) },
-    });
-
-    const [currency, requirement] = await Promise.all([
-      currencyTransaction,
-      requirementTransaction,
-    ]);
-    const extension = currency?.seniority
-      ? requirement?.seniorExtension
-      : requirement?.extensionPeriod;
-
-    if (currency && requirement && extension) {
-      const nextExpiry = getNextExpiry(
-        currency?.expiry,
-        dayjs(completedOn).toDate(),
-        requirement?.rehackPeriod,
-        extension,
-        requirement.refreshToMonthEnd
-      );
-
-      const updatedCurrency = await prisma.currency.update({
-        where: {
-          trainee_requirement: {
-            trainee: Number(traineeId),
-            requirement: Number(requirementId),
-          },
-        },
-        data: {
-          expiry: nextExpiry.toDate(),
-          updatedAt: dayjs().toDate(),
-        },
-      });
-      res.status(200).json(updatedCurrency);
-    } else {
-      res.status(400);
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500);
   }
 };
 
@@ -309,6 +201,11 @@ const update = async (req: Request, res: Response) => {
     });
     return upsertTransaction;
   });
+  
+  const currentUser = await prisma.userModel.findUnique({
+    where: { id: Number(trainee.user) },
+    select: { accountType: true },
+  });
 
   const updateTrainee = prisma.trainee.update({
     where: { id: Number(traineeId) },
@@ -319,8 +216,20 @@ const update = async (req: Request, res: Response) => {
     },
   });
 
+  const updateUser = prisma.userModel.update({
+    where: { id: Number(trainee.user) },
+    data: {
+      displayName: trainee.callsign,
+      updatedAt: dayjs().toDate(),
+      authCategory:
+        currentUser?.accountType === Account.TraineeAdmin
+          ? trainee.category
+          : null,
+    },
+  });
+
   try {
-    await updateTrainee;
+    await prisma.$transaction([updateTrainee, updateUser]);
     if (upsertCurrencies.length) {
       await Promise.all(upsertCurrencies);
     }
@@ -331,7 +240,7 @@ const update = async (req: Request, res: Response) => {
   }
 };
 
-const deleteController = async (req: Request, res: Response) => {
+const deleteTrainee = async (req: Request, res: Response) => {
   const { traineeId } = req.params;
 
   try {
@@ -373,41 +282,57 @@ const deleteController = async (req: Request, res: Response) => {
   }
 };
 
-const checkin = async (req: Request, res: Response) => {
-  console.log("handle checkin");
-  const { passphrase } = req.body;
-  const { user: userId, training: trainingId } = req.query;
+const showBooking = async (req: Request, res: Response) => {
+  const { traineeId, requirementId } = req.params;
 
   try {
-    const trainee = await prisma.trainee.findUnique({
-      where: { user: Number(userId) },
-    });
-    const training = await prisma.training.findUnique({
-      where: { id: Number(trainingId) },
-    });
-
-    const isCorrectPassphrase = passphrase === training?.passphrase;
-    const isSameDay = dayjs(training?.start).isSame(dayjs(), "day");
-
-    if (trainee && isCorrectPassphrase && isSameDay) {
-      await prisma.traineeToTraining.update({
-        where: {
-          trainee_training: {
-            trainee: trainee?.id,
-            training: Number(trainingId),
+    const booking = await prisma.traineeToTraining.findFirst({
+      where: {
+        trainee: Number(traineeId),
+        trainings: {
+          requirement: Number(requirementId),
+          complete: false,
+          start: { gte: dayjs().toDate() },
+        },
+        status: { in: [1, 6] },
+      },
+      select: {
+        status: true,
+        trainings: {
+          select: {
+            id: true,
+            start: true,
+            requirements: {
+              select: {
+                selfComplete: true,
+              },
+            },
           },
         },
-        data: { status: 2, updatedAt: dayjs().toDate() },
-      });
-      return res.status(200).json({ message: "Check in successful!" });
+      },
+    });
+    if (booking) {
+      res.status(200).json(booking);
     } else {
-      return res
-        .status(400)
-        .json({ message: "Check in unsucessful. Please try again." });
+      res.status(204).json({ message: "no bookings found" });
     }
   } catch (error) {
-    return res.status(500).json(error);
+    res.status(500).json(error);
   }
+};
+
+const updateBooking = async (req: Request, res: Response) => {
+  const { traineeId, trainingId } = req.params;
+
+  try {
+    console.log("attempt booking");
+    const booking = await book(Number(traineeId), Number(trainingId));
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500);
+  }
+
+  console.log(`trainee: ${traineeId}, training: ${trainingId}`);
 };
 
 const getAllBookings = async (req: Request, res: Response) => {
@@ -498,6 +423,107 @@ const getAllBookings = async (req: Request, res: Response) => {
   }
 };
 
+const completeRequirement = async (req: Request, res: Response) => {
+  const { traineeId, requirementId } = req.params;
+  const { completedOn } = req.body;
+  try {
+    const currencyTransaction = prisma.currency.findUnique({
+      where: {
+        trainee_requirement: {
+          trainee: Number(traineeId),
+          requirement: Number(requirementId),
+        },
+      },
+    });
+    const requirementTransaction = prisma.requirement.findUnique({
+      where: { id: Number(requirementId) },
+    });
+
+    const [currency, requirement] = await Promise.all([
+      currencyTransaction,
+      requirementTransaction,
+    ]);
+    const extension = currency?.seniority
+      ? requirement?.seniorExtension
+      : requirement?.extensionPeriod;
+
+    if (currency && requirement && extension) {
+      const nextExpiry = getNextExpiry(
+        currency?.expiry,
+        dayjs(completedOn).toDate(),
+        requirement?.rehackPeriod,
+        extension,
+        requirement.refreshToMonthEnd
+      );
+
+      const updatedCurrency = await prisma.currency.update({
+        where: {
+          trainee_requirement: {
+            trainee: Number(traineeId),
+            requirement: Number(requirementId),
+          },
+        },
+        data: {
+          expiry: nextExpiry.toDate(),
+          updatedAt: dayjs().toDate(),
+        },
+      });
+      res.status(200).json(updatedCurrency);
+    } else {
+      res.status(400);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  }
+};
+
+const checkin = async (req: Request, res: Response) => {
+  console.log("handle checkin");
+  const { passphrase } = req.body;
+  const { user: userId, training: trainingId } = req.query;
+
+  try {
+    const traineeQuery = prisma.trainee.findUnique({
+      where: { user: Number(userId) },
+    });
+    const trainingQuery = prisma.training.findUnique({
+      where: { id: Number(trainingId) },
+    });
+    const [trainee, training] = await Promise.all([
+      traineeQuery,
+      trainingQuery,
+    ]);
+
+    if (!trainee || !training) {
+      return res.status(400).json({ message: "Trainee or training not found" });
+    }
+
+    const isCorrectPassphrase = passphrase === training?.passphrase;
+    if (!isCorrectPassphrase) {
+      return res.status(400).json({ message: "Incorrect passphrase" });
+    }
+    const dateDifference = dayjs(training?.start).diff(dayjs(), "hours");
+    const isWithin24h = dateDifference <= 24 && dateDifference >= 0;
+    if (!isWithin24h) {
+      return res.status(400).json({ message: "Training is not today" });
+    }
+
+    await prisma.traineeToTraining.update({
+      where: {
+        trainee_training: {
+          trainee: trainee?.id,
+          training: Number(trainingId),
+        },
+      },
+      data: { status: 2, updatedAt: dayjs().toDate() },
+    });
+    return res.status(200).json({ message: "Check in successful!" });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 export {
   index,
   show,
@@ -507,7 +533,7 @@ export {
   updateBooking,
   completeRequirement,
   checkin,
-  deleteController as delete,
+  deleteTrainee as delete,
   getAllBookings,
 };
 

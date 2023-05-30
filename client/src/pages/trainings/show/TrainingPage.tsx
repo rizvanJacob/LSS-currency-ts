@@ -22,6 +22,7 @@ export default function TrainingPage(): JSX.Element {
     requirement: 0,
     requirements: {
       name: "",
+      alsoCompletes: 0,
     },
     requirementName: "",
     relatedRequirementName: "",
@@ -52,7 +53,7 @@ export default function TrainingPage(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (setTitle && training) setTitle(training?.requirements.name);
+    if (setTitle && training.requirements) setTitle(training.requirements.name);
   }, [training]);
 
   const setTrainingComplete = () => {
@@ -76,6 +77,9 @@ export default function TrainingPage(): JSX.Element {
           relatedTraining={training.relatedTraining}
           name={training.requirementName}
           relatedName={training.relatedRequirementName}
+          trainingRequirement={training.requirement}
+          relatedRequirement={training.requirements?.alsoCompletes}
+          trainingDate={training.start}
         />
       ) : (
         <p>No Trainees</p>
