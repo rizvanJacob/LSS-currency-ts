@@ -7,9 +7,11 @@ import { Training } from "../../../@types/training";
 import TrainingCard from "./components/TrainingCard";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
+import { Trainee } from "../../../@types/trainee";
 
 const BookTrainingPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [trainee, setTrainee] = useState<Trainee | null>(null);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const [displayTrainings, setDisplayTrainings] = useState<Training[]>([]);
@@ -22,7 +24,9 @@ const BookTrainingPage = () => {
     if (setTitle) setTitle("Book Training");
     getRequest(`/api/trainings/?requirement=${requirement}`, setTrainings).then(
       () => {
-        setIsLoaded(true);
+        getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
+          setIsLoaded(true);
+        });
       }
     );
   }, []);
@@ -33,7 +37,9 @@ const BookTrainingPage = () => {
     );
     setDisplayTrainings(display);
     if (setTitle && trainings.length)
-      setTitle(`Book ${trainings[0].requirements.name}`);
+      setTitle(
+        `${trainee?.callsign}: Book ${trainings[0].requirements.name}`
+      );
   }, [displayDate, trainings]);
 
   const updateTraining = (newTraining: Training) => {
