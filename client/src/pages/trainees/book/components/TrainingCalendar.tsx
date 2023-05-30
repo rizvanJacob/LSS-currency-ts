@@ -78,7 +78,9 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
 
   const getNavigationLabel: NavigationLabelFunc = ({ date }) => {
     const navDisplay = dayjs(date).format("MMM YY");
-    return <h4 className="btn btn-sm sm:btn-wide btn-ghost">{navDisplay}</h4>;
+    return (
+      <h4 className="btn btn-sm 2xs:btn-wide btn-secondary ">{navDisplay}</h4>
+    );
   };
 
   return (
@@ -92,10 +94,16 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
           prevLabel={
-            <div className="ml-16 sm:ml-5 btn btn-sm btn-outline">{"<"}</div>
+            <div className="btn btn-sm btn-square btn-ghost btn-primary">
+              {"<"}
+            </div>
           }
           prev2Label={<></>}
-          nextLabel={<div className="btn btn-sm btn-outline">{">"}</div>}
+          nextLabel={
+            <div className="btn btn-sm btn-square btn-ghost btn-primary">
+              {">"}
+            </div>
+          }
           next2Label={<></>}
           navigationLabel={getNavigationLabel}
           showNeighboringMonth={false}

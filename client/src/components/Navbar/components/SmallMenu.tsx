@@ -28,7 +28,7 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
         </label>
         <div
           tabIndex={0}
-          className="dropdown-content menu bg-secondary rounded-box p-2 w-40 mt-3"
+          className="dropdown-content menu bg-secondary rounded-box p-2 w-40 mt-3 drop-shadow-xl"
         >
           <button
             className="btn btn-ghost justify-start"

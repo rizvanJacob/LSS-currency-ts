@@ -227,7 +227,7 @@ const isAuth =
           )
         ) {
           throw new Error(
-            "You are not authorized to create a training you did not specify before"
+            "Not authorized to access training"
           );
         } else if (Number(trainingId)) {
           const training = await prisma.training.findUnique({

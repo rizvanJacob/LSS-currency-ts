@@ -8,7 +8,6 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
-import * as jwt from "jsonwebtoken";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {

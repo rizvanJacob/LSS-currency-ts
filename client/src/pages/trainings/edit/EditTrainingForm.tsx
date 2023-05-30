@@ -207,15 +207,17 @@ export default function EditTrainingForm(): JSX.Element {
               </div>
               <div className="flex items-center">
                 <label className="w-2/5 text-left">Check In Passphrase:</label>
-                <Field
-                  as="input"
-                  type="text"
-                  id="passphrase"
-                  name="passphrase"
-                  value={training?.passphrase || ""}
-                  className="input-text input input-bordered input-primary flex-1"
-                  onChange={handleInputChange}
-                />
+                <div className="flex-1">
+                  <Field
+                    as="input"
+                    type="text"
+                    id="passphrase"
+                    name="passphrase"
+                    value={training?.passphrase || ""}
+                    className="input-text input input-bordered input-primary w-full"
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
               <button
                 type="submit"

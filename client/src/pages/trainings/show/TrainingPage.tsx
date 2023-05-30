@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { Training } from "../../../@types/training";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TrainingInfo from "./components/TrainingInfo";
 import TraineeList from "./components/TraineeList";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
+import NoResourceMsg from "../../../components/misc/NoResourceMsg";
 
 export default function TrainingPage(): JSX.Element {
   const { id } = useParams();
@@ -60,7 +61,7 @@ export default function TrainingPage(): JSX.Element {
 
   return isLoading ? (
     <ProgressBar />
-  ) : (
+  ) : training.id ? (
     <>
       <TrainingInfo
         training={training}
@@ -80,5 +81,7 @@ export default function TrainingPage(): JSX.Element {
         <p>No Trainees</p>
       )}
     </>
+  ) : (
+    <NoResourceMsg />
   );
 }
