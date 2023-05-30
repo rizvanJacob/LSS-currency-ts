@@ -36,11 +36,9 @@ const BookTrainingPage = () => {
       dayjs(t.start).isSame(dayjs(displayDate), "day")
     );
     setDisplayTrainings(display);
-    if (setTitle && trainings.length)
-      setTitle(
-        `${trainee?.callsign}: Book ${trainings[0].requirements.name}`
-      );
-  }, [displayDate, trainings]);
+    if (setTitle && trainings.length && trainings[0].requirements)
+      setTitle(`${trainee?.callsign}: Book ${trainings[0].requirements.name}`);
+  }, [displayDate, trainings, trainee]);
 
   const updateTraining = (newTraining: Training) => {
     setTrainings(

@@ -1,5 +1,5 @@
 import { Account } from "../../../../server/src/constants";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import TraineesIndexPage from "./index/TraineesIndexPage";
 import ShowTraineePage from "./show/ShowTraineePage";
 import EditTraineePage from "./edit/EditTraineePage";
@@ -13,15 +13,13 @@ export const INDEX_PAGE_ACCESS = [
   Account.TraineeAdmin,
   Account.Trainer,
 ];
-const TRAINEE_ACTIONS_ACCESS = [
-  Account.Admin,
-  Account.TraineeAdmin,
-  Account.Trainee,
-  Account.Trainer,
-];
+const TRAINEE_ACTIONS_ACCESS = [Account.Admin, Account.Trainer];
 const TRAINEE_AMEND_ACCESS = [Account.Admin, Account.TraineeAdmin];
 const TraineesRoutes = (): JSX.Element => {
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
+  const params = useParams();
+  const id = Number(params["*"]?.replace(/\/.*/, ""));
+  
   return (
     <>
       {currentUser ? (
@@ -29,7 +27,8 @@ const TraineesRoutes = (): JSX.Element => {
           {INDEX_PAGE_ACCESS.includes(Number(currentUser.accountType)) ? (
             <Route path="/" element={<TraineesIndexPage />} />
           ) : null}
-          {TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType)) ? (
+          {TRAINEE_ACTIONS_ACCESS.includes(Number(currentUser.accountType)) ||
+          id === currentUser.trainee?.id ? (
             <>
               <Route path="/:id" element={<ShowTraineePage />} />
               <Route
