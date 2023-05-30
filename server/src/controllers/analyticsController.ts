@@ -31,7 +31,10 @@ const analyticsController = {
           currencyMap[formattedExpiry]++;
         }
       });
-      console.log(currencyMap);
+      console.log(
+        "Response data sent to analytics currency chart",
+        currencyMap
+      );
       res.status(200).json(currencyMap);
     } catch (err) {
       res.status(500);
