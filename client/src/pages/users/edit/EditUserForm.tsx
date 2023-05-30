@@ -240,6 +240,7 @@ export default function EditUserForm(): JSX.Element {
                   && user?.trainee?.id ? (
                     <>
                       <TraineeFieldSet
+                        user={user}
                         trainee={trainee}
                         setTrainee={setTrainee}
                         setIsLoadingTrainee={setIsLoading}

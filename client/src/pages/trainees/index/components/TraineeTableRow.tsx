@@ -7,6 +7,7 @@ import RedCross from "../../../../assets/icons/redCross.svg";
 import DialogModal from "../../../../components/DialogModal";
 import { CurrentUser } from "../../../../@types/currentUser";
 import { CurrentUserContext } from "../../../../App";
+
 type Prop = {
   trainee: Trainee;
   category: string;
@@ -42,11 +43,11 @@ const TraineeTableRow = ({
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium hidden sm:table-cell text-slate-950">
         {overallStatus.message}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
-        {trainee.users.approved ? "Active" : "Inactive"}
-      </td>
-      <td className="text-center items-center justify-evenly">
-        {currentUser?.id !== trainee.user ? (
+      <td className="text-center items-center justify-evenly hidden xs:table-cell">
+        {currentUser?.id !== trainee.user &&
+        currentUser?.accountType !== Account.Trainer &&
+        (currentUser?.accountType === Account.Admin ||
+          currentUser?.authCategory === trainee.category) ? (
           <>
             <Link to={`${trainee.id}/edit`}>
               <button className="btn btn-circle btn-outline">
@@ -62,9 +63,7 @@ const TraineeTableRow = ({
               <img src={RedCross} alt="redCross" />
             </button>
           </>
-        ) : (
-          null
-        )}
+        ) : null}
         {showModal && (
           <DialogModal
             title="Delete Trainee?"

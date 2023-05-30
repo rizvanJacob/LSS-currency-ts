@@ -6,6 +6,8 @@ import {
   TileDisabledFunc,
   TileClassNameFunc,
   NavigationLabelFunc,
+  OnArgs,
+  Value,
 } from "react-calendar/dist/cjs/shared/types";
 import { useSearchParams } from "react-router-dom";
 
@@ -13,9 +15,10 @@ type Prop = {
   trainings: Training[];
   displayDate: Date;
   setDisplayDate: React.Dispatch<React.SetStateAction<Date>>;
+  handleFocus: (value: Value) => void;
 };
 
-const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
+const TrainingCalendar = ({ trainings, displayDate, setDisplayDate, handleFocus }: Prop) => {
   const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
     return dayjs(t.start).toDate();
@@ -72,30 +75,41 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate }: Prop) => {
     return className;
   };
 
-  const onChange = (nextValue: any) => {
-    setDisplayDate(nextValue);
+  const handleActiveStartDateChange = ({ activeStartDate, view }: OnArgs) => {
+    if (view === "month" && activeStartDate) {
+      setDisplayDate(activeStartDate);
+    }
   };
 
   const getNavigationLabel: NavigationLabelFunc = ({ date }) => {
     const navDisplay = dayjs(date).format("MMM YY");
-    return <h4 className="btn btn-sm sm:btn-wide btn-ghost">{navDisplay}</h4>;
+    return (
+      <h4 className="btn btn-sm 2xs:btn-wide btn-secondary ">{navDisplay}</h4>
+    );
   };
 
   return (
     <div className="mx-auto py-5">
-      <div className="flex flex-col h-[360px] items-center">
+      <div className="flex flex-col h-fit items-center">
         <Calendar
           className="flex-1 max-w-sm"
           value={displayDate}
-          onChange={onChange}
+          onActiveStartDateChange={handleActiveStartDateChange}
+          onChange={handleFocus}
           minDate={dayjs().toDate()}
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
           prevLabel={
-            <div className="ml-16 sm:ml-5 btn btn-sm btn-outline">{"<"}</div>
+            <div className="btn btn-sm btn-square btn-ghost btn-primary">
+              {"<"}
+            </div>
           }
           prev2Label={<></>}
-          nextLabel={<div className="btn btn-sm btn-outline">{">"}</div>}
+          nextLabel={
+            <div className="btn btn-sm btn-square btn-ghost btn-primary">
+              {">"}
+            </div>
+          }
           next2Label={<></>}
           navigationLabel={getNavigationLabel}
           showNeighboringMonth={false}

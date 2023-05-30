@@ -1,7 +1,9 @@
 import TraineeParticularsFieldset from "./TraineeParticularsFieldset";
+import TraineeFieldSetRejectionMsg from "../misc/TraineeFieldSetRejectionMsg"
 import CurrencyFieldset from "./CurrencyFieldset";
 import { useEffect, useState } from "react";
 import { Requirement, Trainee } from "../../@types/trainee";
+import { User  } from "../../@types/user";
 import dayjs from "dayjs";
 import getRequest from "../../utilities/getRequest";
 import ProgressBar from "../ProgressBar";
@@ -9,15 +11,17 @@ import { CancelTokenSource } from "axios";
 import { set } from "date-fns";
 
 type Props = {
+  user?: User;
   trainee: Trainee;
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
   setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoadingAdmin: boolean;
+  isLoadingAdmin?: boolean;
   forceCallsign?: string;
   forceCategory?: number | null;
 };
 
 const TraineeFieldset = ({
+  user,
   trainee,
   setTrainee,
   setIsLoadingTrainee = () => {},
@@ -63,14 +67,16 @@ const TraineeFieldset = ({
 
   useEffect(() => {
     if (
-      loadedCount === requirements.length &&
+      loadedCount && loadedCount === requirements.length &&
       !isLoadingParticulars &&
       !isLoadingAdmin
     ) {
       setIsLoadingTrainee(false);
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
-
+  console.log("loadedCount", loadedCount, "requirements.length", requirements.length);
+  console.log("isLoadingParticulars", isLoadingParticulars);
+  console.log("isLoadingAdmin", isLoadingAdmin);
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "category") {
@@ -139,7 +145,12 @@ const TraineeFieldset = ({
       />
       {isLoading ? (
         <ProgressBar />
-      ) : requirements.length ? (
+      ) : user && user.approved ? (
+        <TraineeFieldSetRejectionMsg 
+          requirements={requirements}
+          setLoadedCount={setLoadedCount}
+        />
+      ) : (requirements.length ) ? (
         requirements.map((r) => {
           const currency = trainee.currencies.find(
             (c) => c.requirement === r.id

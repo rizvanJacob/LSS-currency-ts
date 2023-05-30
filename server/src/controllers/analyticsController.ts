@@ -22,20 +22,19 @@ const analyticsController = {
         },
       });
 
-      const formattedCurrency = currency.map((c) => ({
-        ...c,
-        expiry: dayjs(c.expiry).format("MM-YYYY"),
-      }));
-
       const currencyMap: { [key: string]: number } = {};
       currency.forEach((c) => {
-        const formattedExpiry = dayjs(c.expiry).format("MM-YYYY");
+        const formattedExpiry = dayjs(c.expiry).format("MMM YYYY");
         if (!currencyMap[formattedExpiry]) {
           currencyMap[formattedExpiry] = 1;
         } else {
           currencyMap[formattedExpiry]++;
         }
       });
+      console.log(
+        "Response data sent to analytics currency chart",
+        currencyMap
+      );
       res.status(200).json(currencyMap);
     } catch (err) {
       res.status(500);

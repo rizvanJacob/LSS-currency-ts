@@ -44,9 +44,7 @@ export default function AllTrainingsPage(): JSX.Element {
         <p>No trainings to show</p>
       )}
       {(currentUser?.accountType === Account.Trainer ||
-        currentUser?.accountType === Account.Admin) && (
-          <CreateTrainingButton />
-        )}
+        currentUser?.accountType === Account.Admin) && <CreateTrainingButton />}
     </>
   );
 }

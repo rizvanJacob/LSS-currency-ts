@@ -10,8 +10,7 @@ import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
 import deleteRequest from "../../../utilities/deleteRequest";
 import ProgressBar from "../../../components/ProgressBar";
 import TraineesFilterControls from "./components/TraineesFilterControls";
-
-const DEL_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
+import { TRAINEE_AMEND_ACCESS } from "../TraineesRoutes";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
@@ -37,8 +36,8 @@ const TraineesIndexPage = (): JSX.Element => {
   }, [fetchFlag]);
 
   const deleteTrainee = (id: number) => async () => {
-    if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
-      navigate(`/`);
+    if (!TRAINEE_AMEND_ACCESS.includes(Number(currentUser?.accountType))) {
+      return navigate(`/`);
     }
     deleteRequest(`/api/trainees/${id}`, id, setTrainees);
   };

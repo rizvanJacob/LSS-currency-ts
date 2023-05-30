@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { Training } from "../../../@types/training";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TrainingInfo from "./components/TrainingInfo";
 import TraineeList from "./components/TraineeList";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
+import NoResourceMsg from "../../../components/misc/NoResourceMsg";
 
 export default function TrainingPage(): JSX.Element {
   const { id } = useParams();
@@ -21,6 +22,7 @@ export default function TrainingPage(): JSX.Element {
     requirement: 0,
     requirements: {
       name: "",
+      alsoCompletes: 0,
     },
     requirementName: "",
     relatedRequirementName: "",
@@ -51,7 +53,7 @@ export default function TrainingPage(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (setTitle && training) setTitle(training?.requirements.name);
+    if (setTitle && training.requirements) setTitle(training.requirements.name);
   }, [training]);
 
   const setTrainingComplete = () => {
@@ -60,7 +62,7 @@ export default function TrainingPage(): JSX.Element {
 
   return isLoading ? (
     <ProgressBar />
-  ) : (
+  ) : training.id ? (
     <>
       <TrainingInfo
         training={training}
@@ -75,10 +77,15 @@ export default function TrainingPage(): JSX.Element {
           relatedTraining={training.relatedTraining}
           name={training.requirementName}
           relatedName={training.relatedRequirementName}
+          trainingRequirement={training.requirement}
+          relatedRequirement={training.requirements?.alsoCompletes}
+          trainingDate={training.start}
         />
       ) : (
         <p>No Trainees</p>
       )}
     </>
+  ) : (
+    <NoResourceMsg />
   );
 }

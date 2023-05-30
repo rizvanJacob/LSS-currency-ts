@@ -18,7 +18,7 @@ export type trainingProvided = {
   requirement: number;
   requirements?: {
     name: string;
-    alsoCompletes: number
+    alsoCompletes: number;
   };
 };
 
@@ -29,6 +29,32 @@ export type CategoryToRequirement = {
   };
   requirement: number;
   requirements: {
+    name: string;
+  };
+};
+
+export type Booking = {
+  id: number;
+  trainees: {
+    id: number;
+    callsign: string;
+    category: number;
+    categories: {
+      name: string;
+    };
+  };
+  trainings: {
+    requirement: number;
+    requirements: {
+      name: string;
+    };
+    capacity: number;
+    start: Date;
+    end: Date;
+    complete: boolean;
+  };
+  status: number;
+  statuses: {
     name: string;
   };
 };
