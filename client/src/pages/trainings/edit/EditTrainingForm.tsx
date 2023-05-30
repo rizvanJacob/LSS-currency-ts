@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import { trainingSchema } from "../../../yupSchemas/trainingSchema";
 import { TitleContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function EditTrainingForm(): JSX.Element {
   const navigate = useNavigate();
@@ -65,17 +67,25 @@ export default function EditTrainingForm(): JSX.Element {
     navigate(`/trainings`);
   };
 
+  const handleDateInputChange = (value: Date | null, fieldName: string) => {
+    setTraining((training) => {
+      if (fieldName === "start") {
+        const newStart = value || new Date();
+        const newEnd = value || new Date();
+        return { ...training, start: newStart, end: newEnd };
+      } else if (fieldName === "end") {
+        const newEnd = value || new Date();
+        return { ...training, end: newEnd };
+      } else {
+        return training;
+      }
+    });
+  };
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setTraining((training) => {
-      if (name === "start") {
-        const newStart = dayjs(value).toDate();
-        const newEnd = dayjs(value).toDate();
-        return { ...training, start: newStart, end: newEnd };
-      } else if (name === "end") {
-        const newEnd = dayjs(value).toDate();
-        return { ...training, end: newEnd };
-      } else if (name === "start_time") {
+      if (name === "start_time") {
         const [hours, minutes] = value.split(":");
         const newStart = dayjs(training.start)
           .set("hour", parseInt(hours))
@@ -109,22 +119,30 @@ export default function EditTrainingForm(): JSX.Element {
       <div className="flex items-center justify-center">
         <Formik
           initialValues={training}
+          validateOnMount
           onSubmit={handleFormSubmit}
           enableReinitialize
           validationSchema={trainingSchema(training)}
         >
-          {({ isSubmitting, isValidating, isValid }) => (
+          {({ isSubmitting, isValidating, isValid, setFieldValue, setFieldTouched }) => (
             <Form className="space-y-6 m-auto">
               <div className="flex items-center">
                 <label className="text-left w-2/5">Start Date:</label>
                 <div className="flex-1">
                   <Field
+                    as={DatePicker}
                     type="date"
                     id="start"
                     name="start"
-                    value={dayjs(training?.start).format("YYYY-MM-DD") || ""}
+                    dateFormat="dd/MM/yyyy"
+                    selected={training?.start ? new Date(training.start) : null}
+                    value={training?.start ? dayjs(training.start).format("DD/MM/YYYY") : ""}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
+                    onChange={(value: Date) => {
+                      handleDateInputChange(value, "start")
+                      setFieldValue("start", value);
+                      setFieldTouched("start", true);
+                    }}
                   />
                   <div className="error-message text-error">
                     <ErrorMessage name="start" />
@@ -148,12 +166,15 @@ export default function EditTrainingForm(): JSX.Element {
                 <label className="w-2/5 text-left">End Date:</label>
                 <div className="flex-1">
                   <Field
+                    as={DatePicker}
                     type="date"
                     id="end"
                     name="end"
-                    value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
+                    dateFormat="dd/MM/yyyy"
+                    selected={training?.end ? new Date(training.end) : null}
+                    value={training?.start ? dayjs(training.start).format("DD/MM/YYYY") : ""}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
-                    onChange={handleInputChange}
+                    onChange={(value: Date) => handleDateInputChange(value, "end")}
                   />
                   <div className="error-message text-error">
                     <ErrorMessage name="end" />

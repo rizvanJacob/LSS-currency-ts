@@ -33,6 +33,9 @@ export const trainingSchema = (training: Training) => {
 
 export const newTrainingSchema = (training: NewTraining) => {
   return Yup.object().shape({
+    requirement: Yup.number()
+      .required("Requirement is required")
+      .min(1, "Requirement is required"),
     capacity: Yup.number()
       .min(1, "Capacity needs to be greater than 0")
       .required("Capacity is required"),
