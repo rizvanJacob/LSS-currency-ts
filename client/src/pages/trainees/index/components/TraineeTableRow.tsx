@@ -45,7 +45,9 @@ const TraineeTableRow = ({
       </td>
       <td className="text-center items-center justify-evenly hidden xs:table-cell">
         {currentUser?.id !== trainee.user &&
-        currentUser?.accountType !== Account.Trainer ? (
+        currentUser?.accountType !== Account.Trainer &&
+        (currentUser?.accountType === Account.Admin ||
+          currentUser?.authCategory === trainee.category) ? (
           <>
             <Link to={`${trainee.id}/edit`}>
               <button className="btn btn-circle btn-outline">
