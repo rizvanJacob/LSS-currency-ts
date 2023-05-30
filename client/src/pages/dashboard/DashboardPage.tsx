@@ -7,6 +7,7 @@ import BarChart from "../../components/Chart/BarChart"
 import ScatterPlot from "../../components/Chart/ScatterPlot";
 import ProgressBar from "../../components/ProgressBar";
 import AreaChart from "../../components/Chart/AreaChart";
+import BookingCSVButton from "./Components/BookingCSVButton";
 import { TitleContext } from "../../App";
 import { CategoryToRequirement } from "../../@types/lookup";
 import { CurrencyData } from "../../@types/analytics";
@@ -36,7 +37,8 @@ export default function DashboardPage(): JSX.Element {
     }, [filterOptions]);
     
     return  (
-        <>
+        <div className="flex flex-col">
+            <BookingCSVButton/>
             <AreaChart 
                 filterOptions={filterOptions}
                 setFilterOptions={setFilterOptions}
@@ -49,6 +51,6 @@ export default function DashboardPage(): JSX.Element {
             {trainings.length ? <ScatterPlot 
                 data = { trainings } 
             /> : <ProgressBar />}
-        </>
+        </div>
     )
 }

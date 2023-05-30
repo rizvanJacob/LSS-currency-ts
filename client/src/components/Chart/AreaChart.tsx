@@ -1,9 +1,11 @@
 import { Line } from 'react-chartjs-2';
 import { CurrencyFilter } from "../../@types/analytics";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, ChartOptions, Filler} from 'chart.js';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, ChartOptions, Filler, TimeScale } from 'chart.js';
 import { CategoryToRequirement } from '../../@types/lookup';
 import { CurrencyData } from "../../@types/analytics";
 import { PointElement, LineElement } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import dayjs from "dayjs";
 
 ChartJS.register(
   BarElement,
@@ -12,7 +14,8 @@ ChartJS.register(
   Tooltip,
   PointElement,
   LineElement,
-  Filler
+  Filler,
+  TimeScale
 );
 
 type Prop = {
@@ -42,10 +45,10 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
     ];
 
     const chartData = {
-        labels: Object.keys(data),
-        datasets
+        labels: Object.keys(data).sort((a, b) => dayjs(a) < dayjs(b) ? -1 : 1),
+        datasets: datasets,
     };
-
+    console.log(chartData);
     const chartOptions: ChartOptions<'line'> = { 
         scales: {
             y: {
@@ -56,6 +59,12 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
                 },
             },
             x: {
+                //type: 'time',
+                time: {
+                    displayFormats: {
+                      quarter: 'MMM yyyy',
+                    },
+                  },
                 title: {
                     display: true,
                     text: "Time period (MM-YYYY)"
@@ -91,7 +100,11 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
             </select>
             </div>
             <h1>Expiry Overview by Requirement</h1>
-            <Line data={chartData} options={chartOptions} />
+            {filterOptions.requirement !== 0 ? (
+                <Line data={chartData} options={chartOptions} />
+            ) : (
+                <h4 className="text-center text-xs underline decoration-solid">Select a requirement in the drop down above to view currency expiry overview for all trainees</h4>
+            )}
         </>
       );
 };

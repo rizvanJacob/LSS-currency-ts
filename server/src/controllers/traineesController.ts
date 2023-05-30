@@ -410,6 +410,94 @@ const checkin = async (req: Request, res: Response) => {
   }
 };
 
+const getAllBookings = async (req: Request, res: Response) => {
+  try {
+    const bookings = await prisma.traineeToTraining.findMany({
+      select: {
+        id: true,
+        trainees: {
+          select: {
+            id: true,
+            callsign: true,
+            category: true,
+            categories: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        trainings: {
+          select: {
+            requirement: true,
+            requirements: {
+              select: {
+                name: true,
+              },
+            },
+            capacity: true,
+            start: true,
+            end: true,
+            complete: true,
+          },
+        },
+        status: true,
+        statuses: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const csvData = [
+      [
+        "Booking ID",
+        "Trainee ID",
+        "Trainee Callsign",
+        "Trainee Category",
+        "Category Name",
+        "Training Requirement",
+        "Requirement Name",
+        "Training Capacity",
+        "Training Start",
+        "Training End",
+        "Training Complete",
+        "Booking Status",
+        "Status Name",
+      ],
+    ];
+
+    bookings.forEach((booking) => {
+      const row: any = [
+        booking.id,
+        booking.trainees.id,
+        booking.trainees.callsign,
+        booking.trainees.category,
+        booking.trainees.categories.name,
+        booking.trainings.requirement,
+        booking.trainings.requirements.name,
+        booking.trainings.capacity,
+        booking.trainings.start,
+        booking.trainings.end,
+        booking.trainings.complete,
+        booking.status,
+        booking.statuses.name,
+      ];
+      csvData.push(row);
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Bookings_Data.csv"
+    );
+    res.setHeader("Content-Type", "text/csv");
+    res.status(200).json(csvData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 export {
   index,
   show,
@@ -420,6 +508,7 @@ export {
   completeRequirement,
   checkin,
   deleteController as delete,
+  getAllBookings,
 };
 
 const book = async (traineeId: number, trainingId: number) => {
