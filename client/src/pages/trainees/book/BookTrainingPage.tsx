@@ -20,12 +20,11 @@ const BookTrainingPage = () => {
 
   useEffect(() => {
     if (setTitle) setTitle("Book Training");
-    getRequest(
-      `/api/trainings/?requirement=${requirement}`,
-      setTrainings
-    ).then(() => {
-      setIsLoaded(true);
-    });
+    getRequest(`/api/trainings/?requirement=${requirement}`, setTrainings).then(
+      () => {
+        setIsLoaded(true);
+      }
+    );
   }, []);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const BookTrainingPage = () => {
     <>
       {isLoaded ? (
         trainings.length ? (
-          <div className="flex flex-col w-screen max-w-md mx-auto p-3">
+          <div className="flex flex-col mx-auto p-3">
             <TrainingCalendar
               trainings={trainings}
               displayDate={displayDate}
