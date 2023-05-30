@@ -29,17 +29,19 @@ const TraineeParticularsFieldset = ({
     getRequest("/api/lookup/categories", setCategories).then(({ source }) => {
       cancelToken = source;
     });
+    setIsLoading(false);
     return () => {
       cancelToken?.cancel();
     };
+    
   }, []);
 
   useEffect(() => {
     if (trainee.callsign && trainee.category && setIsLoadingParticulars) {
-      setIsLoading(false);
       setIsLoadingParticulars(false);
     }
   }, [trainee]);
+  console.log("isLoading", isLoading);
 
   return isLoading ? (
     <ProgressBar />
