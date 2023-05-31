@@ -7,11 +7,11 @@ export default function EditUserButton({ user }: { user: User }): JSX.Element {
   const currentUser = useContext(CurrentUserContext);
 
   return currentUser?.id !== user.id ? (
-    <Link to={`/users/${user.id}/edit`}>
-      <button className="btn btn-circle btn-outline">
-        <img src={Edit} alt="edit" />
-      </button>
-    </Link>
+    <button className="btn btn-circle btn-outline btn-md">
+      <Link to={`/users/${user.id}/edit`}>
+          <img src={Edit} alt="edit" />
+      </Link>
+    </button>
   ) : (
     <> </>
   );
