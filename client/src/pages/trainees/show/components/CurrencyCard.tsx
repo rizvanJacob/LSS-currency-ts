@@ -7,10 +7,7 @@ import getRequest from "../../../../utilities/getRequest";
 import ProgressBar from "../../../../components/ProgressBar";
 import BookButton from "./BookButton";
 import SelfCompleteButton from "./SelfCompleteButton";
-import {
-  TRAINEE_ACTIONS_ACCESS,
-  TRAINEE_AMEND_ACCESS,
-} from "../../TraineesRoutes";
+import { TRAINEE_ACTIONS_ACCESS } from "../../TraineesRoutes";
 import { CurrentUserContext } from "../../../../App";
 
 type Prop = {
@@ -84,6 +81,9 @@ const CurrencyCard = ({
       <h4 className="collapse-title font-semibold text-left">
         <span className="pr-2">{currency?.requirements?.name}</span>
         <span className={status.className}>{status.message}</span>
+        {currency.seniority && (
+          <span className="badge badge-outline badge-primary mx-2">Senior</span>
+        )}
       </h4>
       <div className="collapse-content">
         <div className="flex items-center">
