@@ -4,6 +4,7 @@ import { prisma } from "../config/database";
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { UPDATED } from "../server";
 
 type User = {
   id: number;
@@ -37,7 +38,7 @@ const generateUrl = async (req: Request, res: Response) => {
     CLIENT_URL
   ).url;
 
-  res.status(200).json({ login, checkin });
+  res.status(200).json({ login, checkin, updated: UPDATED });
 };
 
 const login = async (req: Request, res: Response) => {

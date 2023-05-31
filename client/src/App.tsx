@@ -14,6 +14,8 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 
+export const UPDATED = "31 May 1911H"
+
 const AUTHORISE = true;
 const CURRENT_USER = {
   id: 1,
@@ -42,8 +44,6 @@ export const TitleContext = createContext<React.Dispatch<
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
-
-  console.log("Version Control Check: 30th May 2023 11:59am");
 
   useEffect(() => {
     if (!AUTHORISE) {
