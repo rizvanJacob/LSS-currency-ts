@@ -160,7 +160,6 @@ export default function CreateTrainingForm(): JSX.Element {
                   dateFormat="dd/MM/yyyy"
                   name="start"
                   selected={training?.start ? new Date(training.start) : null}
-                  value={training?.start ? dayjs(training.start).format("DD/MM/YYYY") : ""}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
                   onBlur={() => setFieldTouched("start", true)}
                   onChange={(value: Date) => {
@@ -197,7 +196,6 @@ export default function CreateTrainingForm(): JSX.Element {
                   dateFormat="dd/MM/yyyy"
                   name="end"
                   selected={training?.end ? new Date(training.end) : null}
-                  value={training?.end ? dayjs(training.end).format("DD/MM/YYYY") : ""}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
                   onChange={(value: Date) => handleDateInputChange(value, "end")}
                 />

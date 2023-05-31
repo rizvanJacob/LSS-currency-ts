@@ -107,7 +107,7 @@ export default function EditTrainingForm(): JSX.Element {
       }
     });
   };
-
+  console.log("Training Start", new Date(training?.start).toISOString().split("T")[0])
   return isLoading ? (
     <ProgressBar />
   ) : (
@@ -134,9 +134,9 @@ export default function EditTrainingForm(): JSX.Element {
                     type="date"
                     id="start"
                     name="start"
+                    selected={dayjs(training?.start).toDate()}
+                    value={dayjs(training?.start) || ""}
                     dateFormat="dd/MM/yyyy"
-                    selected={training?.start ? new Date(training.start) : null}
-                    value={training?.start ? dayjs(training.start).format("DD/MM/YYYY") : ""}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={(value: Date) => {
                       handleDateInputChange(value, "start")
@@ -171,8 +171,8 @@ export default function EditTrainingForm(): JSX.Element {
                     id="end"
                     name="end"
                     dateFormat="dd/MM/yyyy"
-                    selected={training?.end ? new Date(training.end) : null}
-                    value={training?.start ? dayjs(training.start).format("DD/MM/YYYY") : ""}
+                    value={dayjs(training?.end) || ""}
+                    selected={dayjs(training?.start).toDate()}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={(value: Date) => handleDateInputChange(value, "end")}
                   />
