@@ -50,7 +50,7 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
             </svg>
           </button>
           {menuItems.map((i, index) => {
-            return (
+            return i.path ? (
               <Link
                 className="btn btn-ghost normal-case text-md text-primary justify-start"
                 to={i.path}
@@ -58,6 +58,8 @@ const SmallMenu = ({ menuItems, className }: Prop) => {
               >
                 {i.name}
               </Link>
+            ) : (
+              null
             );
           })}
         </div>

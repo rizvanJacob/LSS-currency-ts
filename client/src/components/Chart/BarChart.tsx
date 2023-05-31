@@ -46,6 +46,12 @@ const BarChart = ({ data }: Prop) => {
           display: true,
           text: 'Number of Trainees',
         },
+        ticks: {
+          callback: (val) => {
+              if (Number(val) % 1 === 0)
+                  return val;
+          },
+        },
       },
       x: {
         title: {

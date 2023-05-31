@@ -32,7 +32,11 @@ const LargeMenu = ({ menuItems, className }: Prop) => {
           </svg>
         </button>
         {menuItems.map((i, index) => {
-          return <NavLink to={i.path} display={i.name} key={index} />;
+          return i.path ? (
+            <NavLink to={i.path} display={i.name} key={index} />
+          ) : (
+            null
+          );
         })}
       </div>
     </div>

@@ -28,6 +28,8 @@ const TraineeListRow = ({
   ) {
     showTraineesAsLinks = true;
   }
+
+  console.log(trainee);
   return (
     <tr>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
