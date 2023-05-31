@@ -34,7 +34,7 @@ export default function ApprovedUsersList({
                 accountTypeClass = "text-pink-950";
             }
             return (
-              <tr key={user.id} className="hover:bg-gray-100">
+              <tr key={user.id} className="hover:bg-gray-100 h-max">
                 <td className="px-2 py-4 whitespace-nowrap text-left overflow-clip text-sm font-medium text-slate-950">
                   {user.displayName}
                 </td>
@@ -43,7 +43,7 @@ export default function ApprovedUsersList({
                 >
                   {accountType}
                 </td>
-                <td className="px-1 py-2 text-center whitespace-nowrap flex items-center justify-evenly">
+                <td className="px-1 py-2 h-14 text-center whitespace-nowrap flex items-center justify-evenly">
                   <EditUserButton user={user} />
                   <DeleteUserButton setUsers={setUsers} user={user} />
                 </td>
