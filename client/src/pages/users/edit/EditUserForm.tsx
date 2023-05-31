@@ -83,14 +83,14 @@ export default function EditUserForm(): JSX.Element {
   const handleFormSubmit = async () => {
     console.log("submit form");
     if (!user.approved) {
-      if (user.accountType === Account.Trainee) {
+      if (user.trainee?.id) {
         await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
       }
       const updatedUser = { ...user, approved: !user.approved };
       console.log("update and approve user");
       await putRequest(`/api/users/${id}`, updatedUser, setUser);
     } else {
-      if (user.accountType === Account.Trainee) {
+      if (user.trainee?.id) {
         await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
       }
       await putRequest(`/api/users/${id}`, user, setUser);

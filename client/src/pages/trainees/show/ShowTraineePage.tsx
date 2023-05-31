@@ -8,6 +8,7 @@ import LoadingPage from "../../../components/LoadingPage";
 
 const ShowTraineePage = () => {
   const { id } = useParams();
+  console.log("id",id)
   const [isLoading, setIsLoading] = useState(true);
   const [trainee, setTrainee] = useState<Trainee | null>(null);
   const setTitle = useContext<React.Dispatch<
