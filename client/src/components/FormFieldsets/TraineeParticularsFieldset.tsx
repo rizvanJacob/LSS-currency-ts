@@ -81,6 +81,7 @@ const TraineeParticularsFieldset = ({
                 className="input-select select select-primary w-full max-w-xs"
                 onChange={handleChange}
               >
+                <option> value={0} Select a category:</option>
                 {categories?.map((c) => {
                   return (
                     <option value={c.id} key={c.id}>
