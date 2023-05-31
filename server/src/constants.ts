@@ -38,3 +38,10 @@ export const TRAINEE_ACTIONS_ACCESS = [
 ];
 
 export const TRAINING_WRITE_ACCESS = [Account.Admin, Account.Trainer];
+
+export const STATUSES_TO_SHOW = [
+  "booked",
+  "attended",
+  "completed",
+  "withdrawn",
+];

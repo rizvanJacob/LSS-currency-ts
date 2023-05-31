@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
 import { transformTrainingForBooking } from "../utilities/trimTraining";
+import { STATUSES_TO_SHOW } from "../constants";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -16,6 +17,11 @@ const index = async (req: Request, res: Response) => {
             trainings: {
               some: {
                 training: Number(training),
+                statuses: {
+                  name: {
+                    in: STATUSES_TO_SHOW,
+                  },
+                },
               },
             },
             users: { approved: true },
@@ -201,7 +207,7 @@ const update = async (req: Request, res: Response) => {
     });
     return upsertTransaction;
   });
-  
+
   const currentUser = await prisma.userModel.findUnique({
     where: { id: Number(trainee.user) },
     select: { accountType: true },
