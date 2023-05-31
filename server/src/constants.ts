@@ -5,6 +5,15 @@ export const enum Account {
   Trainer = 4,
 }
 
+export const enum Status {
+  Booked = 1,
+  Attended = 2,
+  Completed = 3,
+  Withdrawn = 4,
+  Absent = 5,
+  Waitlist = 6,
+}
+
 export const JWT_EXPIRIES: {
   [key in Account]: string;
 } = {
@@ -39,9 +48,15 @@ export const TRAINEE_ACTIONS_ACCESS = [
 
 export const TRAINING_WRITE_ACCESS = [Account.Admin, Account.Trainer];
 
-export const STATUSES_TO_SHOW = [
-  "booked",
-  "attended",
-  "completed",
-  "withdrawn",
+export const STATUSES_IN_TRAINING_LIST = [
+  Status.Booked,
+  Status.Attended,
+  Status.Completed,
+  Status.Waitlist,
+];
+
+export const STATUSES_IN_TRAINING_CAPACITY = [
+  Status.Booked,
+  Status.Attended,
+  Status.Completed,
 ];

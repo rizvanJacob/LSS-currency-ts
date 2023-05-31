@@ -8,6 +8,7 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
+import { STATUSES_IN_TRAINING_CAPACITY } from "../constants";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -53,7 +54,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    not: 4,
+                    in: STATUSES_IN_TRAINING_CAPACITY,
                   },
                 },
                 include: {
@@ -105,6 +106,9 @@ const trainingsController = {
             },
           },
           trainees: {
+            where: {
+              status: { in: STATUSES_IN_TRAINING_CAPACITY },
+            },
             select: {
               trainees: {
                 select: {
