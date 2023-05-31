@@ -155,6 +155,16 @@ const isAuth =
         throw new Error("Unauthorized account type");
       }
 
+      if (verifiedUser.accountType === Account.Admin) {
+        console.log("Verifying admin access...");
+        if (userId === verifiedUser.id && !generalAccess) {
+          if (userId === verifiedUser.id) {
+            throw new Error("Admin not authorized to change own account");
+          }
+        }
+        console.log(`Admin authorized for general access`);
+      }
+
       if (verifiedUser.accountType === Account.TraineeAdmin) {
         console.log("Verifying trainee admin access...");
         if (traineeId && !generalAccess) {
@@ -171,6 +181,11 @@ const isAuth =
             `Trainee Admin authorized to access trainee ${traineeId}`
           );
         } else if (userId && !generalAccess) {
+          if (userId === verifiedUser.id) {
+            throw new Error(
+              "Trainee Admin not authorized to change own account"
+            );
+          }
           const trainee = await prisma.trainee.findUnique({
             where: { user: userId },
             select: { category: true },
@@ -188,7 +203,7 @@ const isAuth =
       }
 
       if (verifiedUser.accountType === Account.Trainer) {
-        console.log("Verifying trainer access");
+        console.log("Verifying trainer access...");
         console.log(trainingId, requirementId);
         if (trainingId && !generalAccess) {
           const trainingQuery = prisma.training.findUnique({
