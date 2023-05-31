@@ -57,6 +57,12 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
                     display: true,
                     text: "Number of Trainees expiring",
                 },
+                ticks: {
+                    callback: (val) => {
+                        if (Number(val) % 1 === 0)
+                            return val;
+                    },
+                },
             },
             x: {
                 //type: 'time',
