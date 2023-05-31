@@ -13,7 +13,7 @@ const emptyStatus = {
 
 const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
   return (
-    <div className="overflow-y-auto overflow-x-hidden mx-auto">
+    <div className="overflow-y-auto overflow-x-auto ">
       <table className="table w-full">
         <thead className="bg-blue-500 text-black">
           <tr>
@@ -26,7 +26,7 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
             <th className="px-4 py-3 text-center text-xs font-medium uppercase hidden sm:table-cell tracking-wider">
               Overall Status
             </th>
-            <th className="px-4 py-3 text-center text-xs font-medium hidden xs:table-cell uppercase tracking-wider">
+            <th className="px-4 py-3 text-center text-xs font-medium hidden 3xs:table-cell uppercase tracking-wider">
               Actions
             </th>
           </tr>
