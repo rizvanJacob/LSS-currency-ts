@@ -29,7 +29,7 @@ const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
         <SmallMenu className="lg:hidden" menuItems={menuItems} />
         <LargeMenu className="hidden lg:block" menuItems={menuItems} />
       </div>
-      <div className="navbar-center w-44 xs:w-56 md:w-max text-sm xs:text-md md:text-2xl break-normal font-extrabold text-secondary">
+      <div className="navbar-center justify-center max-w-[176px] xs:max-w-[224px] md:max-w-none text-sm xs:text-lg md:text-2xl break-normal font-extrabold text-secondary">
         {title}
       </div>
       <div className="navbar-end">
