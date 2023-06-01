@@ -27,7 +27,7 @@ export default function DeleteUserButton({
 
   return currentUser?.id !== user.id ? (
     <>
-      <button onClick={handleClick} className="btn btn-circle btn-outline">
+      <button onClick={handleClick} className="btn btn-circle btn-outline btn-md">
         <img src={RedCross} alt="redCross" />
       </button>
       {showModal && (

@@ -32,7 +32,7 @@ const TraineeTableRow = ({
           to={trainee.id.toString()}
         >
           <span className={overallStatus.className + " badge-xs mx-2"}></span>
-          <span className="flex-1 text-left overflow-clip w-36">
+          <span className="flex-1 text-left overflow-clip w-24">
             {trainee.callsign}
           </span>
         </Link>
@@ -43,26 +43,26 @@ const TraineeTableRow = ({
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium hidden sm:table-cell text-slate-950">
         {overallStatus.message}
       </td>
-      <td className="text-center items-center justify-evenly hidden xs:table-cell">
+      <td className="text-center items-center justify-evenly hidden 3xs:table-cell">
         {currentUser?.id !== trainee.user &&
         currentUser?.accountType !== Account.Trainer &&
         (currentUser?.accountType === Account.Admin ||
           currentUser?.authCategory === trainee.category) ? (
-          <>
-            <Link to={`${trainee.id}/edit`}>
-              <button className="btn btn-circle btn-outline">
-                <img src={Edit} alt="edit" />
-              </button>
-            </Link>
+          <div className="btn-group">
+            <button className="btn btn-circle btn-outline btn-md">
+              <Link to={`${trainee.id}/edit`}>  
+                  <img src={Edit} alt="edit" />
+              </Link>
+            </button>
             <button
-              className="btn btn-circle btn-outline"
+              className="btn btn-circle btn-outline btn-md"
               onClick={() => {
                 setShowModal(true);
               }}
             >
               <img src={RedCross} alt="redCross" />
             </button>
-          </>
+          </div>
         ) : null}
         {showModal && (
           <DialogModal
