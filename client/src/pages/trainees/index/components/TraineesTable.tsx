@@ -20,7 +20,7 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
             <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider overflow-x-hidden">
               Callsign
             </th>
-            <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider hidden md:table-cell">
+            <th className="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider hidden xs:table-cell">
               Category
             </th>
             <th className="px-4 py-3 text-center text-xs font-medium uppercase hidden sm:table-cell tracking-wider">

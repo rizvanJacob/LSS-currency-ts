@@ -28,7 +28,7 @@ const TraineeTableRow = ({
     <tr>
       <td>
         <Link
-          className="btn btn-primary btn-sm btn-block text-sm flex-nowrap"
+          className="btn btn-secondary border-primary shadow-md btn-sm btn-block text-sm flex-nowrap"
           to={trainee.id.toString()}
         >
           <span className={overallStatus.className + " badge-xs mx-2"}></span>
@@ -37,7 +37,7 @@ const TraineeTableRow = ({
           </span>
         </Link>
       </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden xs:table-cell">
         {category}
       </td>
       <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium hidden sm:table-cell text-slate-950">
@@ -49,13 +49,13 @@ const TraineeTableRow = ({
         (currentUser?.accountType === Account.Admin ||
           currentUser?.authCategory === trainee.category) ? (
           <div className="btn-group">
-            <button className="btn btn-circle btn-outline btn-md">
-              <Link to={`${trainee.id}/edit`}>  
-                  <img src={Edit} alt="edit" />
+            <button className="btn btn-square btn-secondary border-primary shadow-md btn-sm">
+              <Link to={`${trainee.id}/edit`}>
+                <img src={Edit} alt="edit" />
               </Link>
             </button>
             <button
-              className="btn btn-circle btn-outline btn-md"
+              className="btn btn-square btn-secondary border-primary shadow-md btn-sm"
               onClick={() => {
                 setShowModal(true);
               }}
