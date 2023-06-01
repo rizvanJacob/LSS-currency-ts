@@ -6,29 +6,29 @@ on:
       - origin/infra
 
 jobs:
-  frontend:
-    runs-on: ubuntu-latest
+  # frontend:
+  #   runs-on: ubuntu-latest
     
-    steps: 
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps: 
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: npm install and build
-        run: |
-          cd client
-          cat > .env << EOF
-          VITE_SERVER_URL="https://api.lss-currency.swiftoffice.org"
-          EOF
-          npm install
-          npm run build
+  #     - name: npm install and build
+  #       run: |
+  #         cd client
+  #         cat > .env << EOF
+  #         VITE_SERVER_URL="https://api.lss-currency.swiftoffice.org"
+  #         EOF
+  #         npm install
+  #         npm run build
       
-      - name: Upload to S3
-        run: |
-          aws s3 sync client/dist/. s3://lss-currency-web-staging
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'ap-southeast-1'
+  #     - name: Upload to S3
+  #       run: |
+  #         aws s3 sync client/dist/. s3://lss-currency-web-staging
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         AWS_DEFAULT_REGION: 'ap-southeast-1'
   
   backend: 
     runs-on: ubuntu-latest
@@ -45,7 +45,5 @@ jobs:
           instance-ids: ${{ secrets.INSTANCE_ID }}
 
           working-directory: /usr/bin
-          command: |
-            sudo su
-            ./script.sh
+          command: sudo ./script.sh
             
