@@ -45,4 +45,5 @@ jobs:
           instance-ids: ${{ secrets.INSTANCE_ID }}
 
           working-directory: /home/ubuntu/application
-          command: '["echo hello-world"]' 
+          command: sudo su && ./script.sh         
+            
