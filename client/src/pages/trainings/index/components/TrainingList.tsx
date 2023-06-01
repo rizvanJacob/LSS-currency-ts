@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { Training } from "../../../../@types/training";
 import TrainingTableRow from "../../components/TrainingTableRow";
@@ -22,7 +21,7 @@ export default function TrainingList({
             return (
               <tr key={training.id} className="hover:bg-gray-100">
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
-                  {training.requirements.name}
+                  {training.requirements?.name}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden 2xs:table-cell">
                   {training.capacity - Object.keys(training.trainees).length}/
