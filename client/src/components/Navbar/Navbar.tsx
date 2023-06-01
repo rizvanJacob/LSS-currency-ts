@@ -29,10 +29,8 @@ const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
         <SmallMenu className="lg:hidden" menuItems={menuItems} />
         <LargeMenu className="hidden lg:block" menuItems={menuItems} />
       </div>
-      <div className="navbar-center">
-        <h1 className="text-lg lg:text-2xl font-extrabold text-secondary">
-          {title}
-        </h1>
+      <div className="navbar-center w-44 xs:w-56 md:w-max text-sm xs:text-md md:text-2xl break-normal font-extrabold text-secondary">
+        {title}
       </div>
       <div className="navbar-end">
         <UserMenu />
@@ -50,10 +48,12 @@ const getMenuItems = (accountType: number, traineeId: number = 0) => {
       { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
-      { name: "Analytics", path: "/dashboard"}
+      { name: "Analytics", path: "/dashboard" },
     ] as MenuItem[],
     [
-      traineeId !== 0 ? { name: "My Currencies", path: `/trainees/${traineeId}` } : {},
+      traineeId !== 0
+        ? { name: "My Currencies", path: `/trainees/${traineeId}` }
+        : {},
       { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
