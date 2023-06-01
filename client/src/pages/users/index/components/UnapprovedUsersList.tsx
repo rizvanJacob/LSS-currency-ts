@@ -13,7 +13,7 @@ export default function UnapprovedUsersList({
   setUsers,
 }: UsersListProps): JSX.Element {
   return (
-    <div className="overflow-y-auto h-40 overflow-x-clip">
+    <div className="h-40 overflow-x-clip">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">

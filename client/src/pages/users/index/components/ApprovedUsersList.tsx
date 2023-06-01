@@ -16,7 +16,7 @@ export default function ApprovedUsersList({
 }: UsersListProps): JSX.Element {
   const currentUser = useContext(CurrentUserContext);
   return (
-    <div className="overflow-y-auto overflow-x-clip">
+    <div className="overflow-y-auto overflow-x-clip flex-1">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">
@@ -47,14 +47,13 @@ export default function ApprovedUsersList({
                   {accountType}
                 </td>
                 {currentUser?.id !== user.id ? (
-                <td className="btn-group py-2 text-center whitespace-nowrap flex items-center justify-center">
-                  <EditUserButton user={user} />
-                  <DeleteUserButton setUsers={setUsers} user={user} />
-                </td>
-                ): (
+                  <td className="btn-group py-2 text-center whitespace-nowrap flex items-center justify-center">
+                    <EditUserButton user={user} />
+                    <DeleteUserButton setUsers={setUsers} user={user} />
+                  </td>
+                ) : (
                   <td></td>
-                )
-                }
+                )}
               </tr>
             );
           })}
