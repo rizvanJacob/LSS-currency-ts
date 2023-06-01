@@ -45,5 +45,7 @@ jobs:
           instance-ids: ${{ secrets.INSTANCE_ID }}
 
           working-directory: /usr/bin
-          command: sudo su && ./script.sh         
+          command: |
+            sudo su
+            ./script.sh
             
