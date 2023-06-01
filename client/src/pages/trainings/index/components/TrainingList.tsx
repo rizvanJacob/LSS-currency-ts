@@ -14,7 +14,7 @@ export default function TrainingList({
   setTrainings,
 }: TrainingListProps): JSX.Element {
   return (
-    <div className="overflow-y-auto overflow-x-hidden">
+    <div className="overflow-y-auto overflow-x-hidden scrollbar-hide">
       <table className="table w-full">
         <TrainingTableRow />
         <tbody className="bg-white divide-y divide-gray-200">

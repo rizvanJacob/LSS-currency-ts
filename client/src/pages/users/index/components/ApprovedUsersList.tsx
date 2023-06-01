@@ -16,7 +16,7 @@ export default function ApprovedUsersList({
 }: UsersListProps): JSX.Element {
   const currentUser = useContext(CurrentUserContext);
   return (
-    <div className="overflow-y-auto overflow-x-clip flex-1">
+    <div className="overflow-y-auto overflow-x-clip flex-1 scrollbar-hide">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">

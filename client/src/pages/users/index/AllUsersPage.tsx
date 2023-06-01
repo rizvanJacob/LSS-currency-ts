@@ -40,7 +40,7 @@ export default function AllUsersPage(): JSX.Element {
             }}
           />
           <PendingCollapseHeader showUnapproved={showUnapproved} />
-          <div className="collapse-content p-0 overflow-auto flex-1">
+          <div className="collapse-content p-0 overflow-auto flex-1 scrollbar-hide">
             <UnapprovedUsersList
               users={notApprovedUsers as User[]}
               setUsers={
