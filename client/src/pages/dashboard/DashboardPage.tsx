@@ -15,7 +15,12 @@ import { CurrencyData } from "../../@types/analytics";
 export default function DashboardPage(): JSX.Element {
     const [trainees, setTrainees] = useState<Trainee[]>([]);
     const [trainings, setTrainings] = useState<Training[]>([]);
-    const [currencyData, setCurrencyData] = useState<CurrencyData[]>([]);
+    const [currencyData, setCurrencyData] = useState<CurrencyData>({
+        filteredCurrencyMap: {
+            "": 0,
+        },
+        totalExpired: 0
+    });
     const [catRequirements, setCatRequirements] = useState<CategoryToRequirement[]>([]);
     const [filterOptions, setFilterOptions] = useState<CurrencyFilter>({
         requirement: 0,
@@ -35,7 +40,6 @@ export default function DashboardPage(): JSX.Element {
     useEffect(() => {
         getRequest(`/api/analytics/requirement/${filterOptions.requirement}`, setCurrencyData);
     }, [filterOptions]);
-    
     return  (
         <div className="flex flex-col">
             <BookingCSVButton/>

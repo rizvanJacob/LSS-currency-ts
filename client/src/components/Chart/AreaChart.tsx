@@ -22,7 +22,7 @@ type Prop = {
     filterOptions: CurrencyFilter;
     setFilterOptions: React.Dispatch<React.SetStateAction<CurrencyFilter>>;
     catRequirements: CategoryToRequirement[];
-    data: CurrencyData[];
+    data: CurrencyData;
 };
 
 const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: Prop) => {
@@ -37,7 +37,8 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
 
     const datasets = [
         {
-            data: Object.values(data),
+            data: [data.totalExpired].concat(Object.values(data.filteredCurrencyMap)),
+            label: "Currency",
             fill: true,
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -45,10 +46,10 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
     ];
 
     const chartData = {
-        labels: Object.keys(data).sort((a, b) => dayjs(a) < dayjs(b) ? -1 : 1),
+        labels: ["Before today"].concat(Object.keys(data.filteredCurrencyMap)),
         datasets: datasets,
     };
-    console.log(chartData);
+    
     const chartOptions: ChartOptions<'line'> = { 
         scales: {
             y: {
@@ -65,16 +66,20 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
                 },
             },
             x: {
-                //type: 'time',
                 time: {
                     displayFormats: {
-                      quarter: 'MMM yyyy',
+                      quarter: 'MMM YYYY',
                     },
+                    tooltipFormat: 'MMM YYYY'
                   },
                 title: {
                     display: true,
-                    text: "Time period (MM-YYYY)"
+                    text: "Time period (MMM-YYYY)"
                 },
+                ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 20,
+                },    
             }
         },
         plugins: {
@@ -105,7 +110,7 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
                 })}
             </select>
             </div>
-            <h1>Expiry Overview by Requirement</h1>
+            <h1 className="text-center">Expiry Overview by Requirement (12 Months Projection)</h1>
             {filterOptions.requirement !== 0 ? (
                 <Line data={chartData} options={chartOptions} />
             ) : (
