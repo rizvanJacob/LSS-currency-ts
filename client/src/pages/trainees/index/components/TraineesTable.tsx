@@ -32,15 +32,19 @@ const TraineesTable = ({ trainees, deleteTrainee }: Prop) => {
           </tr>
         </thead>
         <tbody>
-          {trainees?.map((t) => (
-            <TraineeTableRow
-              trainee={t}
-              key={t.id}
-              category={t.categories.name}
-              overallStatus={t.status || emptyStatus}
-              deleteTrainee={deleteTrainee}
-            />
-          ))}
+          {trainees?.map((t) => {
+            if (t.users.approved) {
+              return (
+                <TraineeTableRow
+                  trainee={t}
+                  key={t.id}
+                  category={t.categories.name}
+                  overallStatus={t.status || emptyStatus}
+                  deleteTrainee={deleteTrainee}
+                />
+              );
+            }
+          })}
         </tbody>
       </table>
     </div>
