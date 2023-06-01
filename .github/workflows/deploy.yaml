@@ -44,6 +44,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           instance-ids: ${{ secrets.INSTANCE_ID }}
 
-          working-directory: /home/ubuntu/application
+          working-directory: /usr/bin
           command: sudo su && ./script.sh         
             
