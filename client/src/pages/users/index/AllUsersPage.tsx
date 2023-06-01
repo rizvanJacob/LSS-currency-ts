@@ -53,7 +53,7 @@ export default function AllUsersPage(): JSX.Element {
         <></>
       )}
 
-      <h1 className="text-lg font-bold self-start"> Approved Users:</h1>
+      <h1 className="text-lg font-bold self-start py-4"> Approved Users:</h1>
       <UsersFilterControls
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}

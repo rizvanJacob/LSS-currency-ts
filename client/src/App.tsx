@@ -9,10 +9,11 @@ import TrainingRoutes from "./pages/trainings/routes/TrainingRoutes";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 import { CurrentUser, UserPayload } from "./@types/currentUser";
-import Navbar from "./components/Navbar/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
+import Navbar2 from "./components/Navbar/Navbar";
+import NavDrawer from "./components/Navbar/components/NavDrawer";
 
 export const UPDATED = "1 Jun 1150H";
 
@@ -44,6 +45,7 @@ export const TitleContext = createContext<React.Dispatch<
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (!AUTHORISE) {
@@ -63,14 +65,21 @@ function App() {
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
         {currentUser ? (
-          <>
-            <div className="App h-screen flex flex-col">
-              <Navbar
+          <div className="drawer">
+            <input
+              id="my-drawer-3"
+              type="checkbox"
+              className="drawer-toggle"
+              checked={drawerOpen}
+            />
+            <div className="drawer-content flex flex-col h-screen">
+              <Navbar2
                 accountType={currentUser.accountType}
                 traineeId={currentUser.trainee?.id}
                 title={title}
+                openDrawer={() => setDrawerOpen(true)}
               />
-              <div className="flex-1 overflow-auto w-screen max-w-3xl flex flex-col items-stretch self-center p-2 space-y-2 justify-start">
+              <div className="max-w-screen-md w-full mx-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
@@ -109,7 +118,12 @@ function App() {
                 </Routes>
               </div>
             </div>
-          </>
+            <NavDrawer
+              accountType={currentUser.accountType}
+              traineeId={currentUser.trainee?.id}
+              closeDrawer={() => setDrawerOpen(false)}
+            />
+          </div>
         ) : (
           <AuthRoutes setCurrentUser={setCurrentUser} />
         )}
