@@ -14,7 +14,7 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 
-export const UPDATED = "31 May 1911H"
+export const UPDATED = "1 Jun 1150H"
 
 const AUTHORISE = true;
 const CURRENT_USER = {
