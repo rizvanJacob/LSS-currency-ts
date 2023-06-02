@@ -62,7 +62,8 @@ export default function DashboardPage(): JSX.Element {
         <option value={2}>Trainee Count by Category</option>
         <option value={3}>Trainings Start and End Dates</option>
       </select>
-      <div className="flex-1 overflow-auto scrollbar-hide">
+      
+      <div className="flex-1 text-center overflow-auto scrollbar-hide">
         {showItem === 1 && (
           <AreaChart
             filterOptions={filterOptions}
@@ -85,8 +86,8 @@ export default function DashboardPage(): JSX.Element {
             )}
           </>
         )}
+        <BookingCSVButton />
       </div>
-      <BookingCSVButton />
     </div>
   );
 }
