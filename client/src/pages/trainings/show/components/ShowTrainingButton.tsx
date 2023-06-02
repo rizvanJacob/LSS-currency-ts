@@ -8,8 +8,8 @@ export default function ShowTrainingButton({
 }): JSX.Element {
   return (
     <Link to={`${training.id}`}>
-      <button className="btn btn-circle btn-outline">
-        <img src={Enter} alt="enter"/>
+      <button className="btn btn-secondary btn-sm btn-square border-primary shadow-md">
+        <img src={Enter} alt="enter" className="text-primary" />
       </button>
     </Link>
   );

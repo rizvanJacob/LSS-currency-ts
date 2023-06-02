@@ -40,7 +40,7 @@ const DialogModal = ({
 
   return (
     <dialog
-      className="card shadow-xl w-96 bg-neutral text-primary overflow-hidden"
+      className="card shadow-xl w-96 bg-base-100 text-primary overflow-hidden"
       ref={ref}
       onClick={onClose}
       onKeyDown={onClose}
@@ -50,7 +50,9 @@ const DialogModal = ({
         onClick={preventAutoClose}
       >
         <h3 className="font-bold text-lg capitalize">{title}</h3>
-        <p className="py-2 whitespace-normal break-normal text-left">{message}</p>
+        <p className="py-2 whitespace-normal break-normal text-left">
+          {message}
+        </p>
         <div className="flex justify-end gap-x-2">
           <button className="btn btn-primary btn-sm" onClick={onClose}>
             {closeButtonText}

@@ -4,7 +4,7 @@ const PendingCollapseHeader = ({
   showUnapproved: boolean;
 }) => {
   return (
-    <div className="collapse-title p-0 flex items-center h-min">
+    <div className="collapse-title p-0 flex items-center">
       <h1 className="text-lg font-bold text-left flex-1">Pending approval:</h1>
       <label className="swap swap-rotate h-min px-2">
         <input type="checkbox" checked={showUnapproved} readOnly />

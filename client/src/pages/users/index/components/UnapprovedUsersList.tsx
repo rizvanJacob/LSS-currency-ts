@@ -43,9 +43,11 @@ export default function UnapprovedUsersList({
                 >
                   {accountType}
                 </td>
-                <td className="btn-group py-2 text-center whitespace-nowrap flex items-center justify-center">
-                  <EditUserButton user={user} />
-                  <DeleteUserButton setUsers={setUsers} user={user} />
+                <td className="py-2 text-center whitespace-nowrap">
+                  <div className="btn-group flex items-center justify-center">
+                    <EditUserButton user={user} />
+                    <DeleteUserButton setUsers={setUsers} user={user} />
+                  </div>
                 </td>
               </tr>
             );

@@ -55,7 +55,7 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
 
   return (
     <div
-      className="my-2 py-5 px-5 card bg-sky-50 shadow-xl"
+      className="my-2 py-5 px-5 card card-bordered border-primary bg-sky-50 shadow-xl"
       id={`training${training.id}`}
     >
       <div className="flex items-center ">
@@ -71,14 +71,14 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
           <button
-            className="btn btn-secondary min-w-max capitalize"
+            className="btn btn-secondary border-primary shadow-md min-w-max capitalize"
             onClick={bookTraining}
             disabled={isLoading}
           >
             {buttonText}
           </button>
           <Link
-            className="btn btn-secondary min-w-max"
+            className="btn btn-secondary border-primary shadow-md  min-w-max"
             to={`/trainings/${training.id}`}
           >
             <button>Details</button>

@@ -34,7 +34,7 @@ const SelfCompleteButton = ({
   return (
     <>
       <button
-        className="break-words btn btn-sm btn-outline"
+        className="break-words btn btn-sm btn-secondary border-primary shadow-md"
         disabled={disableButton}
         onClick={handleClick}
       >

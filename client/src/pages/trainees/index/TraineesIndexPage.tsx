@@ -14,7 +14,7 @@ import { TRAINEE_AMEND_ACCESS } from "../TraineesRoutes";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
-  const [fetchFlag, setFetchFlag] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filterOptions, setFilterOptions] = useState<TraineeFilterOptions>({
     category: 0,
   });
@@ -27,13 +27,13 @@ const TraineesIndexPage = (): JSX.Element => {
   useEffect(() => {
     if (setTitle) setTitle("Trainees Index");
     getRequest("/api/trainees", setTrainees).then(() => {
-      setFetchFlag(!fetchFlag);
+      setIsLoading(false);
     });
   }, []);
 
   useEffect(() => {
     computeOverallStatus(trainees, setTrainees);
-  }, [fetchFlag]);
+  }, [isLoading]);
 
   const deleteTrainee = (id: number) => async () => {
     if (!TRAINEE_AMEND_ACCESS.includes(Number(currentUser?.accountType))) {
@@ -44,7 +44,9 @@ const TraineesIndexPage = (): JSX.Element => {
 
   return (
     <>
-      {trainees.length > 0 ? (
+      {isLoading ? (
+        <ProgressBar />
+      ) : trainees.length ? (
         <>
           <TraineesFilterControls
             filterOptions={filterOptions}
@@ -61,7 +63,7 @@ const TraineesIndexPage = (): JSX.Element => {
           />
         </>
       ) : (
-        <ProgressBar />
+        <>No Trainees to Show</>
       )}
     </>
   );
