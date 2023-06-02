@@ -14,7 +14,7 @@ import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 
-export const UPDATED = "1 Jun 1150H"
+export const UPDATED = "2 Jun 2115H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -59,7 +59,7 @@ function App() {
       }
     } catch (error) {}
   }, []);
-  console.log("traineeId", currentUser?.trainee?.id)
+  console.log("traineeId", currentUser?.trainee?.id);
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
