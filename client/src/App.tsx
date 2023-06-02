@@ -72,6 +72,7 @@ function App() {
               type="checkbox"
               className="drawer-toggle"
               checked={drawerOpen}
+              readOnly={true}
             />
             <div className="drawer-content flex flex-col h-screen">
               <Navbar2
