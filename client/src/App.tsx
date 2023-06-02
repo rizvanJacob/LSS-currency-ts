@@ -61,10 +61,7 @@ function App() {
       }
     } catch (error) {}
   }, []);
-<<<<<<< HEAD
-=======
   console.log("traineeId", currentUser?.trainee?.id);
->>>>>>> main
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
