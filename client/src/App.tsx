@@ -15,7 +15,7 @@ import HomePageCallback from "./components/HomePageCallback";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 
-export const UPDATED = "2 Jun 0025H";
+export const UPDATED = "2 Jun 2115H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -61,6 +61,10 @@ function App() {
       }
     } catch (error) {}
   }, []);
+<<<<<<< HEAD
+=======
+  console.log("traineeId", currentUser?.trainee?.id);
+>>>>>>> main
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>

@@ -75,7 +75,7 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (user.accountType === Account.Admin) {
+    if (!user.trainee?.id) {
       setIsLoading(isLoadingAdmin);
     }
   }, [isLoadingAdmin]);
@@ -185,8 +185,21 @@ export default function EditUserForm(): JSX.Element {
                       onChange={handleInputChange}
                     >
                       {accountTypes?.map((type) => {
-                        if (NON_TRAINEE_ACCOUNTS.includes(type.id)) 
-                          return <option value={type.id} key={type.id} disabled>{type.name}</option>;
+                        if (NON_TRAINEE_ACCOUNTS.includes(type.id))
+                          return (
+                            <option value={type.id} key={type.id} disabled>
+                              {type.name}
+                            </option>
+                          );
+
+                        if (!user.trainee?.id && type.id === Account.Trainee) {
+                          return (
+                            <option value={type.id} key={type.id} disabled>
+                              {type.name}
+                            </option>
+                          );
+                        }
+
                         return (
                           <option value={type.id} key={type.id}>
                             {type.name}
@@ -235,20 +248,21 @@ export default function EditUserForm(): JSX.Element {
                     </div>
                   </div>
                 )}
-                {(user.accountType === Account.Trainee || user.accountType === Account.TraineeAdmin) 
-                  && trainee.id 
-                  && user?.trainee?.id ? (
-                    <>
-                      <TraineeFieldSet
-                        user={user}
-                        trainee={trainee}
-                        setTrainee={setTrainee}
-                        setIsLoadingTrainee={setIsLoading}
-                        isLoadingAdmin={isLoadingAdmin}
-                        forceCallsign={user.displayName}
-                        forceCategory={user.authCategory}
-                      />
-                    </>
+                {(user.accountType === Account.Trainee ||
+                  user.accountType === Account.TraineeAdmin) &&
+                trainee.id &&
+                user?.trainee?.id ? (
+                  <>
+                    <TraineeFieldSet
+                      user={user}
+                      trainee={trainee}
+                      setTrainee={setTrainee}
+                      setIsLoadingTrainee={setIsLoading}
+                      isLoadingAdmin={isLoadingAdmin}
+                      forceCallsign={user.displayName}
+                      forceCategory={user.authCategory}
+                    />
+                  </>
                 ) : user.accountType === Account.Trainee ? (
                   <ProgressBar />
                 ) : null}
