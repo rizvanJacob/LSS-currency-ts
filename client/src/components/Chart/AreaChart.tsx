@@ -46,7 +46,7 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
     ];
 
     const chartData = {
-        labels: ["Before today"].concat(Object.keys(data.filteredCurrencyMap)),
+        labels: ["Expired"].concat(Object.keys(data.filteredCurrencyMap)),
         datasets: datasets,
     };
     
@@ -68,14 +68,10 @@ const AreaChart = ({ filterOptions, setFilterOptions, catRequirements, data }: P
             x: {
                 time: {
                     displayFormats: {
-                      quarter: 'MMM YYYY',
+                      quarter: 'MMM-YY',
                     },
-                    tooltipFormat: 'MMM YYYY'
+                    tooltipFormat: 'MMM-YY'
                   },
-                title: {
-                    display: true,
-                    text: "Time period (MMM-YYYY)"
-                },
                 ticks: {
                     autoSkip: true,
                     maxTicksLimit: 20,
