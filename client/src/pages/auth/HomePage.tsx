@@ -44,7 +44,7 @@ const HomePage = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="flex flex-col mx-auto items-center h-48 justify-evenly">
+    <div className="flex flex-col mx-auto items-center justify-evenly gap-4 h-screen pt-4">
       <h1 className="badge badge-lg badge-primary badge-outline">AviAid</h1>
       <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
@@ -52,6 +52,11 @@ const HomePage = (): JSX.Element => {
       <a className="btn btn-primary btn-wide" href={authUrls.checkin}>
         CHECK IN
       </a>
+      <div className="flex-1"> </div>
+      <footer className="footer footer-center p-4 bg-base-300 text-base-content">
+        This website is best viewed with the current browser version of Chrome.
+        Some features may not display correctly on other browsers.
+      </footer>
     </div>
   );
 };
