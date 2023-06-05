@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
 import { transformTrainingForBooking } from "../utilities/trimTraining";
+import { STATUSES_IN_TRAINING_LIST } from "../constants";
 
 const index = async (req: Request, res: Response) => {
   const { training } = req.query;
@@ -16,11 +17,12 @@ const index = async (req: Request, res: Response) => {
             trainings: {
               some: {
                 training: Number(training),
+                status: { in: STATUSES_IN_TRAINING_LIST },
               },
             },
             users: { approved: true },
           }
-        : {},
+        : { users: { approved: true } },
       select: {
         id: true,
         callsign: true,
@@ -149,6 +151,139 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
+const create = async (req: Request, res: Response) => {
+  try {
+    const { callsign, category, user } = req.body;
+    console.log("req.body", req.body);
+    const newTrainee = await prisma.trainee.create({
+      data: {
+        callsign: callsign,
+        category: Number(category),
+        user: Number(user),
+      },
+    });
+    res.status(200).json(newTrainee);
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+const update = async (req: Request, res: Response) => {
+  console.log("Update trainee");
+  const trainee = req.body;
+  const { traineeId } = req.params;
+  const upsertCurrencies = trainee.currencies?.map((c: any) => {
+    console.log(c);
+    const upsertTransaction = prisma.currency.upsert({
+      where: {
+        trainee_requirement: {
+          trainee: Number(traineeId),
+          requirement: c.requirement,
+        },
+      },
+      update: {
+        expiry: c.expiry,
+        seniority: c.seniority || false,
+        updatedAt: dayjs().toDate(),
+      },
+      create: {
+        expiry: c.expiry,
+        seniority: c.seniority || false,
+        trainees: {
+          connect: {
+            id: Number(traineeId),
+          },
+        },
+        requirements: {
+          connect: {
+            id: c.requirement,
+          },
+        },
+      },
+    });
+    return upsertTransaction;
+  });
+
+  const currentUser = await prisma.userModel.findUnique({
+    where: { id: Number(trainee.user) },
+    select: { accountType: true },
+  });
+
+  const updateTrainee = prisma.trainee.update({
+    where: { id: Number(traineeId) },
+    data: {
+      callsign: trainee.callsign,
+      category: Number(trainee.category),
+      updatedAt: dayjs().toDate(),
+    },
+  });
+
+  const updateUser = prisma.userModel.update({
+    where: { id: Number(trainee.user) },
+    data: {
+      displayName: trainee.callsign,
+      updatedAt: dayjs().toDate(),
+      authCategory:
+        currentUser?.accountType === Account.TraineeAdmin
+          ? trainee.category
+          : null,
+    },
+  });
+
+  try {
+    await prisma.$transaction([updateTrainee, updateUser]);
+    if (upsertCurrencies.length) {
+      await Promise.all(upsertCurrencies);
+    }
+    res.status(200).send("updated");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("unable to update");
+  }
+};
+
+const deleteTrainee = async (req: Request, res: Response) => {
+  const { traineeId } = req.params;
+
+  try {
+    const trainee = await prisma.trainee.findUnique({
+      where: { id: Number(traineeId) },
+      select: { users: { select: { id: true, accountType: true } } },
+    });
+    const userId = trainee?.users.id;
+
+    const deleteCurrencies = prisma.currency.deleteMany({
+      where: {
+        trainee: Number(traineeId),
+      },
+    });
+    const deleteTrainings = prisma.traineeToTraining.deleteMany({
+      where: {
+        trainee: Number(traineeId),
+      },
+    });
+    const deleteTrainee = prisma.trainee.delete({
+      where: {
+        id: Number(traineeId),
+      },
+    });
+
+    await prisma.$transaction([
+      deleteCurrencies,
+      deleteTrainings,
+      deleteTrainee,
+    ]);
+    if (trainee?.users.accountType === Account.Trainee) {
+      await prisma.userModel.delete({ where: { id: Number(userId) } });
+    }
+    res
+      .status(200)
+      .json({ message: `${traineeId} had been deleted successfully` });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
 const showBooking = async (req: Request, res: Response) => {
   const { traineeId, requirementId } = req.params;
 
@@ -188,23 +323,6 @@ const showBooking = async (req: Request, res: Response) => {
   }
 };
 
-const create = async (req: Request, res: Response) => {
-  try {
-    const { callsign, category, user } = req.body;
-    console.log("req.body", req.body);
-    const newTrainee = await prisma.trainee.create({
-      data: {
-        callsign: callsign,
-        category: Number(category),
-        user: Number(user),
-      },
-    });
-    res.status(200).json(newTrainee);
-  } catch (err) {
-    res.status(500).json({ err });
-  }
-};
-
 const updateBooking = async (req: Request, res: Response) => {
   const { traineeId, trainingId } = req.params;
 
@@ -217,6 +335,94 @@ const updateBooking = async (req: Request, res: Response) => {
   }
 
   console.log(`trainee: ${traineeId}, training: ${trainingId}`);
+};
+
+const getAllBookings = async (req: Request, res: Response) => {
+  try {
+    const bookings = await prisma.traineeToTraining.findMany({
+      select: {
+        id: true,
+        trainees: {
+          select: {
+            id: true,
+            callsign: true,
+            category: true,
+            categories: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        trainings: {
+          select: {
+            requirement: true,
+            requirements: {
+              select: {
+                name: true,
+              },
+            },
+            capacity: true,
+            start: true,
+            end: true,
+            complete: true,
+          },
+        },
+        status: true,
+        statuses: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const csvData = [
+      [
+        "Booking ID",
+        "Trainee ID",
+        "Trainee Callsign",
+        "Trainee Category",
+        "Category Name",
+        "Training Requirement",
+        "Requirement Name",
+        "Training Capacity",
+        "Training Start",
+        "Training End",
+        "Training Complete",
+        "Booking Status",
+        "Status Name",
+      ],
+    ];
+
+    bookings.forEach((booking) => {
+      const row: any = [
+        booking.id,
+        booking.trainees.id,
+        booking.trainees.callsign,
+        booking.trainees.category,
+        booking.trainees.categories.name,
+        booking.trainings.requirement,
+        booking.trainings.requirements.name,
+        booking.trainings.capacity,
+        booking.trainings.start,
+        booking.trainings.end,
+        booking.trainings.complete,
+        booking.status,
+        booking.statuses.name,
+      ];
+      csvData.push(row);
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Bookings_Data.csv"
+    );
+    res.setHeader("Content-Type", "text/csv");
+    res.status(200).json(csvData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const completeRequirement = async (req: Request, res: Response) => {
@@ -274,137 +480,47 @@ const completeRequirement = async (req: Request, res: Response) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
-  console.log("Update trainee");
-  const trainee = req.body;
-  const { traineeId } = req.params;
-  const upsertCurrencies = trainee.currencies?.map((c: any) => {
-    console.log(c);
-    const upsertTransaction = prisma.currency.upsert({
-      where: {
-        trainee_requirement: {
-          trainee: Number(traineeId),
-          requirement: c.requirement,
-        },
-      },
-      update: {
-        expiry: c.expiry,
-        seniority: c.seniority || false,
-        updatedAt: dayjs().toDate(),
-      },
-      create: {
-        expiry: c.expiry,
-        seniority: c.seniority || false,
-        trainees: {
-          connect: {
-            id: Number(traineeId),
-          },
-        },
-        requirements: {
-          connect: {
-            id: c.requirement,
-          },
-        },
-      },
-    });
-    return upsertTransaction;
-  });
-
-  const updateTrainee = prisma.trainee.update({
-    where: { id: Number(traineeId) },
-    data: {
-      callsign: trainee.callsign,
-      category: Number(trainee.category),
-      updatedAt: dayjs().toDate(),
-    },
-  });
-
-  try {
-    await updateTrainee;
-    if (upsertCurrencies.length) {
-      await Promise.all(upsertCurrencies);
-    }
-    res.status(200).send("updated");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("unable to update");
-  }
-};
-
-const deleteController = async (req: Request, res: Response) => {
-  const { traineeId } = req.params;
-
-  try {
-    const trainee = await prisma.trainee.findUnique({
-      where: { id: Number(traineeId) },
-      select: { users: { select: { id: true, accountType: true } } },
-    });
-    const userId = trainee?.users.id;
-
-    const deleteCurrencies = prisma.currency.deleteMany({
-      where: {
-        trainee: Number(traineeId),
-      },
-    });
-    const deleteTrainings = prisma.traineeToTraining.deleteMany({
-      where: {
-        trainee: Number(traineeId),
-      },
-    });
-    const deleteTrainee = prisma.trainee.delete({
-      where: {
-        id: Number(traineeId),
-      },
-    });
-
-    await prisma.$transaction([
-      deleteCurrencies,
-      deleteTrainings,
-      deleteTrainee,
-    ]);
-    if (trainee?.users.accountType === Account.Trainee) {
-      await prisma.userModel.delete({ where: { id: Number(userId) } });
-    }
-    res
-      .status(200)
-      .json({ message: `${traineeId} had been deleted successfully` });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
-
 const checkin = async (req: Request, res: Response) => {
   console.log("handle checkin");
   const { passphrase } = req.body;
   const { user: userId, training: trainingId } = req.query;
 
   try {
-    const trainee = await prisma.trainee.findUnique({
+    const traineeQuery = prisma.trainee.findUnique({
       where: { user: Number(userId) },
     });
-    const training = await prisma.training.findUnique({
+    const trainingQuery = prisma.training.findUnique({
       where: { id: Number(trainingId) },
     });
+    const [trainee, training] = await Promise.all([
+      traineeQuery,
+      trainingQuery,
+    ]);
+
+    if (!trainee || !training) {
+      return res.status(400).json({ message: "Trainee or training not found" });
+    }
 
     const isCorrectPassphrase = passphrase === training?.passphrase;
-    const isSameDay = dayjs(training?.start).isSame(dayjs(), "day");
-
-    if (trainee && isCorrectPassphrase && isSameDay) {
-      await prisma.traineeToTraining.update({
-        where: {
-          trainee_training: {
-            trainee: trainee?.id,
-            training: Number(trainingId),
-          },
-        },
-        data: { status: 2, updatedAt: dayjs().toDate() },
-      });
-      return res.status(200).json({ message: "Check in successful!" });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Check in unsucessful. Please try again." });
+    if (!isCorrectPassphrase) {
+      return res.status(400).json({ message: "Incorrect passphrase" });
     }
+    const dateDifference = dayjs(training?.start).diff(dayjs(), "hours");
+    const isWithin24h = dateDifference <= 24 && dateDifference >= 0;
+    if (!isWithin24h) {
+      return res.status(400).json({ message: "Training is not today" });
+    }
+
+    await prisma.traineeToTraining.update({
+      where: {
+        trainee_training: {
+          trainee: trainee?.id,
+          training: Number(trainingId),
+        },
+      },
+      data: { status: 2, updatedAt: dayjs().toDate() },
+    });
+    return res.status(200).json({ message: "Check in successful!" });
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -419,7 +535,8 @@ export {
   updateBooking,
   completeRequirement,
   checkin,
-  deleteController as delete,
+  deleteTrainee as delete,
+  getAllBookings,
 };
 
 const book = async (traineeId: number, trainingId: number) => {

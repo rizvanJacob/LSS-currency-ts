@@ -6,13 +6,35 @@ on:
       - main
 
 jobs:
-  start:
+  frontend:
     runs-on: ubuntu-latest
     
     steps: 
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: npm install and build
+        run: |
+          cd client
+          cat > .env << EOF
+          VITE_SERVER_URL="https://api.lss-currency.swiftoffice.org"
+          EOF
+          npm install
+          npm run build
+      
+      - name: Upload to S3
+        run: |
+          aws s3 sync client/dist/. s3://lss-currency-web-staging
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'ap-southeast-1'
+  
+  backend: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: AWS SSM Command
         uses: peterkimzz/aws-ssm-send-command@master
         id: ssm
@@ -22,18 +44,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           instance-ids: ${{ secrets.INSTANCE_ID }}
 
-          working-directory: /home/ubuntu/application
-          command:             
-            sudo su
-            pm2 stop all
-            cd ..
-            rm -rf lss-currency-application
-            git clone https://${{ secrets.TOKEN_PAT }}@github.com/rswiftoffice/lss-currency-app.git
-            cp .env lss-currency-application/server
-            cd lss-currency-application/server
-            npm install
-            npm run build
-            pm2 start "npm run start"
-            pm2 save
-            pm2 startup
-
+          working-directory: /usr/bin
+          command: sudo ./script.sh

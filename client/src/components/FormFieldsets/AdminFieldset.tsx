@@ -1,19 +1,21 @@
 import { Field, ErrorMessage } from "formik";
 
-import { NewUser } from "../../@types/user";
+import { User } from "../../@types/user";
 import { useEffect } from "react";
 
 type Props = {
-  user: NewUser;
+  user: User;
   handleChange: any;
   setIsLoadingAdmin?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-
 const AdminFieldSet = ({ user, handleChange, setIsLoadingAdmin }: Props) => {
-
   useEffect(() => {
-    if (user.displayName && setIsLoadingAdmin) { 
+    if (user.displayName && setIsLoadingAdmin) {
+      setIsLoadingAdmin(false);
+    }
+
+    if (!user.trainee?.id && setIsLoadingAdmin) {
       setIsLoadingAdmin(false);
     }
   }, [user]);
@@ -24,19 +26,19 @@ const AdminFieldSet = ({ user, handleChange, setIsLoadingAdmin }: Props) => {
         <label htmlFor="displayName" className="w-2/4">
           Display Name:
         </label>
-          <div className="w-4/4">
-            <Field
-              type="text"
-              id="displayName"
-              name="displayName"
-              className="input-text input input-bordered input-primary w-full max-w-xs"
-              value={user.displayName}
-              onChange={handleChange}
-            />
-            <div className="error-message text-error">
-              <ErrorMessage name="displayName" />
-            </div>
+        <div className="w-4/4">
+          <Field
+            type="text"
+            id="displayName"
+            name="displayName"
+            className="input-text input input-bordered input-primary w-full max-w-xs"
+            value={user.displayName}
+            onChange={handleChange}
+          />
+          <div className="error-message text-error">
+            <ErrorMessage name="displayName" />
           </div>
+        </div>
       </fieldset>
     </div>
   );

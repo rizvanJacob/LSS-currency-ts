@@ -3,7 +3,6 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { User } from "../../../@types/user";
-import { Requirement } from "../../../@types/lookup";
 import { SimpleLookup } from "../../../@types/lookup";
 import { Trainee } from "../../../@types/trainee";
 import getRequest from "../../../utilities/getRequest";
@@ -15,6 +14,8 @@ import TraineeFieldSet from "../../../components/FormFieldsets/TraineeFieldset";
 import TrainerFieldSet from "../../../components/FormFieldsets/TrainerFieldset";
 import ProgressBar from "../../../components/ProgressBar";
 import LoadingPage from "../../../components/LoadingPage";
+
+const NON_TRAINEE_ACCOUNTS = [1, 4];
 
 export default function EditUserForm(): JSX.Element {
   const { id } = useParams();
@@ -54,8 +55,8 @@ export default function EditUserForm(): JSX.Element {
     React.SetStateAction<string>
   > | null>(TitleContext);
 
-  const [isLoadingAdmin, setIsLoadingAdmin] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAdmin, setIsLoadingAdmin] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getRequest(`/api/users/${id}`, setUser);
@@ -74,24 +75,22 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (user.accountType === Account.Admin || user.accountType === Account.TraineeAdmin) {
-      if (!isLoadingAdmin) {
-        setIsLoading(false);
-      }
+    if (!user.trainee?.id) {
+      setIsLoading(isLoadingAdmin);
     }
-  },[isLoadingAdmin]);
+  }, [isLoadingAdmin]);
 
   const handleFormSubmit = async () => {
     console.log("submit form");
     if (!user.approved) {
-      if (user.accountType === Account.Trainee) {
+      if (user.trainee?.id) {
         await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
       }
       const updatedUser = { ...user, approved: !user.approved };
       console.log("update and approve user");
       await putRequest(`/api/users/${id}`, updatedUser, setUser);
     } else {
-      if (user.accountType === Account.Trainee) {
+      if (user.trainee?.id) {
         await putRequest(`/api/trainees/${trainee.id}`, trainee, setTrainee);
       }
       await putRequest(`/api/users/${id}`, user, setUser);
@@ -100,6 +99,7 @@ export default function EditUserForm(): JSX.Element {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleInputChange");
     const { name, value } = event.target;
     const parsedValue =
       name === "authCategory" || name === "accountType"
@@ -123,7 +123,28 @@ export default function EditUserForm(): JSX.Element {
               categoryTypes?.find((type) => parsedValue === type.name)?.id ?? 0,
           },
         };
+      } else if (name === "accountType") {
+        if (parsedValue === Account.Trainee) {
+          console.log("clear user.authCategory");
+          user.authCategory = null;
+        } else {
+          user.authCategory = Number(trainee.category);
+        }
+        return {
+          ...user,
+          [name]: parsedValue,
+        };
+      } else if (name === "authCategory") {
+        if (parsedValue !== 0) {
+          return {
+            ...user,
+            [name]: parsedValue,
+          };
+        } else {
+          return user;
+        }
       } else {
+        console.log("setUser", name, parsedValue);
         return {
           ...user,
           [name]: parsedValue,
@@ -156,12 +177,29 @@ export default function EditUserForm(): JSX.Element {
                       type="number"
                       id="accountType"
                       name="accountType"
-                      disabled
+                      disabled={NON_TRAINEE_ACCOUNTS.includes(
+                        user?.accountType
+                      )}
                       className="input-select select select-primary w-full max-w-xs"
-                      value={user?.accountType || ""}
+                      value={Number(user.accountType)}
                       onChange={handleInputChange}
                     >
                       {accountTypes?.map((type) => {
+                        if (NON_TRAINEE_ACCOUNTS.includes(type.id))
+                          return (
+                            <option value={type.id} key={type.id} disabled>
+                              {type.name}
+                            </option>
+                          );
+
+                        if (!user.trainee?.id && type.id === Account.Trainee) {
+                          return (
+                            <option value={type.id} key={type.id} disabled>
+                              {type.name}
+                            </option>
+                          );
+                        }
+
                         return (
                           <option value={type.id} key={type.id}>
                             {type.name}
@@ -175,12 +213,16 @@ export default function EditUserForm(): JSX.Element {
                   </div>
                 </div>
                 {user.accountType !== Account.Trainer && (
-                  <AdminFieldSet user={user} handleChange={handleInputChange} setIsLoadingAdmin={setIsLoadingAdmin} />
+                  <AdminFieldSet
+                    user={user}
+                    handleChange={handleInputChange}
+                    setIsLoadingAdmin={setIsLoadingAdmin}
+                  />
                 )}
                 {user.accountType === Account.TraineeAdmin && (
                   <div className="flex items-center justify-center flex-col">
                     <label htmlFor="authCategory" className="w-4/4">
-                      Authorization Category:
+                      Authorized Category:
                     </label>
                     <div className="w-3/4">
                       <Field
@@ -193,6 +235,7 @@ export default function EditUserForm(): JSX.Element {
                         onChange={handleInputChange}
                         className="input-select select select-primary w-full max-w-xs"
                       >
+                        <option value={0}>Select an option</option>
                         {categoryTypes.map((type) => (
                           <option value={type.id} key={type.id}>
                             {type.name}
@@ -203,20 +246,21 @@ export default function EditUserForm(): JSX.Element {
                         <ErrorMessage name="authCategory" />
                       </div>
                     </div>
-                    <label htmlFor="currencies" className="w-4/4">
-                      Au:
-                    </label>
                   </div>
                 )}
-                {trainee.id &&
-                user?.trainee?.id &&
-                user.accountType === Account.Trainee ? (
+                {(user.accountType === Account.Trainee ||
+                  user.accountType === Account.TraineeAdmin) &&
+                trainee.id &&
+                user?.trainee?.id ? (
                   <>
                     <TraineeFieldSet
+                      user={user}
                       trainee={trainee}
                       setTrainee={setTrainee}
                       setIsLoadingTrainee={setIsLoading}
                       isLoadingAdmin={isLoadingAdmin}
+                      forceCallsign={user.displayName}
+                      forceCategory={user.authCategory}
                     />
                   </>
                 ) : user.accountType === Account.Trainee ? (
@@ -259,5 +303,5 @@ export default function EditUserForm(): JSX.Element {
         </div>
       </div>
     </fieldset>
-  ) 
+  );
 }

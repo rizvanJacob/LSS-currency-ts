@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { buildFullUrl } from "../../utilities/stringManipulation";
+import { UPDATED } from "../../App";
 type AuthURLs = {
   login: string;
   checkin: string;
@@ -25,8 +26,11 @@ const HomePage = (): JSX.Element => {
       });
       const data = await res.json();
       setAuthUrls(data);
+      console.log("server updated at: ", data.updated);
     };
     getAuthUrls();
+
+    console.log("client updated at: ", UPDATED);
 
     if (state === "login") {
       navigate("/loginCallback", { state: { code } });
@@ -41,6 +45,7 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div className="flex flex-col mx-auto items-center h-48 justify-evenly">
+      <h1 className="badge badge-lg badge-primary badge-outline">AviAid</h1>
       <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
       </a>

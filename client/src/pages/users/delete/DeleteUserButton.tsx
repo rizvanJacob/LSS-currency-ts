@@ -2,7 +2,8 @@ import deleteRequest from "../../../utilities/deleteRequest";
 import RedCross from "../../../assets/icons/redCross.svg";
 import { User } from "../../../@types/user";
 import DialogModal from "../../../components/DialogModal";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CurrentUserContext } from "../../../App";
 
 export default function DeleteUserButton({
   setUsers,
@@ -10,9 +11,9 @@ export default function DeleteUserButton({
 }: {
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   user: User;
-}): JSX.Element {
+}) {
   const [showModal, setShowModal] = useState(false);
-
+  const currentUser = useContext(CurrentUserContext);
   const handleClick = () => {
     setShowModal(true);
   };
@@ -24,9 +25,12 @@ export default function DeleteUserButton({
     }
   };
 
-  return (
+  return currentUser?.id !== user.id ? (
     <>
-      <button onClick={handleClick} className="btn btn-circle btn-outline">
+      <button
+        onClick={handleClick}
+        className="btn btn-square border-primary btn-secondary btn-sm shadow-md"
+      >
         <img src={RedCross} alt="redCross" />
       </button>
       {showModal && (
@@ -43,5 +47,7 @@ export default function DeleteUserButton({
         />
       )}
     </>
+  ) : (
+    <></>
   );
 }

@@ -1,7 +1,7 @@
 export type BasicUser = {
   accountType: number;
   displayName: string;
-  authCategory?: number;
+  authCategory?: number | null
 };
 
 export type TrainerUser = {

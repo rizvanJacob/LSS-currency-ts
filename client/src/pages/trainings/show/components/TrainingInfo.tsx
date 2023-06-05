@@ -22,7 +22,7 @@ export default function TrainingInfo({
     currentUser && CHANGE_TRAINING_ACCESS.includes(currentUser?.accountType);
 
   return (
-    <div className="card w-full 2xs:w-96 text-primary shadow-xl bg-secondary mx-auto">
+    <div className="card w-full xs:w-96 text-primary shadow-xl bg-secondary mx-auto">
       <div className="card-body text-left">
         <p>
           <span className="font-semibold">Date: </span>
@@ -47,10 +47,8 @@ export default function TrainingInfo({
         </p>
         {showEditControls && (
           <>
-            <div className="h-6 flex items-start align-center gap-x-1">
-              <span className="font-semibold flex-none">
-                Check In Passphrase:{" "}
-              </span>
+            <div className="h-6 flex items-start align-center gap-x-1 flex-wrap grow">
+              <span className="font-semibold flex-none">Passphrase: </span>
               <label className="swap">
                 <input type="checkbox" />
                 <div className="swap-on">{training.passphrase}</div>

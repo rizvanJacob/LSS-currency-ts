@@ -3,9 +3,6 @@ export type CurrencyFilter = {
 };
 
 export type CurrencyData = {
-  requirement: number;
-  expiry: Date;
-  trainees: {
-    category: number;
-  };
+  filteredCurrencyMap: { [key: string]: number };
+  totalExpired: number;
 };

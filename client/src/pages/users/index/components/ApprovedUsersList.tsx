@@ -2,6 +2,8 @@ import EditUserButton from "../../edit/EditUserButton";
 import DeleteUserButton from "../../delete/DeleteUserButton";
 import { User } from "../../../../@types/user";
 import UserTableRow from "../../components/UserTableRow";
+import { useContext } from "react";
+import { CurrentUserContext } from "../../../../App";
 
 export type UsersListProps = {
   users: User[];
@@ -12,8 +14,9 @@ export default function ApprovedUsersList({
   users,
   setUsers,
 }: UsersListProps): JSX.Element {
+  const currentUser = useContext(CurrentUserContext);
   return (
-    <div className="overflow-y-auto overflow-x-clip">
+    <div className="overflow-y-auto overflow-x-clip flex-1 scrollbar-hide">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">
@@ -34,8 +37,8 @@ export default function ApprovedUsersList({
                 accountTypeClass = "text-pink-950";
             }
             return (
-              <tr key={user.id} className="hover:bg-gray-100">
-                <td className="px-2 py-4 whitespace-nowrap text-left overflow-clip text-sm font-medium text-slate-950">
+              <tr key={user.id} className="hover:bg-gray-100 h-max">
+                <td className="px-2 py-4 whitespace-nowrap text-center overflow-clip text-sm font-medium text-slate-950">
                   {user.displayName}
                 </td>
                 <td
@@ -43,10 +46,16 @@ export default function ApprovedUsersList({
                 >
                   {accountType}
                 </td>
-                <td className="px-1 py-2 text-center whitespace-nowrap flex items-center justify-evenly">
-                  <EditUserButton user={user} />
-                  <DeleteUserButton setUsers={setUsers} user={user} />
-                </td>
+                {currentUser?.id !== user.id ? (
+                  <td className="py-2 text-center whitespace-nowrap">
+                    <div className="btn-group flex items-center justify-center">
+                      <EditUserButton user={user} />
+                      <DeleteUserButton setUsers={setUsers} user={user} />
+                    </div>
+                  </td>
+                ) : (
+                  <td></td>
+                )}
               </tr>
             );
           })}

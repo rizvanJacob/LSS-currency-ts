@@ -10,12 +10,11 @@ import { computeOverallStatus } from "../../../utilities/computeCurrencyStatus";
 import deleteRequest from "../../../utilities/deleteRequest";
 import ProgressBar from "../../../components/ProgressBar";
 import TraineesFilterControls from "./components/TraineesFilterControls";
-
-const DEL_TRAINEE_ACCESS = [Account.Admin, Account.TraineeAdmin];
+import { TRAINEE_AMEND_ACCESS } from "../TraineesRoutes";
 
 const TraineesIndexPage = (): JSX.Element => {
   const [trainees, setTrainees] = useState<Trainee[]>([]);
-  const [fetchFlag, setFetchFlag] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filterOptions, setFilterOptions] = useState<TraineeFilterOptions>({
     category: 0,
   });
@@ -28,24 +27,26 @@ const TraineesIndexPage = (): JSX.Element => {
   useEffect(() => {
     if (setTitle) setTitle("Trainees Index");
     getRequest("/api/trainees", setTrainees).then(() => {
-      setFetchFlag(!fetchFlag);
+      setIsLoading(false);
     });
   }, []);
 
   useEffect(() => {
     computeOverallStatus(trainees, setTrainees);
-  }, [fetchFlag]);
+  }, [isLoading]);
 
   const deleteTrainee = (id: number) => async () => {
-    if (!DEL_TRAINEE_ACCESS.includes(Number(currentUser?.accountType))) {
-      navigate(`/`);
+    if (!TRAINEE_AMEND_ACCESS.includes(Number(currentUser?.accountType))) {
+      return navigate(`/`);
     }
     deleteRequest(`/api/trainees/${id}`, id, setTrainees);
   };
 
   return (
     <>
-      {trainees.length > 0 ? (
+      {isLoading ? (
+        <ProgressBar />
+      ) : trainees.length ? (
         <>
           <TraineesFilterControls
             filterOptions={filterOptions}
@@ -62,7 +63,7 @@ const TraineesIndexPage = (): JSX.Element => {
           />
         </>
       ) : (
-        <ProgressBar />
+        <>No Trainees to Show</>
       )}
     </>
   );

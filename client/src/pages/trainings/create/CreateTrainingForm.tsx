@@ -12,6 +12,8 @@ import { newTrainingSchema } from "../../../yupSchemas/trainingSchema";
 import { CurrentUser } from "../../../@types/currentUser";
 import { CurrentUserContext, TitleContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function CreateTrainingForm(): JSX.Element {
   const [trainingsProvided, setTrainingProvided] = useState<trainingProvided[]>(
@@ -21,8 +23,8 @@ export default function CreateTrainingForm(): JSX.Element {
   const [training, setTraining] = useState<NewTraining>({
     id: 0,
     capacity: 0,
-    start: new Date(),
-    end: new Date(),
+    start: dayjs(new Date()).add(5,"minute").toDate(),
+    end: dayjs(new Date()).add(10,"minute").toDate(),
     requirement: 0,
     requirements: {
       name: "",
@@ -50,17 +52,27 @@ export default function CreateTrainingForm(): JSX.Element {
     navigate(`/trainings`);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateInputChange = (value: Date | null, fieldName: string) => {
+    setTraining((training) => {
+      if (fieldName === "start") {
+        const newStart = value || new Date();
+        const newEnd = value || new Date();
+        return { ...training, start: newStart, end: newEnd };
+      } else if (fieldName === "end") {
+        const newEnd = value || new Date();
+        return { ...training, end: newEnd };
+      } else {
+        return training;
+      }
+    });
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+    ) => {
     const { name, value } = event.target;
     setTraining((training) => {
-      if (name === "start") {
-        const newStart = dayjs(value).toDate();
-        const newEnd = dayjs(value).toDate();
-        return { ...training, start: newStart, end: newEnd };
-      } else if (name === "end") {
-        const newEnd = dayjs(value).toDate();
-        return { ...training, end: newEnd };
-      } else if (name === "start_time") {
+      if (name === "start_time") {
         const [hours, minutes] = value.split(":");
         const newStart = dayjs(training.start)
           .set("hour", parseInt(hours))
@@ -92,16 +104,17 @@ export default function CreateTrainingForm(): JSX.Element {
       }
     });
   };
-
+  console.log(training.start)
   return trainingsProvided.length || requirements.length ? (
     <div className="max-w-lg mx-auto">
       <Formik
         initialValues={training}
+        validateOnMount
         onSubmit={handleFormSubmit}
         enableReinitialize
         validationSchema={newTrainingSchema(training)}
       >
-        {({ isSubmitting, isValidating, isValid }) => (
+        {({ isSubmitting, isValidating, isValid, setFieldTouched, setFieldValue }) => (
           <Form className="space-y-6">
             <div className="flex items-center">
               <label className="w-2/5 text-left">Requirement:</label>
@@ -132,18 +145,28 @@ export default function CreateTrainingForm(): JSX.Element {
                         </option>
                       ))}
                 </Field>
+                <div className="error-message text-error">
+                  <ErrorMessage name="name"/>
+                </div>
               </div>
             </div>
             <div className="flex items-center">
               <label className="w-2/5 text-left">Start Date:</label>
               <div className="flex-1">
                 <Field
+                  as={DatePicker}
                   type="date"
                   id="start"
+                  dateFormat="dd/MM/yyyy"
                   name="start"
-                  value={dayjs(training?.start).format("YYYY-MM-DD") || ""}
+                  selected={training?.start ? new Date(training.start) : null}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
-                  onChange={handleInputChange}
+                  onBlur={() => setFieldTouched("start", true)}
+                  onChange={(value: Date) => {
+                    handleDateInputChange(value, "start")
+                    setFieldValue("start", value);
+                    setFieldTouched("start", true);
+                  }}
                 />
                 <div className="error-message text-error">
                   <ErrorMessage name="start" />
@@ -167,12 +190,14 @@ export default function CreateTrainingForm(): JSX.Element {
               <label className="w-2/5 text-left">End Date:</label>
               <div className="flex-1">
                 <Field
+                  as={DatePicker}
                   type="date"
                   id="end"
+                  dateFormat="dd/MM/yyyy"
                   name="end"
-                  value={dayjs(training?.end).format("YYYY-MM-DD") || ""}
+                  selected={training?.end ? new Date(training.end) : null}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
-                  onChange={handleInputChange}
+                  onChange={(value: Date) => handleDateInputChange(value, "end")}
                 />
                 <div className="error-message text-error">
                   <ErrorMessage name="end" />

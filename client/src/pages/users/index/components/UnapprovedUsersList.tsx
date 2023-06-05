@@ -13,7 +13,7 @@ export default function UnapprovedUsersList({
   setUsers,
 }: UsersListProps): JSX.Element {
   return (
-    <div className="">
+    <div className="h-40 overflow-x-clip">
       <table className="table w-full">
         <UserTableRow />
         <tbody className="bg-white divide-y divide-gray-200">
@@ -35,7 +35,7 @@ export default function UnapprovedUsersList({
             }
             return (
               <tr key={user.id} className="hover:bg-gray-100">
-                <td className="px-2 py-4 whitespace-nowrap text-left overflow-clip text-sm font-medium text-slate-950">
+                <td className="px-2 py-4 whitespace-nowrap text-center overflow-clip text-sm font-medium text-slate-950">
                   {user.displayName}
                 </td>
                 <td
@@ -43,9 +43,11 @@ export default function UnapprovedUsersList({
                 >
                   {accountType}
                 </td>
-                <td className="px-1 py-2 text-center whitespace-nowrap flex items-center justify-evenly">
-                  <EditUserButton user={user} />
-                  <DeleteUserButton setUsers={setUsers} user={user} />
+                <td className="py-2 text-center whitespace-nowrap">
+                  <div className="btn-group flex items-center justify-center">
+                    <EditUserButton user={user} />
+                    <DeleteUserButton setUsers={setUsers} user={user} />
+                  </div>
                 </td>
               </tr>
             );

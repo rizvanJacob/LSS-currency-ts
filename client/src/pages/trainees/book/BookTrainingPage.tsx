@@ -7,9 +7,12 @@ import { Training } from "../../../@types/training";
 import TrainingCard from "./components/TrainingCard";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
+import { Trainee } from "../../../@types/trainee";
+import { Value } from "react-calendar/dist/cjs/shared/types";
 
 const BookTrainingPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [trainee, setTrainee] = useState<Trainee | null>(null);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const [displayTrainings, setDisplayTrainings] = useState<Training[]>([]);
@@ -20,22 +23,23 @@ const BookTrainingPage = () => {
 
   useEffect(() => {
     if (setTitle) setTitle("Book Training");
-    getRequest(
-      `/api/trainings/?requirement=${requirement}`,
-      setTrainings
-    ).then(() => {
-      setIsLoaded(true);
-    });
+    getRequest(`/api/trainings/?requirement=${requirement}`, setTrainings).then(
+      () => {
+        getRequest(`/api/trainees/${id}`, setTrainee).then(() => {
+          setIsLoaded(true);
+        });
+      }
+    );
   }, []);
 
   useEffect(() => {
     const display = trainings.filter((t) =>
-      dayjs(t.start).isSame(dayjs(displayDate), "day")
+      dayjs(t.start).isSame(dayjs(displayDate), "month")
     );
     setDisplayTrainings(display);
-    if (setTitle && trainings.length)
-      setTitle(`Book ${trainings[0].requirements.name}`);
-  }, [displayDate, trainings]);
+    if (setTitle && trainings.length && trainings[0].requirements)
+      setTitle(`${trainee?.callsign}: Book ${trainings[0].requirements.name}`);
+  }, [displayDate, trainings, trainee]);
 
   const updateTraining = (newTraining: Training) => {
     setTrainings(
@@ -54,15 +58,26 @@ const BookTrainingPage = () => {
     );
   };
 
+  const handleFocus = (value: Value) => {
+    const displayTraining = trainings.find((t) =>
+      dayjs(t.start).isSame(dayjs(value?.toString()), "date")
+    );
+
+    document.querySelector(`#training${displayTraining?.id}`)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       {isLoaded ? (
         trainings.length ? (
-          <div className="flex flex-col w-screen max-w-md mx-auto p-3">
+          <div className="flex flex-col mx-auto p-3">
             <TrainingCalendar
               trainings={trainings}
               displayDate={displayDate}
               setDisplayDate={setDisplayDate}
+              handleFocus={handleFocus}
             />
             {displayTrainings.map((t) => {
               return (

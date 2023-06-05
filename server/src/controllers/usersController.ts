@@ -69,11 +69,16 @@ const usersController = {
       if (req.headers.authorization) {
         verifiedUser = JSON.parse(req.headers.authorization);
       }
-      console.log("Verified user", verifiedUser);
       if (verifiedUser?.accountType === Account.TraineeAdmin) {
         const allUsers = await prisma.userModel.findMany({
           where: {
-            accountType: Account.Trainee,
+            OR: [
+              { accountType: Account.Trainee },
+              { accountType: Account.TraineeAdmin },
+            ],
+            trainee: {
+              category: verifiedUser.authCategory,
+            },
           },
           orderBy: {
             displayName: "asc",
@@ -103,6 +108,7 @@ const usersController = {
         res.status(200).json(allUsers);
       }
     } catch (err) {
+      console.log(err);
       res.status(500).json({ err });
     }
   },
@@ -182,8 +188,8 @@ const usersController = {
           trainee: trainee
             ? {
                 update: {
-                  callsign: trainee?.callsign,
-                  category: Number(trainee?.category),
+                  callsign: displayName,
+                  category: Number(authCategory || trainee?.category),
                 },
               }
             : undefined,

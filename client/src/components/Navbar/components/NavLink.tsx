@@ -8,7 +8,7 @@ type Prop = {
 const NavLink = ({ to, display }: Prop) => {
   return (
     <Link
-      className="btn btn-ghost normal-case text-md font-thin text-secondary sm:text-lg"
+      className="btn btn-primary normal-case text-md font-thin text-secondary sm:text-lg"
       to={to}
     >
       {display}

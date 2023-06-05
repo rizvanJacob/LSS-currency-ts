@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import SmallMenu from "./components/SmallMenu";
-import LargeMenu from "./components/LargeMenu";
+import NavLink from "./components/NavLink";
 import UserMenu from "./components/UserMenu";
 
 export type MenuItem = {
@@ -9,14 +7,19 @@ export type MenuItem = {
   path: string;
 };
 
-type Prop = {
+type props = {
   accountType: number;
   traineeId?: number;
-  title?: string;
+  title: string;
+  openDrawer: () => void;
 };
 
-const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
-  const navigate = useNavigate();
+const Navbar2 = ({
+  accountType,
+  traineeId = 0,
+  title,
+  openDrawer,
+}: props): JSX.Element => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
@@ -24,36 +27,58 @@ const Navbar = ({ accountType, traineeId, title }: Prop): JSX.Element => {
   }, [accountType, traineeId]);
 
   return (
-    <nav className="navbar bg-primary max-h-10">
-      <div className="navbar-start">
-        <SmallMenu className="lg:hidden" menuItems={menuItems} />
-        <LargeMenu className="hidden lg:block" menuItems={menuItems} />
+    <div className="w-full navbar bg-primary">
+      <div className="flex-none lg:hidden">
+        <label
+          htmlFor="my-drawer-3"
+          className="btn btn-square btn-ghost text-secondary"
+          onClick={openDrawer}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="inline-block w-6 h-6 stroke-current"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+        </label>
       </div>
-      <div className="navbar-center">
-        <h1 className="text-lg lg:text-2xl font-extrabold text-secondary">
-          {title}
-        </h1>
+      <div className="flex-1 px-2 mx-2 text-secondary font-bold text-xl">
+        {title}
       </div>
-      <div className="navbar-end">
-        <UserMenu />
+      <div className="flex-none hidden lg:block">
+        <ul className="menu menu-horizontal">
+          {menuItems.map((item, index) => (
+            <NavLink key={index} display={item.name} to={item.path} />
+          ))}
+          <UserMenu />
+        </ul>
       </div>
-    </nav>
+    </div>
   );
 };
 
-export default Navbar;
+export default Navbar2;
 
-const getMenuItems = (accountType: number, traineeId: number = 0) => {
+export const getMenuItems = (accountType: number, traineeId: number = 0) => {
   const lookup = [
     [],
     [
       { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },
-      { name: "Analytics", path: "/dashboard"}
+      { name: "Analytics", path: "/dashboard" },
     ] as MenuItem[],
     [
-      { name: "My Currencies", path: `/trainees/${traineeId}` },
+      traineeId !== 0
+        ? { name: "My Currencies", path: `/trainees/${traineeId}` }
+        : {},
       { name: "Users", path: "/users" },
       { name: "Trainees", path: "/trainees" },
       { name: "Trainings", path: "/trainings" },

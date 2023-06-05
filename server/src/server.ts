@@ -15,6 +15,8 @@ import analyticsRouter from "./routes/analyticsRouter";
 import VARouter from "./routes/VARouter";
 import cors from "cors";
 
+export const UPDATED = "2 Jun 2223H";
+
 const app = express();
 
 app.use(logger("dev"));

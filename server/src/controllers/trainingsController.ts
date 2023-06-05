@@ -8,7 +8,7 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
-import * as jwt from "jsonwebtoken";
+import { STATUSES_IN_TRAINING_CAPACITY } from "../constants";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -33,7 +33,7 @@ const trainingsController = {
             : {}),
         },
         orderBy: {
-          start: "desc",
+          start: requirement ? "asc" : "desc",
         },
         include: checkin
           ? {
@@ -54,7 +54,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    not: 4,
+                    in: STATUSES_IN_TRAINING_CAPACITY,
                   },
                 },
                 include: {
@@ -106,6 +106,9 @@ const trainingsController = {
             },
           },
           trainees: {
+            where: {
+              status: { in: STATUSES_IN_TRAINING_CAPACITY },
+            },
             select: {
               trainees: {
                 select: {
@@ -203,7 +206,7 @@ const trainingsController = {
   },
 
   completeTraining: async (req: Request, res: Response) => {
-    const { id: trainingId } = req.params;
+    const { trainingId } = req.params;
     const completedTrainees = req.body as number[];
 
     const updateCompletedStatuses = prisma.traineeToTraining.updateMany({
