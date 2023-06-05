@@ -235,7 +235,7 @@ export default function EditUserForm(): JSX.Element {
                         onChange={handleInputChange}
                         className="input-select select select-primary w-full max-w-xs"
                       >
-                        <option value={0}>Select an option</option>
+                        <option value={0}>Select Authorized Category</option>
                         {categoryTypes.map((type) => (
                           <option value={type.id} key={type.id}>
                             {type.name}

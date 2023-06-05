@@ -59,7 +59,7 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
             className="input-select select select-primary w-full max-w-xs"
             onChange={handleChange}
           >
-            <option value="">Select Authorized Category</option>
+            <option disabled value="0">Select Authorized Category</option>
             {categories?.map((c) => {
               return (
                 <option key={c.id} value={c.id}>

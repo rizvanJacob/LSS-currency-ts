@@ -172,7 +172,7 @@ export default function EditTrainingForm(): JSX.Element {
                     name="end"
                     dateFormat="dd/MM/yyyy"
                     value={dayjs(training?.end) || ""}
-                    selected={dayjs(training?.start).toDate()}
+                    selected={dayjs(training?.end).toDate()}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={(value: Date) => handleDateInputChange(value, "end")}
                   />
