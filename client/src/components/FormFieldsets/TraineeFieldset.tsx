@@ -86,14 +86,13 @@ const TraineeFieldset = ({
     }
   };
 
-  const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
+  const handleExpiryChange = (value: Date | null, id: number) => {
     console.log("expiry change");
 
     if (trainee.currencies.find((c) => c.requirement === Number(id))) {
       const updatedCurrencies = trainee.currencies.map((c) => {
         if (c.requirement === Number(id)) {
-          c.expiry = dayjs(value).toDate();
+          c.expiry = value || new Date();
         }
         return c;
       });
@@ -101,7 +100,7 @@ const TraineeFieldset = ({
     } else {
       const newCurrency = {
         requirement: Number(id),
-        expiry: dayjs(value).toDate(),
+        expiry: value || new Date()
       };
       const updatedCurrencies = [...trainee.currencies, newCurrency];
       setTrainee({ ...trainee, currencies: updatedCurrencies });

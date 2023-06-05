@@ -104,7 +104,7 @@ export default function CreateTrainingForm(): JSX.Element {
       }
     });
   };
-  console.log(training.start)
+  
   return trainingsProvided.length || requirements.length ? (
     <div className="max-w-lg mx-auto">
       <Formik
