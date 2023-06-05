@@ -33,7 +33,7 @@ const TrainingsFilterControls = ({
             ) {
               const requirement = {
                 id: training.requirement,
-                name: training.requirements.name,
+                name: training?.requirements?.name || "",
               };
               acc.push(requirement);
             }
