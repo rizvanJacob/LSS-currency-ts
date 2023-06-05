@@ -127,7 +127,7 @@ export default function CreateTrainingForm(): JSX.Element {
                   className="input-select select select-primary w-full max-w-xs"
                   onChange={handleInputChange}
                 >
-                  <option value={0}>Select an option</option>
+                  <option value={""}>Select a Requirement</option>
                   {currentUser?.accountType !== Account.Admin
                     ? trainingsProvided.map((type) =>
                         type.user === currentUser?.id ? (

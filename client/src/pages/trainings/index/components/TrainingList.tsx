@@ -34,6 +34,9 @@ export default function TrainingList({
                   {dayjs(training.start).format("HH:mm")}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
+                  {dayjs(training.end).format("D MMM YY")}
+                </td>
+                <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
                   {dayjs(training.end).format("HH:mm")}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">

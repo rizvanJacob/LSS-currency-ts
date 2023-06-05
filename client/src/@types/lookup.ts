@@ -18,7 +18,7 @@ export type trainingProvided = {
   requirement: number;
   requirements?: {
     name: string;
-    alsoCompletes: number;
+    alsoCompletes?: number;
   };
 };
 
