@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar/Navbar";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
+import VARoutes from "./pages/VA/VARoutes";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -110,7 +111,10 @@ function App() {
             </div>
           </>
         ) : (
-          <AuthRoutes setCurrentUser={setCurrentUser} />
+          <>
+            <AuthRoutes setCurrentUser={setCurrentUser} />
+            <VARoutes />
+          </>
         )}
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
