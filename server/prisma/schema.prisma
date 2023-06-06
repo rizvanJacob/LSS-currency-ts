@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,8 +17,8 @@ model UserModel {
   categories      Category?   @relation(fields: [authCategory], references: [id])
   authCategory    Int?
   trainee         Trainee?    
-  createdAt       DateTime    @default(now()) @db.DateTime2
-  updatedAt       DateTime    @default(now()) @db.DateTime2
+  createdAt       DateTime    @default(now()) @db.Timestamp
+  updatedAt       DateTime    @default(now()) @db.Timestamp
   trainings       TrainingProvided[]
   approved        Boolean     @default(false)
 }
@@ -29,8 +29,8 @@ model TrainingProvided {
   user          Int? 
   requirements  Requirement @relation(fields: [requirement], references: [id])
   requirement   Int
-  createdAt     DateTime    @default(now()) @db.DateTime2
-  updatedAt     DateTime    @default(now()) @db.DateTime2
+  createdAt     DateTime    @default(now()) @db.Timestamp
+  updatedAt     DateTime    @default(now()) @db.Timestamp
   @@unique([user, requirement])
 }
 
@@ -45,8 +45,8 @@ model Trainee {
   callsign      String?
   categories    Category  @relation(fields: [category], references: [id], onUpdate: NoAction)
   category      Int
-  createdAt     DateTime  @default(now()) @db.DateTime2
-  updatedAt     DateTime  @default(now()) @db.DateTime2
+  createdAt     DateTime  @default(now()) @db.Timestamp
+  updatedAt     DateTime  @default(now()) @db.Timestamp
   users         UserModel      @relation(fields: [user], references: [id])
   user          Int       @unique
   trainings     TraineeToTraining[]
@@ -85,8 +85,8 @@ model Currency {
   requirement   Int
   seniority     Boolean   @default(false)
   expiry        DateTime
-  createdAt     DateTime  @default(now()) @db.DateTime2
-  updatedAt     DateTime  @default(now()) @db.DateTime2
+  createdAt     DateTime  @default(now()) @db.Timestamp
+  updatedAt     DateTime  @default(now()) @db.Timestamp
   @@unique([trainee, requirement])
 }
 
@@ -109,8 +109,8 @@ model Training {
   complete      Boolean   @default(false)
   instruction   String?
   passphrase    String    @default("code")
-  createdAt     DateTime  @default(now()) @db.DateTime2
-  updatedAt     DateTime  @default(now()) @db.DateTime2
+  createdAt     DateTime  @default(now()) @db.Timestamp
+  updatedAt     DateTime  @default(now()) @db.Timestamp
   trainees      TraineeToTraining[]
 }
 
@@ -122,8 +122,8 @@ model TraineeToTraining {
   training      Int
   statuses      Status    @relation(fields: [status], references: [id])
   status        Int    
-  createdAt     DateTime  @default(now()) @db.DateTime2
-  updatedAt     DateTime  @default(now()) @db.DateTime2
+  createdAt     DateTime  @default(now()) @db.Timestamp
+  updatedAt     DateTime  @default(now()) @db.Timestamp
   @@unique([trainee, training])
 }
 
