@@ -8,6 +8,19 @@ const alvinIndex = async (req: Request, res: Response) => {
 
 const nimalanIndex = async (req: Request, res: Response) => {
   // Nimalan's solution here
+  
+  try {
+    const users = await prisma.userModel.findMany();
+    if (users.length === 0){
+      res.status(400).json({Error: "No entries found"});
+    } else if (users.length > 0) {
+      res.status(200).json(users);
+    }
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({Error: "Server error."});
+  }
 };
 
 //Problem 2: write a function that will create a new entry in the "Status" table. The request "req" will have a body of {"name": "xxx"}. Respond to the HTTP request with a 200 status code if successful. If unsuccessful, respond with a status code of 500.
@@ -18,5 +31,6 @@ const alvinCreate = async (req: Request, res: Response) => {
 const nimalanCreate = async (req: Request, res: Response) => {
   // Nimalan's solution here
 };
+  
 
 export default { alvinIndex, nimalanIndex, alvinCreate, nimalanCreate };
