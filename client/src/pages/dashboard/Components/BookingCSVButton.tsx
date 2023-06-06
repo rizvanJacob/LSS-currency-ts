@@ -31,7 +31,7 @@ const BookingCSVButton = () => {
     }
   };
   return (
-    <button className="btn btn-primary my-2" onClick={handleClick}>
+    <button className="btn btn-primary btn-block my-2" onClick={handleClick}>
       Download all bookings as .csv
     </button>
   );

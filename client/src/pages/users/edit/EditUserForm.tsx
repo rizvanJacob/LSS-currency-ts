@@ -283,7 +283,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block "
+                      className="btn btn-primary btn-block "
                     >
                       Update User and Approve
                     </button>
@@ -291,7 +291,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block"
+                      className="btn btn-primary btn-block"
                     >
                       Update User
                     </button>
