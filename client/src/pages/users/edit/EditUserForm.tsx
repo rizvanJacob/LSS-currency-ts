@@ -75,10 +75,12 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (!user.trainee?.id) {
-      setIsLoading(isLoadingAdmin);
+    if (user.accountType === Account.Admin && !isLoadingAdmin) {
+      setIsLoading(false);
     }
-  }, [isLoadingAdmin]);
+  }, [user.accountType, user.displayName, isLoadingAdmin]);
+
+  console.log("isLoadingAdmin", isLoadingAdmin);
 
   const handleFormSubmit = async () => {
     console.log("submit form");

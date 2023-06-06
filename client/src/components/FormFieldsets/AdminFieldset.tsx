@@ -8,7 +8,6 @@ type Props = {
   handleChange: any;
   setIsLoadingAdmin?: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
 const AdminFieldSet = ({ user, handleChange, setIsLoadingAdmin }: Props) => {
   useEffect(() => {
     if (user.displayName && setIsLoadingAdmin) {
