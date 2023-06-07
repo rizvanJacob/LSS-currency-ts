@@ -24,6 +24,7 @@ export type User = NewUser & {
   categories?: {
     name: string;
   };
+  accountType?: number;
   accountTypes?: {
     name: string;
   };

@@ -75,10 +75,12 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (!user.trainee?.id) {
-      setIsLoading(isLoadingAdmin);
+    if (user.accountType === Account.Admin && !isLoadingAdmin) {
+      setIsLoading(false);
     }
-  }, [isLoadingAdmin]);
+  }, [user.accountType, user.displayName, isLoadingAdmin]);
+
+  console.log("isLoadingAdmin", isLoadingAdmin);
 
   const handleFormSubmit = async () => {
     console.log("submit form");
@@ -283,7 +285,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block "
+                      className="btn btn-primary btn-block "
                     >
                       Update User and Approve
                     </button>
@@ -291,7 +293,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block"
+                      className="btn btn-primary btn-block"
                     >
                       Update User
                     </button>

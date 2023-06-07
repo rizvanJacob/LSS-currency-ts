@@ -72,7 +72,7 @@ const EditTraineePage = () => {
                 />
                 <button
                   disabled={isSubmitting || isValidating || !isValid}
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-block"
                   type="submit"
                 >
                   Update Trainee
