@@ -86,7 +86,7 @@ model Currency {
   seniority     Boolean   @default(false)
   expiry        DateTime
   createdAt     DateTime  @default(now()) @db.Timestamp
-  updatedAt     DateTime  @default(now()) @db.Timestamp
+  updatedAt     DateTime  @default(now()) @db.Timestamp>>>>>>> main
   @@unique([trainee, requirement])
 }
 

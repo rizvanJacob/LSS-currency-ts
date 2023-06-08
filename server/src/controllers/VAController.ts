@@ -6,29 +6,37 @@ import { prisma } from "../config/database";
 
 export const alvinIndex = async (req: Request, res: Response) => {
   try {
-    // throw new Error('internal server error'); test for status code of 500
     // Retrieve all entries from the "UserModel" table
     const users = await prisma.userModel.findMany();
-
-    // if (users.length >= 1) test for status code of 500
-    if (users.length === 0) {
+    const accType = await prisma.accountType.findMany();
+  
+    if (!users.length) {      
       //************
       //RIZ: the conditional in line 11 can be simplified to if(!users.length). The value 0 evaluates to false when used in a conditional. In this specific case, you could even use if !users, since the promise will be rejected (but it's ok if you don't really get this yet)
       //************
+
       // If no entries exist, respond with a status code of 400
       return res.status(400).send("No entries found.");
     }
-
-    // Respond with a 200 status code and the data if successful
-    res.status(200).json(users);
+  
+    // Merge users and accType into a single array of objects
+    const mergedData = users.map((user, index) => ({
+      user: {
+        ...user,
+        accountType: accType.find((type) => type.id === user.accountType)?.name || null,
+      },
+    }));
+  
+    // Respond with a 200 status code and the merged data if successful
+    res.status(200).json(mergedData);
   } catch (error) {
     // If the function fails, respond with a status code of 500
-    res.status(500).send("Internal server error.");
-
+    
     //************
     //RIZ: Nimalan's practice of being consistent with the response, in this case always sending back JSON, is good.
     //************
-  }
+    res.status(500).send("Internal server error.");
+  }  
 };
 
 const nimalanIndex = async (req: Request, res: Response) => {
@@ -58,6 +66,7 @@ export const alvinCreate = async (req: Request, res: Response) => {
     //you should probably validate the name here, e.g.:
     // if (!name) return res.status(400).json({Error: 'Name is required'})
 
+
     // Create a new entry in the "Status" table
     await prisma.status.create({
       data: {
@@ -71,10 +80,6 @@ export const alvinCreate = async (req: Request, res: Response) => {
     // If unsuccessful, respond with a status code of 500
     res.status(500).send("Internal server error.");
   }
-};
-
-const nimalanCreate = async (req: Request, res: Response) => {
-  // Nimalan's solution here
 };
 
 export default { alvinIndex, alvinCreate, nimalanIndex, nimalanCreate };
