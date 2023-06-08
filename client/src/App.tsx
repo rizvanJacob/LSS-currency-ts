@@ -81,7 +81,7 @@ function App() {
                 title={title}
                 openDrawer={() => setDrawerOpen(true)}
               />
-              <div className="max-w-screen-md w-full mx-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
+              <div className="max-w-screen-md pb-24 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
