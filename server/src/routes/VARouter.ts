@@ -12,3 +12,5 @@ router.get('/alvin', VAController.alvinIndex);
 
 //Alvin: The URL to access the route should be "/api/VA/alvin" (post)
 router.post('/alvin', VAController.alvinCreate);
+
+export default router;
