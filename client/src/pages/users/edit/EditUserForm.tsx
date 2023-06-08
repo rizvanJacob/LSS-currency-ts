@@ -73,8 +73,13 @@ export default function EditUserForm(): JSX.Element {
     if (setTitle) setTitle("Update User");
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
-    setIsLoadingGeneral(false);
   }, []);
+
+  useEffect(() => {
+    if (categoryTypes.length > 0 && accountTypes.length > 0) {
+      setIsLoadingGeneral(false);
+    }
+  }, [categoryTypes, accountTypes]);
 
   useEffect(() => {
     if (user.accountType === Account.Admin && !isLoadingAdmin) {
@@ -156,6 +161,7 @@ export default function EditUserForm(): JSX.Element {
   };
 
   console.log("isLoading", isLoading);
+  console.log("isLoadingGeneral", isLoadingGeneral);
   return (
     <fieldset>
       {isLoading && <LoadingPage />}
@@ -251,7 +257,23 @@ export default function EditUserForm(): JSX.Element {
                   </div>
                 )}
                 {(user.accountType === Account.Trainee ||
-                  user.accountType === Account.TraineeAdmin) ? (
+                  user.accountType === Account.TraineeAdmin) &&
+                trainee.id &&
+                user?.trainee?.id ? (
+                  <>
+                    <TraineeFieldSet
+                      user={user}
+                      trainee={trainee}
+                      setTrainee={setTrainee}
+                      setIsLoadingTrainee={setIsLoading}
+                      isLoadingAdmin={isLoadingAdmin}
+                      forceCallsign={user.displayName}
+                      forceCategory={user.authCategory}
+                    />
+                  </>
+                ) : user.accountType === Account.Trainee ? (
+                  <ProgressBar />
+                ) : user.accountType === Account.TraineeAdmin && !trainee.id ? (
                   <>
                     <TraineeFieldSet
                       user={user}
@@ -260,12 +282,8 @@ export default function EditUserForm(): JSX.Element {
                       setIsLoadingTrainee={setIsLoading}
                       isLoadingAdmin={isLoadingAdmin}
                       isLoadingGeneral={isLoadingGeneral}
-                      forceCallsign={user.displayName}
-                      forceCategory={user.authCategory}
                     />
                   </>
-                ) : user.accountType === Account.Trainee ? (
-                  <ProgressBar />
                 ) : null}
                 {user.accountType === Account.Trainer && (
                   <>

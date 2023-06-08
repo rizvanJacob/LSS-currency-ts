@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import getRequest from "../../utilities/getRequest";
 import ProgressBar from "../ProgressBar";
 import { CancelTokenSource } from "axios";
-import { set } from "date-fns";
+import { Account } from "../../../../server/src/constants"
 
 type Props = {
   user?: User;
@@ -77,17 +77,19 @@ const TraineeFieldset = ({
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
 
+  console.log("check for user", user)
   //specifically for trainee admin with no trainees
   useEffect(() => {
     if ( 
-        user?.accountType && 
+        user?.accountType &&
+        user?.authCategory &&
         !user?.trainee?.id && 
         !isLoadingAdmin && 
         !isLoadingGeneral
     ) {
         setIsLoadingTrainee(false);
       }
-  }, [trainee.id, isLoadingAdmin, isLoadingGeneral]);
+  }, [user, isLoadingAdmin, isLoadingGeneral]);
 
   console.log("loadedCount", loadedCount, "requirements.length", requirements.length);
   console.log("isLoadingParticulars", isLoadingParticulars);
