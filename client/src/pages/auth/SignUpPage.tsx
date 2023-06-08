@@ -117,10 +117,15 @@ const SignUpPage = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (includeTrainee) {
+    if (includeTrainee && user.accountType === Account.Admin) {
       setTrainee({
         callsign: user.displayName as string,
         category: trainee.category as number,
+      });
+    } else if (includeTrainee && user.accountType === Account.TraineeAdmin) {
+      setTrainee({
+        callsign: user.displayName as string,
+        category: Number(user.authCategory) as number,
       });
     } else {
       setTrainee({ callsign: "", category: 0});

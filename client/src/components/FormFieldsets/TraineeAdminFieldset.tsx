@@ -1,3 +1,4 @@
+import { Account } from "../../../../server/src/constants"
 import { Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import getRequest from "../../utilities/getRequest";
@@ -22,16 +23,6 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
     getRequest("/api/lookup/categories", setCategories);
   }, []);
 
-  useEffect(() => {
-    if (includeTrainee) {
-      setTrainee({
-        callsign: user.displayName,
-        category: user.authCategory as number,
-      });
-    } else {
-      setTrainee({ callsign: "", category: 0 });
-    }
-  }, [includeTrainee, user]);
 
   return (
     <div className="flex items-center justify-center">
