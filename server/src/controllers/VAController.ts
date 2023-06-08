@@ -49,7 +49,7 @@ export const alvinIndex = async (req: Request, res: Response) => {
 
 const nimalanIndex = async (req: Request, res: Response) => {
   // Nimalan's solution here
-<<<<<<< HEAD
+  
   const user = await prisma.userModel.findMany({
     include: {
       accountTypes: {
@@ -59,8 +59,7 @@ const nimalanIndex = async (req: Request, res: Response) => {
       },
     },
   });
-=======
->>>>>>> e97788abd204b8f9b55dcc63d254d0a4b118d26f
+
 
   try {
     //RIZ: see my comment to Alvin's code on line 13. In addition, you could return res... on line 38 to prevent the rest of the code from running, and avoid the need for the else statement on line 39.
