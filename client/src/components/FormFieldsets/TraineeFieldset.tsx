@@ -16,6 +16,7 @@ type Props = {
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
   setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin?: boolean;
+  isLoadingGeneral?: boolean;
   forceCallsign?: string;
   forceCategory?: number | null;
 };
@@ -26,6 +27,7 @@ const TraineeFieldset = ({
   setTrainee,
   setIsLoadingTrainee = () => {},
   isLoadingAdmin,
+  isLoadingGeneral,
   forceCallsign = "",
   forceCategory = 0,
 }: Props) => {
@@ -74,6 +76,19 @@ const TraineeFieldset = ({
       setIsLoadingTrainee(false);
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
+
+  //specifically for trainee admin with no trainees
+  useEffect(() => {
+    if ( 
+        user?.accountType && 
+        !user?.trainee?.id && 
+        !isLoadingAdmin && 
+        !isLoadingGeneral
+    ) {
+        setIsLoadingTrainee(false);
+      }
+  }, [trainee.id, isLoadingAdmin, isLoadingGeneral]);
+
   console.log("loadedCount", loadedCount, "requirements.length", requirements.length);
   console.log("isLoadingParticulars", isLoadingParticulars);
   console.log("isLoadingAdmin", isLoadingAdmin);
@@ -133,7 +148,7 @@ const TraineeFieldset = ({
     }
   };
 
-  return (
+  return trainee.id ? (
     <div className="flex flex-col items-center gap-2">
       <TraineeParticularsFieldset
         trainee={trainee}
@@ -169,6 +184,8 @@ const TraineeFieldset = ({
         <p>There are no requirements in this category</p>
       )}
     </div>
+  ) : (
+    null
   );
 };
 

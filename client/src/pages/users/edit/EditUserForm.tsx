@@ -56,6 +56,7 @@ export default function EditUserForm(): JSX.Element {
   > | null>(TitleContext);
 
   const [isLoadingAdmin, setIsLoadingAdmin] = useState<boolean>(true);
+  const [isLoadingGeneral, setIsLoadingGeneral] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -72,6 +73,7 @@ export default function EditUserForm(): JSX.Element {
     if (setTitle) setTitle("Update User");
     getRequest(`/api/lookup/accountTypes`, setAccountTypes);
     getRequest(`/api/lookup/categories`, setCategoryTypes);
+    setIsLoadingGeneral(false);
   }, []);
 
   useEffect(() => {
@@ -79,8 +81,6 @@ export default function EditUserForm(): JSX.Element {
       setIsLoading(false);
     }
   }, [user.accountType, user.displayName, isLoadingAdmin]);
-
-  console.log("isLoadingAdmin", isLoadingAdmin);
 
   const handleFormSubmit = async () => {
     console.log("submit form");
@@ -251,9 +251,7 @@ export default function EditUserForm(): JSX.Element {
                   </div>
                 )}
                 {(user.accountType === Account.Trainee ||
-                  user.accountType === Account.TraineeAdmin) &&
-                trainee.id &&
-                user?.trainee?.id ? (
+                  user.accountType === Account.TraineeAdmin) ? (
                   <>
                     <TraineeFieldSet
                       user={user}
@@ -261,6 +259,7 @@ export default function EditUserForm(): JSX.Element {
                       setTrainee={setTrainee}
                       setIsLoadingTrainee={setIsLoading}
                       isLoadingAdmin={isLoadingAdmin}
+                      isLoadingGeneral={isLoadingGeneral}
                       forceCallsign={user.displayName}
                       forceCategory={user.authCategory}
                     />
