@@ -16,6 +16,9 @@ router.get('/alvin', alvinIndex);
 //Nimalan: The URL to access the route should be "/api/VA/nimalan" (get)
 router.get('/nimalan', VAController.nimalanIndex);
 
+
+router.get('/riz', VAController.rizIndex);
+
 //Alvin: The URL to access the route should be "/api/VA/alvin" (post)
 router.post('/alvin', alvinCreate);
 

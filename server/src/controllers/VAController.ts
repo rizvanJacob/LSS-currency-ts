@@ -49,7 +49,7 @@ export const alvinIndex = async (req: Request, res: Response) => {
 
 const nimalanIndex = async (req: Request, res: Response) => {
   // Nimalan's solution here
-  
+
   const user = await prisma.userModel.findMany({
     include: {
       accountTypes: {
@@ -60,75 +60,46 @@ const nimalanIndex = async (req: Request, res: Response) => {
     },
   });
 
-
   try {
     //RIZ: see my comment to Alvin's code on line 13. In addition, you could return res... on line 38 to prevent the rest of the code from running, and avoid the need for the else statement on line 39.
     if (!user.length) {
       res.status(400).json({ Error: "No entries found" });
     }
-      res.status(200).json(user);
-} catch (err) {
-  console.log(err);
-  res.status(500).json({ Error: "Server error." });
-}
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Error: "Server error." });
+  }
 };
 
+const rizIndex = async (req: Request, res: Response) => {
+  try {
+    //one thing we can do to make this more readable is to store the query (the {} within the findMany) in another module and import it.
+    const users = await prisma.userModel.findMany({
+      include: {
+        accountTypes: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
 
-  // const users = await prisma.userModel.findMany();
-  // const account = await prisma.accountType.findMany();
-  // function acctId(array: any) {
-  //   return array.accountType; 
-  // }
-  // const newUsers = users.map(acctId);
+    if (!users.length) {
+      return res.status(400).json({ Error: "No entries found" });
+    }
 
-  // let acct = "";
-  // function type(newarray: any) {
-  //   if (newarray === 1){
-  //     return acct = "admin";
-  //   } else if (newarray === 2 ){
-  //     return acct = "Trainee Admin";
-  //   }
-  //   else if (newarray === 3 ){
-  //     return acct = "Trainee";
-  //   }
-  //   else {
-  //     return acct = "Trainer";
-  //   }
-  // }
-  // const newtype = newUsers.map(type);
+    const mappedUsers = users.map((user) => {
+      const { accountTypes, accountType, ...userLessAccountTypes } = user;
+      return { ...userLessAccountTypes, accountType: accountTypes.name };
+    });
 
-  
-
-  // const updateUser = await prisma.userModel.updateMany({
-  //   where: {
-  //     accountType: 1
-  //   },
-  //   create: {
-  //     accountTyper: accountTypes.name,
-  //   },
-  // })
-//   let acct = "";
-//   const result = account.filter(
-//   (element, index) => {
-//     if (element.id = 1){
-//       acct = "admin";
-//     } else if (element.id = 2 ){
-//       acct = "trainee admin";
-//      }
-//      else if (element.id = 3 ){
-//       acct = "trainee";
-//      }
-//      else {
-//       acct = "trainer";
-//      }
-//     }
-// );
-
-  // const mergedData = users.map((user, index) => ({
-  //   user: user,
-  //   accountTypeName: newtype[index]
-  // }));
-  
+    res.status(200).json(mappedUsers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Error: "Server error." });
+  }
+};
 
 //Problem 2: write a function that will create a new entry in the "Status" table. The request "req" will have a body of {"name": "xxx"}. Respond to the HTTP request with a 200 status code if successful. If unsuccessful, respond with a status code of 500.
 
@@ -157,31 +128,44 @@ export const alvinCreate = async (req: Request, res: Response) => {
 
 const nimalanCreate = async (req: Request, res: Response) => {
   // Nimalan's solution here
+
+  //RIZ: you read the status table from the database here, but it's never used in your code. Meaning its wasted resources and can be removed.
   const userStatus = await prisma.status.findMany();
 
   try {
     console.log("req.body", req.body);
+
+    //RIZ: why are you getting the openId and accountType here when it is not used in the rest of the function?
     const { name, openId, accountType } = req.body;
     console.log(req.body);
+
+    //RIZ: good job validating that there is a name here. I hope you didn't just copy it off my comments to Alvin...
     if (!name) {
-      return res.status(400).json({Error: 'Name is required'})
+      return res.status(400).json({ Error: "Name is required" });
     } else {
+      //RIZ: good job using the create method. Why did you store the created user as "user"? It's not used anywhere else in the function.
       const user = await prisma.status.create({
         data: {
           // openId: openId as string,
           // accountType: accountType as number,
           // displayName: name as string
-          name: name
+          name: name, // note that you didn't have to say "as string" because HTTP body is always a string
         },
-      })
-      //const users = await prisma.userModel.findMany();
-      res.status(200).json('New entry created');
-  }
-} 
-  catch (err) {
-    res.status(500).json('Failed to create a new entry.');
-  }
+      });
+      //const users = await prisma.userModel.findMany()
 
+      //RIZ: typically, we may return the created object back to the client, so they can see info such as the created time, or the id (since you opted to store the created user in line 148).
+      res.status(200).json("New entry created");
+    }
+  } catch (err) {
+    res.status(500).json("Failed to create a new entry.");
+  }
 };
 
-export default { alvinIndex, alvinCreate, nimalanIndex, nimalanCreate };
+export default {
+  alvinIndex,
+  alvinCreate,
+  nimalanIndex,
+  nimalanCreate,
+  rizIndex,
+};
