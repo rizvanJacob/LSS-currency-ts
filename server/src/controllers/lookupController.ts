@@ -15,7 +15,11 @@ const categories = async (req: Request, res: Response) => {
   }
 };
 
-const statuses = async (req: Request, res: Response) => {};
+const statuses = async (req: Request, res: Response) => {
+  const statuses = await prisma.status.findMany({});
+
+  res.status(200).json(statuses);
+};
 
 const requirements = async (req: Request, res: Response) => {
   const { category, forTraining } = req.query;
