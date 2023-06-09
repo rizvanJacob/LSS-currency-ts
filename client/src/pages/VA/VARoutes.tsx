@@ -5,6 +5,7 @@ import Alvin from "./Alvin";
 export default function VARoutes() {
   return (
     <>
+      <VALinks />
       <Routes>
         {/* Problem 3: create a route that takes a path "/VA/:name" and renders your respective components.
          Your component should send a HTTP request to "/api/VA/:name" and display the response. 
@@ -13,7 +14,6 @@ export default function VARoutes() {
         <Route path="/VA/Alvin" element={<Alvin />} />
       </Routes>
       {/* try not to look at this "VALinks file" */}
-      <VALinks />
     </>
   );
 }
