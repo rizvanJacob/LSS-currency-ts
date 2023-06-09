@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 
 // Define the structure or shape of the user object
+
+//RIZ: good definition of the type, but you never use it in your code? The errors in lines 54 onwards still exist. 
 interface user {
   id: string;
   openId: string;
@@ -24,6 +26,8 @@ const Alvin = () => {
         //correct use of the fetch API and async/await.
         const response = await fetch("/api/VA/alvin");
         const responseData = await response.json();
+
+        //RIZ: what happens if you get an error from the server? Can you handle that case? 
         setData(responseData);
       } catch (error) {
         console.error(error);
@@ -37,6 +41,7 @@ const Alvin = () => {
   return (
     // with reference from https://www.valentinog.com/blog/html-table/
     <table>
+      {/* RIZ: additional task. can you make the <thead></thead> element into a new component called <TableHead />? */}
       <thead>
         <tr>
           <th>ID</th>
@@ -49,6 +54,7 @@ const Alvin = () => {
       <tbody>
         {/* good use of map to render the data. the reason you're getting the compilation errors is that data doesn't have its type declared. Try to get that done and you'll be good.  */}
         {data.map((user) => (
+          // RIZ: additional task. Can you make the <tr></tr> element into a new component called <TableRow />? TableRow will also need to accept a userProp, passed to it by Alvin.tsx.
           <tr key={user.id}>
             <td>{user.id}</td>
             <td>{user.openId}</td>
