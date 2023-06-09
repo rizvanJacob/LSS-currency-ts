@@ -1,6 +1,17 @@
 //RIZ: no need to import React since you're not using it.
 import React, { useEffect, useState } from "react";
 
+// Define the structure or shape of the user object
+interface user {
+  id: string;
+  openId: string;
+  displayName: string;
+  accountType: string;
+  accountTypes: {
+  name: string;
+  };
+}
+
 // with reference from: https://www.codingthesmartway.com/how-to-fetch-api-data-with-react/
 const Alvin = () => {
   //correct use of useState. However, since this is typescript, you want to be explicit about what type of array data will contain. You will need to declare a new type called user.
