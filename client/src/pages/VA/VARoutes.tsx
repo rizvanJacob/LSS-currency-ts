@@ -11,6 +11,8 @@ export default function VARoutes() {
          Your components should be named ":name.tsx" in the same folder as this file. */}
         {/* Alvin's solution should take the path "/VA/alvin" */}
         <Route path="/VA/Alvin" element={<Alvin />} />
+        <Route path="/VA/Nimalan" element={<Nimalan />} />
+
       </Routes>
       {/* try not to look at this "VALinks file" */}
       <VALinks />

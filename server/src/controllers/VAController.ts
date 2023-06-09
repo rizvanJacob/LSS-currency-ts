@@ -6,7 +6,7 @@ import { UserInfo } from "os";
 //Problem 1: write a function that will read all the entries in the "UserModel" table, including the name of the account type of the user. Respond to the HTTP request with a 200 status code and the data if successful. If no entries exist, respond with a status code of 400. If the function fails, respond with a status code of 500.
 //RIZ: neither of you fulfilled the requirement to include the NAME of the account type of the user. Currently it shouws account type as 1, 2, 3, or 4. I want to see "Admin", "Trainee", etc.
 
-export const alvinIndex: async (req: Request, res: Response) => {
+ const alvinIndex = async (req: Request, res: Response) => {
     try {
       // Retrieve all entries from the "UserModel" table
       const users = await prisma.userModel.findMany({
@@ -26,7 +26,7 @@ export const alvinIndex: async (req: Request, res: Response) => {
       // If the function fails, respond with a status code of 500
       res.status(500).send("Internal server error.");
     }  
-  },
+  };
 
 const nimalanIndex = async (req: Request, res: Response) => {
   // Nimalan's solution here
@@ -84,7 +84,7 @@ const rizIndex = async (req: Request, res: Response) => {
 
 //Problem 2: write a function that will create a new entry in the "Status" table. The request "req" will have a body of {"name": "xxx"}. Respond to the HTTP request with a 200 status code if successful. If unsuccessful, respond with a status code of 500.
 
-export const alvinCreate: async (req: Request, res: Response) => {
+ const alvinCreate = async (req: Request, res: Response) => {
     try {
       // Extract the name from the request body
       const { name } = req.body;
@@ -107,8 +107,7 @@ export const alvinCreate: async (req: Request, res: Response) => {
       // If unsuccessful, respond with a status code of 500
       res.status(500).send("Internal server error.");
     }
-  },
-};
+  };
 
 const nimalanCreate = async (req: Request, res: Response) => {
   // Nimalan's solution here
