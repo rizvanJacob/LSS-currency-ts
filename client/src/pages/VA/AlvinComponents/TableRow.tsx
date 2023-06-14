@@ -1,5 +1,8 @@
-import { user } from "./Alvin";
+//Good job importing the interface from the other component. 
+//Typically we would put all the types into separate files in a types folder. 
+import { user } from "../Alvin";
 
+//good job typing your props.
 interface TableRowProps {
   user: user;
 }
