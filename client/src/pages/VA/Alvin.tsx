@@ -1,23 +1,28 @@
 //RIZ: no need to import React since you're not using it.
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import TableHead from "./AlvinComponents/TableHead";
+import TableRow from "./AlvinComponents/TableRow";
 
 // Define the structure or shape of the user object
 
-//RIZ: good definition of the type, but you never use it in your code? The errors in lines 54 onwards still exist. 
-interface user {
+//RIZ: good definition of the type, but you never use it in your code? The errors in lines 54 onwards still exist.
+
+//typically we use UpperCamelCase for types. So it should be "User".
+export interface user {
   id: string;
   openId: string;
   displayName: string;
   accountType: string;
   accountTypes: {
-  name: string;
+    name: string;
   };
 }
 
 // with reference from: https://www.codingthesmartway.com/how-to-fetch-api-data-with-react/
 const Alvin = () => {
   //correct use of useState. However, since this is typescript, you want to be explicit about what type of array data will contain. You will need to declare a new type called user.
-  const [data, setData] = useState([]);
+  //Good job typing your data.
+  const [data, setData] = useState<user[]>([]);
 
   //correct use of useEffect. This callback function will run once when the component is mounted, since the dependency array is empty.
   useEffect(() => {
@@ -27,7 +32,7 @@ const Alvin = () => {
         const response = await fetch("/api/VA/alvin");
         const responseData = await response.json();
 
-        //RIZ: what happens if you get an error from the server? Can you handle that case? 
+        //RIZ: what happens if you get an error from the server? Can you handle that case?
         setData(responseData);
       } catch (error) {
         console.error(error);
@@ -42,26 +47,12 @@ const Alvin = () => {
     // with reference from https://www.valentinog.com/blog/html-table/
     <table>
       {/* RIZ: additional task. can you make the <thead></thead> element into a new component called <TableHead />? */}
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Open ID</th>
-          <th>Display Name</th>
-          <th>Account Type</th>
-          <th>Account Type Name</th>
-        </tr>
-      </thead>
+      <TableHead />
       <tbody>
         {/* good use of map to render the data. the reason you're getting the compilation errors is that data doesn't have its type declared. Try to get that done and you'll be good.  */}
         {data.map((user) => (
           // RIZ: additional task. Can you make the <tr></tr> element into a new component called <TableRow />? TableRow will also need to accept a userProp, passed to it by Alvin.tsx.
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.openId}</td>
-            <td>{user.displayName}</td>
-            <td>{user.accountType}</td>
-            <td>{user.accountTypes.name}</td>
-          </tr>
+          <TableRow key={user.id} user={user} />
         ))}
       </tbody>
     </table>
