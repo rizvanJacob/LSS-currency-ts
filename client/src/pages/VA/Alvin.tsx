@@ -1,5 +1,6 @@
 //RIZ: no need to import React since you're not using it.
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import TableHead from "./TableHead";
 
 // Define the structure or shape of the user object
 
@@ -17,7 +18,7 @@ interface user {
 // with reference from: https://www.codingthesmartway.com/how-to-fetch-api-data-with-react/
 const Alvin = () => {
   //correct use of useState. However, since this is typescript, you want to be explicit about what type of array data will contain. You will need to declare a new type called user.
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<user[]>([]);
 
   //correct use of useEffect. This callback function will run once when the component is mounted, since the dependency array is empty.
   useEffect(() => {
@@ -42,15 +43,7 @@ const Alvin = () => {
     // with reference from https://www.valentinog.com/blog/html-table/
     <table>
       {/* RIZ: additional task. can you make the <thead></thead> element into a new component called <TableHead />? */}
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Open ID</th>
-          <th>Display Name</th>
-          <th>Account Type</th>
-          <th>Account Type Name</th>
-        </tr>
-      </thead>
+      <TableHead />
       <tbody>
         {/* good use of map to render the data. the reason you're getting the compilation errors is that data doesn't have its type declared. Try to get that done and you'll be good.  */}
         {data.map((user) => (
