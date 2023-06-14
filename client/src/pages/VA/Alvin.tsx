@@ -1,10 +1,12 @@
 //RIZ: no need to import React since you're not using it.
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import TableHead from "./TableHead";
+import TableRow from "./TableRow";
 
 // Define the structure or shape of the user object
 
 //RIZ: good definition of the type, but you never use it in your code? The errors in lines 54 onwards still exist. 
-interface user {
+export interface user {
   id: string;
   openId: string;
   displayName: string;
@@ -47,13 +49,7 @@ const Alvin = () => {
         {/* good use of map to render the data. the reason you're getting the compilation errors is that data doesn't have its type declared. Try to get that done and you'll be good.  */}
         {data.map((user) => (
           // RIZ: additional task. Can you make the <tr></tr> element into a new component called <TableRow />? TableRow will also need to accept a userProp, passed to it by Alvin.tsx.
-          <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.openId}</td>
-            <td>{user.displayName}</td>
-            <td>{user.accountType}</td>
-            <td>{user.accountTypes.name}</td>
-          </tr>
+          <TableRow key={user.id} user={user}/>
         ))}
       </tbody>
     </table>
