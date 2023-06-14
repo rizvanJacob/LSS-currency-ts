@@ -11,6 +11,7 @@ const router = express.Router();
 //Alvin: The URL to access the route should be "/api/VA/alvin" (get)
 router.get('/alvin', VAController.alvinIndex);
 
+router.get('/nimalan', VAController.nimalanIndex);
 
 router.get('/riz', VAController.rizIndex);
 
