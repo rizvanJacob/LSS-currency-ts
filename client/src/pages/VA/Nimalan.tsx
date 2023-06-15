@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import  TableRow  from './TableComponents';
-import  TableHead  from './TableHead';
+//RIZ: by convention we will name the file the same name as the component. 
+//in this case everything would be named TableRow.
+import  TableRow  from './NimalanComponents/TableComponents';
+import  TableHead  from './NimalanComponents/TableHead';
 
 
 const userPage = () => {

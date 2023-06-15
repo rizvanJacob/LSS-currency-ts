@@ -1,3 +1,4 @@
+//good use of interface here. You could have exported this and reused it in Nimalan.tsx.
 interface User {
     id: number;
     openId: string;
@@ -12,6 +13,9 @@ interface User {
   }
   const TableRow: React.FC<TableRowProps> = ({ user }) =>{
     return (
+        //RIZ: you are creating a <tbody> for each user in your dataset. 
+        //instead, <tbody> should be in the parent component, 
+        //and only the <tr> onwards should be in the child (this) component.
         <tbody>
             <tr>
             <td>{user.id}</td>
