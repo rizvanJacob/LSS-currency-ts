@@ -1,5 +1,5 @@
 //good use of interface here. You could have exported this and reused it in Nimalan.tsx.
-interface User {
+export interface User {
     id: number;
     openId: string;
     displayName: string;
