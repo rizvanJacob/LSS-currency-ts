@@ -18,7 +18,12 @@ type Prop = {
   handleFocus: (value: Value) => void;
 };
 
-const TrainingCalendar = ({ trainings, displayDate, setDisplayDate, handleFocus }: Prop) => {
+const TrainingCalendar = ({
+  trainings,
+  displayDate,
+  setDisplayDate,
+  handleFocus,
+}: Prop) => {
   const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
     return dayjs(t.start).toDate();
@@ -92,7 +97,7 @@ const TrainingCalendar = ({ trainings, displayDate, setDisplayDate, handleFocus 
     <div className="mx-auto py-5">
       <div className="flex flex-col h-fit items-center">
         <Calendar
-          className="flex-1 max-w-sm"
+          className="flex-1 max-w-sm text-center"
           value={displayDate}
           onActiveStartDateChange={handleActiveStartDateChange}
           onChange={handleFocus}
