@@ -29,23 +29,25 @@ export default function AllTrainingsPage(): JSX.Element {
   return isLoading ? (
     <ProgressBar />
   ) : (
-    <>
-      <TrainingsFilterControls
-        filterOptions={filterOptions}
-        setFilterOptions={setFilterOptions}
-        trainings={trainings}
-      />
-      {trainings.length > 0 ? (
-        <TrainingList
-          trainings={filterTrainings(trainings, filterOptions)}
-          setTrainings={setTrainings}
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-auto scrollbar-hide">
+        <TrainingsFilterControls
+          filterOptions={filterOptions}
+          setFilterOptions={setFilterOptions}
+          trainings={trainings}
         />
-      ) : (
-        <p>No trainings to show</p>
-      )}
+        {trainings.length > 0 ? (
+          <TrainingList
+            trainings={filterTrainings(trainings, filterOptions)}
+            setTrainings={setTrainings}
+          />
+        ) : (
+          <p>No trainings to show</p>
+        )}
+      </div>
       {(currentUser?.accountType === Account.Trainer ||
         currentUser?.accountType === Account.Admin) && <CreateTrainingButton />}
-    </>
+    </div>
   );
 }
 
