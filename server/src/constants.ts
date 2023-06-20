@@ -14,6 +14,8 @@ export const enum Status {
   Waitlist = 6,
 }
 
+//##RIZ: Why are you setting the expiries as constants? 
+//The expiry date is already returned in the token when the server returns it.
 export const JWT_EXPIRIES: {
   [key in Account]: string;
 } = {

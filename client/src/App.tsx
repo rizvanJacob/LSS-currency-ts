@@ -61,20 +61,24 @@ function App() {
     try {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
-      //##RIZ: the token expiry is already provided by the server. 
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
 
         setCurrentUser(decoded as CurrentUser);
+        //##RIZ: good job passing the dayjs object to the function. 
+        //alternatively you can pass the expiry as a date, or in unix, 
+        //or even just the duration until expiry as an int (either seconds or milliseconds). 
         createLogoutTimeout(dayjs.unix(decoded.exp));
-        //##RIZ: start a timeout here to logout the user when the token expires. 
-        //code the function in a separate file (src/utilities/accountUtils.ts) and import it here.
       } else {
         localStorage.clear(); 
+        //##RIZ: why are you alerting session expired here? 
+        //remember, else statement catches if there is no valid token in local storage.
+        //else, it just redirects to the main page. This alert is unnecessary. 
         alert ("Session expired");       
       }
     } catch (error) {}
 
     //##RIZ: return a clean up function to clear the timeout. 
+    //remember to clear the timeout when the component unmounts.
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);

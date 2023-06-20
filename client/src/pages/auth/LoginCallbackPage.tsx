@@ -30,9 +30,13 @@ const LoginCallbackPage = ({
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
-    //##RIZ: add the same timeout function here to logout the user when the token expires.
-    //this can either be part of the attemptLogin function or a separate function.
+    
+    //##RIZ: why are you checking the expiration timeout every second? 
+    //you can just set a timeout to log the user out when the token expires.
+    //the timeout will be the duration between now and the token expiry.
     const checkExpirationTimeout = setInterval(checkTokenExpiration, 1000); // Check for expiration every 1 second
+    
+    
     return () => {
       //##RIZ: remember to clear the timeout here. 
       clearInterval(checkExpirationTimeout);
@@ -61,7 +65,9 @@ const attemptLogin = async (
 
     const currentUser = jwt_decode(token) as CurrentUser;
 
-    //
+    //##RIZ: why are you storing these as new variables? they are accessible from currentUser.
+    //you may want to change the decoded token from CurrentUser type to DecodedToken type
+    //go take a look at src/@types/currentUser. 
     const accountType = currentUser.accountType as Account;
     const expirationTime = new Date();
     expirationTime.setSeconds(
@@ -69,8 +75,10 @@ const attemptLogin = async (
     );
 
     localStorage.setItem("token", token);
+    //##RIZ: why are you storing the expiration time in local storage?
+    //the expiration is already stored in the token (just encoded).
+    //look at lines 62-64 in App.tsx to see how to access it.
     localStorage.setItem("tokenExpiration", expirationTime.getTime().toString());
-    //
 
     setCurrentUser(currentUser);
 
