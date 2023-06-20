@@ -54,12 +54,18 @@ function App() {
     try {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
+      //##RIZ: the token expiry is already provided by the server. 
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
+
         setCurrentUser(decoded as CurrentUser);
+        //##RIZ: start a timeout here to logout the user when the token expires. 
+        //code the function in a separate file (src/utilities/accountUtils.ts) and import it here.
       } else {
         localStorage.clear();
       }
     } catch (error) {}
+
+    //##RIZ: return a clean up function to clear the timeout. 
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);
