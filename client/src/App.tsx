@@ -16,10 +16,11 @@ import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { useNavigate } from "react-router-dom";
-
+import { createLogoutTimeout } from "./utilities/accountUtils";
 
 import checkLoginExpiry from "./LoginExpiry";
 import LoginCallbackPage from "./pages/auth/LoginCallbackPage";
+
 
 export const UPDATED = "5 Jun 1623H";
 
@@ -64,6 +65,7 @@ function App() {
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
 
         setCurrentUser(decoded as CurrentUser);
+        createLogoutTimeout(dayjs.unix(decoded.exp));
         //##RIZ: start a timeout here to logout the user when the token expires. 
         //code the function in a separate file (src/utilities/accountUtils.ts) and import it here.
       } else {
