@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
 
+import { Account, JWT_EXPIRIES } from "../../../../server/src/constants"; // get session tokens from respective acc types
+
 const LoginCallbackPage = ({
   setCurrentUser,
 }: setCurrentUserProp): JSX.Element => {
@@ -11,14 +13,29 @@ const LoginCallbackPage = ({
   const code = location.state.code;
   const navigate = useNavigate();
 
+  const logoutUser = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiration");
+    navigate("/login", { replace: true });
+  };
+
+  const checkTokenExpiration = () => {
+    const expirationTime = localStorage.getItem("tokenExpiration");
+    if (expirationTime && parseInt(expirationTime) < Date.now()) {
+      logoutUser();
+    }
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
     //##RIZ: add the same timeout function here to logout the user when the token expires.
     //this can either be part of the attemptLogin function or a separate function.
+    const checkExpirationTimeout = setInterval(checkTokenExpiration, 1000); // Check for expiration every 1 second
     return () => {
       //##RIZ: remember to clear the timeout here. 
+      clearInterval(checkExpirationTimeout);
       controller.abort;
     };
   }, []);
@@ -43,6 +60,18 @@ const attemptLogin = async (
     localStorage.setItem("token", token);
 
     const currentUser = jwt_decode(token) as CurrentUser;
+
+    //
+    const accountType = currentUser.accountType as Account;
+    const expirationTime = new Date();
+    expirationTime.setSeconds(
+      expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
+    );
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("tokenExpiration", expirationTime.getTime().toString());
+    //
+
     setCurrentUser(currentUser);
 
     //setCurrentUser(null); -> logs the user out of the app
