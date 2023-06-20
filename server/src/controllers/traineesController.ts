@@ -505,10 +505,16 @@ const checkin = async (req: Request, res: Response) => {
     if (!isCorrectPassphrase) {
       return res.status(400).json({ message: "Incorrect passphrase" });
     }
-    const dateDifference = dayjs(training?.start).diff(dayjs(), "hours");
-    const isWithin24h = dateDifference <= 24 && dateDifference >= 0;
-    if (!isWithin24h) {
-      return res.status(400).json({ message: "Training is not today" });
+    const withinCheckInPeriodStart = dayjs().isAfter(
+      dayjs(training?.start).subtract(24, "hours")
+    );
+    const withinCheckInPeriodEnd = dayjs().isBefore(
+      dayjs(training?.end).add(24, "hours")
+    );
+    if (!withinCheckInPeriodStart && !withinCheckInPeriodEnd) {
+      return res
+        .status(400)
+        .json({ message: "Training check-in is out of allowed time period" });
     }
 
     await prisma.traineeToTraining.update({

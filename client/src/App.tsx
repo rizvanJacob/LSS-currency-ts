@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import checkLoginExpiry from "./LoginExpiry";
 import LoginCallbackPage from "./pages/auth/LoginCallbackPage";
 
-export const UPDATED = "2 Jun 2223H";
+export const UPDATED = "5 Jun 1623H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -60,14 +60,21 @@ function App() {
     try {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
+      //##RIZ: the token expiry is already provided by the server. 
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
+
         setCurrentUser(decoded as CurrentUser);
+        //##RIZ: start a timeout here to logout the user when the token expires. 
+        //code the function in a separate file (src/utilities/accountUtils.ts) and import it here.
       } else {
         localStorage.clear(); 
         alert ("Session expired");       
       }
     } catch (error) {}
+
+    //##RIZ: return a clean up function to clear the timeout. 
   }, []);
+
   console.log("traineeId", currentUser?.trainee?.id);
   return (
     <TitleContext.Provider value={setTitle}>
@@ -88,7 +95,7 @@ function App() {
                 title={title}
                 openDrawer={() => setDrawerOpen(true)}
               />
-              <div className="max-w-screen-md w-full mx-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
+              <div className="max-w-screen-md pb-24 sm:pb-6 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)

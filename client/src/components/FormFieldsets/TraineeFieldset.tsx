@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import getRequest from "../../utilities/getRequest";
 import ProgressBar from "../ProgressBar";
 import { CancelTokenSource } from "axios";
-import { set } from "date-fns";
+import { Account } from "../../../../server/src/constants"
 
 type Props = {
   user?: User;
@@ -16,6 +16,7 @@ type Props = {
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>;
   setIsLoadingTrainee?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoadingAdmin?: boolean;
+  isLoadingGeneral?: boolean;
   forceCallsign?: string;
   forceCategory?: number | null;
 };
@@ -26,6 +27,7 @@ const TraineeFieldset = ({
   setTrainee,
   setIsLoadingTrainee = () => {},
   isLoadingAdmin,
+  isLoadingGeneral,
   forceCallsign = "",
   forceCategory = 0,
 }: Props) => {
@@ -74,6 +76,21 @@ const TraineeFieldset = ({
       setIsLoadingTrainee(false);
     }
   }, [loadedCount, isLoadingParticulars, isLoadingAdmin]);
+
+  console.log("check for user", user)
+  //specifically for trainee admin with no trainees
+  useEffect(() => {
+    if ( 
+        user?.accountType &&
+        user?.authCategory &&
+        !user?.trainee?.id && 
+        !isLoadingAdmin && 
+        !isLoadingGeneral
+    ) {
+        setIsLoadingTrainee(false);
+      }
+  }, [user, isLoadingAdmin, isLoadingGeneral]);
+
   console.log("loadedCount", loadedCount, "requirements.length", requirements.length);
   console.log("isLoadingParticulars", isLoadingParticulars);
   console.log("isLoadingAdmin", isLoadingAdmin);
@@ -86,14 +103,13 @@ const TraineeFieldset = ({
     }
   };
 
-  const handleExpiryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = event.target;
+  const handleExpiryChange = (value: Date | null, id: number) => {
     console.log("expiry change");
 
     if (trainee.currencies.find((c) => c.requirement === Number(id))) {
       const updatedCurrencies = trainee.currencies.map((c) => {
         if (c.requirement === Number(id)) {
-          c.expiry = dayjs(value).toDate();
+          c.expiry = value || new Date();
         }
         return c;
       });
@@ -101,7 +117,7 @@ const TraineeFieldset = ({
     } else {
       const newCurrency = {
         requirement: Number(id),
-        expiry: dayjs(value).toDate(),
+        expiry: value || new Date()
       };
       const updatedCurrencies = [...trainee.currencies, newCurrency];
       setTrainee({ ...trainee, currencies: updatedCurrencies });
@@ -134,7 +150,7 @@ const TraineeFieldset = ({
     }
   };
 
-  return (
+  return trainee.id ? (
     <div className="flex flex-col items-center gap-2">
       <TraineeParticularsFieldset
         trainee={trainee}
@@ -170,6 +186,8 @@ const TraineeFieldset = ({
         <p>There are no requirements in this category</p>
       )}
     </div>
+  ) : (
+    null
   );
 };
 

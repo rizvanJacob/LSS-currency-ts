@@ -56,6 +56,7 @@ export default function EditUserForm(): JSX.Element {
   > | null>(TitleContext);
 
   const [isLoadingAdmin, setIsLoadingAdmin] = useState<boolean>(true);
+  const [isLoadingGeneral, setIsLoadingGeneral] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -75,10 +76,16 @@ export default function EditUserForm(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (!user.trainee?.id) {
-      setIsLoading(isLoadingAdmin);
+    if (categoryTypes.length > 0 && accountTypes.length > 0) {
+      setIsLoadingGeneral(false);
     }
-  }, [isLoadingAdmin]);
+  }, [categoryTypes, accountTypes]);
+
+  useEffect(() => {
+    if (user.accountType === Account.Admin && !isLoadingAdmin) {
+      setIsLoading(false);
+    }
+  }, [user.accountType, user.displayName, isLoadingAdmin]);
 
   const handleFormSubmit = async () => {
     console.log("submit form");
@@ -154,6 +161,7 @@ export default function EditUserForm(): JSX.Element {
   };
 
   console.log("isLoading", isLoading);
+  console.log("isLoadingGeneral", isLoadingGeneral);
   return (
     <fieldset>
       {isLoading && <LoadingPage />}
@@ -235,7 +243,7 @@ export default function EditUserForm(): JSX.Element {
                         onChange={handleInputChange}
                         className="input-select select select-primary w-full max-w-xs"
                       >
-                        <option value={0}>Select an option</option>
+                        <option value={0}>Select Authorized Category</option>
                         {categoryTypes.map((type) => (
                           <option value={type.id} key={type.id}>
                             {type.name}
@@ -265,6 +273,17 @@ export default function EditUserForm(): JSX.Element {
                   </>
                 ) : user.accountType === Account.Trainee ? (
                   <ProgressBar />
+                ) : user.accountType === Account.TraineeAdmin && !trainee.id ? (
+                  <>
+                    <TraineeFieldSet
+                      user={user}
+                      trainee={trainee}
+                      setTrainee={setTrainee}
+                      setIsLoadingTrainee={setIsLoading}
+                      isLoadingAdmin={isLoadingAdmin}
+                      isLoadingGeneral={isLoadingGeneral}
+                    />
+                  </>
                 ) : null}
                 {user.accountType === Account.Trainer && (
                   <>
@@ -283,7 +302,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block "
+                      className="btn btn-primary btn-block "
                     >
                       Update User and Approve
                     </button>
@@ -291,7 +310,7 @@ export default function EditUserForm(): JSX.Element {
                     <button
                       type="submit"
                       disabled={isSubmitting || isValidating || !isValid}
-                      className="btn btn-info btn-block"
+                      className="btn btn-primary btn-block"
                     >
                       Update User
                     </button>

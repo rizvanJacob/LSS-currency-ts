@@ -31,18 +31,20 @@ const TraineesFilterControls = ({
   );
 
   return (
-    <select
-      onChange={handleChange}
-      value={filterOptions.category}
-      className="select select-ghost select-xs w-full max-w-xs self-end"
-    >
-      <option value={0}>Show all categories</option>
-      {categories.map((category: { id: number; name: string }) => (
-        <option value={category.id} key={category.id}>
-          {category.name}
-        </option>
-      ))}
-    </select>
+    <div className="flex flex-row justify-end items-center">
+      <select
+        onChange={handleChange}
+        value={filterOptions.category}
+        className="select select-ghost select-xs w-full max-w-xs self-end"
+      >
+        <option value={0}>Show all categories</option>
+        {categories.map((category: { id: number; name: string }) => (
+          <option value={category.id} key={category.id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 

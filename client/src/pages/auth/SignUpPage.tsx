@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import getRequest from "../../utilities/getRequest";
 import postRequest from "../../utilities/postRequest";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 
 import AdminFieldSet from "../../components/FormFieldsets/AdminFieldset";
 import TraineeAdminFieldset from "../../components/FormFieldsets/TraineeAdminFieldset";
@@ -24,12 +24,13 @@ const blankUser = {
 
 const blankTrainee = {
   callsign: "",
-  category: Account.Trainee,
+  category: 0,
   user: 0,
 };
 
 const SignUpPage = (): JSX.Element => {
   const location = useLocation();
+  const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
   const [accountTypes, setAccountTypes] = useState<SimpleLookup[] | null>(null);
   const [user, setUser] = useState<User>({
     ...blankUser,
@@ -42,13 +43,16 @@ const SignUpPage = (): JSX.Element => {
     []
   );
   const navigate = useNavigate();
+  
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
+    getRequest("/api/lookup/categories", setCategories);
   }, []);
 
   const handleSubmit = async () => {
     if (user.openId) {
       if (
+        (Number(user.accountType === Account.Admin) && includeTrainee) ||
         (Number(user.accountType) === Account.TraineeAdmin && includeTrainee) ||
         Number(user.accountType) === Account.Trainee
       ) {
@@ -67,7 +71,12 @@ const SignUpPage = (): JSX.Element => {
           (userResponse) => {
             return postRequest(
               "/api/trainees",
-              { ...trainee, user: Number(userResponse?.data.id) },
+              { ...trainee, 
+                callsign: 
+                  user.accountType === Account.Admin
+                    ? user.displayName
+                    : trainee.callsign,
+                user: Number(userResponse?.data.id) },
               setTrainee
             );
           }
@@ -101,11 +110,27 @@ const SignUpPage = (): JSX.Element => {
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "category") {
-      setTrainee({ ...trainee, [name]: parseInt(value) });
+      setTrainee({ ...trainee, [name]: Number(value) });
     } else {
       setTrainee({ ...trainee, [name]: value });
     }
   };
+
+  useEffect(() => {
+    if (includeTrainee && user.accountType === Account.Admin) {
+      setTrainee({
+        callsign: user.displayName as string,
+        category: trainee.category as number,
+      });
+    } else if (includeTrainee && user.accountType === Account.TraineeAdmin) {
+      setTrainee({
+        callsign: user.displayName as string,
+        category: Number(user.authCategory) as number,
+      });
+    } else {
+      setTrainee({ callsign: "", category: 0});
+    }
+  }, [includeTrainee, user])
 
   return (
     <div className="max-w-lg mx-auto">
@@ -115,7 +140,7 @@ const SignUpPage = (): JSX.Element => {
           initialValues={{ ...user, ...trainee }}
           onSubmit={handleSubmit}
           enableReinitialize
-          validationSchema={signUpPageSchema(user)}
+          validationSchema={signUpPageSchema(user, includeTrainee)}
         >
           {({ isSubmitting, isValidating, isValid}) => (
             <Form className="space-y-6">
@@ -143,7 +168,41 @@ const SignUpPage = (): JSX.Element => {
                 </fieldset>
               </div>
               {user.accountType == Account.Admin && (
+                <div>
                   <AdminFieldSet user={user} handleChange={handleUserChange} />
+                  <label className="w-1/4">Include Trainee account:</label>
+                  <div className="w-4/4">
+                    <Field
+                      name="includeTrainee"
+                      type="checkbox"
+                      checked={includeTrainee}
+                      className="checkbox"
+                      onChange={() => setIncludeTrainee(!includeTrainee)}
+                    />
+                  </div>
+                  {includeTrainee && (
+                    <Field
+                      as="select"
+                      type="number"
+                      id="category"
+                      name="category"
+                      className="input-select select select-primary w-full max-w-xs"
+                      onChange = {handleTraineeChange}
+                    >
+                      <option value="">Select a category:</option>
+                        {categories?.map((c) => {
+                          return (
+                            <option value={Number(c.id)} key={Number(c.id)}>
+                              {c.name}
+                            </option>
+                          );
+                        })}
+                    </Field>
+                  )}
+                  <div className="error-message text-error">
+                    <ErrorMessage name="category" />
+                  </div>
+                </div>
               )}
               {user.accountType == Account.TraineeAdmin && (
                 <TraineeAdminFieldset

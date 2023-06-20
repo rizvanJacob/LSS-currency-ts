@@ -12,7 +12,7 @@ const TrainingsFilterControls = ({
   trainings,
 }: Props) => {
   return (
-    <div className="flex flex-row self-end items-center flex-nowrap">
+    <div className="flex flex-row justify-end items-center flex-nowrap">
       <select
         className="select select-ghost select-xs w-full max-w-xs flex-auto"
         value={filterOptions.requirement}
@@ -33,7 +33,7 @@ const TrainingsFilterControls = ({
             ) {
               const requirement = {
                 id: training.requirement,
-                name: training.requirements.name,
+                name: training?.requirements?.name || "",
               };
               acc.push(requirement);
             }

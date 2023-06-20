@@ -15,7 +15,10 @@ const LoginCallbackPage = ({
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
+    //##RIZ: add the same timeout function here to logout the user when the token expires.
+    //this can either be part of the attemptLogin function or a separate function.
     return () => {
+      //##RIZ: remember to clear the timeout here. 
       controller.abort;
     };
   }, []);
@@ -41,6 +44,10 @@ const attemptLogin = async (
 
     const currentUser = jwt_decode(token) as CurrentUser;
     setCurrentUser(currentUser);
+
+    //setCurrentUser(null); -> logs the user out of the app
+    //localStorage.removeItem("token"); -> removes the token from local storage
+
     navigate("/", { replace: true });
   } else if (response.status === 404) {
     const openId = await response.json();

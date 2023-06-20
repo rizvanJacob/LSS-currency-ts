@@ -9,13 +9,16 @@ export default function TrainingTableRow() {
           Capacity
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
-          Date
+          Date (St.)
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
-          Start
+          Time (St.)
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
-          End
+          Date (End)
+        </th>
+        <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
+          Time (End)
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
           Complete

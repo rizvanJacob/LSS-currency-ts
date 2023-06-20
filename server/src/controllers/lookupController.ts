@@ -85,6 +85,11 @@ const trainingsProvided = async (req: Request, res: Response) => {
 const categoryToRequirement = async (req: Request, res: Response) => {
   try {
     const categoryToRequirement = await prisma.categoryToRequirement.findMany({
+      orderBy: {
+        requirements: {
+          name: "asc",
+        },
+      },
       select: {
         category: true,
         categories: {
