@@ -27,7 +27,7 @@ const userPage = () => {
     })
     .then((data) => {
       setUsers(data);
-    });    
+    });
   }, []);
     //you could have directly put in the fetch statement here, like so:
     // fetch("/api/VA/nimalan")

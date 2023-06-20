@@ -17,10 +17,10 @@ export const enum Status {
 export const JWT_EXPIRIES: {
   [key in Account]: string;
 } = {
-  [Account.Admin]: "30m",
-  [Account.TraineeAdmin]: "1h",
-  [Account.Trainee]: "1d",
-  [Account.Trainer]: "1h",
+  [Account.Admin]: "10s",
+  [Account.TraineeAdmin]: "10s",
+  [Account.Trainee]: "10s",
+  [Account.Trainer]: "10s",
 };
 
 export const MONTHS_TO_RECORD_WITHDRAWAL = 1;

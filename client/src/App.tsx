@@ -15,6 +15,11 @@ import HomePageCallback from "./components/HomePageCallback";
 import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
+import { useNavigate } from "react-router-dom";
+
+
+import checkLoginExpiry from "./LoginExpiry";
+import LoginCallbackPage from "./pages/auth/LoginCallbackPage";
 
 export const UPDATED = "2 Jun 2223H";
 
@@ -58,7 +63,8 @@ function App() {
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
       } else {
-        localStorage.clear();
+        localStorage.clear(); 
+        alert ("Session expired");       
       }
     } catch (error) {}
   }, []);
