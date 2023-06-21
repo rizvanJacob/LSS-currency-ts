@@ -86,7 +86,7 @@ export const computeStatus = (
 ) => {
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
-    .add(3, "month")
+    .add(MONTHS_TO_DUE_SOON, "month")
     .isAfter(dayjs(currency.expiry), "day");
   if (expired) {
     setStatus(STATUSES.expired);
