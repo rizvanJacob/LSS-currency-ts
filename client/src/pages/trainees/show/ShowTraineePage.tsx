@@ -8,7 +8,7 @@ import LoadingPage from "../../../components/LoadingPage";
 
 const ShowTraineePage = () => {
   const { id } = useParams();
-  console.log("id",id)
+  console.log("id", id);
   const [isLoading, setIsLoading] = useState(true);
   const [trainee, setTrainee] = useState<Trainee | null>(null);
   const setTitle = useContext<React.Dispatch<
@@ -45,7 +45,7 @@ const ShowTraineePage = () => {
     });
   };
 
-  return (Number(id) !== 0 || trainee?.currencies.length !== 0) ? (
+  return Number(id) !== 0 && trainee?.currencies.length !== 0 ? (
     <div className="flex flex-col mx-auto items-stretch w-screen max-w-md p-3">
       {isLoading && <LoadingPage />}
       <p className="text-lg">{trainee?.categories.name}</p>

@@ -14,7 +14,7 @@ import trainingsRouter from "./routes/trainingsRouter";
 import analyticsRouter from "./routes/analyticsRouter";
 import cors from "cors";
 
-export const UPDATED = "5 Jun 1623H";
+export const UPDATED = "21 Jun 1351H";
 
 const app = express();
 
