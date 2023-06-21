@@ -15,7 +15,6 @@ import HomePageCallback from "./components/HomePageCallback";
 import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
-import { useNavigate } from "react-router-dom";
 import { createLogoutTimeout } from "./utilities/accountUtils";
 
 import checkLoginExpiry from "./LoginExpiry";
@@ -49,6 +48,8 @@ export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
 > | null>(null);
 
+
+
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
@@ -75,21 +76,22 @@ function App() {
       const token = localStorage.getItem("token") as string;
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
-
         setCurrentUser(decoded as CurrentUser);
         //##RIZ: good job passing the dayjs object to the function. 
         //alternatively you can pass the expiry as a date, or in unix, 
         //or even just the duration until expiry as an int (either seconds or milliseconds). 
-        createLogoutTimeout(dayjs.unix(decoded.exp));
+        createLogoutTimeout(decoded.exp);
+        console.log('Token expires at:', new Date(decoded.exp));
+
       } else {
-        localStorage.clear(); 
+        localStorage.clear();         
+        const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+        clearLogoutTimeout();
         //##RIZ: why are you alerting session expired here? 
         //remember, else statement catches if there is no valid token in local storage.
         //else, it just redirects to the main page. This alert is unnecessary. 
-        alert ("Session expired");       
       }
     } catch (error) {}
-
     //##RIZ: return a clean up function to clear the timeout. 
     //remember to clear the timeout when the component unmounts.
   }, []);

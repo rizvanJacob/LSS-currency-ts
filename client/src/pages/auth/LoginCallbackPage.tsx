@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
-
+import { createLogoutTimeout } from "../../utilities/accountUtils";
 import { Account, JWT_EXPIRIES } from "../../../../server/src/constants"; // get session tokens from respective acc types
 
 const LoginCallbackPage = ({
@@ -13,39 +13,44 @@ const LoginCallbackPage = ({
   const code = location.state.code;
   const navigate = useNavigate();
 
-  const logoutUser = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenExpiration");
-    navigate("/login", { replace: true });
-  };
 
-  const checkTokenExpiration = () => {
-    const expirationTime = localStorage.getItem("tokenExpiration");
-    if (expirationTime && parseInt(expirationTime) < Date.now()) {
-      logoutUser();
-    }
-  };
+  // const logoutUser = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("tokenExpiration");
+  //   navigate("/login", { replace: true });
+  // };
+
+  // const checkTokenExpiration = () => {
+  //   const expirationTime = localStorage.getItem("tokenExpiration");
+  //   if (expirationTime && parseInt(expirationTime) < Date.now()) {
+  //     logoutUser();
+  //   }
+  // };
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
     
+    createLogoutTimeout(10000); //Need to change this to token expiry
+
     //##RIZ: why are you checking the expiration timeout every second? 
     //you can just set a timeout to log the user out when the token expires.
-    const expirationTime = localStorage.getItem("tokenExpiration"); 
-    const timeToExpiration = expirationTime // calculates time remain until token expiration
-      ? parseInt(expirationTime) - Date.now() // if assigned variable > 0, timeout function will be executed else when token invalid or expired, user will be logged out
-      : 0; //#Alvin: this overall checks user token stored in local storage or should i just implement in the timeout function 
-           // My thoughts: have to store the each user account token expiration when it expires, it will be executed by timeout function
+    // const expirationTime = localStorage.getItem("tokenExpiration"); 
+    // const timeToExpiration = expirationTime // calculates time remain until token expiration
+    //   ? parseInt(expirationTime) - Date.now() // if assigned variable > 0, timeout function will be executed else when token invalid or expired, user will be logged out
+    //   : 0; //#Alvin: this overall checks user token stored in local storage or should i just implement in the timeout function 
+    //        // My thoughts: have to store the each user account token expiration when it expires, it will be executed by timeout function
 
-    // Set a timeout to log the user out when the token expires
-    const logoutTimeout = setTimeout(logoutUser, timeToExpiration);
+    // // Set a timeout to log the user out when the token expires
+    // const logoutTimeout = setTimeout(logoutUser, timeToExpiration);
     
     
     return () => {
       //##RIZ: remember to clear the timeout here. 
-      clearInterval(logoutTimeout);
+      //clearInterval(logoutTimeout);
+      const clearLogoutTimeout = createLogoutTimeout(10000);
+      clearLogoutTimeout();
       controller.abort;
     };
   }, []);
@@ -68,7 +73,6 @@ const attemptLogin = async (
     const data = await response.json();
     const { token } = data;
     localStorage.setItem("token", token);
-
     const currentUser = jwt_decode(token) as CurrentUser;
 
     //##RIZ: why are you storing these as new variables? they are accessible from currentUser.
