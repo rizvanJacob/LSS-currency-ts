@@ -15,7 +15,7 @@ import HomePageCallback from "./components/HomePageCallback";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 
-export const UPDATED = "21 Jun 1041H";
+export const UPDATED = "21 Jun 1048H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
