@@ -8,6 +8,10 @@ const LogoutActions = () => {
     console.log('User logged out');
   };
   
+
+//##RIZ: would be good to declare the type of your argument explicitly. e.g. timeoutDuration:number
+//already I see that the function call in App.tsx is passing in the wrong type of argument
+//(line 70 on App.tsx)
 export const createLogoutTimeout = (timeoutDuration: any) => {
     const timeout = setTimeout(LogoutActions, timeoutDuration);
     alert("session expiring");
