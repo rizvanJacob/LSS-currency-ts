@@ -15,7 +15,7 @@ import HomePageCallback from "./components/HomePageCallback";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 
-export const UPDATED = "5 Jun 1623H";
+export const UPDATED = "21 Jun 1041H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -82,7 +82,7 @@ function App() {
                 title={title}
                 openDrawer={() => setDrawerOpen(true)}
               />
-              <div className="max-w-screen-md pb-24 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
+              <div className="max-w-screen-md pb-24 sm:pb-6 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
                 <Routes>
                   {USER_ACCOUNT_TYPES.includes(
                     Number(currentUser.accountType)
