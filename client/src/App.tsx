@@ -1,7 +1,7 @@
 import { Account } from "../../server/src/constants";
 import "./App.css";
 import { useState, useEffect, createContext } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import UserRoutes from "./pages/users/routes/UserRoutes";
 import AuthRoutes from "./pages/auth/AuthRoutes";
 import DashboardRoutes from "./pages/dashboard/DashboardRoutes";
@@ -53,6 +53,19 @@ function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
+
+  //I would park this function elsewhere, perhaps in a "userUtils" file within the utilities folder
+  const handleIdleTimeout = () => {
+    setCurrentUser(null);
+    localStorage.clear();
+
+    //instead of using window.location.href,
+    //you should use a react hook to navigate around the app.
+    //Can you think of the downsides of using this line below?
+    alert("Session has expired");
+    window.location.href = "http://localhost:5173"; // Redirect to "localhost:5173" when user is inactive for ten seconds
+  };
 
   useEffect(() => {
     if (!AUTHORISE) {
@@ -73,11 +86,10 @@ function App() {
         alert ("Session expired");       
       }
     } catch (error) {}
-
-    //##RIZ: return a clean up function to clear the timeout. 
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);
+
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
@@ -152,4 +164,5 @@ function App() {
     </TitleContext.Provider>
   );
 }
+
 export default App;
