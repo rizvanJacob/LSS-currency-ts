@@ -33,13 +33,19 @@ const LoginCallbackPage = ({
     
     //##RIZ: why are you checking the expiration timeout every second? 
     //you can just set a timeout to log the user out when the token expires.
-    //the timeout will be the duration between now and the token expiry.
-    const checkExpirationTimeout = setInterval(checkTokenExpiration, 1000); // Check for expiration every 1 second
+    const expirationTime = localStorage.getItem("tokenExpiration"); 
+    const timeToExpiration = expirationTime // calculates time remain until token expiration
+      ? parseInt(expirationTime) - Date.now() // if assigned variable > 0, timeout function will be executed else when token invalid or expired, user will be logged out
+      : 0; //#Alvin: this overall checks user token stored in local storage or should i just implement in the timeout function 
+           // My thoughts: have to store the each user account token expiration when it expires, it will be executed by timeout function
+
+    // Set a timeout to log the user out when the token expires
+    const logoutTimeout = setTimeout(logoutUser, timeToExpiration);
     
     
     return () => {
       //##RIZ: remember to clear the timeout here. 
-      clearInterval(checkExpirationTimeout);
+      clearInterval(logoutTimeout);
       controller.abort;
     };
   }, []);
@@ -78,7 +84,8 @@ const attemptLogin = async (
     //##RIZ: why are you storing the expiration time in local storage?
     //the expiration is already stored in the token (just encoded).
     //look at lines 62-64 in App.tsx to see how to access it.
-    localStorage.setItem("tokenExpiration", expirationTime.getTime().toString());
+    // #Alvin: By removing these variables, I can use the values directly from currentUser instead of creating additional variables.
+    // #Alvin: to access it, I have written it on line 36 in this file
 
     setCurrentUser(currentUser);
 
