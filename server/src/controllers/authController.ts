@@ -150,6 +150,9 @@ const isAuth =
           }
         }
       }
+      if (verifiedUser.accountType === Account.Trainee) {
+        throw new Error("Trainee not authorized to access resource");
+      }
 
       //attempt to access as other account types
       if (!authorized.includes(verifiedUser.accountType)) {
@@ -251,8 +254,9 @@ const isAuth =
         }
       }
     } catch (err) {
+      const error = err as Error;
       console.log(err);
-      return res.status(404).json({ err });
+      return res.status(404).json({ error: error.message });
     }
     return next();
   };
