@@ -13,42 +13,23 @@ const LoginCallbackPage = ({
   const code = location.state.code;
   const navigate = useNavigate();
 
-
-  // const logoutUser = () => {
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("tokenExpiration");
-  //   navigate("/login", { replace: true });
-  // };
-
-  // const checkTokenExpiration = () => {
-  //   const expirationTime = localStorage.getItem("tokenExpiration");
-  //   if (expirationTime && parseInt(expirationTime) < Date.now()) {
-  //     logoutUser();
-  //   }
-  // };
-
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
     
+    //##RIZ: You create a logout timeout here. but what if the login fails
+    //and the control flow directs to line 72 onwards? 
+    //Do you still want to create the logout timeout? 
     createLogoutTimeout(10000); //Need to change this to token expiry
 
-    //##RIZ: why are you checking the expiration timeout every second? 
-    //you can just set a timeout to log the user out when the token expires.
-    // const expirationTime = localStorage.getItem("tokenExpiration"); 
-    // const timeToExpiration = expirationTime // calculates time remain until token expiration
-    //   ? parseInt(expirationTime) - Date.now() // if assigned variable > 0, timeout function will be executed else when token invalid or expired, user will be logged out
-    //   : 0; //#Alvin: this overall checks user token stored in local storage or should i just implement in the timeout function 
-    //        // My thoughts: have to store the each user account token expiration when it expires, it will be executed by timeout function
-
-    // // Set a timeout to log the user out when the token expires
-    // const logoutTimeout = setTimeout(logoutUser, timeToExpiration);
+    //I assume you passing in 10000 is supposed to mean 10 seconds. But your
+    //createLogoutTimeout function is expecting a number represing the expiry time in unix. 
     
     
     return () => {
-      //##RIZ: remember to clear the timeout here. 
-      //clearInterval(logoutTimeout);
+      //##RIZ: I don't thionk you are clearing the correct timeout. 
+      //There will still be an active timeout created by line 22. 
       const clearLogoutTimeout = createLogoutTimeout(10000);
       clearLogoutTimeout();
       controller.abort;
@@ -73,28 +54,23 @@ const attemptLogin = async (
     const data = await response.json();
     const { token } = data;
     localStorage.setItem("token", token);
+    //##RIZ: Hint, you need to decode the token as another type of interface.
+    //referece compare with line 77 in App.tsx to see what's going on. 
     const currentUser = jwt_decode(token) as CurrentUser;
 
-    //##RIZ: why are you storing these as new variables? they are accessible from currentUser.
-    //you may want to change the decoded token from CurrentUser type to DecodedToken type
-    //go take a look at src/@types/currentUser. 
+    //##RIZ: Still not sure why you are creating these new variables
+    //they are not used anywhere else.
     const accountType = currentUser.accountType as Account;
     const expirationTime = new Date();
     expirationTime.setSeconds(
+      //##RIZ: and you definitely shouldn't be using JWT_EXPIRIES. This constant shouldn't even exist. 
       expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
     );
 
     localStorage.setItem("token", token);
-    //##RIZ: why are you storing the expiration time in local storage?
-    //the expiration is already stored in the token (just encoded).
-    //look at lines 62-64 in App.tsx to see how to access it.
-    // #Alvin: By removing these variables, I can use the values directly from currentUser instead of creating additional variables.
-    // #Alvin: to access it, I have written it on line 36 in this file
 
     setCurrentUser(currentUser);
 
-    //setCurrentUser(null); -> logs the user out of the app
-    //localStorage.removeItem("token"); -> removes the token from local storage
 
     navigate("/", { replace: true });
   } else if (response.status === 404) {

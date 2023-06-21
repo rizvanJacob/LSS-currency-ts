@@ -18,24 +18,16 @@ const LogoutActions = () => {
 //already I see that the function call in App.tsx is passing in the wrong type of argument
 //(line 70 on App.tsx)
 
-
-// export const createLogoutTimeout = (timeoutDuration: number) => {
-//     const timeout = setTimeout(LogoutActions, timeoutDuration);
-//     //console.log("Timer started");
-//       const clearLogoutTimeout = () => {
-//     clearTimeout(timeout);
-//   };
-//   };
-
-
   
-
+  //##RIZ: suggest you accept the expiry time argument as a date or a dayjs object. 
   const createLogoutTimeout = (expiryTime: number) => {
     const currentTime = dayjs().unix();
+    //##RIZ: suggest you use dayjs to manipulate things to do with time. 
     const timeoutDuration = (expiryTime - currentTime) * 1000;
   
     const timeout = setTimeout(LogoutActions, timeoutDuration);
   
+    //##RIZ: Good job returning the cleared timeout. 
     const clearLogoutTimeout = () => {
       clearTimeout(timeout);
     };

@@ -77,23 +77,19 @@ function App() {
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
-        //##RIZ: good job passing the dayjs object to the function. 
-        //alternatively you can pass the expiry as a date, or in unix, 
-        //or even just the duration until expiry as an int (either seconds or milliseconds). 
         createLogoutTimeout(decoded.exp);
         console.log('Token expires at:', new Date(decoded.exp));
-
+        //##RIZ: how about the cleanup function to clear the timeout?
       } else {
         localStorage.clear();         
+
+        //##RIZ: why are you clearing the timeout here? 
+        // decoded.exp in line 88 will just compile to undefined. 
         const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+        //and the clearLogoutTimeout function will be fore the timeout you created in line 88, not the one in line 80. 
         clearLogoutTimeout();
-        //##RIZ: why are you alerting session expired here? 
-        //remember, else statement catches if there is no valid token in local storage.
-        //else, it just redirects to the main page. This alert is unnecessary. 
       }
     } catch (error) {}
-    //##RIZ: return a clean up function to clear the timeout. 
-    //remember to clear the timeout when the component unmounts.
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);
