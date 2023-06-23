@@ -64,7 +64,10 @@ function App() {
       }
     } catch (error) {}
 
-    return clearLogoutTimer;
+    return () => {
+      console.log("cleaning up app");
+      clearLogoutTimer();
+    };
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);

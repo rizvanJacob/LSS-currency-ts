@@ -20,14 +20,13 @@ const LoginCallbackPage = ({
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    let clearLogoutTimer: any = null;
     attemptLogin(signal, setCurrentUser, code, navigate).then((returnValue) => {
-      clearLogoutTimer = returnValue;
+      return () => {
+        console.log("cleaning up logincallback");
+        controller.abort;
+        if (returnValue) returnValue();
+      };
     });
-    return () => {
-      controller.abort;
-      if (clearLogoutTimer) clearLogoutTimer();
-    };
   }, []);
 
   return <>Authorizing...</>;
