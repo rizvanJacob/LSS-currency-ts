@@ -14,6 +14,7 @@ import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
+import { createLogoutTimer } from "./utilities/accountUtils";
 
 export const UPDATED = "21 Jun 1048H";
 
@@ -48,6 +49,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
+    let clearLogoutTimer: any = null;
     if (!AUTHORISE) {
       setCurrentUser(CURRENT_USER);
     }
@@ -56,11 +58,17 @@ function App() {
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
+        clearLogoutTimer = createLogoutTimer(
+          decoded.exp,
+          setCurrentUser
+        );
       } else {
         localStorage.clear();
       }
     } catch (error) {}
-  }, []);
+
+    return clearLogoutTimer;
+  }, [currentUser]);
 
   console.log("traineeId", currentUser?.trainee?.id);
   return (
