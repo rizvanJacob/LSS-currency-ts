@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { CurrentUser } from "../@types/currentUser";
 import dayjs from "dayjs";
 
@@ -10,7 +9,10 @@ export const createLogoutTimer = (
   console.log("timeout created for ", timeoutDuration / 1000, " seconds");
   const timer = setTimeout(logoutCurrentUser(setCurrentUser), timeoutDuration);
 
-  return () => clearTimeout(timer);
+  return () => {
+    console.log("clearing timeout");
+    clearTimeout(timer);
+  };
 };
 
 export const logoutCurrentUser =
