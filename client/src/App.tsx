@@ -58,17 +58,14 @@ function App() {
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
-        clearLogoutTimer = createLogoutTimer(
-          decoded.exp,
-          setCurrentUser
-        );
+        clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
       } else {
         localStorage.clear();
       }
     } catch (error) {}
 
     return clearLogoutTimer;
-  }, [currentUser]);
+  }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);
   return (
