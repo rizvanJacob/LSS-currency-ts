@@ -16,7 +16,7 @@ import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
 
-export const UPDATED = "21 Jun 1048H";
+export const UPDATED = "23 Jun 1515H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
