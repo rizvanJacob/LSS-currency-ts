@@ -1,8 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
+import {
+  CurrentUser,
+  UserPayload,
+  setCurrentUserProp,
+} from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
+import dayjs from "dayjs";
+import { createLogoutTimer } from "../../utilities/accountUtils";
 
 const LoginCallbackPage = ({
   setCurrentUser,
@@ -14,9 +20,13 @@ const LoginCallbackPage = ({
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    attemptLogin(signal, setCurrentUser, code, navigate);
+    let clearLogoutTimer: any = null;
+    attemptLogin(signal, setCurrentUser, code, navigate).then((returnValue) => {
+      clearLogoutTimer = returnValue;
+    });
     return () => {
       controller.abort;
+      if (clearLogoutTimer) clearLogoutTimer();
     };
   }, []);
 
@@ -27,7 +37,7 @@ export default LoginCallbackPage;
 
 const attemptLogin = async (
   signal: AbortSignal,
-  setCurrentUser: any,
+  setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>,
   code: string,
   navigate: any
 ) => {
@@ -39,9 +49,13 @@ const attemptLogin = async (
     const { token } = data;
     localStorage.setItem("token", token);
 
-    const currentUser = jwt_decode(token) as CurrentUser;
+    const decoded = jwt_decode(token) as UserPayload;
+    const currentUser = decoded as CurrentUser;
+
     setCurrentUser(currentUser);
+    const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
     navigate("/", { replace: true });
+    return clearLogoutTimer;
   } else if (response.status === 404) {
     const openId = await response.json();
     navigate("/new", { state: { openId }, replace: true });
@@ -49,4 +63,5 @@ const attemptLogin = async (
     alert("Your requested account has not been approved");
     navigate("/", { replace: true });
   }
+  return null;
 };
