@@ -1,5 +1,6 @@
 //##RIZ: code all the account utils here.
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 //one function should just be to create a timeout and call a logout function after the timer is up. 
 //this function should take the timeout duration as an argument. 
@@ -32,22 +33,25 @@ import dayjs from "dayjs";
 
   
   //##RIZ: suggest you accept the expiry time argument as a date or a dayjs object. 
-  const createLogoutTimeout = (handleLogout: Function, expiryTime: number) => {
-    const currentTime = dayjs().unix();
-    //##RIZ: suggest you use dayjs to manipulate things to do with time. 
-    const timeoutDuration = (expiryTime - currentTime) * 1000;
-  
-    const timeout = setTimeout(handleLogout, timeoutDuration);
-  
-    //##RIZ: Good job returning the cleared timeout. 
-    const clearLogoutTimeout = () => {
-      clearTimeout(timeout);
-    };
-  
-    return clearLogoutTimeout;
+export function logoutActions(navigate: ReturnType<typeof useNavigate>) {
+  alert("Session expired");
+  localStorage.clear();
+  console.log('User logged out');
+  navigate("/logout", { replace: true });
+}
+
+export function createLogoutTimeout(logoutActions: Function, expiryTime: number) {
+  const currentTime = dayjs().unix();
+  const timeoutDuration = (expiryTime - currentTime) * 1000;
+
+  const timeout = setTimeout(logoutActions, timeoutDuration);
+
+  const clearLogoutTimeout = () => {
+    clearTimeout(timeout);
   };
-  
-  export { createLogoutTimeout };
+
+  return clearLogoutTimeout;
+}
 //another function should contain the logout actions, ie to:
 
 // - set currentUser to null
