@@ -6,6 +6,7 @@ import { buildFullUrl } from "../../utilities/stringManipulation";
 import { createLogoutTimeout } from "../../utilities/accountUtils";
 import { Account, JWT_EXPIRIES } from "../../../../server/src/constants"; // get session tokens from respective acc types
 
+
 const LoginCallbackPage = ({
   setCurrentUser,
 }: setCurrentUserProp): JSX.Element => {
@@ -17,6 +18,8 @@ const LoginCallbackPage = ({
     const controller = new AbortController();
     const signal = controller.signal;
     attemptLogin(signal, setCurrentUser, code, navigate);
+    
+
     
     //##RIZ: You create a logout timeout here. but what if the login fails
     //and the control flow directs to line 72 onwards? 
@@ -54,13 +57,23 @@ const attemptLogin = async (
     const data = await response.json();
     const { token } = data;
     localStorage.setItem("token", token);
+ 
     //##RIZ: Hint, you need to decode the token as another type of interface.
     //referece compare with line 77 in App.tsx to see what's going on. 
+    const LogoutActions = () => {
+      alert("Session expired"); 
+      localStorage.clear();
+      console.log('User logged out');
+      
+      //Alvin's logout actions
+      //const navigate = useNavigate();
+      navigate("/logout", { replace: true });
+    };
+    
     const decoded = jwt_decode(token) as UserPayload;
     setCurrentUser(decoded as CurrentUser);
-    createLogoutTimeout(decoded.exp);
-    console.log('Token expires at:', new Date(decoded.exp));
-    const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+    createLogoutTimeout(LogoutActions, decoded.exp);
+    const clearLogoutTimeout = createLogoutTimeout(LogoutActions, decoded.exp);
     clearLogoutTimeout();
 
     
@@ -72,7 +85,6 @@ const attemptLogin = async (
     //   //##RIZ: and you definitely shouldn't be using JWT_EXPIRIES. This constant shouldn't even exist. 
     //   expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
     // );
-
 
     //setCurrentUser(currentUser);
 

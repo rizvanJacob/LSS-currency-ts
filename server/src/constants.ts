@@ -20,9 +20,9 @@ export const JWT_EXPIRIES: {
   [key in Account]: string;
 } = {
   [Account.Admin]: "5s",
-  [Account.TraineeAdmin]: "10s",
-  [Account.Trainee]: "15s",
-  [Account.Trainer]: "20s",
+  [Account.TraineeAdmin]: "5s",
+  [Account.Trainee]: "5s",
+  [Account.Trainer]: "5s",
 };
 
 export const MONTHS_TO_RECORD_WITHDRAWAL = 1;

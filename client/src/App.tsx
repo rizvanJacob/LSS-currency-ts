@@ -77,10 +77,18 @@ function App() {
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
-        createLogoutTimeout(decoded.exp);
-        console.log('Token expires at:', new Date(decoded.exp));
+        const LogoutActions = () => {
+          alert("Session expired"); 
+          localStorage.clear();
+          console.log('User logged out');
+          
+          //Alvin's logout actions
+          //const navigate = useNavigate();
+          navigate("/logout", { replace: true });
+        };
+        createLogoutTimeout(LogoutActions, decoded.exp);
         //##RIZ: how about the cleanup function to clear the timeout?
-        const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+        const clearLogoutTimeout = createLogoutTimeout(LogoutActions, decoded.exp);
         clearLogoutTimeout();
       } else {
         localStorage.clear();         

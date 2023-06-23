@@ -1,9 +1,5 @@
 //##RIZ: code all the account utils here.
 import dayjs from "dayjs";
-//import { useEffect } from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
 
 //one function should just be to create a timeout and call a logout function after the timer is up. 
 //this function should take the timeout duration as an argument. 
@@ -19,15 +15,15 @@ import { useNavigate } from "react-router-dom";
 //   }, []);
 // }
 
-const LogoutActions = () => {
-    alert("Session expired"); 
-    localStorage.clear();
-    console.log('User logged out');
+// const LogoutActions = () => {
+//     alert("Session expired"); 
+//     localStorage.clear();
+//     console.log('User logged out');
     
-    //Alvin's logout actions
-    //const navigate = useNavigate();
-    //navigate("/logout", { replace: true });
-  };
+//     //Alvin's logout actions
+//     //const navigate = useNavigate();
+//     //navigate("/logout", { replace: true });
+//   };
   
 
 //##RIZ: would be good to declare the type of your argument explicitly. e.g. timeoutDuration:number
@@ -36,12 +32,12 @@ const LogoutActions = () => {
 
   
   //##RIZ: suggest you accept the expiry time argument as a date or a dayjs object. 
-  const createLogoutTimeout = (expiryTime: number) => {
+  const createLogoutTimeout = (handleLogout: Function, expiryTime: number) => {
     const currentTime = dayjs().unix();
     //##RIZ: suggest you use dayjs to manipulate things to do with time. 
     const timeoutDuration = (expiryTime - currentTime) * 1000;
   
-    const timeout = setTimeout(LogoutActions, timeoutDuration);
+    const timeout = setTimeout(handleLogout, timeoutDuration);
   
     //##RIZ: Good job returning the cleared timeout. 
     const clearLogoutTimeout = () => {
