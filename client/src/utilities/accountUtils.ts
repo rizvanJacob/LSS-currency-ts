@@ -1,16 +1,32 @@
 //##RIZ: code all the account utils here.
 import dayjs from "dayjs";
+//import { useEffect } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 //one function should just be to create a timeout and call a logout function after the timer is up. 
 //this function should take the timeout duration as an argument. 
 
+
+
+// function LogoutActions() {
+//   //const navigate = useNavigate();
+
+//   useEffect(() => {
+//      alert("Session expired"); 
+//      //navigate("/Logout");
+//   }, []);
+// }
+
 const LogoutActions = () => {
-    //Alvin's logout actions
     alert("Session expired"); 
-    //navigate("/logout", { replace: true });
+    localStorage.clear();
     console.log('User logged out');
+    
+    //Alvin's logout actions
+    //const navigate = useNavigate();
+    //navigate("/logout", { replace: true });
   };
   
 

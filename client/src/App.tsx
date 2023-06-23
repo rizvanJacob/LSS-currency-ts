@@ -80,14 +80,15 @@ function App() {
         createLogoutTimeout(decoded.exp);
         console.log('Token expires at:', new Date(decoded.exp));
         //##RIZ: how about the cleanup function to clear the timeout?
+        const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+        clearLogoutTimeout();
       } else {
         localStorage.clear();         
-
         //##RIZ: why are you clearing the timeout here? 
         // decoded.exp in line 88 will just compile to undefined. 
-        const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+        
         //and the clearLogoutTimeout function will be fore the timeout you created in line 88, not the one in line 80. 
-        clearLogoutTimeout();
+
       }
     } catch (error) {}
   }, []);

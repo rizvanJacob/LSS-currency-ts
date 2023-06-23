@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { CurrentUser, setCurrentUserProp } from "../../@types/currentUser";
+import { CurrentUser, setCurrentUserProp, UserPayload } from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
 import { createLogoutTimeout } from "../../utilities/accountUtils";
 import { Account, JWT_EXPIRIES } from "../../../../server/src/constants"; // get session tokens from respective acc types
@@ -21,7 +21,7 @@ const LoginCallbackPage = ({
     //##RIZ: You create a logout timeout here. but what if the login fails
     //and the control flow directs to line 72 onwards? 
     //Do you still want to create the logout timeout? 
-    createLogoutTimeout(10000); //Need to change this to token expiry
+    //createLogoutTimeout(10000); //Need to change this to token expiry
 
     //I assume you passing in 10000 is supposed to mean 10 seconds. But your
     //createLogoutTimeout function is expecting a number represing the expiry time in unix. 
@@ -30,8 +30,8 @@ const LoginCallbackPage = ({
     return () => {
       //##RIZ: I don't thionk you are clearing the correct timeout. 
       //There will still be an active timeout created by line 22. 
-      const clearLogoutTimeout = createLogoutTimeout(10000);
-      clearLogoutTimeout();
+      // const clearLogoutTimeout = createLogoutTimeout(10000);
+      // clearLogoutTimeout();
       controller.abort;
     };
   }, []);
@@ -56,21 +56,25 @@ const attemptLogin = async (
     localStorage.setItem("token", token);
     //##RIZ: Hint, you need to decode the token as another type of interface.
     //referece compare with line 77 in App.tsx to see what's going on. 
-    const currentUser = jwt_decode(token) as CurrentUser;
+    const decoded = jwt_decode(token) as UserPayload;
+    setCurrentUser(decoded as CurrentUser);
+    createLogoutTimeout(decoded.exp);
+    console.log('Token expires at:', new Date(decoded.exp));
+    const clearLogoutTimeout = createLogoutTimeout(decoded.exp);
+    clearLogoutTimeout();
 
+    
     //##RIZ: Still not sure why you are creating these new variables
     //they are not used anywhere else.
-    const accountType = currentUser.accountType as Account;
-    const expirationTime = new Date();
-    expirationTime.setSeconds(
-      //##RIZ: and you definitely shouldn't be using JWT_EXPIRIES. This constant shouldn't even exist. 
-      expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
-    );
+    // const accountType = currentUser.accountType as Account;
+    // const expirationTime = new Date();
+    // expirationTime.setSeconds(
+    //   //##RIZ: and you definitely shouldn't be using JWT_EXPIRIES. This constant shouldn't even exist. 
+    //   expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
+    // );
 
-    localStorage.setItem("token", token);
 
-    setCurrentUser(currentUser);
-
+    //setCurrentUser(currentUser);
 
     navigate("/", { replace: true });
   } else if (response.status === 404) {
