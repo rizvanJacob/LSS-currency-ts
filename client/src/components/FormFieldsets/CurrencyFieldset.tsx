@@ -2,8 +2,8 @@ import { Currency, Requirement } from "../../@types/trainee";
 import { Field, ErrorMessage } from "formik";
 import dayjs from "dayjs";
 import { useEffect } from "react";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type Prop = {
   requirement: Requirement;
@@ -18,9 +18,8 @@ const CurrencyFieldset = ({
   currency,
   handleExpiryChange,
   handleSeniorityChange,
-  incrementCount
+  incrementCount,
 }: Prop) => {
-
   useEffect(() => {
     incrementCount();
   }, []);
@@ -42,14 +41,10 @@ const CurrencyFieldset = ({
                 dateFormat="dd/MM/yyyy"
                 name="currencies"
                 className="input-text text-primary input input-bordered input-primary w-full max-w-xs input-xs xs:input-md"
-                value={
-                  currency ? new Date(currency.expiry) : new Date()
-                }
-                selected={
-                  currency ? new Date(currency.expiry) : new Date()
-                }
+                value={currency?.expiry || null}
+                selected={currency?.expiry || null}
                 onChange={(value: Date) => {
-                  handleExpiryChange(value, requirement.id)
+                  handleExpiryChange(value, requirement.id);
                 }}
                 required={true}
               />
