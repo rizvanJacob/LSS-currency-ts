@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { CurrentUser, setCurrentUserProp, UserPayload } from "../../@types/currentUser";
+import {
+  CurrentUser,
+  UserPayload,
+  setCurrentUserProp,
+} from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
-import { createLogoutTimeout } from "../../utilities/accountUtils";
-import { Account, JWT_EXPIRIES } from "../../../../server/src/constants"; // get session tokens from respective acc types
-
+import dayjs from "dayjs";
+import { createLogoutTimer } from "../../utilities/accountUtils";
 
 const LoginCallbackPage = ({
   setCurrentUser,
@@ -17,26 +20,13 @@ const LoginCallbackPage = ({
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    attemptLogin(signal, setCurrentUser, code, navigate);
-    
-
-    
-    //##RIZ: You create a logout timeout here. but what if the login fails
-    //and the control flow directs to line 72 onwards? 
-    //Do you still want to create the logout timeout? 
-    //createLogoutTimeout(10000); //Need to change this to token expiry
-
-    //I assume you passing in 10000 is supposed to mean 10 seconds. But your
-    //createLogoutTimeout function is expecting a number represing the expiry time in unix. 
-    
-    
-    return () => {
-      //##RIZ: I don't thionk you are clearing the correct timeout. 
-      //There will still be an active timeout created by line 22. 
-      // const clearLogoutTimeout = createLogoutTimeout(10000);
-      // clearLogoutTimeout();
-      controller.abort;
-    };
+    attemptLogin(signal, setCurrentUser, code, navigate).then((returnValue) => {
+      return () => {
+        console.log("cleaning up logincallback");
+        controller.abort;
+        if (returnValue) returnValue();
+      };
+    });
   }, []);
 
   return <>Authorizing...</>;
@@ -46,7 +36,7 @@ export default LoginCallbackPage;
 
 const attemptLogin = async (
   signal: AbortSignal,
-  setCurrentUser: any,
+  setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>,
   code: string,
   navigate: any
 ) => {
@@ -88,7 +78,13 @@ const attemptLogin = async (
 
     //setCurrentUser(currentUser);
 
+    const decoded = jwt_decode(token) as UserPayload;
+    const currentUser = decoded as CurrentUser;
+
+    setCurrentUser(currentUser);
+    const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
     navigate("/", { replace: true });
+    return clearLogoutTimer;
   } else if (response.status === 404) {
     const openId = await response.json();
     navigate("/new", { state: { openId }, replace: true });
@@ -96,4 +92,5 @@ const attemptLogin = async (
     alert("Your requested account has not been approved");
     navigate("/", { replace: true });
   }
+  return null;
 };

@@ -15,13 +15,9 @@ import HomePageCallback from "./components/HomePageCallback";
 import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
-import { createLogoutTimeout, logoutActions } from "./utilities/accountUtils";
+import { createLogoutTimer } from "./utilities/accountUtils";
 
-import checkLoginExpiry from "./LoginExpiry";
-import LoginCallbackPage from "./pages/auth/LoginCallbackPage";
-
-
-export const UPDATED = "5 Jun 1623H";
+export const UPDATED = "23 Jun 1515H";
 
 const AUTHORISE = true;
 const CURRENT_USER = {
@@ -69,6 +65,7 @@ function App() {
   };
 
   useEffect(() => {
+    let clearLogoutTimer: any = null;
     if (!AUTHORISE) {
       setCurrentUser(CURRENT_USER);
     }
@@ -77,14 +74,16 @@ function App() {
       const decoded = jwt_decode(token) as UserPayload;
       if (dayjs.unix(decoded.exp).isAfter(dayjs())) {
         setCurrentUser(decoded as CurrentUser);
-        const logoutAndNavigate = () => logoutActions(navigate);
-        //##RIZ: how about the cleanup function to clear the timeout?
-        const clearLogoutTimeout = createLogoutTimeout(logoutAndNavigate, decoded.exp);
-        clearLogoutTimeout();
+        clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
       } else {
         localStorage.clear();         
       }
     } catch (error) {}
+
+    return () => {
+      console.log("cleaning up app");
+      clearLogoutTimer();
+    };
   }, []);
 
   console.log("traineeId", currentUser?.trainee?.id);

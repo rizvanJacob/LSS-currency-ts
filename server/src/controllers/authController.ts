@@ -139,7 +139,7 @@ const isAuth =
       if (verifiedUser.trainee?.id) {
         console.log("Verifying trainee access...");
         if (authorized.includes(Account.Trainee)) {
-          if (traineeId && !generalAccess) {
+          if (traineeId) {
             if (verifiedUser.trainee.id === traineeId) {
               console.log("Trainee authorized to access own resources");
               return next();
@@ -149,6 +149,10 @@ const isAuth =
             return next();
           }
         }
+      }
+      console.log("Trainee access denied")
+      if (verifiedUser.accountType === Account.Trainee) {
+        throw new Error("Trainee not authorized to access resource");
       }
 
       //attempt to access as other account types
@@ -251,8 +255,9 @@ const isAuth =
         }
       }
     } catch (err) {
+      const error = err as Error;
       console.log(err);
-      return res.status(404).json({ err });
+      return res.status(404).json({ error: error.message });
     }
     return next();
   };

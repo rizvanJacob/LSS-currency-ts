@@ -13,7 +13,7 @@ import * as traineesController from "../controllers/traineesController";
 router.get("/", isAuth(TRAINEE_READ_ALL_ACCESS), traineesController.index);
 router.get(
   "/:traineeId",
-  isAuth(TRAINEE_READ_ALL_ACCESS, true),
+  isAuth(ALL, true),
   traineesController.show
 );
 router.post("/", traineesController.create);

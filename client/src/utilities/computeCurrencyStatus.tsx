@@ -1,7 +1,7 @@
 import { Trainee, Currency, CurrencyStatus } from "../@types/trainee";
 import dayjs from "dayjs";
 
-const MONTHS_TO_DUE_SOON = 2;
+const MONTHS_TO_DUE_SOON = 6;
 
 const STATUSES = {
   current: {
@@ -86,7 +86,7 @@ export const computeStatus = (
 ) => {
   const expired = dayjs().isAfter(dayjs(currency.expiry), "day");
   const dueSoon = dayjs()
-    .add(3, "month")
+    .add(MONTHS_TO_DUE_SOON, "month")
     .isAfter(dayjs(currency.expiry), "day");
   if (expired) {
     setStatus(STATUSES.expired);

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import putRequest from "../../../../utilities/putRequest";
-import ConfirmPopup from "../../../../components/ConfirmPopup";
 import DialogModal from "../../../../components/DialogModal";
 
 type Prop = {
