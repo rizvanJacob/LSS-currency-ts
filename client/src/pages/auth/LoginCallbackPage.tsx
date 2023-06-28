@@ -9,6 +9,7 @@ import {
 import { buildFullUrl } from "../../utilities/stringManipulation";
 import dayjs from "dayjs";
 import { createLogoutTimer } from "../../utilities/accountUtils";
+import { createLogoutTimeout } from "../../utilities/accountUtilsVA";
 
 const LoginCallbackPage = ({
   setCurrentUser,
@@ -78,8 +79,8 @@ const attemptLogin = async (
 
     //setCurrentUser(currentUser);
 
-    const decoded = jwt_decode(token) as UserPayload;
-    const currentUser = decoded as CurrentUser;
+    // const decoded = jwt_decode(token) as UserPayload;
+    // const currentUser = decoded as CurrentUser;
 
     setCurrentUser(currentUser);
     const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);

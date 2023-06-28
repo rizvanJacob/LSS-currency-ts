@@ -16,6 +16,7 @@ import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
+import React from "react";
 
 export const UPDATED = "23 Jun 1515H";
 
@@ -45,24 +46,37 @@ export const TitleContext = createContext<React.Dispatch<
 > | null>(null);
 
 
+interface Filters {
+  [key: string]: string;
+}
+
+interface FilterContextProps {
+  filters: Filters;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+}
+
+export const FilterContext = createContext<FilterContextProps | null>(null);
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const navigate = useNavigate();
+  const [filters, setFilters] = useState<Filters>({});
+
+  
+  //const navigate = useNavigate();
 
   //I would park this function elsewhere, perhaps in a "userUtils" file within the utilities folder
-  const handleIdleTimeout = () => {
-    setCurrentUser(null);
-    localStorage.clear();
+  // const handleIdleTimeout = () => {
+  //   setCurrentUser(null);
+  //   localStorage.clear();
 
-    //instead of using window.location.href,
-    //you should use a react hook to navigate around the app.
-    //Can you think of the downsides of using this line below?
-    alert("Session has expired");
-    window.location.href = "http://localhost:5173"; // Redirect to "localhost:5173" when user is inactive for ten seconds
-  };
+  //   //instead of using window.location.href,
+  //   //you should use a react hook to navigate around the app.
+  //   //Can you think of the downsides of using this line below?
+  //   alert("Session has expired");
+  //   window.location.href = "http://localhost:5173"; // Redirect to "localhost:5173" when user is inactive for ten seconds
+  // };
 
   useEffect(() => {
     let clearLogoutTimer: any = null;
@@ -85,7 +99,7 @@ function App() {
       clearLogoutTimer();
     };
   }, []);
-
+  
   console.log("traineeId", currentUser?.trainee?.id);
 
   return (
@@ -158,6 +172,8 @@ function App() {
             <VARoutes />
           </>
         )}
+        <FilterContext.Provider value={{ filters, setFilters }}>
+        </FilterContext.Provider>
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
   );

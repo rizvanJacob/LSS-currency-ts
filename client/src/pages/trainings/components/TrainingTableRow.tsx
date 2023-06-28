@@ -1,3 +1,5 @@
+import React, { useContext } from 'react';
+
 export default function TrainingTableRow() {
   return (
     <thead className="bg-blue-500 text-black">
