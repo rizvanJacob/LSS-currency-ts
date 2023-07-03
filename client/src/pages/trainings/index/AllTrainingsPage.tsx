@@ -5,7 +5,7 @@ import { Training, TrainingFilterOptions } from "../../../@types/training";
 import TrainingList from "./components/TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, FilterContext } from "../../../App";
+import { CurrentUserContext, TitleContext, TrainingsFilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import TrainingsFilterControls from "./components/TrainingsFilterControls";
 
@@ -20,22 +20,13 @@ export default function AllTrainingsPage(): JSX.Element {
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
-  
-  const TrainingFilterControls: React.FC = () => {
-    const { filters, setFilters } = useContext(FilterContext);
-  
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
-    }
-  };
+
+  const { trainingsFilter } = useContext(TrainingsFilterContext);
+
   useEffect(() => {
     if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings).then(() => setIsLoading(false));
-  }, []);
+  }, [trainingsFilter]);
 
   return isLoading ? (
     <ProgressBar />

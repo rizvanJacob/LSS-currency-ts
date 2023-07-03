@@ -17,6 +17,7 @@ import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
 import React from "react";
+import { TrainingFilterOptions } from "./@types/training";
 
 export const UPDATED = "23 Jun 1515H";
 
@@ -46,22 +47,24 @@ export const TitleContext = createContext<React.Dispatch<
 > | null>(null);
 
 
-interface Filters {
-  [key: string]: string;
-}
+// const TrainingsFilterContext = createContext<{
+//   filter: TrainingFilterOptions;
+//   setFilter: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
+// }>({
+//   filter: {},
+//   setFilter: () => {},
+// });
+// export const TrainingsFilterProvider: React.FC = ({ children }) => {
+//   const [filter, setFilter] = useState<TrainingFilterOptions>();
 
-interface FilterContextProps {
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-}
-
-export const FilterContext = createContext<FilterContextProps | null>(null);
+export const TrainingsFilterContext = createContext<any>(null);
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [filters, setFilters] = useState<Filters>({});
+  //const [filters, setFilters] = useState<TrainingFilterOptions>();
+  const [trainingsFilter, setTrainingsFilter] = useState<any>(null);
 
   
   //const navigate = useNavigate();
@@ -172,8 +175,8 @@ function App() {
             <VARoutes />
           </>
         )}
-        <FilterContext.Provider value={{ filters, setFilters }}>
-        </FilterContext.Provider>
+        <TrainingsFilterContext.Provider value={{ trainingsFilter, setTrainingsFilter }}>
+        </TrainingsFilterContext.Provider>
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
   );

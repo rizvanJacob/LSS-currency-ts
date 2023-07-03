@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Training, TrainingFilterOptions } from "../../../../@types/training";
+import { TrainingsFilterContext } from "../../../../App";
 
 type Props = {
   filterOptions: TrainingFilterOptions;
@@ -6,17 +8,20 @@ type Props = {
   trainings: Training[];
 };
 
-const TrainingsFilterControls = ({
-  filterOptions,
-  setFilterOptions,
-  trainings,
-}: Props) => {
+const TrainingsFilterControls = ({filterOptions, setFilterOptions, trainings, }: Props) => {
+  
+  const { trainingsFilter, setTrainingsFilter } = useContext(TrainingsFilterContext);
+
   return (
     <div className="flex flex-row justify-end items-center flex-nowrap">
       <select
         className="select select-ghost select-xs w-full max-w-xs flex-auto"
-        value={filterOptions.requirement}
+        value={trainingsFilter.requirement || filterOptions.requirement}
         onChange={(event) => {
+          setTrainingsFilter({
+            ...trainingsFilter,
+            requirement: parseInt(event.target.value),
+          });
           setFilterOptions({
             ...filterOptions,
             requirement: parseInt(event.target.value),
@@ -52,8 +57,12 @@ const TrainingsFilterControls = ({
         <input
           type="checkbox"
           className="toggle toggle-primary toggle-xs"
-          checked={filterOptions.showCompleted}
+          checked={trainingsFilter.showCompleted || filterOptions.showCompleted}
           onChange={(event) => {
+            setTrainingsFilter({
+              ...trainingsFilter,
+              showCompleted: event.target.checked,
+            });
             setFilterOptions({
               ...filterOptions,
               showCompleted: event.target.checked,
