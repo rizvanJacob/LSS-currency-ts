@@ -82,7 +82,7 @@ const attemptLogin = async (
     // const decoded = jwt_decode(token) as UserPayload;
     // const currentUser = decoded as CurrentUser;
 
-    setCurrentUser(currentUser);
+    setCurrentUser(decoded as CurrentUser);
     const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
     navigate("/", { replace: true });
     return clearLogoutTimer;

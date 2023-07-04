@@ -5,7 +5,7 @@ import { Training, TrainingFilterOptions } from "../../../@types/training";
 import TrainingList from "./components/TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, FilterContext } from "../../../App";
+import { CurrentUserContext, TitleContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import TrainingsFilterControls from "./components/TrainingsFilterControls";
 
@@ -21,7 +21,7 @@ export default function AllTrainingsPage(): JSX.Element {
     React.SetStateAction<string>
   > | null>(TitleContext);
   
-  const TrainingFilterControls: React.FC = () => {
+  /*const TrainingFilterControls: React.FC = () => {
     const { filters, setFilters } = useContext(FilterContext);
   
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ export default function AllTrainingsPage(): JSX.Element {
         [name]: value,
       }));
     }
-  };
+  }; */
   useEffect(() => {
     if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings).then(() => setIsLoading(false));
