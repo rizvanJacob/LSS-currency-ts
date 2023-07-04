@@ -17,6 +17,7 @@ import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
 import React from "react";
+import { TrainingFilterOptions } from "./@types/training";
 
 export const UPDATED = "23 Jun 1515H";
 
@@ -71,15 +72,12 @@ export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
 > | null>(null);
 
-/*#Nimalan
+/*# Nimalan
 interface Filters {
   [key: string]: string;
 }
 
-interface FilterContextProps {
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-}
+//export const TrainingsFilterContext = createContext<any>(null);
 
 export const FilterContext = createContext<FilterContextProps | null>(null); */
 
