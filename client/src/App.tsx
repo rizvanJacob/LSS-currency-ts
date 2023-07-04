@@ -57,14 +57,32 @@ export const TitleContext = createContext<React.Dispatch<
 // export const TrainingsFilterProvider: React.FC = ({ children }) => {
 //   const [filter, setFilter] = useState<TrainingFilterOptions>();
 
-export const TrainingsFilterContext = createContext<any>(null);
+//export const TrainingsFilterContext = createContext<any>(null);
+
+// export interface TrainingFilterOptions {
+//   requirement: number;
+//   showCompleted: boolean;
+// }
+
+export const TrainingsFilterContext = createContext<{
+  filterOptions: TrainingFilterOptions;
+  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
+}>({
+  filterOptions: { requirement: 0, showCompleted: false },
+  setFilterOptions: () => {},
+});
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   //const [filters, setFilters] = useState<TrainingFilterOptions>();
-  const [trainingsFilter, setTrainingsFilter] = useState<any>(null);
+  //const [trainingsFilter, setTrainingsFilter] = useState<any>(null);
+  const [trainingsFilterOptions, setTrainingsFilterOptions] = useState<TrainingFilterOptions>({
+    requirement: 0,
+    showCompleted: false,
+  });
+
 
   
   //const navigate = useNavigate();
@@ -175,7 +193,7 @@ function App() {
             <VARoutes />
           </>
         )}
-        <TrainingsFilterContext.Provider value={{ trainingsFilter, setTrainingsFilter }}>
+        <TrainingsFilterContext.Provider value={{ filterOptions: trainingsFilterOptions, setFilterOptions: setTrainingsFilterOptions }}>
         </TrainingsFilterContext.Provider>
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
