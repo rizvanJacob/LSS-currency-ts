@@ -18,6 +18,8 @@ import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
 import React from "react";
 import { TrainingFilterOptions } from "./@types/training";
+import { UserFilterOptions } from "./@types/user";
+import { TraineeFilterOptions } from "./@types/trainee";
 
 export const UPDATED = "23 Jun 1515H";
 
@@ -46,24 +48,36 @@ export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
 > | null>(null);
 
+
+type MergedFilterOptions = {
+  trainingsFilter: TrainingFilterOptions;
+  usersFilter: UserFilterOptions;
+  traineesFilter: TraineeFilterOptions;
+};
+
 export const TrainingsFilterContext = createContext<{
-  filterOptions: TrainingFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
+  filterOptions: MergedFilterOptions;
+  setFilterOptions: React.Dispatch<React.SetStateAction<MergedFilterOptions>>;
 }>({
-  filterOptions: { requirement: 0, showCompleted: false },
+  filterOptions: {
+    trainingsFilter: { requirement: 0, showCompleted: false },
+    usersFilter: { accountType: 0 },
+    traineesFilter: { category: 0 }, 
+  },
   setFilterOptions: () => {},
 });
-
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const [trainingsFilterOptions, setTrainingsFilterOptions] = useState<TrainingFilterOptions>({
-    requirement: 0,
-    showCompleted: false,
+  const [filterOptions, setFilterOptions] = useState<MergedFilterOptions>({
+    trainingsFilter: { requirement: 0, showCompleted: false },
+    usersFilter: { accountType: 0 }, 
+    traineesFilter: { category: 0 }, 
   });
+
 
 
   useEffect(() => {
@@ -100,10 +114,7 @@ function App() {
             value={{ filters: traineeFilters, setFilters: setTraineeFilters }}
           > */}
             <TrainingsFilterContext.Provider
-              value={{
-                filterOptions: trainingsFilterOptions,
-                setFilterOptions: setTrainingsFilterOptions,
-              }}
+              value={{ filterOptions, setFilterOptions }}
             >
               {currentUser ? (
                 <div className="drawer">
