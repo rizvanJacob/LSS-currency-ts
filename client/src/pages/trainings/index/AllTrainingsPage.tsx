@@ -5,16 +5,17 @@ import { Training, TrainingFilterOptions } from "../../../@types/training";
 import TrainingList from "./components/TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext } from "../../../App";
+import { CurrentUserContext, TitleContext, TrainingsFilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import TrainingsFilterControls from "./components/TrainingsFilterControls";
 
 export default function AllTrainingsPage(): JSX.Element {
+  const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [filterOptions, setFilterOptions] = useState<TrainingFilterOptions>({
-    requirement: 0,
-    showCompleted: false,
-  });
+  // const [filterOptions, setFilterOptions] = useState<TrainingFilterOptions>({
+  //   requirement: 0,
+  //   showCompleted: false,
+  // });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const setTitle = useContext<React.Dispatch<
@@ -35,6 +36,8 @@ export default function AllTrainingsPage(): JSX.Element {
   useEffect(() => {
     if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings).then(() => setIsLoading(false));
+
+    setFilterOptions({ requirement: 0, showCompleted: false });
   }, []);
 
   return isLoading ? (

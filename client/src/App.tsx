@@ -42,70 +42,62 @@ const TRAINEE_ACCOUNT_TYPES = [
 const USER_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin];
 
 //#Alvin
-interface UserFilters {
-  [key: string]: string;
-}
+// interface UserFilters {
+//   [key: string]: string;
+// }
 
-interface TraineeFilters {
-  [key: string]: string;
-}
+// interface TraineeFilters {
+//   [key: string]: string;
+// }
 
-interface TrainingFilters {
-  [key: string]: string;
-}
+// interface TrainingFilters {
+//   [key: string]: string;
+// }
 
-interface FilterContextProps<T> {
-  filters: T;
-  setFilters: React.Dispatch<React.SetStateAction<T>>;
-}
+// interface FilterContextProps<T> {
+//   filters: T;
+//   setFilters: React.Dispatch<React.SetStateAction<T>>;
+// }
 
 //#Alvin:
-export const UsersFilterContext =
-  createContext<FilterContextProps<UserFilters> | null>(null);
-export const TraineesFilterContext =
-  createContext<FilterContextProps<TraineeFilters> | null>(null);
-export const TrainingsFilterContext =
-  createContext<FilterContextProps<TrainingFilters> | null>(null);
+// export const UsersFilterContext =
+//   createContext<FilterContextProps<UserFilters> | null>(null);
+// export const TraineesFilterContext =
+//   createContext<FilterContextProps<TraineeFilters> | null>(null);
+// export const TrainingsFilterContext =
+//   createContext<FilterContextProps<TrainingFilters> | null>(null);
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
 > | null>(null);
 
-/*# Nimalan
-interface Filters {
-  [key: string]: string;
-}
+export const TrainingsFilterContext = createContext<{
+  filterOptions: TrainingFilterOptions;
+  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
+}>({
+  filterOptions: { requirement: 0, showCompleted: false },
+  setFilterOptions: () => {},
+});
 
-//export const TrainingsFilterContext = createContext<any>(null);
-
-export const FilterContext = createContext<FilterContextProps | null>(null); */
 
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  const [trainingsFilterOptions, setTrainingsFilterOptions] = useState<TrainingFilterOptions>({
+    requirement: 0,
+    showCompleted: false,
+  });
+
+
   //#Alvin:
-  const [userFilters, setUserFilters] = useState<UserFilters>({});
-  const [traineeFilters, setTraineeFilters] = useState<TraineeFilters>({});
-  const [trainingFilters, setTrainingFilters] = useState<TrainingFilters>({});
+  // const [userFilters, setUserFilters] = useState<UserFilters>({});
+  // const [traineeFilters, setTraineeFilters] = useState<TraineeFilters>({});
+  // const [trainingFilters, setTrainingFilters] = useState<TrainingFilters>({});
 
-  /*#Nimalan const [filters, setFilters] = useState<Filters>({}); */
 
-  //const navigate = useNavigate();
-
-  //I would park this function elsewhere, perhaps in a "userUtils" file within the utilities folder
-  // const handleIdleTimeout = () => {
-  //   setCurrentUser(null);
-  //   localStorage.clear();
-
-  //   //instead of using window.location.href,
-  //   //you should use a react hook to navigate around the app.
-  //   //Can you think of the downsides of using this line below?
-  //   alert("Session has expired");
-  //   window.location.href = "http://localhost:5173"; // Redirect to "localhost:5173" when user is inactive for ten seconds
-  // };
 
   useEffect(() => {
     let clearLogoutTimer: any = null;
@@ -134,16 +126,16 @@ function App() {
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
-        <UsersFilterContext.Provider
+        {/* <UsersFilterContext.Provider
           value={{ filters: userFilters, setFilters: setUserFilters }}
-        >
-          <TraineesFilterContext.Provider
+        > */}
+          {/* <TraineesFilterContext.Provider
             value={{ filters: traineeFilters, setFilters: setTraineeFilters }}
-          >
+          > */}
             <TrainingsFilterContext.Provider
               value={{
-                filters: trainingFilters,
-                setFilters: setTrainingFilters,
+                filterOptions: trainingsFilterOptions,
+                setFilterOptions: setTrainingsFilterOptions,
               }}
             >
               {currentUser ? (
@@ -223,8 +215,8 @@ function App() {
                 </>
               )}
             </TrainingsFilterContext.Provider>
-          </TraineesFilterContext.Provider>
-        </UsersFilterContext.Provider>
+          {/* </TraineesFilterContext.Provider>
+        </UsersFilterContext.Provider> */}
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
   );

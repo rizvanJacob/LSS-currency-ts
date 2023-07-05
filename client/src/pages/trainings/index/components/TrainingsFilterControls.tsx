@@ -1,16 +1,19 @@
+import { useContext } from "react";
 import { Training, TrainingFilterOptions } from "../../../../@types/training";
+import { TrainingsFilterContext } from "../../../../App";
 
 type Props = {
-  filterOptions: TrainingFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
+  //  filterOptions: TrainingFilterOptions;
+  //  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
   trainings: Training[];
 };
 
 const TrainingsFilterControls = ({
-  filterOptions,
-  setFilterOptions,
-  trainings,
+  // filterOptions,
+  // setFilterOptions,
+  trainings
 }: Props) => {
+  const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);
   return (
     <div className="flex flex-row justify-end items-center flex-nowrap">
       <select
