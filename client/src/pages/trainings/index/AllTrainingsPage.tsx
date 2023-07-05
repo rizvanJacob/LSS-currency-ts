@@ -12,32 +12,15 @@ import TrainingsFilterControls from "./components/TrainingsFilterControls";
 export default function AllTrainingsPage(): JSX.Element {
   const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);
   const [trainings, setTrainings] = useState<Training[]>([]);
-  // const [filterOptions, setFilterOptions] = useState<TrainingFilterOptions>({
-  //   requirement: 0,
-  //   showCompleted: false,
-  // });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
   
-  /*const TrainingFilterControls: React.FC = () => {
-    const { filters, setFilters } = useContext(FilterContext);
-  
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: value,
-      }));
-    }
-  }; */
   useEffect(() => {
     if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings).then(() => setIsLoading(false));
-
-    setFilterOptions({ requirement: 0, showCompleted: false });
   }, []);
 
   return isLoading ? (
@@ -46,8 +29,6 @@ export default function AllTrainingsPage(): JSX.Element {
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-auto scrollbar-hide">
         <TrainingsFilterControls
-          filterOptions={filterOptions}
-          setFilterOptions={setFilterOptions}
           trainings={trainings}
         />
         {trainings.length > 0 ? (
@@ -87,17 +68,3 @@ const filterTrainings = (
 
   });
 };
-
-// const TrainingsFilterControls = () => {
-//   const { setTrainingsFilter } = useContext(TrainingsFilterContext);
-
-//   const handleFilterChange = (event: any) => {
-//     const { name, value } = event.target;
-
-//     setTrainingsFilter((prevFilter: any) => ({
-//       ...prevFilter,
-//       [name]: value,
-//     }));
-//   };
-
-// };

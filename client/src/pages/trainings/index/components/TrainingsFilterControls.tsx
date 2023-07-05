@@ -3,14 +3,10 @@ import { Training, TrainingFilterOptions } from "../../../../@types/training";
 import { TrainingsFilterContext } from "../../../../App";
 
 type Props = {
-  //  filterOptions: TrainingFilterOptions;
-  //  setFilterOptions: React.Dispatch<React.SetStateAction<TrainingFilterOptions>>;
   trainings: Training[];
 };
 
 const TrainingsFilterControls = ({
-  // filterOptions,
-  // setFilterOptions,
   trainings
 }: Props) => {
   const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);

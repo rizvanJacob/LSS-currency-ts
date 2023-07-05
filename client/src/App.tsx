@@ -41,32 +41,6 @@ const TRAINEE_ACCOUNT_TYPES = [
 ];
 const USER_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin];
 
-//#Alvin
-// interface UserFilters {
-//   [key: string]: string;
-// }
-
-// interface TraineeFilters {
-//   [key: string]: string;
-// }
-
-// interface TrainingFilters {
-//   [key: string]: string;
-// }
-
-// interface FilterContextProps<T> {
-//   filters: T;
-//   setFilters: React.Dispatch<React.SetStateAction<T>>;
-// }
-
-//#Alvin:
-// export const UsersFilterContext =
-//   createContext<FilterContextProps<UserFilters> | null>(null);
-// export const TraineesFilterContext =
-//   createContext<FilterContextProps<TraineeFilters> | null>(null);
-// export const TrainingsFilterContext =
-//   createContext<FilterContextProps<TrainingFilters> | null>(null);
-
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
@@ -90,13 +64,6 @@ function App() {
     requirement: 0,
     showCompleted: false,
   });
-
-
-  //#Alvin:
-  // const [userFilters, setUserFilters] = useState<UserFilters>({});
-  // const [traineeFilters, setTraineeFilters] = useState<TraineeFilters>({});
-  // const [trainingFilters, setTrainingFilters] = useState<TrainingFilters>({});
-
 
 
   useEffect(() => {
