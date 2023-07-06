@@ -1,25 +1,26 @@
+import { useContext } from "react";
 import { User, UserFilterOptions } from "../../../../@types/user";
+import { MergedFilterContext } from "../../../../App";
 
 type Prop = {
-  filterOptions: UserFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<UserFilterOptions>>;
   users: User[];
 };
 
-const UsersFilterControls = ({
-  filterOptions,
-  setFilterOptions,
-  users,
-}: Prop) => {
+const UsersFilterControls = ({ users }: Prop) => {
+  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
+
   return (
     <div className="flex flex-row items-center justify-end">
       <select
-        value={filterOptions.accountType}
+        value={filterOptions.usersFilter.accountType}
         onChange={(e) =>
-          setFilterOptions({
+          setFilterOptions((filterOptions) => ({
             ...filterOptions,
-            accountType: parseInt(e.target.value),
-          })
+            usersFilter: {
+              ...filterOptions.usersFilter,
+              accountType: parseInt(e.target.value),
+            },
+          }))
         }
         className="select select-ghost select-xs w-full max-w-xs self-end"
       >
