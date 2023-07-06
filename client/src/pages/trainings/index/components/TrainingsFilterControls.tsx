@@ -11,26 +11,6 @@ const TrainingsFilterControls = ({
 }: Props) => {
   const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
 
-  const handleRequirementChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterOptions((prevFilterOptions) => ({
-      ...prevFilterOptions,
-      trainingsFilter: {
-        ...prevFilterOptions.trainingsFilter,
-        requirement: parseInt(event.target.value),
-      },
-    }));
-  };
-
-  const handleShowCompletedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterOptions((prevFilterOptions) => ({
-      ...prevFilterOptions,
-      trainingsFilter: {
-        ...prevFilterOptions.trainingsFilter,
-        showCompleted: event.target.checked,
-      },
-    }));
-  };
-
   return (
     <div className="flex flex-row justify-end items-center flex-nowrap">
       <select
