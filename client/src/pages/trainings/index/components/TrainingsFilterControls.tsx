@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Training, TrainingFilterOptions } from "../../../../@types/training";
-import { TrainingsFilterContext } from "../../../../App";
+import { MergedFilterContext } from "../../../../App";
 
 type Props = {
   trainings: Training[];
@@ -9,18 +9,43 @@ type Props = {
 const TrainingsFilterControls = ({
   trainings
 }: Props) => {
-  const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);
+  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
+
+  const handleRequirementChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterOptions((prevFilterOptions) => ({
+      ...prevFilterOptions,
+      trainingsFilter: {
+        ...prevFilterOptions.trainingsFilter,
+        requirement: parseInt(event.target.value),
+      },
+    }));
+  };
+
+  const handleShowCompletedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterOptions((prevFilterOptions) => ({
+      ...prevFilterOptions,
+      trainingsFilter: {
+        ...prevFilterOptions.trainingsFilter,
+        showCompleted: event.target.checked,
+      },
+    }));
+  };
+
   return (
     <div className="flex flex-row justify-end items-center flex-nowrap">
       <select
         className="select select-ghost select-xs w-full max-w-xs flex-auto"
-        value={filterOptions.requirement}
+        value={filterOptions.trainingsFilter.requirement}
         onChange={(event) => {
-          setFilterOptions({
+          setFilterOptions((filterOptions) => ({
             ...filterOptions,
-            requirement: parseInt(event.target.value),
-          });
-        }}
+            trainingsFilter: {
+              ...filterOptions.trainingsFilter,
+              requirement: parseInt(event.target.value),
+            },
+          }));
+        }
+      }
       >
         <option value={0}>Show all</option>
         {trainings
@@ -51,13 +76,17 @@ const TrainingsFilterControls = ({
         <input
           type="checkbox"
           className="toggle toggle-primary toggle-xs"
-          checked={filterOptions.showCompleted}
+          checked={filterOptions.trainingsFilter.showCompleted}
           onChange={(event) => {
-            setFilterOptions({
+            setFilterOptions((filterOptions) => ({
               ...filterOptions,
-              showCompleted: event.target.checked,
-            });
-          }}
+              trainingsFilter: {
+                ...filterOptions.trainingsFilter,
+                showCompleted: event.target.checked,
+              },
+            }));
+          }
+        }
         />
       </label>
     </div>

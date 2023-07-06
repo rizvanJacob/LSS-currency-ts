@@ -5,12 +5,12 @@ import { Training, TrainingFilterOptions } from "../../../@types/training";
 import TrainingList from "./components/TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, TrainingsFilterContext } from "../../../App";
+import { CurrentUserContext, TitleContext, MergedFilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import TrainingsFilterControls from "./components/TrainingsFilterControls";
 
 export default function AllTrainingsPage(): JSX.Element {
-  const { filterOptions, setFilterOptions } = useContext(TrainingsFilterContext);
+  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
@@ -33,7 +33,7 @@ export default function AllTrainingsPage(): JSX.Element {
         />
         {trainings.length > 0 ? (
           <TrainingList
-            trainings={filterTrainings(trainings, filterOptions)}
+            trainings={filterTrainings(trainings, filterOptions.trainingsFilter)}
             setTrainings={setTrainings}
           />
         ) : (

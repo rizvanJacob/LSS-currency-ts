@@ -55,7 +55,7 @@ type MergedFilterOptions = {
   traineesFilter: TraineeFilterOptions;
 };
 
-export const TrainingsFilterContext = createContext<{
+export const MergedFilterContext = createContext<{
   filterOptions: MergedFilterOptions;
   setFilterOptions: React.Dispatch<React.SetStateAction<MergedFilterOptions>>;
 }>({
@@ -113,7 +113,7 @@ function App() {
           {/* <TraineesFilterContext.Provider
             value={{ filters: traineeFilters, setFilters: setTraineeFilters }}
           > */}
-            <TrainingsFilterContext.Provider
+            <MergedFilterContext.Provider
               value={{ filterOptions, setFilterOptions }}
             >
               {currentUser ? (
@@ -192,7 +192,7 @@ function App() {
                   <VARoutes />
                 </>
               )}
-            </TrainingsFilterContext.Provider>
+            </MergedFilterContext.Provider>
           {/* </TraineesFilterContext.Provider>
         </UsersFilterContext.Provider> */}
       </CurrentUserContext.Provider>
