@@ -1,3 +1,5 @@
+//RIZ: Why create another component called Calendar View here instead of just reusing the same Calendar component from pages/trainees/book/components?
+
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { Training } from "../../../@types/training";

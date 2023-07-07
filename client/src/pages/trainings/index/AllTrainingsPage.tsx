@@ -39,13 +39,19 @@ export default function AllTrainingsPage(): JSX.Element {
         <TrainingsFilterControls
           trainings={trainings}
         />
+        {/* //RIZ: Set up a new component to toggle between calendar and table view. you'll need a new boolean state for it */}
+        {/* if booleanState is true, then display the calendar view, else display the table view */}
         <CalendarView  // added
+          //RIZ: instead of trainings you should pass filterTrainings(trainings, filterOptions.trainingsFilter)
           trainings={trainings}
           displayDate={selectedDate}
           setDisplayDate={setSelectedDate}
           handleFocus={handleFocus}
+          //RIZ: instead of line 48, you should just pass the correct set of trainings you want to display to the CalendarView component
           currency="DFS"  // Replace "DFS" with the current selected currency
         />
+        {/* RIZ: Next, you should have a TrainingList alongside your calendar view. for this List, you pass trainings={trainings.filter(filter all trainings on the selected date + filterOptions.trainingsFilter)} */}
+        {/* RIZ: You should also move your calendar view inside this conditional; ie if there are no trainings it will just say no trainings */}
         {trainings.length > 0 ? (
           <TrainingList
             trainings={filterTrainings(trainings, filterOptions.trainingsFilter)}
