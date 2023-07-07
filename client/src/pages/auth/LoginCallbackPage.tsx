@@ -7,7 +7,6 @@ import {
   setCurrentUserProp,
 } from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
-import dayjs from "dayjs";
 import { createLogoutTimer } from "../../utilities/accountUtils";
 
 const LoginCallbackPage = ({
@@ -50,8 +49,8 @@ const attemptLogin = async (
 
     const decoded = jwt_decode(token) as UserPayload;
     const currentUser = decoded as CurrentUser;
-
     setCurrentUser(currentUser);
+
     const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
     navigate("/", { replace: true });
     return clearLogoutTimer;

@@ -1,27 +1,23 @@
 import { useState, useEffect, useContext } from "react";
-import ApprovedUsersList from "./components/ApprovedUsersList";
 import getRequest from "../../../utilities/getRequest";
 import { User, UserFilterOptions } from "../../../@types/user";
+import ApprovedUsersList from "./components/ApprovedUsersList";
 import UnapprovedUsersList from "./components/UnapprovedUsersList";
+import { TitleContext, FilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
-import { TitleContext } from "../../../App";
 import UsersFilterControls from "./components/UsersFilterControls";
 import PendingCollapseHeader from "./components/PendingCollapseHeader";
 
 export default function AllUsersPage(): JSX.Element {
+  const { filterOptions } = useContext(FilterContext);
   const [users, setUsers] = useState<User[]>([]);
-  const [filterOptions, setFilterOptions] = useState<UserFilterOptions>({
-    accountType: 0,
-  });
   const [showUnapproved, setShowUnapproved] = useState<boolean>(true);
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
 
   useEffect(() => {
-    if (setTitle) {
-      setTitle("Users Index");
-    }
+    if (setTitle) setTitle("Users Index");
     getRequest(`/api/users`, setUsers);
   }, []);
 
@@ -54,19 +50,9 @@ export default function AllUsersPage(): JSX.Element {
       )}
 
       <h1 className="text-lg font-bold self-start py-4"> Approved Users:</h1>
-      <UsersFilterControls
-        filterOptions={filterOptions}
-        setFilterOptions={setFilterOptions}
-        users={approvedUsers}
-      />
+      <UsersFilterControls users={approvedUsers} />
       <ApprovedUsersList
-        users={
-          filterOptions.accountType
-            ? approvedUsers.filter(
-                (user) => user.accountType === filterOptions.accountType
-              )
-            : approvedUsers
-        }
+        users={filterUsers(approvedUsers, filterOptions.usersFilter)}
         setUsers={setUsers}
       />
     </>
@@ -74,3 +60,16 @@ export default function AllUsersPage(): JSX.Element {
     <ProgressBar />
   );
 }
+
+//utility function to filter the users based on a filter options object
+const filterUsers = (users: User[], filterOptions: UserFilterOptions) => {
+  return users.filter((user) => {
+    let accountTypeFilter;
+    if (filterOptions.accountType) {
+      accountTypeFilter = user.accountType === filterOptions.accountType;
+    } else {
+      accountTypeFilter = true;
+    }
+    return accountTypeFilter;
+  });
+};

@@ -1,8 +1,7 @@
-import { Account } from "../../../../../server/src/constants";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext } from "../../../App";
+import { CurrentUserContext, TitleContext, FilterContext } from "../../../App";
 import getRequest from "../../../utilities/getRequest";
 import TraineesTable from "./components/TraineesTable";
 import { Trainee, TraineeFilterOptions } from "../../../@types/trainee";
@@ -13,11 +12,9 @@ import TraineesFilterControls from "./components/TraineesFilterControls";
 import { TRAINEE_AMEND_ACCESS } from "../TraineesRoutes";
 
 const TraineesIndexPage = (): JSX.Element => {
+  const { filterOptions } = useContext(FilterContext);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filterOptions, setFilterOptions] = useState<TraineeFilterOptions>({
-    category: 0,
-  });
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
@@ -48,17 +45,9 @@ const TraineesIndexPage = (): JSX.Element => {
         <ProgressBar />
       ) : trainees.length ? (
         <>
-          <TraineesFilterControls
-            filterOptions={filterOptions}
-            setFilterOptions={setFilterOptions}
-            trainees={trainees}
-          />
+          <TraineesFilterControls trainees={trainees} />
           <TraineesTable
-            trainees={
-              filterOptions.category
-                ? trainees.filter((t) => t.category === filterOptions.category)
-                : trainees
-            }
+            trainees={filterTrainees(trainees, filterOptions.traineesFilter)}
             deleteTrainee={deleteTrainee}
           />
         </>
@@ -70,3 +59,16 @@ const TraineesIndexPage = (): JSX.Element => {
 };
 
 export default TraineesIndexPage;
+
+const filterTrainees = (
+  trainees: Trainee[],
+  filterOptions: TraineeFilterOptions
+) => {
+  return trainees.filter((trainee) => {
+    if (filterOptions.category) {
+      return trainee.category === filterOptions.category;
+    } else {
+      return true;
+    }
+  });
+};
