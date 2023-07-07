@@ -8,6 +8,20 @@ type Props = {
 
 const TrainingsFilterControls = ({ trainings }: Props) => {
   const { filterOptions, setFilterOptions } = useContext(FilterContext);
+  const requirements = trainings.reduce(
+    (acc: { id: number; name: string }[], training) => {
+      if (!acc.find((requirement) => requirement.id === training.requirement)) {
+        const requirement = {
+          id: training.requirement,
+          name: training?.requirements?.name || "",
+        };
+        acc.push(requirement);
+      }
+      return acc;
+    },
+    []
+  );
+  requirements.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="flex flex-row justify-end items-center flex-nowrap">
@@ -25,26 +39,11 @@ const TrainingsFilterControls = ({ trainings }: Props) => {
         }}
       >
         <option value={0}>Show all</option>
-        {trainings
-          .reduce((acc: { id: number; name: string }[], training) => {
-            if (
-              !acc.find(
-                (requirement) => requirement.id === training.requirement
-              )
-            ) {
-              const requirement = {
-                id: training.requirement,
-                name: training?.requirements?.name || "",
-              };
-              acc.push(requirement);
-            }
-            return acc;
-          }, [])
-          .map((requirement) => (
-            <option value={requirement.id} key={requirement.id}>
-              {requirement.name}
-            </option>
-          ))}
+        {requirements.map((requirement) => (
+          <option value={requirement.id} key={requirement.id}>
+            {requirement.name}
+          </option>
+        ))}
       </select>
       <label className="cursor-pointer label">
         <span className="label-text text-xs text-left whitespace-nowrap">

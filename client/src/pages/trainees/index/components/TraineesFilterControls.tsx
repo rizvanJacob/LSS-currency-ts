@@ -32,6 +32,7 @@ const TraineesFilterControls = ({ trainees }: Props) => {
     },
     []
   );
+  categories.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="flex flex-row justify-end items-center">
