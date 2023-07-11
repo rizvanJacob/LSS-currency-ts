@@ -136,7 +136,8 @@ export default function EditTrainingForm(): JSX.Element {
                     name="start"
                     selected={dayjs(training?.start).toDate()}
                     value={dayjs(training?.start) || ""}
-                    dateFormat="dd/MM/yyyy"
+                    dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                    placeholderText="dd/mm/yy"
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={(value: Date) => {
                       handleDateInputChange(value, "start")
@@ -170,7 +171,8 @@ export default function EditTrainingForm(): JSX.Element {
                     type="date"
                     id="end"
                     name="end"
-                    dateFormat="dd/MM/yyyy"
+                    dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                    placeholderText="dd/mm/yy"
                     value={dayjs(training?.end) || ""}
                     selected={dayjs(training?.end).toDate()}
                     className="input-text input input-bordered input-primary w-full max-w-xs"
