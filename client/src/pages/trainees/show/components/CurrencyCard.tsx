@@ -25,7 +25,11 @@ type Booking = {
   };
 };
 
-const BOOKING_STATUSES = ["", "Booked", "On Waitlist"];
+const getStatusName = (status: number) => {
+  if (status === 1) return "Booked";
+  if (status === 6) return "On Waitlist";
+  return "";
+};
 
 const CurrencyCard = ({
   currency,
@@ -91,7 +95,7 @@ const CurrencyCard = ({
             <p>Next due: {dayjs(currency.expiry).format("DD-MMM-YY")}</p>
             {booking.status > 0 && (
               <Link to={`/trainings/${booking.trainings?.id}`} className="link">
-                {BOOKING_STATUSES[booking.status]}:{" "}
+                {getStatusName(booking.status)}:{" "}
                 {dayjs(booking.trainings?.start).format("DD-MMM-YY")}
               </Link>
             )}
