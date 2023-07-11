@@ -157,7 +157,8 @@ export default function CreateTrainingForm(): JSX.Element {
                   as={DatePicker}
                   type="date"
                   id="start"
-                  dateFormat="dd/MM/yyyy"
+                  dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                  placeholderText="dd/mm/yy"
                   name="start"
                   selected={training?.start ? new Date(training.start) : null}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
@@ -193,7 +194,8 @@ export default function CreateTrainingForm(): JSX.Element {
                   as={DatePicker}
                   type="date"
                   id="end"
-                  dateFormat="dd/MM/yyyy"
+                  dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                  placeholderText="dd/mm/yy"
                   name="end"
                   selected={training?.end ? new Date(training.end) : null}
                   className="input-text input input-bordered input-primary w-full max-w-xs"
