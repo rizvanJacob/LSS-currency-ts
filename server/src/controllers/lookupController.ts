@@ -71,6 +71,11 @@ const trainingsProvided = async (req: Request, res: Response) => {
           },
         },
       },
+      orderBy: {
+        requirements: {
+          name: "asc",
+        },
+      },
     });
     res.status(200).json(trainingsProvided);
   } catch (error) {
