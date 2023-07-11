@@ -21,6 +21,7 @@ const CurrencyFieldset = ({
   incrementCount,
 }: Prop) => {
   useEffect(() => {
+    console.log("attempt to render currency fieldset");
     incrementCount();
   }, []);
 
@@ -41,8 +42,12 @@ const CurrencyFieldset = ({
                 dateFormat="dd/MM/yyyy"
                 name="currencies"
                 className="input-text text-primary input input-bordered input-primary w-full max-w-xs input-xs xs:input-md"
-                value={currency?.expiry || null}
-                selected={currency?.expiry || null}
+                value={
+                  currency?.expiry ? dayjs(currency?.expiry).toDate() : null
+                }
+                selected={
+                  currency?.expiry ? dayjs(currency?.expiry).toDate() : null
+                }
                 onChange={(value: Date) => {
                   handleExpiryChange(value, requirement.id);
                 }}

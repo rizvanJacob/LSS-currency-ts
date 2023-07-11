@@ -1,44 +1,49 @@
-import { User, UserFilterOptions } from "../../../../@types/user";
+import { useContext } from "react";
+import { User } from "../../../../@types/user";
+import { FilterContext } from "../../../../App";
 
 type Prop = {
-  filterOptions: UserFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<UserFilterOptions>>;
   users: User[];
 };
 
-const UsersFilterControls = ({
-  filterOptions,
-  setFilterOptions,
-  users,
-}: Prop) => {
+const UsersFilterControls = ({ users }: Prop) => {
+  const { filterOptions, setFilterOptions } = useContext(FilterContext);
+
+  const accountTypes = users.reduce(
+    (acc: { id: number; name: string }[], user) => {
+      if (!acc.find((accUser) => accUser.id === user.accountType)) {
+        acc.push({
+          id: user.accountType,
+          name: user.accountTypes?.name || "",
+        });
+      }
+      return acc;
+    },
+    []
+  );
+  accountTypes.sort((a, b) => a.name.localeCompare(b.name));
+  
   return (
     <div className="flex flex-row items-center justify-end">
       <select
-        value={filterOptions.accountType}
+        value={filterOptions.usersFilter.accountType}
         onChange={(e) =>
-          setFilterOptions({
+          setFilterOptions((filterOptions) => ({
             ...filterOptions,
-            accountType: parseInt(e.target.value),
-          })
+            usersFilter: {
+              ...filterOptions.usersFilter,
+              accountType: parseInt(e.target.value),
+            },
+          }))
         }
         className="select select-ghost select-xs w-full max-w-xs self-end"
       >
         <option value={0}>Show all</option>
-        {users
-          .reduce((acc: { id: number; name: string }[], user) => {
-            if (!acc.find((accUser) => accUser.id === user.accountType)) {
-              acc.push({
-                id: user.accountType,
-                name: user.accountTypes?.name || "",
-              });
-            }
-            return acc;
-          }, [])
-          .map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name}
-            </option>
-          ))}
+        {accountTypes.map((accountType) => (
+          <option key={accountType.id} value={accountType.id}>
+            {accountType.name}
+          </option>
+        ))}
       </select>
     </div>
   );

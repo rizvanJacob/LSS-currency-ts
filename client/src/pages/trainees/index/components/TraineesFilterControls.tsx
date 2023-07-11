@@ -1,19 +1,22 @@
-import React from "react";
-import { Trainee, TraineeFilterOptions } from "../../../../@types/trainee";
+import React, { useContext } from "react";
+import { Trainee } from "../../../../@types/trainee";
+import { FilterContext } from "../../../../App";
 
 type Props = {
-  filterOptions: TraineeFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<TraineeFilterOptions>>;
   trainees: Trainee[];
 };
 
-const TraineesFilterControls = ({
-  filterOptions,
-  setFilterOptions,
-  trainees,
-}: Props) => {
+const TraineesFilterControls = ({ trainees }: Props) => {
+  const { filterOptions, setFilterOptions } = useContext(FilterContext);
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterOptions({ category: Number(event.target.value) });
+    setFilterOptions((filterOptions) => ({
+      ...filterOptions,
+      traineesFilter: {
+        ...filterOptions.traineesFilter,
+        category: Number(event.target.value),
+      },
+    }));
   };
 
   const categories = trainees.reduce(
@@ -29,12 +32,13 @@ const TraineesFilterControls = ({
     },
     []
   );
+  categories.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="flex flex-row justify-end items-center">
       <select
         onChange={handleChange}
-        value={filterOptions.category}
+        value={filterOptions.traineesFilter.category}
         className="select select-ghost select-xs w-full max-w-xs self-end"
       >
         <option value={0}>Show all categories</option>
