@@ -54,18 +54,18 @@ export default function CreateTrainingForm(): JSX.Element {
 
   const handleDateInputChange = (value: Date | null, fieldName: string) => {
     setTraining((training) => {
-      if (fieldName === "start") {
-        const newStart = value || new Date();
-        const newEnd = value || new Date();
-        return { ...training, start: newStart, end: newEnd };
+            if (fieldName === "start") {
+         const newStart = value || new Date();
+         training.start = newStart;
+         training.end = newStart;
       } else if (fieldName === "end") {
         const newEnd = value || new Date();
-        return { ...training, end: newEnd };
-      } else {
-        return training;
+        training.end = newEnd;
       }
+      return training;
     });
   };
+
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -74,18 +74,23 @@ export default function CreateTrainingForm(): JSX.Element {
     setTraining((training) => {
       if (name === "start_time") {
         const [hours, minutes] = value.split(":");
-        const newStart = dayjs(training.start)
-          .set("hour", parseInt(hours))
-          .set("minute", parseInt(minutes))
+        const parsedHours = parseInt(hours);
+        const parsedMinutes = parseInt(minutes);
+          const newStart = dayjs(training.start)
+          .set("hour", isNaN(parsedHours) ? 0 : parsedHours)            
+          .set("minute", isNaN(parsedMinutes) ? 0 : parsedMinutes)
           .toDate();
         return { ...training, start: newStart, end: newStart };
+
       } else if (name === "end_time") {
         const [hours, minutes] = value.split(":");
-        const newEnd = dayjs(training.end)
-          .set("hour", parseInt(hours))
-          .set("minute", parseInt(minutes))
-          .toDate();
-        return { ...training, end: newEnd };
+        const parsedHours = parseInt(hours);
+        const parsedMinutes = parseInt(minutes);
+          const newEnd = dayjs(training.end)
+          .set("hour", isNaN(parsedHours) ? 0 : parsedHours)            
+          .set("minute", isNaN(parsedMinutes) ? 0 : parsedMinutes)
+            .toDate();
+          return { ...training, end: newEnd };
       } else if (name === "name") {
         return {
           ...training,

@@ -8,7 +8,7 @@ export default function TrainingTableRow() {
           Requirement
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden 2xs:table-cell">
-          Capacity
+          Vacancy
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
           Date (St.)
