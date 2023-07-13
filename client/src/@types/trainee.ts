@@ -20,7 +20,11 @@ export type Trainee = NewTrainee & {
   trainings?: {
     status: number;
     statuses?: { name: string };
-    trainings?: { requirement: number; start: Date };
+    trainings?: {
+      requirement: number;
+      start: Date;
+      requirements?: { alsoCompletes: number };
+    };
   }[];
 };
 

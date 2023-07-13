@@ -12,7 +12,6 @@ import { CurrentUser, UserPayload } from "./@types/currentUser";
 import TraineesRoutes from "./pages/trainees/TraineesRoutes";
 import LogoutCallback from "./components/LogoutCallback";
 import HomePageCallback from "./components/HomePageCallback";
-import VARoutes from "./pages/VA/VARoutes";
 import Navbar2 from "./components/Navbar/Navbar";
 import NavDrawer from "./components/Navbar/components/NavDrawer";
 import { createLogoutTimer } from "./utilities/accountUtils";
@@ -24,45 +23,19 @@ import { TraineeFilterOptions } from "./@types/trainee";
 export const UPDATED = "23 Jun 1515H";
 
 const AUTHORISE = true;
-const CURRENT_USER = {
-  id: 1,
-  accountType: Account.Admin,
-  authCategory: 1,
-};
-
-const TRAINING_ACCOUNT_TYPES = [
-  Account.Admin,
-  Account.TraineeAdmin,
-  Account.Trainer,
-];
-const TRAINEE_ACCOUNT_TYPES = [
-  Account.Admin,
-  Account.TraineeAdmin,
-  Account.Trainee,
-  Account.Trainer,
-];
-const USER_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin];
 
 export const CurrentUserContext = createContext<CurrentUser | null>(null);
 export const TitleContext = createContext<React.Dispatch<
   React.SetStateAction<string>
 > | null>(null);
-
-
-type MergedFilterOptions = {
-  trainingsFilter: TrainingFilterOptions;
-  usersFilter: UserFilterOptions;
-  traineesFilter: TraineeFilterOptions;
-};
-
-export const MergedFilterContext = createContext<{
-  filterOptions: MergedFilterOptions;
-  setFilterOptions: React.Dispatch<React.SetStateAction<MergedFilterOptions>>;
+export const FilterContext = createContext<{
+  filterOptions: FilterOptions;
+  setFilterOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
 }>({
   filterOptions: {
     trainingsFilter: { requirement: 0, showCompleted: false },
     usersFilter: { accountType: 0 },
-    traineesFilter: { category: 0 }, 
+    traineesFilter: { category: 0 },
   },
   setFilterOptions: () => {},
 });
@@ -71,14 +44,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const [filterOptions, setFilterOptions] = useState<MergedFilterOptions>({
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     trainingsFilter: { requirement: 0, showCompleted: false },
-    usersFilter: { accountType: 0 }, 
-    traineesFilter: { category: 0 }, 
+    usersFilter: { accountType: 0 },
+    traineesFilter: { category: 0 },
   });
-
-
 
   useEffect(() => {
     let clearLogoutTimer: any = null;
@@ -107,97 +77,107 @@ function App() {
   return (
     <TitleContext.Provider value={setTitle}>
       <CurrentUserContext.Provider value={currentUser}>
-        {/* <UsersFilterContext.Provider
-          value={{ filters: userFilters, setFilters: setUserFilters }}
-        > */}
-          {/* <TraineesFilterContext.Provider
-            value={{ filters: traineeFilters, setFilters: setTraineeFilters }}
-          > */}
-            <MergedFilterContext.Provider
-              value={{ filterOptions, setFilterOptions }}
-            >
-              {currentUser ? (
-                <div className="drawer">
-                  <input
-                    id="my-drawer-3"
-                    type="checkbox"
-                    className="drawer-toggle"
-                    checked={drawerOpen}
-                    readOnly={true}
-                  />
-                  <div className="drawer-content flex flex-col h-screen">
-                    <Navbar2
-                      accountType={currentUser.accountType}
-                      traineeId={currentUser.trainee?.id}
-                      title={title}
-                      openDrawer={() => setDrawerOpen(true)}
-                    />
-                    <div className="max-w-screen-md pb-24 sm:pb-6 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
-                      <Routes>
-                        {USER_ACCOUNT_TYPES.includes(
-                          Number(currentUser.accountType)
-                        ) ? (
-                          <>
-                            <Route path="/users/*" element={<UserRoutes />} />
-                            <Route
-                              path="/dashboard/*"
-                              element={<DashboardRoutes />}
-                            />
-                          </>
-                        ) : null}
-                        {TRAINEE_ACCOUNT_TYPES.includes(
-                          Number(currentUser.accountType)
-                        ) ? (
-                          <>
-                            <Route
-                              path="/trainees/*"
-                              element={<TraineesRoutes />}
-                            />
-                            <Route
-                              path="/trainings/*"
-                              element={<TrainingRoutes />}
-                            />
-                          </>
-                        ) : null}
-                        {TRAINING_ACCOUNT_TYPES.includes(
-                          Number(currentUser.accountType)
-                        ) ? (
-                          <Route
-                            path="/trainings/*"
-                            element={<TrainingRoutes />}
-                          />
-                        ) : null}
-                        <Route path="/logout" element={<LogoutCallback />} />
+        <FilterContext.Provider value={{ filterOptions, setFilterOptions }}>
+          {currentUser ? (
+            <div className="drawer">
+              <input
+                id="my-drawer-3"
+                type="checkbox"
+                className="drawer-toggle"
+                checked={drawerOpen}
+                readOnly={true}
+              />
+              <div className="drawer-content flex flex-col h-screen">
+                <Navbar2
+                  accountType={currentUser.accountType}
+                  traineeId={currentUser.trainee?.id}
+                  title={title}
+                  openDrawer={() => setDrawerOpen(true)}
+                />
+                <div className="max-w-screen-md pb-24 sm:pb-6 w-full mx-auto my-auto flex-1 overflow-y-auto scrollbar-hide px-2 pt-2">
+                  <Routes>
+                    {USER_ACCOUNT_TYPES.includes(
+                      Number(currentUser.accountType)
+                    ) ? (
+                      <>
+                        <Route path="/users/*" element={<UserRoutes />} />
                         <Route
-                          path="/"
-                          element={
-                            <HomePageCallback
-                              accountType={currentUser.accountType}
-                              traineeId={currentUser.trainee?.id}
-                            />
-                          }
+                          path="/dashboard/*"
+                          element={<DashboardRoutes />}
                         />
-                      </Routes>
-                    </div>
-                  </div>
-                  <NavDrawer
-                    accountType={currentUser.accountType}
-                    traineeId={currentUser.trainee?.id}
-                    closeDrawer={() => setDrawerOpen(false)}
-                  />
+                      </>
+                    ) : null}
+                    {TRAINEE_ACCOUNT_TYPES.includes(
+                      Number(currentUser.accountType)
+                    ) ? (
+                      <>
+                        <Route
+                          path="/trainees/*"
+                          element={<TraineesRoutes />}
+                        />
+                        <Route
+                          path="/trainings/*"
+                          element={<TrainingRoutes />}
+                        />
+                      </>
+                    ) : null}
+                    {TRAINING_ACCOUNT_TYPES.includes(
+                      Number(currentUser.accountType)
+                    ) ? (
+                      <Route path="/trainings/*" element={<TrainingRoutes />} />
+                    ) : null}
+                    <Route path="/logout" element={<LogoutCallback />} />
+                    <Route
+                      path="/"
+                      element={
+                        <HomePageCallback
+                          accountType={currentUser.accountType}
+                          traineeId={currentUser.trainee?.id}
+                        />
+                      }
+                    />
+                  </Routes>
                 </div>
-              ) : (
-                <>
-                  <AuthRoutes setCurrentUser={setCurrentUser} />
-                  <VARoutes />
-                </>
-              )}
-            </MergedFilterContext.Provider>
-          {/* </TraineesFilterContext.Provider>
-        </UsersFilterContext.Provider> */}
+              </div>
+              <NavDrawer
+                accountType={currentUser.accountType}
+                traineeId={currentUser.trainee?.id}
+                closeDrawer={() => setDrawerOpen(false)}
+              />
+            </div>
+          ) : (
+            <>
+              <AuthRoutes setCurrentUser={setCurrentUser} />
+            </>
+          )}
+        </FilterContext.Provider>
       </CurrentUserContext.Provider>
     </TitleContext.Provider>
   );
 }
-
 export default App;
+
+const CURRENT_USER = {
+  id: 1,
+  accountType: Account.Admin,
+  authCategory: 1,
+};
+
+const TRAINING_ACCOUNT_TYPES = [
+  Account.Admin,
+  Account.TraineeAdmin,
+  Account.Trainer,
+];
+const TRAINEE_ACCOUNT_TYPES = [
+  Account.Admin,
+  Account.TraineeAdmin,
+  Account.Trainee,
+  Account.Trainer,
+];
+const USER_ACCOUNT_TYPES = [Account.Admin, Account.TraineeAdmin];
+
+type FilterOptions = {
+  trainingsFilter: TrainingFilterOptions;
+  usersFilter: UserFilterOptions;
+  traineesFilter: TraineeFilterOptions;
+};

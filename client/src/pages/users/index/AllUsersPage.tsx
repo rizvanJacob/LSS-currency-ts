@@ -1,22 +1,21 @@
-import { Account } from "../../../../../server/src/constants";
 import { useState, useEffect, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { User, UserFilterOptions } from "../../../@types/user";
 import ApprovedUsersList from "./components/ApprovedUsersList";
 import UnapprovedUsersList from "./components/UnapprovedUsersList";
-import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, MergedFilterContext } from "../../../App";
+import { TitleContext, FilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import UsersFilterControls from "./components/UsersFilterControls";
 import PendingCollapseHeader from "./components/PendingCollapseHeader";
 
 export default function AllUsersPage(): JSX.Element {
-  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
+  const { filterOptions } = useContext(FilterContext);
   const [users, setUsers] = useState<User[]>([]);
   const [showUnapproved, setShowUnapproved] = useState<boolean>(true);
-  const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
-  const setTitle = useContext<React.Dispatch<React.SetStateAction<string>> | null>(TitleContext);
-  
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
+
   useEffect(() => {
     if (setTitle) setTitle("Users Index");
     getRequest(`/api/users`, setUsers);
@@ -40,7 +39,9 @@ export default function AllUsersPage(): JSX.Element {
           <div className="collapse-content p-0 overflow-auto flex-1 scrollbar-hide">
             <UnapprovedUsersList
               users={notApprovedUsers as User[]}
-              setUsers={setUsers as React.Dispatch<React.SetStateAction<User[]>>}
+              setUsers={
+                setUsers as React.Dispatch<React.SetStateAction<User[]>>
+              }
             />
           </div>
         </div>
@@ -49,9 +50,7 @@ export default function AllUsersPage(): JSX.Element {
       )}
 
       <h1 className="text-lg font-bold self-start py-4"> Approved Users:</h1>
-      <UsersFilterControls
-        users={approvedUsers}
-      />
+      <UsersFilterControls users={approvedUsers} />
       <ApprovedUsersList
         users={filterUsers(approvedUsers, filterOptions.usersFilter)}
         setUsers={setUsers}
@@ -60,12 +59,10 @@ export default function AllUsersPage(): JSX.Element {
   ) : (
     <ProgressBar />
   );
-};
+}
 
-const filterUsers = (
-  users: User[],
-  filterOptions: UserFilterOptions
-) => {
+//utility function to filter the users based on a filter options object
+const filterUsers = (users: User[], filterOptions: UserFilterOptions) => {
   return users.filter((user) => {
     let accountTypeFilter;
     if (filterOptions.accountType) {

@@ -8,7 +8,7 @@ import CheckinCallbackPage from "./Checkin/CheckinCallbackPage";
 const AuthRoutes = ({ setCurrentUser }: setCurrentUserProp): JSX.Element => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/*" element={<HomePage />} />
       <Route
         path="/loginCallback"
         element={<LoginCallbackPage setCurrentUser={setCurrentUser} />}

@@ -12,7 +12,6 @@ import traineesRouter from "./routes/traineesRouter";
 import lookupRouter from "./routes/lookupRouter";
 import trainingsRouter from "./routes/trainingsRouter";
 import analyticsRouter from "./routes/analyticsRouter";
-import VARouter from "./routes/VARouter";
 import cors from "cors";
 
 export const UPDATED = "26 Jun 1431H";
@@ -41,7 +40,6 @@ app.use("/api/trainees", traineesRouter);
 app.use("/api/trainings", trainingsRouter);
 app.use("/api/lookup", lookupRouter);
 app.use("/api/analytics", analyticsRouter);
-app.use("/api/VA", VARouter);
 
 app.get("/api/auth");
 

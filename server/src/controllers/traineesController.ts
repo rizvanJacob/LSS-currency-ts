@@ -64,10 +64,23 @@ const index = async (req: Request, res: Response) => {
               orderBy: { training: "asc" },
             }
           : {
+              where: {
+                trainings: {
+                  start: {
+                    gte: dayjs().toDate(),
+                  },
+                },
+              },
               select: {
                 training: true,
                 status: true,
-                trainings: { select: { requirement: true, start: true } },
+                trainings: {
+                  select: {
+                    requirement: true,
+                    start: true,
+                    requirements: { select: { alsoCompletes: true } },
+                  },
+                },
               },
             },
       },

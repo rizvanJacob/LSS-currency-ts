@@ -71,8 +71,7 @@ export default function EditTrainingForm(): JSX.Element {
     setTraining((training) => {
       if (fieldName === "start") {
         const newStart = value || new Date();
-        const newEnd = value || new Date();
-        return { ...training, start: newStart, end: newEnd };
+        return { ...training, start: newStart, end: newStart };
       } else if (fieldName === "end") {
         const newEnd = value || new Date();
         return { ...training, end: newEnd };
@@ -90,17 +89,22 @@ export default function EditTrainingForm(): JSX.Element {
         const parsedHours = parseInt(hours);
         const parsedMinutes = parseInt(minutes);
         const newStart = dayjs(training.start)
-        .set("hour", isNaN(parsedHours) ? 0 : parsedHours)            
-        .set("minute", isNaN(parsedMinutes) ? 0 : parsedMinutes)
+          .set("hour", isNaN(parseInt(hours)) ? 0 : parseInt(hours))
+          .set("minute", isNaN(parseInt(minutes)) ? 0 : parseInt(minutes))
           .toDate();
-        return { ...training, start: newStart };
+        return { ...training, start: newStart, end: newStart};
       } else if (name === "end_time") {
         const [hours, minutes] = value.split(":");
         const parsedHours = parseInt(hours);
         const parsedMinutes = parseInt(minutes);
         const newEnd = dayjs(training.end)
+<<<<<<< HEAD
         .set("hour", isNaN(parsedHours) ? 0 : parsedHours)            
         .set("minute", isNaN(parsedMinutes) ? 0 : parsedMinutes)
+=======
+          .set("hour", isNaN(parseInt(hours)) ? 0 : parseInt(hours))
+          .set("minute", isNaN(parseInt(minutes)) ? 0 : parseInt(minutes))
+>>>>>>> 2b935815b6d8672675db2edc7ba53ebb5b912c97
           .toDate();
         return { ...training, end: newEnd };
       } else {
@@ -140,7 +144,8 @@ export default function EditTrainingForm(): JSX.Element {
                     name="start"
                     selected={dayjs(training?.start).toDate()}
                     value={dayjs(training?.start) || ""}
-                    dateFormat="dd/MM/yyyy"
+                    dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                    placeholderText="dd/mm/yy"
                     className="input-text input input-bordered input-primary w-full max-w-xs"
                     onChange={(value: Date) => {
                       handleDateInputChange(value, "start")
@@ -174,7 +179,8 @@ export default function EditTrainingForm(): JSX.Element {
                     type="date"
                     id="end"
                     name="end"
-                    dateFormat="dd/MM/yyyy"
+                    dateFormat={["dd/MM/yyyy", "dd/MM/yy"]}
+                    placeholderText="dd/mm/yy"
                     value={dayjs(training?.end) || ""}
                     selected={dayjs(training?.end).toDate()}
                     className="input-text input input-bordered input-primary w-full max-w-xs"

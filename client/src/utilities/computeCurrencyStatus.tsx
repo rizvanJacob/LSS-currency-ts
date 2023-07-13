@@ -41,12 +41,18 @@ export const computeOverallStatus = (
           if (status === STATUSES.dueSoon) return status;
           const isBookedBeforeExpiry = t.trainings?.find((training) => {
             return (
-              training.trainings?.requirement === thisCurrency.requirement &&
-              training.status === 1 &&
-              bookingIsBeforeExpiry(
-                thisCurrency.expiry,
-                training.trainings?.start
-              )
+              (training.trainings?.requirement === thisCurrency.requirement &&
+                training.status === 1 &&
+                bookingIsBeforeExpiry(
+                  thisCurrency.expiry,
+                  training.trainings?.start
+                )) ||
+              (training.trainings?.requirements?.alsoCompletes === thisCurrency.requirement &&
+                training.status === 1 &&
+                bookingIsBeforeExpiry(
+                  thisCurrency.expiry,
+                  training.trainings?.start
+                ))
             );
           });
           if (isBookedBeforeExpiry) return STATUSES.dueSoonBooked;
