@@ -47,12 +47,12 @@ const TraineeList = ({
 
   useEffect(() => {
     const fetchPromises = [
-      getRequest(`/api/trainees/?training=${trainingId}`, setTrainees),
+      getRequest(`/api/trainings/${trainingId}/trainees`, setTrainees),
     ];
     if (relatedTraining) {
       fetchPromises.push(
         getRequest(
-          `/api/trainees/?training=${relatedTraining}`,
+          `/api/training/${relatedTraining}/trainees`,
           setRelatedTrainees
         )
       );

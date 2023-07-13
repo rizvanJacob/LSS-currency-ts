@@ -9,6 +9,7 @@ router.get(
   isAuth(ALL),
   trainingsController.getAllTrainings
 );
+router.get("/:trainingId/trainees", isAuth(ALL), trainingsController.traineesIndex)
 router.get(
   "/:trainingId",
   isAuth(ALL),
