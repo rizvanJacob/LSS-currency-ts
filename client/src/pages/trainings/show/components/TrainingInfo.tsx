@@ -37,8 +37,8 @@ export default function TrainingInfo({
           {dayjs(training.end).format("HH:mm")}
         </p>
         <p>
-          <span className="font-semibold">Vacancies: </span>
-          {training.capacity - Object.keys(training.trainees).length}/
+          <span className="font-semibold">Occupancy: </span>
+          {Object.keys(training.trainees).length}/
           {training.capacity}
         </p>
         <p>
