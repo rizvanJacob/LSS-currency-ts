@@ -24,7 +24,7 @@ export default function TrainingList({
                   {training.requirements?.name}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden 2xs:table-cell">
-                  {training.capacity - Object.keys(training.trainees).length}/
+                  {Object.keys(training.trainees).length}/
                   {training.capacity}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
