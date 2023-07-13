@@ -18,7 +18,7 @@ export default function AllTrainingsPage(): JSX.Element {
   const { filterOptions } = useContext(FilterContext);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [calendarView, setCalendarView] = useState<boolean>(false);
+  const [calendarView, setCalendarView] = useState<boolean>(true);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const setTitle = useContext<React.Dispatch<
