@@ -20,7 +20,7 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
-  const vacancies = training.capacity - bookedTrainees.length;
+  const vacancies = bookedTrainees.length;
 
   const bookTraining = async () => {
     setIsLoading(true);
@@ -75,7 +75,7 @@ const TrainingCard = ({
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
-            Vacancies: {vacancies}/{training.capacity}
+            Occupancy: {vacancies}/{training.capacity}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
