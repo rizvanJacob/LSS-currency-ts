@@ -1,6 +1,6 @@
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
-import { Training } from "../../../../@types/training";
+import { Training } from "../../@types/training";
 import { useState, useEffect } from "react";
 import {
   TileDisabledFunc,
@@ -16,6 +16,7 @@ type Prop = {
   displayDate: Date;
   setDisplayDate: React.Dispatch<React.SetStateAction<Date>>;
   handleFocus: (value: Value) => void;
+  isForIndex?: boolean;
 };
 
 const TrainingCalendar = ({
@@ -23,6 +24,7 @@ const TrainingCalendar = ({
   displayDate,
   setDisplayDate,
   handleFocus,
+  isForIndex = false,
 }: Prop) => {
   const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
@@ -101,7 +103,7 @@ const TrainingCalendar = ({
           value={displayDate}
           onActiveStartDateChange={handleActiveStartDateChange}
           onChange={handleFocus}
-          minDate={dayjs().toDate()}
+          minDate={isForIndex ? undefined : dayjs().toDate()}
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
           prevLabel={

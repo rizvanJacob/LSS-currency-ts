@@ -24,7 +24,7 @@ const TrainingsFilterControls = ({ trainings }: Props) => {
   requirements.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div className="flex flex-row justify-end items-center flex-nowrap">
+    <>
       <select
         className="select select-ghost select-xs w-full max-w-xs flex-auto"
         value={filterOptions.trainingsFilter.requirement}
@@ -64,7 +64,7 @@ const TrainingsFilterControls = ({ trainings }: Props) => {
           }}
         />
       </label>
-    </div>
+    </>
   );
 };
 

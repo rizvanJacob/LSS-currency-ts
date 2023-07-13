@@ -1,15 +1,20 @@
 import { Link, useParams } from "react-router-dom";
-import { Training } from "../../../../@types/training";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { buildFullUrl } from "../../../../utilities/stringManipulation";
+import { Training } from "../../@types/training";
+import { buildFullUrl } from "../../utilities/stringManipulation";
 
 type Prop = {
   training: Training;
-  updateTraining: any;
+  updateTraining: ((newTraining: Training) => void) | undefined;
+  isForIndex?: boolean;
 };
 
-const TrainingCard = ({ training, updateTraining }: Prop) => {
+const TrainingCard = ({
+  training,
+  updateTraining,
+  isForIndex = false,
+}: Prop) => {
   const [isLoading, setIsLoading] = useState(false);
   const [buttonText, setButtonText] = useState("");
   const { id } = useParams();
@@ -61,7 +66,11 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
       <div className="flex items-center ">
         <div className="flex-1 flex-col items-start text-left">
           <h4 className="card-title">
-            {dayjs(training.start).format("DD MMM YY")}
+            {isForIndex
+              ? dayjs(training.start).format("DD MMM YY") +
+                ": " +
+                training.requirements?.name
+              : dayjs(training.start).format("DD MMM YY")}
           </h4>
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
@@ -70,13 +79,15 @@ const TrainingCard = ({ training, updateTraining }: Prop) => {
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
-          <button
-            className="btn btn-secondary border-primary shadow-md min-w-max capitalize"
-            onClick={bookTraining}
-            disabled={isLoading}
-          >
-            {buttonText}
-          </button>
+          {!isForIndex && (
+            <button
+              className="btn btn-secondary border-primary shadow-md min-w-max capitalize"
+              onClick={bookTraining}
+              disabled={isLoading}
+            >
+              {buttonText}
+            </button>
+          )}
           <Link
             className="btn btn-secondary border-primary shadow-md  min-w-max"
             to={`/trainings/${training.id}`}
