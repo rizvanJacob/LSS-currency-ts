@@ -20,8 +20,6 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
-  console.log("booked trainees");
-  console.log(bookedTrainees);
   const vacancies = Math.max(0, training.capacity - bookedTrainees.length);
 
   const bookTraining = async () => {
@@ -37,6 +35,7 @@ const TrainingCard = ({
       }
     );
     const data = await response.json();
+    console.log(data)
     updateTraineesinTraining(data, training, updateTraining);
     setIsLoading(false);
   };
@@ -45,6 +44,8 @@ const TrainingCard = ({
     const booking = training.trainees.find((t) => {
       return t.trainee === Number(id);
     });
+    console.log("booking")
+    console.log(booking)
     if (booking && booking.status !== 4) {
       if (booking.status === 1) {
         setButtonText("Unbook");
