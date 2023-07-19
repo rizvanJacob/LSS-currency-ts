@@ -4,18 +4,35 @@ import { Chart as ChartJS, CategoryScale, LinearScale, Tooltip, ChartOptions, Ti
 import dayjs from 'dayjs';
 import { PointElement } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-
+import { CurrencyFilter } from '../../@types/analytics';
+import { Requirement } from '../../@types/lookup';
 ChartJS.register(CategoryScale, LinearScale, Tooltip, PointElement, TimeScale);
 
 type Prop = {
+  filterOptions: CurrencyFilter;
+  setFilterOptions: React.Dispatch<React.SetStateAction<CurrencyFilter>>;
+  requirements: Requirement[]
   data: Training[];
 };
 
-const LineChart = ({ data }: Prop) => {
-    const datasets = data.map(item => {
+const LineChart = ({ filterOptions, setFilterOptions, requirements, data }: Prop) => {
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFilterOptions((prevOptions) => ({
+      ...prevOptions,
+      [name]: Number(value),
+    }));
+  };
+
+  const filteredData = filterOptions.requirement !== 0
+  ? data.filter((item) => item.requirement === filterOptions.requirement)
+  : data;
+
+  const datasets = filteredData.map(item => {
         const start = dayjs(item.start).toDate();
         const end = dayjs(item.end).toDate();
-        const requirement = item.requirements.name;
+        const requirement = item.requirements?.name;
 
         return {
             label: requirement,
@@ -40,8 +57,11 @@ const LineChart = ({ data }: Prop) => {
           display: true,
           text: 'Training',
         },
-        labels: [...new Set(data.map((item) => item.requirements.name))],
+        labels: filteredData.length > 0
+        ? [requirements.find((req) => req.id === filterOptions.requirement)?.name]
+        : [],   //To show everything on y label [...new Set(data.map((item) => item.requirements?.name))].sort(),
       },
+      
       x: {
         type: 'time',
         time: {
@@ -64,8 +84,34 @@ const LineChart = ({ data }: Prop) => {
 
   return (
     <div>
-      <h1>Training Start/End Date Overview</h1>
-      <Line data={chartData} options={chartOptions}/>
+      <div className="flex flex-row self-end items-center flex-nowrap justify-end">
+        <label className="text-xs">Requirements:</label>
+        <select
+            className="select select-ghost select-xs w-full max-w-xs flex-auto"
+            value={filterOptions.requirement}
+            onChange={handleChange}
+            name="requirement"
+          >
+            <option value={0}>Select a requirement</option>
+              {requirements.map((requirement) => (
+                <option value={requirement.id} key={requirement.id}>
+                  {requirement.name}
+                </option>
+              ))}
+          </select> 
+        </div>
+        <h1 className="text-center">Training Start/End Date Overview</h1>
+        {filterOptions.requirement !== 0 && filteredData.length > 0 ? (
+          <Line data={chartData} options={chartOptions} />
+        ) : filterOptions.requirement !== 0 && filteredData.length === 0 ? (
+          <h4 className="text-center text-lg underline decoration-solid">
+            No trainings planned for this requirement
+          </h4>
+        ) : (
+          <h4 className="text-center text-xs underline decoration-solid">
+            Select a requirement in the drop down above to view all training sessions planned
+          </h4>
+        )}
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from "react";
 import getRequest from "../../../utilities/getRequest";
 import { useParams } from "react-router-dom";
-import TrainingCalendar from "./components/TrainingCalendar";
+import TrainingCalendar from "../../../components/Calendar/TrainingCalendar";
+import TrainingCard from "../../../components/Calendar/TrainingCard";
 import dayjs from "dayjs";
 import { Training } from "../../../@types/training";
-import TrainingCard from "./components/TrainingCard";
 import ProgressBar from "../../../components/ProgressBar";
 import { TitleContext } from "../../../App";
 import { Trainee } from "../../../@types/trainee";

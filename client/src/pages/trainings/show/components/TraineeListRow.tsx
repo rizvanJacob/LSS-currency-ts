@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../../../App";
 import { TRAINEE_ACTIONS_ACCESS } from "../../../trainees/TraineesRoutes";
+import { Account } from "../../../../../../server/src/constants";
 
 type Prop = {
   trainee: Trainee;
@@ -32,7 +33,7 @@ const TraineeListRow = ({
   console.log(trainee);
   return (
     <tr>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+      <th className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
         {showTraineesAsLinks ? (
           <Link
             to={`/trainees/${trainee.id}/book/${trainingRequirement}/?selected=${trainingDate}`}
@@ -43,26 +44,28 @@ const TraineeListRow = ({
         ) : (
           trainee.callsign
         )}
-      </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
+      </th>
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950  md:table-cell">
         {trainee.categories.name}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden md:table-cell">
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950  md:table-cell">
         {dayjs(trainee.currencies[0].expiry).format("DD MMM YY")}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden xs:table-cell">
+      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950  xs:table-cell">
         {toTitleCase(trainee.trainings?.[0].statuses?.name)}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
+      {currentUser?.accountType === Account.Trainer || Account.Admin &&
+        <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950">
         {trainee.trainings?.[0].statuses?.name === "attended" && (
           <input
-            name={String(trainee.id)}
-            type="checkbox"
-            onChange={handleChange}
-            disabled={trainingComplete}
+          name={String(trainee.id)}
+          type="checkbox"
+          onChange={handleChange}
+          disabled={trainingComplete}
           />
-        )}
+          )}
       </td>
+        }
     </tr>
   );
 };

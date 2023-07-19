@@ -1,5 +1,3 @@
-import React, { useContext } from 'react';
-
 export default function TrainingTableRow() {
   return (
     <thead className="bg-blue-500 text-black">
@@ -8,7 +6,7 @@ export default function TrainingTableRow() {
           Requirement
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden 2xs:table-cell">
-          Capacity
+          Occupancy
         </th>
         <th className="px-2 py-3 text-center text-xs font-medium uppercase tracking-wider hidden sm:table-cell">
           Date (St.)

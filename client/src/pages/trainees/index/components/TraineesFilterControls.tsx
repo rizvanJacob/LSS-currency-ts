@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
-import { Trainee, TraineeFilterOptions } from "../../../../@types/trainee";
-import { MergedFilterContext } from "../../../../App";
+import { Trainee } from "../../../../@types/trainee";
+import { FilterContext } from "../../../../App";
 
 type Props = {
   trainees: Trainee[];
 };
 
-const TraineesFilterControls = ({
-  trainees,
-}: Props) => {
-  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
+const TraineesFilterControls = ({ trainees }: Props) => {
+  const { filterOptions, setFilterOptions } = useContext(FilterContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterOptions((filterOptions) => ({
@@ -34,6 +32,7 @@ const TraineesFilterControls = ({
     },
     []
   );
+  categories.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="flex flex-row justify-end items-center">

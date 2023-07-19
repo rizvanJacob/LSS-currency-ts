@@ -112,7 +112,7 @@ export default function EditUserForm(): JSX.Element {
       name === "authCategory" || name === "accountType"
         ? parseInt(value)
         : value;
-    setUser((user) => {
+    setUser((user: any) => {
       if (name === "callsign") {
         return {
           ...user,

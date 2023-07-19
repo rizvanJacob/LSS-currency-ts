@@ -1,8 +1,7 @@
-import { Account } from "../../../../../server/src/constants";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, MergedFilterContext } from "../../../App";
+import { CurrentUserContext, TitleContext, FilterContext } from "../../../App";
 import getRequest from "../../../utilities/getRequest";
 import TraineesTable from "./components/TraineesTable";
 import { Trainee, TraineeFilterOptions } from "../../../@types/trainee";
@@ -13,11 +12,13 @@ import TraineesFilterControls from "./components/TraineesFilterControls";
 import { TRAINEE_AMEND_ACCESS } from "../TraineesRoutes";
 
 const TraineesIndexPage = (): JSX.Element => {
-  const { filterOptions } = useContext(MergedFilterContext);
+  const { filterOptions } = useContext(FilterContext);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
-  const setTitle = useContext<React.Dispatch<React.SetStateAction<string>> | null>(TitleContext);
+  const setTitle = useContext<React.Dispatch<
+    React.SetStateAction<string>
+  > | null>(TitleContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,9 +45,7 @@ const TraineesIndexPage = (): JSX.Element => {
         <ProgressBar />
       ) : trainees.length ? (
         <>
-          <TraineesFilterControls
-            trainees={trainees}
-          />
+          <TraineesFilterControls trainees={trainees} />
           <TraineesTable
             trainees={filterTrainees(trainees, filterOptions.traineesFilter)}
             deleteTrainee={deleteTrainee}

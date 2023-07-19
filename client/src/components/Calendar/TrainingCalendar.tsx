@@ -1,6 +1,6 @@
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
-import { Training } from "../../../../@types/training";
+import { Training } from "../../@types/training";
 import { useState, useEffect } from "react";
 import {
   TileDisabledFunc,
@@ -16,6 +16,7 @@ type Prop = {
   displayDate: Date;
   setDisplayDate: React.Dispatch<React.SetStateAction<Date>>;
   handleFocus: (value: Value) => void;
+  isForIndex?: boolean;
 };
 
 const TrainingCalendar = ({
@@ -23,6 +24,7 @@ const TrainingCalendar = ({
   displayDate,
   setDisplayDate,
   handleFocus,
+  isForIndex = false,
 }: Prop) => {
   const [flag, setFlag] = useState(1);
   const datesWithTraining = trainings.map((t) => {
@@ -65,13 +67,15 @@ const TrainingCalendar = ({
         //tiles are colour coded according to no of vacancies
         const overallVacancies = trainingsOnThisDay.reduce(
           (accumulator, currentTraining) => {
-            accumulator +=
-              currentTraining.capacity - currentTraining.trainees.length;
+            const bookedTrainees = currentTraining.trainees.filter((t) =>
+              [1, 2, 3].includes(t.status || 0)
+            );
+            accumulator += currentTraining.capacity - bookedTrainees.length;
             return accumulator;
           },
           0
         );
-        if (overallVacancies) className = className + " btn-success";
+        if (overallVacancies > 0) className = className + " btn-success";
         else className += " btn-warning";
       }
       //all tiles have min height of 48 px
@@ -101,7 +105,7 @@ const TrainingCalendar = ({
           value={displayDate}
           onActiveStartDateChange={handleActiveStartDateChange}
           onChange={handleFocus}
-          minDate={dayjs().toDate()}
+          minDate={isForIndex ? undefined : dayjs().toDate()}
           tileDisabled={tileDisabled}
           tileClassName={tileClassName}
           prevLabel={

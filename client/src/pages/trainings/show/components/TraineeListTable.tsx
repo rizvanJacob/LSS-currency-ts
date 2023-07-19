@@ -1,5 +1,8 @@
+import { Account } from "../../../../../../server/src/constants";
 import { Trainee } from "../../../../@types/trainee";
+import { CurrentUserContext } from "../../../../App";
 import TraineeListRow from "./TraineeListRow";
+import {useContext} from "react"
 
 type Prop = {
   trainees: Trainee[];
@@ -16,42 +19,49 @@ const TraineeListTable = ({
   trainingRequirement,
   trainingDate,
 }: Prop) => {
+  const currentUser = useContext(CurrentUserContext);
+
   return (
-    <table className="table w-full">
+    <div className="overflow-x-auto scrollbar-hide">
+
+    <table className="table table-compact md:table-normal w-full">
       <thead className="text-black">
         <tr>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase">
             Trainee
           </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase   md:table-cell">
             Category
           </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden md:table-cell">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase   md:table-cell">
             Expiry
           </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider hidden xs:table-cell">
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase   xs:table-cell">
             Status
           </th>
-          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase tracking-wider">
+          {currentUser?.accountType === Account.Trainer || Account.Admin &&
+
+          <th className="px-6 py-3 text-center text-base text-bold font-medium uppercase ">
             Complete
-          </th>
+          </th>}
         </tr>
       </thead>
       <tbody>
         {trainees.map((t) => {
           return (
             <TraineeListRow
-              trainee={t}
-              key={t.id}
-              handleChange={handleCheck}
-              trainingComplete={trainingComplete}
-              trainingRequirement={trainingRequirement}
-              trainingDate={trainingDate}
+            trainee={t}
+            key={t.id}
+            handleChange={handleCheck}
+            trainingComplete={trainingComplete}
+            trainingRequirement={trainingRequirement}
+            trainingDate={trainingDate}
             />
-          );
-        })}
+            );
+          })}
       </tbody>
     </table>
+          </div>
   );
 };
 

@@ -7,9 +7,7 @@ import {
   setCurrentUserProp,
 } from "../../@types/currentUser";
 import { buildFullUrl } from "../../utilities/stringManipulation";
-import dayjs from "dayjs";
 import { createLogoutTimer } from "../../utilities/accountUtils";
-import { createLogoutTimeout } from "../../utilities/accountUtilsVA";
 
 const LoginCallbackPage = ({
   setCurrentUser,
@@ -48,41 +46,11 @@ const attemptLogin = async (
     const data = await response.json();
     const { token } = data;
     localStorage.setItem("token", token);
- 
-    //##RIZ: Hint, you need to decode the token as another type of interface.
-    //referece compare with line 77 in App.tsx to see what's going on. 
-    const LogoutActions = () => {
-      alert("Session expired"); 
-      localStorage.clear();
-      console.log('User logged out');
-      
-      //Alvin's logout actions
-      //const navigate = useNavigate();
-      navigate("/logout", { replace: true });
-    };
-    
+
     const decoded = jwt_decode(token) as UserPayload;
-    setCurrentUser(decoded as CurrentUser);
-    createLogoutTimeout(LogoutActions, decoded.exp);
-    const clearLogoutTimeout = createLogoutTimeout(LogoutActions, decoded.exp);
-    clearLogoutTimeout();
+    const currentUser = decoded as CurrentUser;
+    setCurrentUser(currentUser);
 
-    
-    //##RIZ: Still not sure why you are creating these new variables
-    //they are not used anywhere else.
-    // const accountType = currentUser.accountType as Account;
-    // const expirationTime = new Date();
-    // expirationTime.setSeconds(
-    //   //##RIZ: and you definitely shouldn't be using JWT_EXPIRIES. This constant shouldn't even exist. 
-    //   expirationTime.getSeconds() + parseInt(JWT_EXPIRIES[accountType])
-    // );
-
-    //setCurrentUser(currentUser);
-
-    // const decoded = jwt_decode(token) as UserPayload;
-    // const currentUser = decoded as CurrentUser;
-
-    setCurrentUser(decoded as CurrentUser);
     const clearLogoutTimer = createLogoutTimer(decoded.exp, setCurrentUser);
     navigate("/", { replace: true });
     return clearLogoutTimer;

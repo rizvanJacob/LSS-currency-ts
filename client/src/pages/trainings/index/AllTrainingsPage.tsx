@@ -5,30 +5,52 @@ import { Training, TrainingFilterOptions } from "../../../@types/training";
 import TrainingList from "./components/TrainingList";
 import CreateTrainingButton from "../create/CreateTrainingButton";
 import { CurrentUser } from "../../../@types/currentUser";
-import { CurrentUserContext, TitleContext, MergedFilterContext } from "../../../App";
+import { CurrentUserContext, TitleContext, FilterContext } from "../../../App";
 import ProgressBar from "../../../components/ProgressBar";
 import TrainingsFilterControls from "./components/TrainingsFilterControls";
-import CalendarView from "../components/CalendarView"; // updated
-import dayjs from "dayjs";  // added
+import CalendarViewControl from "./components/CalendarViewControl";
+import TrainingCalendar from "../../../components/Calendar/TrainingCalendar";
+import TrainingCard from "../../../components/Calendar/TrainingCard";
+import { Value } from "react-calendar/dist/cjs/shared/types";
+import dayjs from "dayjs";
 
 export default function AllTrainingsPage(): JSX.Element {
-  const { filterOptions, setFilterOptions } = useContext(MergedFilterContext);
+  const { filterOptions } = useContext(FilterContext);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [calendarView, setCalendarView] = useState<boolean>(true);
+  const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
   const [selectedDate, setSelectedDate] = useState(new Date());  // added
   
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
-  
+
   useEffect(() => {
     if (setTitle) setTitle("Trainings Index");
     getRequest(`/api/trainings`, setTrainings).then(() => setIsLoading(false));
   }, []);
 
-  const handleFocus = (value: any) => {  // added
-    setSelectedDate(value);
+  const toggleCalendarView = () => {
+    setCalendarView(!calendarView);
+  };
+
+  const filteredTrainings = filterTrainings(
+    trainings,
+    filterOptions.trainingsFilter
+  );
+
+  const handleFocus = (value: Value) => {
+    const displayTraining = trainings
+      .sort((a, b) => {
+        return dayjs(a.start).isBefore(dayjs(b.start)) ? -1 : 1;
+      })
+      .find((t) => dayjs(t.start).isSame(dayjs(value?.toString()), "date"));
+
+    document.querySelector(`#training${displayTraining?.id}`)?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   return isLoading ? (
@@ -36,27 +58,48 @@ export default function AllTrainingsPage(): JSX.Element {
   ) : (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-auto scrollbar-hide">
-        <TrainingsFilterControls
-          trainings={trainings}
-        />
-        {/* //RIZ: Set up a new component to toggle between calendar and table view. you'll need a new boolean state for it */}
-        {/* if booleanState is true, then display the calendar view, else display the table view */}
-        <CalendarView  // added
-          //RIZ: instead of trainings you should pass filterTrainings(trainings, filterOptions.trainingsFilter)
-          trainings={trainings}
-          displayDate={selectedDate}
-          setDisplayDate={setSelectedDate}
-          handleFocus={handleFocus}
-          //RIZ: instead of line 48, you should just pass the correct set of trainings you want to display to the CalendarView component
-          currency="DFS"  // Replace "DFS" with the current selected currency
-        />
-        {/* RIZ: Next, you should have a TrainingList alongside your calendar view. for this List, you pass trainings={trainings.filter(filter all trainings on the selected date + filterOptions.trainingsFilter)} */}
-        {/* RIZ: You should also move your calendar view inside this conditional; ie if there are no trainings it will just say no trainings */}
-        {trainings.length > 0 ? (
-          <TrainingList
-            trainings={filterTrainings(trainings, filterOptions.trainingsFilter)}
-            setTrainings={setTrainings}
+        <div className="flex flex-row justify-end items-center flex-nowrap">
+          <CalendarViewControl
+            calendarView={calendarView}
+            toggleCalendarView={toggleCalendarView}
           />
+          <TrainingsFilterControls trainings={trainings} />
+        </div>
+        {trainings.length > 0 ? (
+          calendarView ? (
+            <>
+              <TrainingCalendar
+                trainings={filteredTrainings}
+                displayDate={displayDate}
+                setDisplayDate={setDisplayDate}
+                handleFocus={handleFocus}
+                isForIndex={true}
+              />
+              {filteredTrainings
+                .filter((training) => {
+                  return dayjs(training.start).isSame(
+                    dayjs(displayDate),
+                    "month"
+                  );
+                })
+                .sort((a, b) => {
+                  return dayjs(a.start).isBefore(dayjs(b.start)) ? -1 : 1;
+                })
+                .map((training) => (
+                  <TrainingCard
+                    training={training}
+                    key={training.id}
+                    updateTraining={undefined}
+                    isForIndex={true}
+                  />
+                ))}
+            </>
+          ) : (
+            <TrainingList
+              trainings={filteredTrainings}
+              setTrainings={setTrainings}
+            />
+          )
         ) : (
           <p>No trainings to show</p>
         )}
@@ -65,8 +108,9 @@ export default function AllTrainingsPage(): JSX.Element {
         currentUser?.accountType === Account.Admin) && <CreateTrainingButton />}
     </div>
   );
-};
+}
 
+//utility function to filter trainings
 const filterTrainings = (
   trainings: Training[],
   filterOptions: TrainingFilterOptions
