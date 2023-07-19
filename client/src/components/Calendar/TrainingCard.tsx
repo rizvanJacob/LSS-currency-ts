@@ -20,6 +20,8 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
+  console.log("booked trainees");
+  console.log(bookedTrainees);
   const vacancies = Math.max(0, training.capacity - bookedTrainees.length);
 
   const bookTraining = async () => {
@@ -75,7 +77,7 @@ const TrainingCard = ({
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
-            Occupancy: {vacancies}/{training.capacity}
+            Occupancy: {bookedTrainees.length}/{training.capacity}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">

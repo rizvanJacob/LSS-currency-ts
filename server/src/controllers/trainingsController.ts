@@ -57,7 +57,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    in: STATUSES_IN_TRAINING_CAPACITY,
+                    in: STATUSES_IN_TRAINING_LIST,
                   },
                 },
                 include: {
@@ -171,7 +171,7 @@ const trainingsController = {
           },
           trainees: {
             where: {
-              status: { in: STATUSES_IN_TRAINING_CAPACITY },
+              status: { in: STATUSES_IN_TRAINING_LIST },
             },
             select: {
               trainees: {
