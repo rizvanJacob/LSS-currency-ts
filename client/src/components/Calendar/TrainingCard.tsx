@@ -3,7 +3,11 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Training } from "../../@types/training";
 import { buildFullUrl } from "../../utilities/stringManipulation";
+import { useContext } from "react";
+import { ButtonTextContext } from "../../App";
 
+const useButtonText = () => useContext(ButtonTextContext);
+//const buttonText = useButtonText();
 type Prop = {
   training: Training;
   updateTraining: ((newTraining: Training) => void) | undefined;
@@ -20,7 +24,9 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
+  const waitlistTrainees = training.trainees.filter((t) => t.status === 6);
   const vacancies = bookedTrainees.length;
+  const waitListees = waitlistTrainees.length;
 
   const bookTraining = async () => {
     setIsLoading(true);
@@ -56,8 +62,17 @@ const TrainingCard = ({
         setButtonText("Join Waitlist");
       }
     }
-  }, [training]);
 
+    //localStorage.setItem("buttonText", buttonText);
+  }, [training]);
+  
+  
+  //   useEffect(() => {
+  //   const storedButtonText = localStorage.getItem("buttonText");
+  //   if (storedButtonText) {
+  //     setButtonText(storedButtonText);
+  //   }
+  // }, []);
   return (
     <div
       className="my-2 py-5 px-5 card card-bordered border-primary bg-sky-50 shadow-xl"
@@ -75,7 +90,7 @@ const TrainingCard = ({
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
-            Occupancy: {vacancies}/{training.capacity}
+            Occupancy: {vacancies}/{training.capacity}, Q:{waitListees}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">

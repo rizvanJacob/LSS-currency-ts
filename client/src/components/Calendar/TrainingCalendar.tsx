@@ -67,8 +67,7 @@ const TrainingCalendar = ({
         //tiles are colour coded according to no of vacancies
         const overallVacancies = trainingsOnThisDay.reduce(
           (accumulator, currentTraining) => {
-            accumulator +=
-              currentTraining.capacity - currentTraining.trainees.length;
+            accumulator += currentTraining.capacity - currentTraining.trainees.length;
             return accumulator;
           },
           0

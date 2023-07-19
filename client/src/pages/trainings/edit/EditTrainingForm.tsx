@@ -95,16 +95,9 @@ export default function EditTrainingForm(): JSX.Element {
         return { ...training, start: newStart, end: newStart};
       } else if (name === "end_time") {
         const [hours, minutes] = value.split(":");
-        const parsedHours = parseInt(hours);
-        const parsedMinutes = parseInt(minutes);
         const newEnd = dayjs(training.end)
-<<<<<<< HEAD
-        .set("hour", isNaN(parsedHours) ? 0 : parsedHours)            
-        .set("minute", isNaN(parsedMinutes) ? 0 : parsedMinutes)
-=======
           .set("hour", isNaN(parseInt(hours)) ? 0 : parseInt(hours))
           .set("minute", isNaN(parseInt(minutes)) ? 0 : parseInt(minutes))
->>>>>>> 2b935815b6d8672675db2edc7ba53ebb5b912c97
           .toDate();
         return { ...training, end: newEnd };
       } else {

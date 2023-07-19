@@ -80,7 +80,11 @@ export default function DashboardPage(): JSX.Element {
         {showItem === 3 && (
           <>
             {trainings.length ? (
-              <ScatterPlot data={trainings} />
+              <ScatterPlot 
+              filterOptions={filterOptions}
+              setFilterOptions={setFilterOptions}
+              catRequirements={catRequirements}
+              data={trainings} />
             ) : (
               <ProgressBar />
             )}

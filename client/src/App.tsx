@@ -40,6 +40,10 @@ export const FilterContext = createContext<{
   setFilterOptions: () => {},
 });
 
+// Create a new context
+export const ButtonTextContext = createContext("");
+
+
 function App() {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [title, setTitle] = useState("");
