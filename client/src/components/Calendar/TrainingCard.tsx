@@ -20,7 +20,7 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
-  const vacancies = bookedTrainees.length;
+  const vacancies = Math.max(0, training.capacity - bookedTrainees.length);
 
   const bookTraining = async () => {
     setIsLoading(true);
