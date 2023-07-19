@@ -187,6 +187,16 @@ const trainingsController = {
                       expiry: true,
                     },
                   },
+                  trainings: {
+                    where: {
+                      training: {
+                        equals: id,
+                      },
+                    },
+                    select: {
+                      status: true,
+                    },
+                  },
                 },
               },
             },
