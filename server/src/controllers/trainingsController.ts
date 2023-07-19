@@ -57,7 +57,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    in: STATUSES_IN_TRAINING_CAPACITY,
+                    in: STATUSES_IN_TRAINING_LIST,
                   },
                 },
                 include: {
@@ -134,11 +134,13 @@ const trainingsController = {
           },
           trainings: {
             where: { training: Number(trainingId) },
-            select: { statuses: { select: { name: true } } },
+            select: { status: true, statuses: { select: { name: true } } },
             orderBy: { training: "asc" },
           },
         },
-        orderBy: { callsign: "asc" },
+        orderBy: {
+          callsign: "asc",
+        },
       });
       if (!trainees) return res.status(400);
       return res.status(200).json(trainees);
@@ -171,7 +173,7 @@ const trainingsController = {
           },
           trainees: {
             where: {
-              status: { in: STATUSES_IN_TRAINING_CAPACITY },
+              status: { in: STATUSES_IN_TRAINING_LIST },
             },
             select: {
               trainees: {
@@ -185,6 +187,16 @@ const trainingsController = {
                   currencies: {
                     select: {
                       expiry: true,
+                    },
+                  },
+                  trainings: {
+                    where: {
+                      training: {
+                        equals: id,
+                      },
+                    },
+                    select: {
+                      status: true,
                     },
                   },
                 },

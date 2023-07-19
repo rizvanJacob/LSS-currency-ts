@@ -1,4 +1,8 @@
-import { Account, MONTHS_TO_RECORD_WITHDRAWAL } from "../constants";
+import {
+  Account,
+  MONTHS_TO_RECORD_WITHDRAWAL,
+  STATUSES_IN_TRAINING_CAPACITY,
+} from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
@@ -562,7 +566,10 @@ const book = async (traineeId: number, trainingId: number) => {
     where: { id: trainingId },
     select: {
       capacity: true,
-      trainees: { select: { id: true } },
+      trainees: {
+        where: { status: { in: STATUSES_IN_TRAINING_CAPACITY } },
+        select: { id: true },
+      },
       requirement: true,
       requirements: { select: { alsoCompletes: true } },
       createdAt: true,

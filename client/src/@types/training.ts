@@ -29,6 +29,9 @@ export type Training = NewTraining & {
       currencies: {
         expiry: Date;
       };
+      trainings?: {
+        status?: number;
+      }[];
     };
   }[];
 };

@@ -21,6 +21,11 @@ export default function TrainingInfo({
   const showEditControls =
     currentUser && CHANGE_TRAINING_ACCESS.includes(currentUser?.accountType);
 
+  const bookedTrainees = training.trainees.filter((t) => {
+    if (!t.trainees.trainings) return false;
+    return [1, 2, 3].includes(t.trainees.trainings[0].status || 0);
+  });
+
   return (
     <div className="card w-full xs:w-96 text-primary shadow-xl bg-secondary mx-auto">
       <div className="card-body text-left">
@@ -38,8 +43,7 @@ export default function TrainingInfo({
         </p>
         <p>
           <span className="font-semibold">Occupancy: </span>
-          {Object.keys(training.trainees).length}/
-          {training.capacity}
+          {bookedTrainees.length}/{training.capacity}
         </p>
         <p>
           <span className="font-semibold">Instructions: </span>
