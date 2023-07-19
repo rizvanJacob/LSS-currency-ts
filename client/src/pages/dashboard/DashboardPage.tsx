@@ -9,10 +9,11 @@ import ProgressBar from "../../components/ProgressBar";
 import AreaChart from "../../components/Chart/AreaChart";
 import BookingCSVButton from "./Components/BookingCSVButton";
 import { TitleContext } from "../../App";
-import { CategoryToRequirement } from "../../@types/lookup";
+import { CategoryToRequirement, Requirement} from "../../@types/lookup";
 import { CurrencyData } from "../../@types/analytics";
 
 export default function DashboardPage(): JSX.Element {
+  const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [trainees, setTrainees] = useState<Trainee[]>([]);
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [currencyData, setCurrencyData] = useState<CurrencyData>({
@@ -38,6 +39,7 @@ export default function DashboardPage(): JSX.Element {
     getRequest(`/api/lookup/categoryToRequirement`, setCatRequirements);
     getRequest(`/api/trainees`, setTrainees);
     getRequest(`/api/trainings`, setTrainings);
+    getRequest(`/api/lookup/requirements`, setRequirements);
   }, []);
 
   useEffect(() => {
@@ -78,13 +80,20 @@ export default function DashboardPage(): JSX.Element {
           </>
         )}
         {showItem === 3 && (
-          <>
+          <div>
             {trainings.length ? (
-              <ScatterPlot data={trainings} />
+              <div>
+                <ScatterPlot 
+                  filterOptions={filterOptions}
+                  setFilterOptions={setFilterOptions}
+                  requirements={requirements}
+                  data={trainings} 
+                />
+              </div>
             ) : (
               <ProgressBar />
             )}
-          </>
+          </div>
         )}
         <BookingCSVButton />
       </div>

@@ -20,7 +20,7 @@ import { TrainingFilterOptions } from "./@types/training";
 import { UserFilterOptions } from "./@types/user";
 import { TraineeFilterOptions } from "./@types/trainee";
 
-export const UPDATED = "23 Jun 1515H";
+export const UPDATED = "19 Jul 1432H";
 
 const AUTHORISE = true;
 
