@@ -134,11 +134,13 @@ const trainingsController = {
           },
           trainings: {
             where: { training: Number(trainingId) },
-            select: { statuses: { select: { name: true } } },
+            select: { status: true, statuses: { select: { name: true } } },
             orderBy: { training: "asc" },
           },
         },
-        orderBy: { callsign: "asc" },
+        orderBy: {
+          callsign: "asc",
+        },
       });
       if (!trainees) return res.status(400);
       return res.status(200).json(trainees);
