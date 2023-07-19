@@ -8,7 +8,10 @@ import {
   mapTrainingsForIndex,
   transformTrainingForShow,
 } from "../utilities/trimTraining";
-import { STATUSES_IN_TRAINING_CAPACITY } from "../constants";
+import {
+  STATUSES_IN_TRAINING_CAPACITY,
+  STATUSES_IN_TRAINING_LIST,
+} from "../constants";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -54,7 +57,7 @@ const trainingsController = {
               trainees: {
                 where: {
                   status: {
-                    in: STATUSES_IN_TRAINING_CAPACITY,
+                    in: STATUSES_IN_TRAINING_LIST,
                   },
                 },
                 include: {
@@ -84,6 +87,69 @@ const trainingsController = {
     }
   },
 
+  traineesIndex: async (req: Request, res: Response, err: any) => {
+    const { trainingId } = req.params;
+    try {
+      const trainees = await prisma.trainee.findMany({
+        where: {
+          trainings: {
+            some: {
+              training: Number(trainingId),
+              status: { in: STATUSES_IN_TRAINING_LIST },
+            },
+          },
+          users: { approved: true },
+        },
+        select: {
+          id: true,
+          callsign: true,
+          category: true,
+          user: true,
+          users: { select: { approved: true } },
+          categories: {
+            select: {
+              name: true,
+              requirements: {
+                select: {
+                  requirements: {
+                    select: {
+                      id: true,
+                      seniorExtension: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          currencies: {
+            where: {
+              requirements: {
+                trainings: {
+                  some: {
+                    id: Number(trainingId),
+                  },
+                },
+              },
+            },
+          },
+          trainings: {
+            where: { training: Number(trainingId) },
+            select: { status: true, statuses: { select: { name: true } } },
+            orderBy: { training: "asc" },
+          },
+        },
+        orderBy: {
+          callsign: "asc",
+        },
+      });
+      if (!trainees) return res.status(400);
+      return res.status(200).json(trainees);
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+    }
+  },
+
   showTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
@@ -107,7 +173,7 @@ const trainingsController = {
           },
           trainees: {
             where: {
-              status: { in: STATUSES_IN_TRAINING_CAPACITY },
+              status: { in: STATUSES_IN_TRAINING_LIST },
             },
             select: {
               trainees: {
@@ -121,6 +187,16 @@ const trainingsController = {
                   currencies: {
                     select: {
                       expiry: true,
+                    },
+                  },
+                  trainings: {
+                    where: {
+                      training: {
+                        equals: id,
+                      },
+                    },
+                    select: {
+                      status: true,
                     },
                   },
                 },

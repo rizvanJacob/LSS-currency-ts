@@ -24,9 +24,12 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
-  const waitlistTrainees = training.trainees.filter((t) => t.status === 6);
-  const vacancies = bookedTrainees.length;
-  const waitListees = waitlistTrainees.length;
+// <<<<<<< HEAD
+//   const waitlistTrainees = training.trainees.filter((t) => t.status === 6);
+//   const vacancies = bookedTrainees.length;
+//   const waitListees = waitlistTrainees.length;
+
+  const vacancies = Math.max(0, training.capacity - bookedTrainees.length);
 
   const bookTraining = async () => {
     setIsLoading(true);
@@ -41,6 +44,7 @@ const TrainingCard = ({
       }
     );
     const data = await response.json();
+    console.log(data)
     updateTraineesinTraining(data, training, updateTraining);
     setIsLoading(false);
   };
@@ -49,6 +53,8 @@ const TrainingCard = ({
     const booking = training.trainees.find((t) => {
       return t.trainee === Number(id);
     });
+    console.log("booking")
+    console.log(booking)
     if (booking && booking.status !== 4) {
       if (booking.status === 1) {
         setButtonText("Unbook");
@@ -90,7 +96,7 @@ const TrainingCard = ({
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
-            Occupancy: {vacancies}/{training.capacity}, Q:{waitListees}
+            Occupancy: {bookedTrainees.length}/{training.capacity}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">

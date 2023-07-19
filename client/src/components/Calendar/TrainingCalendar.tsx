@@ -67,12 +67,15 @@ const TrainingCalendar = ({
         //tiles are colour coded according to no of vacancies
         const overallVacancies = trainingsOnThisDay.reduce(
           (accumulator, currentTraining) => {
-            accumulator += currentTraining.capacity - currentTraining.trainees.length;
+            const bookedTrainees = currentTraining.trainees.filter((t) =>
+              [1, 2, 3].includes(t.status || 0)
+            );
+            accumulator += currentTraining.capacity - bookedTrainees.length;
             return accumulator;
           },
           0
         );
-        if (overallVacancies) className = className + " btn-success";
+        if (overallVacancies > 0) className = className + " btn-success";
         else className += " btn-warning";
       }
       //all tiles have min height of 48 px

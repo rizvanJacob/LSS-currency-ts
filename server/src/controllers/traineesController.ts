@@ -1,28 +1,19 @@
-import { Account, MONTHS_TO_RECORD_WITHDRAWAL } from "../constants";
+import {
+  Account,
+  MONTHS_TO_RECORD_WITHDRAWAL,
+  STATUSES_IN_TRAINING_CAPACITY,
+} from "../constants";
 import { Request, Response } from "express";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
 import { transformTrainingForBooking } from "../utilities/trimTraining";
-import { STATUSES_IN_TRAINING_LIST } from "../constants";
 
 const index = async (req: Request, res: Response) => {
-  const { training } = req.query;
-
   try {
     const trainees = await prisma.trainee.findMany({
-      where: training
-        ? {
-            trainings: {
-              some: {
-                training: Number(training),
-                status: { in: STATUSES_IN_TRAINING_LIST },
-              },
-            },
-            users: { approved: true },
-          }
-        : { users: { approved: true } },
+      where: { users: { approved: true } },
       select: {
         id: true,
         callsign: true,
@@ -44,50 +35,33 @@ const index = async (req: Request, res: Response) => {
             },
           },
         },
-        currencies: training
-          ? {
-              where: {
-                requirements: {
-                  trainings: {
-                    some: {
-                      id: Number(training),
-                    },
-                  },
-                },
-              },
-            }
-          : { select: { expiry: true, seniority: true, requirement: true } },
-        trainings: training
-          ? {
-              where: { training: Number(training) },
-              select: { statuses: { select: { name: true } } },
-              orderBy: { training: "asc" },
-            }
-          : {
-              where: {
-                trainings: {
-                  start: {
-                    gte: dayjs().toDate(),
-                  },
-                },
-              },
-              select: {
-                training: true,
-                status: true,
-                trainings: {
-                  select: {
-                    requirement: true,
-                    start: true,
-                    requirements: { select: { alsoCompletes: true } },
-                  },
-                },
+        currencies: {
+          select: { expiry: true, seniority: true, requirement: true },
+        },
+        trainings: {
+          where: {
+            trainings: {
+              start: {
+                gte: dayjs().toDate(),
               },
             },
+          },
+          select: {
+            training: true,
+            status: true,
+            trainings: {
+              select: {
+                requirement: true,
+                start: true,
+                requirements: { select: { alsoCompletes: true } },
+              },
+            },
+          },
+        },
       },
       orderBy: { callsign: "asc" },
     });
     if (!trainees) return res.status(400);
-    if (training) return res.status(200).json(trainees);
 
     trainees.map((trainee) => {
       trainee.categories.requirements = trimRequirements(trainee);
@@ -592,7 +566,10 @@ const book = async (traineeId: number, trainingId: number) => {
     where: { id: trainingId },
     select: {
       capacity: true,
-      trainees: { select: { id: true } },
+      trainees: {
+        where: { status: { in: STATUSES_IN_TRAINING_CAPACITY } },
+        select: { id: true },
+      },
       requirement: true,
       requirements: { select: { alsoCompletes: true } },
       createdAt: true,

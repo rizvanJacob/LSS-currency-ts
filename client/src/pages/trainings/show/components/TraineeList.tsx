@@ -47,12 +47,12 @@ const TraineeList = ({
 
   useEffect(() => {
     const fetchPromises = [
-      getRequest(`/api/trainees/?training=${trainingId}`, setTrainees),
+      getRequest(`/api/trainings/${trainingId}/trainees`, setTrainees),
     ];
     if (relatedTraining) {
       fetchPromises.push(
         getRequest(
-          `/api/trainees/?training=${relatedTraining}`,
+          `/api/training/${relatedTraining}/trainees`,
           setRelatedTrainees
         )
       );
@@ -137,7 +137,7 @@ const TraineeList = ({
       >
         {relatedTraining && <h4 className="divider">{name}</h4>}
         <TraineeListTable
-          trainees={trainees}
+          trainees={sortTrainees(trainees)}
           handleCheck={handleCheck}
           trainingComplete={trainingComplete}
           trainingRequirement={trainingRequirement}
@@ -181,3 +181,12 @@ const TraineeList = ({
 };
 
 export default TraineeList;
+
+const sortTrainees = (trainees: Trainee[]) => {
+  return trainees.sort((a, b) => {
+    if (!a.trainings) return 1;
+    if (!b.trainings) return 1;
+
+    return a.trainings[0].status - b.trainings[0].status;
+  });
+};
