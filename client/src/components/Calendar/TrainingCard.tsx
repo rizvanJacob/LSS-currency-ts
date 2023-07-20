@@ -24,10 +24,10 @@ const TrainingCard = ({
   const { id } = useParams();
 
   const bookedTrainees = training.trainees.filter((t) => t.status === 1);
-// <<<<<<< HEAD
-//   const waitlistTrainees = training.trainees.filter((t) => t.status === 6);
+
+  const waitlistTrainees = training.trainees.filter((t) => t.status === 6);
 //   const vacancies = bookedTrainees.length;
-//   const waitListees = waitlistTrainees.length;
+   const waitListees = waitlistTrainees.length;
 
   const vacancies = Math.max(0, training.capacity - bookedTrainees.length);
 
@@ -96,7 +96,7 @@ const TrainingCard = ({
           <p>Start: {dayjs(training.start).format("HH:mm")}</p>
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
-            Occupancy: {bookedTrainees.length}/{training.capacity}
+            Occupancy: {bookedTrainees.length}/{training.capacity}, Q:{waitListees}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
