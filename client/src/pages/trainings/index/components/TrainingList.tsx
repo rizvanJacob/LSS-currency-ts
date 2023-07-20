@@ -28,8 +28,8 @@ export default function TrainingList({
                   {training.requirements?.name}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-sm font-medium text-slate-950 hidden 2xs:table-cell">
-                  {bookedTrainees.length}/
-                  {training.capacity}, Q:{waitlistTrainees.length}
+                  {bookedTrainees.length}/{training.capacity} 
+                  {waitlistTrainees.length > 0 && ` | Q: ${waitlistTrainees.length}`}
                 </td>
                 <td className="px-2 py-4 whitespace-nowrap text-center text-black text-sm hidden sm:table-cell">
                   {dayjs(training.start).format("D MMM YY")}
