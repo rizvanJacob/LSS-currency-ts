@@ -153,7 +153,6 @@ const trainingsController = {
   showTraining: async (req: Request, res: Response, err: any) => {
     try {
       const id = parseInt(req.params.trainingId);
-      console.log("show training", id);
       const training = await prisma.training.findUnique({
         where: { id },
         select: {
@@ -176,6 +175,8 @@ const trainingsController = {
               status: { in: STATUSES_IN_TRAINING_LIST },
             },
             select: {
+              status: true,
+              trainee: true,
               trainees: {
                 select: {
                   callsign: true,
@@ -217,7 +218,6 @@ const trainingsController = {
       }
 
       const transformedTraining = await transformTrainingForShow(training);
-      console.log(transformedTraining);
       res.status(200).json(transformedTraining);
     } catch (err) {
       res.status(500).json({ err });
@@ -426,7 +426,6 @@ const trainingsController = {
           });
         })
       );
-      console.log(newTrainings);
       res.status(200).json(newTrainings);
     } catch (err) {
       res.status(500).json({ err });

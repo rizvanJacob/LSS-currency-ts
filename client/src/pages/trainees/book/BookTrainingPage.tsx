@@ -16,6 +16,7 @@ const BookTrainingPage = () => {
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const [displayTrainings, setDisplayTrainings] = useState<Training[]>([]);
+  const [reloadFlag, setReloadFlag] = useState(false);
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);
@@ -30,7 +31,7 @@ const BookTrainingPage = () => {
         });
       }
     );
-  }, []);
+  }, [reloadFlag]);
 
   useEffect(() => {
     const display = trainings.filter((t) =>
@@ -41,22 +42,22 @@ const BookTrainingPage = () => {
       setTitle(`${trainee?.callsign}: Book ${trainings[0].requirements.name}`);
   }, [displayDate, trainings, trainee]);
 
-  const updateTraining = (newTraining: Training) => {
-    setTrainings(
-      trainings.map((t) => {
-        if (t.id === newTraining.id) {
-          return newTraining;
-        }
-        t.trainees = t.trainees.filter((booking) => {
-          return (
-            booking.trainee === id &&
-            (booking.status === 1 || booking.status === 6)
-          );
-        });
-        return t;
-      })
-    );
-  };
+  // const updateTraining = (newTraining: Training) => {
+  //   setTrainings(
+  //     trainings.map((t) => {
+  //       if (t.id === newTraining.id) {
+  //         return newTraining;
+  //       }
+  //       t.trainees = t.trainees.filter((booking) => {
+  //         return (
+  //           booking.trainee === id &&
+  //           (booking.status === 1 || booking.status === 6)
+  //         );
+  //       });
+  //       return t;
+  //     })
+  //   );
+  // };
 
   const handleFocus = (value: Value) => {
     const displayTraining = trainings.find((t) =>
@@ -66,6 +67,10 @@ const BookTrainingPage = () => {
     document.querySelector(`#training${displayTraining?.id}`)?.scrollIntoView({
       behavior: "smooth",
     });
+  };
+
+  const reloadTrainings = () => {
+    setReloadFlag(!reloadFlag);
   };
 
   return (
@@ -84,7 +89,8 @@ const BookTrainingPage = () => {
                 <TrainingCard
                   training={t}
                   key={t.id}
-                  updateTraining={updateTraining}
+                  // updateTraining={updateTraining}
+                  reloadTrainings={reloadTrainings}
                 />
               );
             })}

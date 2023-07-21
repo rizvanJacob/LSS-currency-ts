@@ -1,6 +1,7 @@
 import { Requirement } from "@prisma/client";
 import { prisma } from "../config/database";
 import dayjs from "dayjs";
+import { STATUSES_IN_TRAINING_LIST } from "../constants";
 
 export const trimRequirementsForTraining = (requirements: Requirement[]) => {
   // get all requirements that are alsoCompleted by another requirement
@@ -10,7 +11,7 @@ export const trimRequirementsForTraining = (requirements: Requirement[]) => {
     }
     return acc;
   }, [] as number[]);
-  console.log(secondaryRequirements);
+  // console.log(secondaryRequirements);
 
   //sort secondaryRequirements in descending order
   secondaryRequirements.sort((a, b) => b - a);
@@ -163,11 +164,15 @@ export const transformTrainingForShow = async (training: any) => {
     returnTraining.requirements.name
   );
 
-  console.log(returnTraining);
+  // console.log(returnTraining);
   return returnTraining;
 };
 
 const mergeTrainings = (primaryTraining: any, secondaryTraining: any) => {
+  console.log("attempt merge trainings: pri, sec");
+  console.log(primaryTraining);
+  console.log(secondaryTraining);
+
   let mergedTraining: any = primaryTraining;
 
   mergedTraining.relatedTraining = secondaryTraining.id;
@@ -179,6 +184,8 @@ const mergeTrainings = (primaryTraining: any, secondaryTraining: any) => {
   );
   mergedTraining.trainees.push(...secondaryTraining.trainees);
 
+  console.log("merged training");
+  console.log(mergedTraining);
   return mergedTraining;
 };
 
@@ -207,13 +214,71 @@ export const findRelatedTraining = async (
   relatedRequirement: { id: any },
   training: any
 ) => {
+  const halfSecondBefore = new Date(training.createdAt.getTime() - 500);
+  const halfSecondAfter = new Date(training.createdAt.getTime() + 500);
+
   const relatedTraining = await prisma.training.findFirst({
     where: {
       requirement: relatedRequirement.id,
-      createdAt: training.createdAt,
+      createdAt: {
+        gt: halfSecondBefore,
+        lt: halfSecondAfter,
+      },
     },
-    select: relatedTrainingSelection,
+    select: {
+      id: true,
+      start: true,
+      end: true,
+      capacity: true,
+      complete: true,
+      instruction: true,
+      requirement: true,
+      passphrase: true,
+      requirements: {
+        select: {
+          name: true,
+          alsoCompletes: true,
+        },
+      },
+      trainees: {
+        where: {
+          status: { in: STATUSES_IN_TRAINING_LIST },
+        },
+        select: {
+          status: true,
+          trainee: true,
+          trainees: {
+            select: {
+              callsign: true,
+              categories: {
+                select: {
+                  name: true,
+                },
+              },
+              currencies: {
+                select: {
+                  expiry: true,
+                },
+              },
+              trainings: {
+                where: {
+                  training: {
+                    equals: relatedRequirement.id,
+                  },
+                },
+                select: {
+                  status: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      createdAt: true,
+    }
   });
+  console.log("Related training");
+  console.log(relatedTraining);
   return relatedTraining;
 };
 

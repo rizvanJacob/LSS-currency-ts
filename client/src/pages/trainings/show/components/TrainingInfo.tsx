@@ -22,8 +22,8 @@ export default function TrainingInfo({
     currentUser && CHANGE_TRAINING_ACCESS.includes(currentUser?.accountType);
 
   const bookedTrainees = training.trainees.filter((t) => {
-    if (!t.trainees.trainings) return false;
-    return [1, 2, 3].includes(t.trainees.trainings[0].status || 0);
+    if (!t.trainees?.trainings) return false;
+    return [1, 2, 3].includes(t.status || 0);
   });
 
   return (
