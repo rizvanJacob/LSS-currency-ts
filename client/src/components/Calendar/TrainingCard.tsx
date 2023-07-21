@@ -100,7 +100,7 @@ const TrainingCard = ({
           <p>End: {dayjs(training.end).format("HH:mm")}</p>
           <p>
             Occupancy: {bookedTrainees.length}/{training.capacity} 
-            {waitListees > 0 && ` | Q: ${waitListees}`}
+            {waitListees > 0 && ` | Q:${waitListees}`}
           </p>
         </div>
         <div className="btn-group btn-group-vertical sm:btn-group-horizontal">
