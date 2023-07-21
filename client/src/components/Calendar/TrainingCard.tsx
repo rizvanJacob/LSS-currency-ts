@@ -6,14 +6,16 @@ import { buildFullUrl } from "../../utilities/stringManipulation";
 
 type Prop = {
   training: Training;
-  updateTraining: ((newTraining: Training) => void) | undefined;
+  updateTraining?: ((newTraining: Training) => void);
   isForIndex?: boolean;
+  reloadTrainings?: () => void;
 };
 
 const TrainingCard = ({
   training,
-  updateTraining,
+  // updateTraining,
   isForIndex = false,
+  reloadTrainings = () => {},
 }: Prop) => {
   const [isLoading, setIsLoading] = useState(false);
   const [buttonText, setButtonText] = useState("");
@@ -35,8 +37,9 @@ const TrainingCard = ({
       }
     );
     const data = await response.json();
-    console.log(data)
-    updateTraineesinTraining(data, training, updateTraining);
+    console.log(data);
+    // updateTraineesinTraining(data, training, updateTraining);
+    reloadTrainings();
     setIsLoading(false);
   };
 
@@ -44,8 +47,8 @@ const TrainingCard = ({
     const booking = training.trainees.find((t) => {
       return t.trainee === Number(id);
     });
-    console.log("booking")
-    console.log(booking)
+    console.log("booking");
+    console.log(booking);
     if (booking && booking.status !== 4) {
       if (booking.status === 1) {
         setButtonText("Unbook");
@@ -105,32 +108,32 @@ const TrainingCard = ({
 
 export default TrainingCard;
 
-const updateTraineesinTraining = (
-  booking: any,
-  training: Training,
-  updateTraining: any
-) => {
-  const isInTraining = training.trainees.find((t) => {
-    return t.trainee === booking.trainee;
-  });
-  let newTraining = {};
+// const updateTraineesinTraining = (
+//   booking: any,
+//   training: Training,
+//   updateTraining: any
+// ) => {
+//   const isInTraining = training.trainees.find((t) => {
+//     return t.trainee === booking.trainee;
+//   });
+//   let newTraining = {};
 
-  if (isInTraining) {
-    const newTrainees = training.trainees.filter((t) => {
-      return t.trainee !== booking.trainee;
-    });
-    newTraining = { ...training, trainees: newTrainees };
-  } else {
-    const newTrainees = [
-      ...training.trainees,
-      {
-        id: booking.id || 0,
-        trainee: booking.trainee,
-        training: booking.training,
-        status: booking.status,
-      },
-    ];
-    newTraining = { ...training, trainees: newTrainees };
-  }
-  return updateTraining(newTraining);
-};
+//   if (isInTraining) {
+//     const newTrainees = training.trainees.filter((t) => {
+//       return t.trainee !== booking.trainee;
+//     });
+//     newTraining = { ...training, trainees: newTrainees };
+//   } else {
+//     const newTrainees = [
+//       ...training.trainees,
+//       {
+//         id: booking.id || 0,
+//         trainee: booking.trainee,
+//         training: booking.training,
+//         status: booking.status,
+//       },
+//     ];
+//     newTraining = { ...training, trainees: newTrainees };
+//   }
+//   return updateTraining(newTraining);
+// };

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import getRequest from "../../../../utilities/getRequest";
-import TraineeListRow from "./TraineeListRow";
 import { Trainee } from "../../../../@types/trainee";
 import ProgressBar from "../../../../components/ProgressBar";
 import { buildFullUrl } from "../../../../utilities/stringManipulation";
@@ -52,7 +51,7 @@ const TraineeList = ({
     if (relatedTraining) {
       fetchPromises.push(
         getRequest(
-          `/api/training/${relatedTraining}/trainees`,
+          `/api/trainings/${relatedTraining}/trainees`,
           setRelatedTrainees
         )
       );
