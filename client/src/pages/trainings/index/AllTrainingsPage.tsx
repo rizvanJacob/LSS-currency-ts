@@ -21,8 +21,6 @@ export default function AllTrainingsPage(): JSX.Element {
   const [calendarView, setCalendarView] = useState<boolean>(true);
   const [displayDate, setDisplayDate] = useState<Date>(new Date());
   const currentUser = useContext<CurrentUser | null>(CurrentUserContext);
-  const [selectedDate, setSelectedDate] = useState(new Date());  // added
-  
   const setTitle = useContext<React.Dispatch<
     React.SetStateAction<string>
   > | null>(TitleContext);

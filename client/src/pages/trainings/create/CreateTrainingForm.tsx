@@ -59,12 +59,12 @@ export default function CreateTrainingForm(): JSX.Element {
         return { ...training, start: newStart, end: newStart };
       } else if (fieldName === "end") {
         const newEnd = value || new Date();
-        return { ...training, end: newEnd };
-      } else {
-        return training;
+        training.end = newEnd;
       }
+      return training;
     });
   };
+
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -78,6 +78,7 @@ export default function CreateTrainingForm(): JSX.Element {
           .set("minute", isNaN(parseInt(minutes)) ? 0 : parseInt(minutes))
           .toDate();
         return { ...training, start: newStart, end: newStart };
+
       } else if (name === "end_time") {
         const [hours, minutes] = value.split(":");
         const newEnd = dayjs(training.end)

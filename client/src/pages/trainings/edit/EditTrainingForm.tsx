@@ -86,6 +86,8 @@ export default function EditTrainingForm(): JSX.Element {
     setTraining((training) => {
       if (name === "start_time") {
         const [hours, minutes] = value.split(":");
+        const parsedHours = parseInt(hours);
+        const parsedMinutes = parseInt(minutes);
         const newStart = dayjs(training.start)
           .set("hour", isNaN(parseInt(hours)) ? 0 : parseInt(hours))
           .set("minute", isNaN(parseInt(minutes)) ? 0 : parseInt(minutes))
