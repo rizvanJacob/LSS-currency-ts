@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import { trimCurrencies, trimRequirements } from "../utilities/trimTrainee";
 import { getNextExpiry } from "./trainingsController";
 import { transformTrainingForBooking } from "../utilities/trimTraining";
+import { parse } from "path";
+import { encryptText, parseVehiclePd } from "../utilities/pd";
 
 const index = async (req: Request, res: Response) => {
   try {
@@ -78,6 +80,8 @@ const index = async (req: Request, res: Response) => {
 const show = async (req: Request, res: Response) => {
   const { traineeId } = req.params;
   const { noTrim } = req.query;
+  const user = await JSON.parse(req.headers.authorization || "");
+  const showVehicle = user.trainee.id === Number(traineeId);
   try {
     const trainee = await prisma.trainee.findUnique({
       where: { id: Number(traineeId) },
@@ -89,6 +93,7 @@ const show = async (req: Request, res: Response) => {
         users: {
           select: {
             approved: true,
+            vehicle: showVehicle,
           },
         },
         categories: {
@@ -140,7 +145,7 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   try {
-    const { callsign, category, user } = req.body;
+    const { callsign, category, user, vehicle } = req.body;
     console.log("req.body", req.body);
     const newTrainee = await prisma.trainee.create({
       data: {
@@ -149,6 +154,14 @@ const create = async (req: Request, res: Response) => {
         user: Number(user),
       },
     });
+    if (vehicle) {
+      const vehicleInfo = parseVehiclePd(vehicle);
+      const encryptedVehicle = await encryptText(vehicleInfo);
+      await prisma.userModel.update({
+        where: { id: Number(user) },
+        data: { vehicle: encryptedVehicle },
+      });
+    }
     res.status(200).json(newTrainee);
   } catch (err) {
     res.status(500).json({ err });
@@ -519,6 +532,28 @@ const checkin = async (req: Request, res: Response) => {
   }
 };
 
+const updateVehicle = async (req: Request, res: Response) => {
+  const { traineeId } = req.params;
+  const { vehicle } = req.body;
+
+  try {
+    const encryptedVehicle = await encryptText(parseVehiclePd(vehicle));
+    const updatedVehicle = await prisma.trainee.update({
+      where: { id: Number(traineeId) },
+      data: { users: { update: { vehicle: encryptedVehicle } } },
+      select: { users: { select: { vehicle: true } } },
+    });
+    if (!updatedVehicle) {
+      return res.status(400).json({ message: "Could not update vehicle" });
+    }
+
+    return res.status(200).json({ vehicle: updatedVehicle.users.vehicle });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: "server error" });
+  }
+};
+
 export {
   index,
   show,
@@ -530,6 +565,7 @@ export {
   checkin,
   deleteTrainee as delete,
   getAllBookings,
+  updateVehicle,
 };
 
 const book = async (traineeId: number, trainingId: number) => {

@@ -431,6 +431,10 @@ const trainingsController = {
       res.status(500).json({ err });
     }
   },
+
+  showTrainingPD: async (req: Request, res: Response, err: any) => {
+    console.log("retrieve trainees PD");
+  },
 };
 export default trainingsController;
 

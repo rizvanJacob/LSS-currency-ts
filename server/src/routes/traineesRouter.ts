@@ -11,11 +11,7 @@ import { isAuth } from "../controllers/authController";
 import * as traineesController from "../controllers/traineesController";
 
 router.get("/", isAuth(TRAINEE_READ_ALL_ACCESS), traineesController.index);
-router.get(
-  "/:traineeId",
-  isAuth(ALL, true),
-  traineesController.show
-);
+router.get("/:traineeId", isAuth(ALL, true), traineesController.show);
 router.post("/", traineesController.create);
 router.put("/checkin", isAuth([Account.Trainee]), traineesController.checkin);
 router.put(
@@ -32,6 +28,11 @@ router.put(
   "/:traineeId/complete/:requirementId",
   isAuth(TRAINEE_ACTIONS_ACCESS),
   traineesController.completeRequirement
+);
+router.put(
+  "/:traineeId/vehicle",
+  isAuth(TRAINEE_ACTIONS_ACCESS),
+  traineesController.updateVehicle
 );
 router.delete(
   "/:traineeId",

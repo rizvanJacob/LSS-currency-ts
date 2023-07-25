@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import CurrencyCard from "./components/CurrencyCard";
 import { TitleContext } from "../../../App";
 import LoadingPage from "../../../components/LoadingPage";
+import VehicleDisplayField from "./components/VehicleDisplayField";
 
 const ShowTraineePage = () => {
   const { id } = useParams();
@@ -67,6 +68,12 @@ const ShowTraineePage = () => {
           );
         }
       })}
+      {trainee && (
+        <VehicleDisplayField
+          inputVehicle={trainee?.users.vehicle || ""}
+          traineeId={trainee.id}
+        />
+      )}
     </div>
   ) : (
     <div>No currencies to show!</div>

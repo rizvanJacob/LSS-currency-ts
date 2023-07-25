@@ -9,7 +9,7 @@ import LoadingPage from "../../../components/LoadingPage";
 import { TitleContext } from "../../../App";
 import TraineeFieldset from "../../../components/FormFieldsets/TraineeFieldset";
 import { traineeSchema } from "../../../yupSchemas/traineeSchema";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 const blankTrainee = {
   callsign: "",
@@ -17,10 +17,10 @@ const blankTrainee = {
   id: 0,
   categories: { name: "" },
   user: 0,
-  users: { approved: false },
+  users: { approved: false, vehicle: "" },
   currencies: [],
+  vehicle: "",
 };
-
 
 const EditTraineePage = () => {
   const [loadingTrainee, setIsLoadingTrainee] = useState(true);
@@ -56,30 +56,30 @@ const EditTraineePage = () => {
   return (
     <fieldset className="justify-center">
       <div className="flex justify-center">
-        {loadingTrainee && <LoadingPage/>}
-          <Formik
-            initialValues={trainee}
-            enableReinitialize
-            validationSchema={traineeSchema(trainee)}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting, isValidating, isValid}) => (
-              <Form className="space-y-6 text-center m-auto py-6">
-                <TraineeFieldset
-                  trainee={trainee}
-                  setTrainee={setTrainee}
-                  setIsLoadingTrainee={setIsLoadingTrainee}
-                />
-                <button
-                  disabled={isSubmitting || isValidating || !isValid}
-                  className="btn btn-primary btn-block"
-                  type="submit"
-                >
-                  Update Trainee
-                </button>
-              </Form>
-            )}
-          </Formik>
+        {loadingTrainee && <LoadingPage />}
+        <Formik
+          initialValues={trainee}
+          enableReinitialize
+          validationSchema={traineeSchema(trainee)}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, isValidating, isValid }) => (
+            <Form className="space-y-6 text-center m-auto py-6">
+              <TraineeFieldset
+                trainee={trainee}
+                setTrainee={setTrainee}
+                setIsLoadingTrainee={setIsLoadingTrainee}
+              />
+              <button
+                disabled={isSubmitting || isValidating || !isValid}
+                className="btn btn-primary btn-block"
+                type="submit"
+              >
+                Update Trainee
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </fieldset>
   );

@@ -21,6 +21,8 @@ model UserModel {
   updatedAt       DateTime    @default(now()) @db.DateTime2
   trainings       TrainingProvided[]
   approved        Boolean     @default(false)
+  info            String?
+  vehicle         String?
 }
 
 model TrainingProvided {

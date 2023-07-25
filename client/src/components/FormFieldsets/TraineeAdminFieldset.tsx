@@ -1,4 +1,4 @@
-import { Account } from "../../../../server/src/constants"
+import { Account } from "../../../../server/src/constants";
 import { Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import getRequest from "../../utilities/getRequest";
@@ -6,23 +6,37 @@ import getRequest from "../../utilities/getRequest";
 import { NewUser } from "../../@types/user";
 import { SimpleLookup } from "../../@types/lookup";
 import { NewTrainee } from "../../@types/trainee";
+import VehicleNumberField from "./VehicleNoField";
+import { set } from "date-fns";
 
 type Prop = {
   user: NewUser;
   handleChange: any;
   setTrainee: React.Dispatch<React.SetStateAction<NewTrainee>>;
   includeTrainee: boolean;
-  setIncludeTrainee: React.Dispatch<React.SetStateAction<boolean>>
+  setIncludeTrainee: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, setIncludeTrainee }: Prop) => {
+const TraineeAdminFieldset = ({
+  user,
+  handleChange,
+  setTrainee,
+  includeTrainee,
+  setIncludeTrainee,
+}: Prop) => {
   const [categories, setCategories] = useState<SimpleLookup[] | null>(null);
-
+  const [vehicle, setVehicle] = useState<string>("");
 
   useEffect(() => {
     getRequest("/api/lookup/categories", setCategories);
   }, []);
 
+  const handleVehicleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVehicle(e.target.value);
+    setTrainee((prev) => {
+      return { ...prev, vehicle: e.target.value };
+    });
+  };
 
   return (
     <div className="flex items-center justify-center">
@@ -74,6 +88,12 @@ const TraineeAdminFieldset = ({ user, handleChange, setTrainee, includeTrainee, 
             onChange={() => setIncludeTrainee(!includeTrainee)}
           />
         </div>
+        {includeTrainee && (
+          <VehicleNumberField
+            vehicle={vehicle}
+            handleChange={handleVehicleChange}
+          />
+        )}
       </fieldset>
     </div>
   );

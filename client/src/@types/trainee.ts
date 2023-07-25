@@ -2,6 +2,7 @@ export type NewTrainee = {
   callsign: string;
   category: number;
   user?: number;
+  vehicle: string;
 };
 
 export type Trainee = NewTrainee & {
@@ -14,6 +15,7 @@ export type Trainee = NewTrainee & {
   };
   users: {
     approved: boolean;
+    vehicle: string;
   };
   currencies: Currency[];
   status?: CurrencyStatus;

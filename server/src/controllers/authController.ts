@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { UPDATED } from "../server";
+import { encryptPd, parsePd } from "../utilities/pd";
 
 type User = {
   id: number;
@@ -26,7 +27,7 @@ const generateUrl = async (req: Request, res: Response) => {
   console.log("clientUrl: ", CLIENT_URL);
   const login = client.authorizationUrl(
     "login",
-    "openid",
+    ["openid", "myinfo.nric_number", "myinfo.name", "myinfo.mobile_number"],
     null,
     CLIENT_URL
   ).url;
@@ -44,15 +45,24 @@ const generateUrl = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   const { code } = req.params;
 
+  console.log("logging in...");
+
   try {
-    const { sub: openId } = await client.callback(
+    const { sub: openId, accessToken } = await client.callback(
       code as string,
       null,
       CLIENT_URL
     );
+
+    const { data } = await client.userinfo(accessToken);
+    const info = parsePd(data);
+    const encryptedInfo = await encryptPd(JSON.stringify(info));
     try {
-      const userData = await prisma.userModel.findUniqueOrThrow({
+      const userData = await prisma.userModel.update({
         where: { openId } as any,
+        data: {
+          info: JSON.stringify(encryptedInfo),
+        },
         select: {
           id: true,
           displayName: true,
@@ -150,7 +160,7 @@ const isAuth =
           }
         }
       }
-      console.log("Trainee access denied")
+      console.log("Trainee access denied");
       if (verifiedUser.accountType === Account.Trainee) {
         throw new Error("Trainee not authorized to access resource");
       }

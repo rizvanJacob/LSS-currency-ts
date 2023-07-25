@@ -5,6 +5,7 @@ import { NewTrainee } from "../../@types/trainee";
 import { SimpleLookup } from "../../@types/lookup";
 import { CancelTokenSource } from "axios";
 import ProgressBar from "../ProgressBar";
+import VehicleNumberField from "./VehicleNoField";
 
 type Prop = {
   trainee: NewTrainee;
@@ -95,6 +96,10 @@ const TraineeParticularsFieldset = ({
             </div>
           </>
         )}
+        <VehicleNumberField
+          vehicle={trainee.vehicle}
+          handleChange={handleChange}
+        />
       </fieldset>
     </div>
   );

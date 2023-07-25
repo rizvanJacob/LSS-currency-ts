@@ -14,6 +14,7 @@ import { SimpleLookup } from "../../@types/lookup";
 import { User } from "../../@types/user";
 import { NewTrainee } from "../../@types/trainee";
 import { signUpPageSchema } from "../../yupSchemas/signUpPageSchema";
+import VehicleNumberField from "../../components/FormFieldsets/VehicleNoField";
 
 const blankUser = {
   displayName: "",
@@ -26,6 +27,7 @@ const blankTrainee = {
   callsign: "",
   category: 0,
   user: 0,
+  vehicle: "",
 };
 
 const SignUpPage = (): JSX.Element => {
@@ -43,7 +45,7 @@ const SignUpPage = (): JSX.Element => {
     []
   );
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     getRequest("/api/lookup/accountTypes", setAccountTypes);
     getRequest("/api/lookup/categories", setCategories);
@@ -71,12 +73,14 @@ const SignUpPage = (): JSX.Element => {
           (userResponse) => {
             return postRequest(
               "/api/trainees",
-              { ...trainee, 
-                callsign: 
+              {
+                ...trainee,
+                callsign:
                   user.accountType === Account.Admin
                     ? user.displayName
                     : trainee.callsign,
-                user: Number(userResponse?.data.id) },
+                user: Number(userResponse?.data.id),
+              },
               setTrainee
             );
           }
@@ -106,7 +110,7 @@ const SignUpPage = (): JSX.Element => {
       [name]: name === "accountType" ? Number(value) : value,
     });
   };
-  
+
   const handleTraineeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (name === "category") {
@@ -121,20 +125,24 @@ const SignUpPage = (): JSX.Element => {
       setTrainee({
         callsign: user.displayName as string,
         category: trainee.category as number,
+        vehicle: "",
       });
     } else if (includeTrainee && user.accountType === Account.TraineeAdmin) {
       setTrainee({
         callsign: user.displayName as string,
         category: Number(user.authCategory) as number,
+        vehicle: "",
       });
     } else {
-      setTrainee({ callsign: "", category: 0});
+      setTrainee({ callsign: "", category: 0, vehicle: "" });
     }
-  }, [includeTrainee, user])
+  }, [includeTrainee, user]);
 
   return (
     <div className="max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-bold mb-8">Request for an account</h1>
+      <h1 className="text-3xl text-center font-bold mb-8">
+        Request for an account
+      </h1>
       <div className="flex items-center justify-center">
         <Formik
           initialValues={{ ...user, ...trainee }}
@@ -142,7 +150,7 @@ const SignUpPage = (): JSX.Element => {
           enableReinitialize
           validationSchema={signUpPageSchema(user, includeTrainee)}
         >
-          {({ isSubmitting, isValidating, isValid}) => (
+          {({ isSubmitting, isValidating, isValid }) => (
             <Form className="space-y-6">
               <div className="flex items-center justify-center">
                 <fieldset>
@@ -170,26 +178,25 @@ const SignUpPage = (): JSX.Element => {
               {user.accountType == Account.Admin && (
                 <div>
                   <AdminFieldSet user={user} handleChange={handleUserChange} />
-                  <label className="w-1/4">Include Trainee account:</label>
-                  <div className="w-4/4">
-                    <Field
-                      name="includeTrainee"
-                      type="checkbox"
-                      checked={includeTrainee}
-                      className="checkbox"
-                      onChange={() => setIncludeTrainee(!includeTrainee)}
-                    />
-                  </div>
+                  <label className="label">Include Trainee account</label>
+                  <Field
+                    name="includeTrainee"
+                    type="checkbox"
+                    checked={includeTrainee}
+                    className="checkbox"
+                    onChange={() => setIncludeTrainee(!includeTrainee)}
+                  />
                   {includeTrainee && (
-                    <Field
-                      as="select"
-                      type="number"
-                      id="category"
-                      name="category"
-                      className="input-select select select-primary w-full max-w-xs"
-                      onChange = {handleTraineeChange}
-                    >
-                      <option value="">Select a category:</option>
+                    <fieldset className="max-w-xs">
+                      <Field
+                        as="select"
+                        type="number"
+                        id="category"
+                        name="category"
+                        className="input-select select select-primary w-full max-w-xs"
+                        onChange={handleTraineeChange}
+                      >
+                        <option value="">Select a category:</option>
                         {categories?.map((c) => {
                           return (
                             <option value={Number(c.id)} key={Number(c.id)}>
@@ -197,7 +204,12 @@ const SignUpPage = (): JSX.Element => {
                             </option>
                           );
                         })}
-                    </Field>
+                      </Field>
+                      <VehicleNumberField
+                        vehicle={trainee.vehicle}
+                        handleChange={handleTraineeChange}
+                      />
+                    </fieldset>
                   )}
                   <div className="error-message text-error">
                     <ErrorMessage name="category" />
@@ -229,12 +241,12 @@ const SignUpPage = (): JSX.Element => {
                 />
               )}
               <div className="flex justify-center">
-                <button 
+                <button
                   type="submit"
                   disabled={isSubmitting || isValidating || !isValid}
                   className="btn btn-info "
                 >
-                    Request Account
+                  Request Account
                 </button>
               </div>
             </Form>

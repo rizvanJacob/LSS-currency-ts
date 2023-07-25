@@ -15,6 +15,7 @@ router.get(
   isAuth(ALL),
   trainingsController.showTraining
 );
+router.get("/:trainingId/pd", isAuth(TRAINING_WRITE_ACCESS), trainingsController.showTrainingPD)
 router.put(
   "/:trainingId",
   isAuth(TRAINING_WRITE_ACCESS),
