@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { buildFullUrl } from "../../utilities/stringManipulation";
 import { UPDATED } from "../../App";
+import AstroBanner from "../../assets/AstroBanner";
 type AuthURLs = {
   login: string;
   checkin: string;
@@ -45,7 +46,7 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div className="flex flex-col mx-auto items-center justify-evenly gap-4 h-screen pt-4">
-      <h1 className="badge badge-lg badge-primary badge-outline">AviAid</h1>
+      <AstroBanner className="w-full max-w-xs text-primary" />
       <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
       </a>

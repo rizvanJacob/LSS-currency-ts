@@ -6,6 +6,11 @@ import { useContext } from "react";
 import { CurrentUser } from "../../../../@types/currentUser";
 import { CurrentUserContext } from "../../../../App";
 import { CHANGE_TRAINING_ACCESS } from "../../routes/TrainingRoutes";
+import generatePDF from "./generatePDF";
+import { Account } from "../../../../../../server/src/constants";
+import DownloadFileIcon from "../../../../assets/icons/DownloadFileIcon";
+import GenerateNominalRollButton from "./GenerateNominalRollButton";
+
 export type TrainingProps = {
   training: Training;
   setTraining: React.Dispatch<React.SetStateAction<Training>>;
@@ -25,6 +30,10 @@ export default function TrainingInfo({
     if (!t.trainees?.trainings) return false;
     return [1, 2, 3].includes(t.status || 0);
   });
+
+  const generateNominalRollPDF = () => {
+    generatePDF(training);
+  };
 
   return (
     <div className="card w-full xs:w-96 text-primary shadow-xl bg-secondary mx-auto">
@@ -74,13 +83,14 @@ export default function TrainingInfo({
                 </div>
               </label>
             </div>
-            <div className="card-actions justify-end">
+            <div className="card-actions justify-end gap-2">
               <EditTrainingButton training={training} />
               <DeleteTrainingButton
                 setTraining={setTraining}
                 training={training}
                 setTrainings={setTrainings}
               />
+              <GenerateNominalRollButton training={training} />
             </div>
           </>
         )}

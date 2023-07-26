@@ -3,7 +3,9 @@ import { prisma } from "../config/database";
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import {
+  FlattenTrainingForTraineesPD,
   findRelatedTraining,
+  getTraineesPD,
   mapTrainingsForBookingCalendar,
   mapTrainingsForIndex,
   transformTrainingForShow,
@@ -12,6 +14,7 @@ import {
   STATUSES_IN_TRAINING_CAPACITY,
   STATUSES_IN_TRAINING_LIST,
 } from "../constants";
+import { raw } from "@prisma/client/runtime";
 
 const trainingsController = {
   getAllTrainings: async (req: Request, res: Response, err: any) => {
@@ -433,7 +436,31 @@ const trainingsController = {
   },
 
   showTrainingPD: async (req: Request, res: Response, err: any) => {
-    console.log("retrieve trainees PD");
+    const { trainingId } = req.params;
+    if (!trainingId) {
+      return res.status(400).json({ message: "Invalid training ID" });
+    }
+    const verifiedUser = JSON.parse(req.headers.authorization || "");
+
+    try {
+      const rawTraining = await getTraineesPD(Number(trainingId));
+      const requestorInfo = await prisma.userModel.findUnique({
+        where: { id: Number(verifiedUser.id) },
+        select: {
+          info: true,
+        },
+      });
+      if (!rawTraining) {
+        return res.status(400).json({ message: "Invalid training ID" });
+      }
+
+      const training = FlattenTrainingForTraineesPD(rawTraining);
+
+      return res.status(200).json({ training, requestorInfo });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Server Error" });
+    }
   },
 };
 export default trainingsController;

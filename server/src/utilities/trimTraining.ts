@@ -275,7 +275,7 @@ export const findRelatedTraining = async (
         },
       },
       createdAt: true,
-    }
+    },
   });
   console.log("Related training");
   console.log(relatedTraining);
@@ -305,4 +305,48 @@ const removeBracketedText = (text: string) => {
 
 const keepTextInBrackets = (text: string) => {
   return text.replace(/.*\(|\).*/g, "");
+};
+
+export const FlattenTrainingForTraineesPD = (training: {
+  trainees: {
+    trainee: number;
+    trainees: { users: { info: string | null; vehicle: string | null } };
+  }[];
+}): { trainees: { trainee: number; info: string; vehicle: string }[] } => {
+  const trainees = training.trainees.map((trainee) => {
+    return {
+      trainee: trainee.trainee,
+      info: trainee.trainees.users.info || "",
+      vehicle: trainee.trainees.users.vehicle || "",
+    };
+  });
+  return { trainees };
+};
+
+export const getTraineesPD = async (trainingId: number) => {
+  return await prisma.training.findUnique({
+    where: { id: Number(trainingId) },
+    select: {
+      trainees: {
+        where: {
+          status: {
+            in: STATUSES_IN_TRAINING_LIST,
+          },
+        },
+        select: {
+          trainee: true,
+          trainees: {
+            select: {
+              users: {
+                select: {
+                  info: true,
+                  vehicle: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 };

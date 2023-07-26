@@ -9,7 +9,7 @@ const PUBLIC_KEY =
 export const parsePd = (data: Record<string, string>) => {
   if (!TRUNCATE_PD) {
     return {
-      nric: data["myinfo.nric_number"],
+      nric: data["myinfo.nric_number"].slice(-4),
       name: data["myinfo.name"],
       mobile: data["myinfo.mobile_number"],
     };
@@ -62,7 +62,9 @@ export const encryptText = async (data: string): Promise<string> => {
   }
   try {
     const publicKey = await jose.importSPKI(RSA_KEY, "RSA-OAEP-256");
-    const encryptedString = await new jose.CompactEncrypt(new TextEncoder().encode(data))
+    const encryptedString = await new jose.CompactEncrypt(
+      new TextEncoder().encode(data)
+    )
       .setProtectedHeader({ alg: "RSA-OAEP-256", enc: "A256GCM" })
       .encrypt(publicKey);
     return encryptedString;

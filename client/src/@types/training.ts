@@ -33,6 +33,10 @@ export type Training = NewTraining & {
         status?: number;
       }[];
     };
+    nric?: string;
+    name?: string;
+    contact?: string;
+    vehicle?: string;
   }[];
 };
 

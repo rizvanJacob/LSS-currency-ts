@@ -41,7 +41,7 @@ export default function DeleteTrainingButton({
         <DialogModal
           title="Delete this training?"
           message={`Are you sure you want to delete ${
-            training.requirements.name
+            training.requirements?.name || "training"
           } on ${dayjs(training.start).format(
             "D MMM"
           )}? This action cannot be undone.`}

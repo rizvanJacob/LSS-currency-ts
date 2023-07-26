@@ -6,6 +6,7 @@ import ConfirmIcon from "../../../../assets/icons/ConfirmIcon";
 import postRequest from "../../../../utilities/postRequest";
 import putRequest from "../../../../utilities/putRequest";
 import { AxiosResponse } from "axios";
+import { buildFullUrl } from "../../../../utilities/stringManipulation";
 
 type Props = {
   inputVehicle: string;
@@ -33,7 +34,7 @@ const VehicleDisplayField = ({ inputVehicle, traineeId }: Props) => {
   const handleFormSubmit = async () => {
     if (edit) setEdit(!edit);
     const axiosResponse = await putRequest(
-      `/api/trainees/${traineeId}/vehicle`,
+      buildFullUrl(`/api/trainees/${traineeId}/vehicle`),
       {
         vehicle,
       }
