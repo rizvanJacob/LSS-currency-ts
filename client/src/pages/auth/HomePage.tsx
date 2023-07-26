@@ -46,7 +46,7 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div className="flex flex-col mx-auto items-center justify-evenly gap-4 h-screen pt-4">
-      <AstroBanner className="w-full max-w-xs text-primary" />
+      <AstroBanner className="w-full max-w-xs md:max-w-xl text-primary" />
       <a className="btn btn-primary btn-wide" href={authUrls.login}>
         LOGIN
       </a>
