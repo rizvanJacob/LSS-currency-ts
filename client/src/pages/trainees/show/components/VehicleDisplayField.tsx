@@ -19,6 +19,7 @@ const VehicleDisplayField = ({ inputVehicle, traineeId }: Props) => {
   const [vehicle, setVehicle] = useState<string>("");
   const [edit, setEdit] = useState<boolean>(false);
   useEffect(() => {
+    if (!encryptedVehicle) return;
     decryptString(encryptedVehicle)
       .then((result) => {
         setVehicle(result);
@@ -28,6 +29,7 @@ const VehicleDisplayField = ({ inputVehicle, traineeId }: Props) => {
 
         console.log("unable to decrypt");
         console.log(error.message);
+        setVehicle("");
       });
   }, [encryptedVehicle]);
 
@@ -45,7 +47,7 @@ const VehicleDisplayField = ({ inputVehicle, traineeId }: Props) => {
     }
   };
 
-  if (!encryptedVehicle) return null;
+  // if (!encryptedVehicle) return null;
   return (
     <div className="collapse collapse-arrow">
       <input type="checkbox" />
@@ -60,6 +62,7 @@ const VehicleDisplayField = ({ inputVehicle, traineeId }: Props) => {
                   type="text"
                   id="vehicle"
                   name="vehicle"
+                  placeholder="No vehicle"
                   value={vehicle || ""}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setVehicle(e.target.value)
